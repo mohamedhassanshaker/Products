@@ -1,0 +1,165 @@
+# Final-build evidence — page-surface Defect 1, middleware-only mechanism (dev retry 3)
+# next build && next start (non-standalone output; standalone tracing step EPERMs on this Windows host)
+# BUILD_ID=xE1CHD3uw0rEmXujLfWTP ; port 3491 = ops env entirely unconfigured ; port 3492 = configured (allowlist 203.0.113.0/24, trusted proxy 127.0.0.1)
+
+## routes-manifest rewrites (all three next.config.mjs rules removed)
+{"beforeFiles":[],"afterFiles":[],"fallback":[]}
+
+### [denied gated real page] curl -s -D - -o /dev/null -X GET http://127.0.0.1:3491/internal/ops/tenants
+HTTP/1.1 404 Not Found
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+X-Powered-By: Next.js
+ETag: "7zzl4pjo7b5av"
+Content-Type: text/html; charset=utf-8
+Content-Length: 6871
+Date: Wed, 19 Aug 2026 07:03:25 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+### [genuinely missing, same shape+depth] curl -s -D - -o /dev/null -X GET http://127.0.0.1:3491/internal/xps/tenants
+HTTP/1.1 404 Not Found
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+X-Powered-By: Next.js
+ETag: "7zzl4pjo7b5av"
+Content-Type: text/html; charset=utf-8
+Content-Length: 6871
+Date: Wed, 19 Aug 2026 07:03:25 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+### [genuinely missing, elsewhere] curl -s -D - -o /dev/null -X GET http://127.0.0.1:3491/nope
+HTTP/1.1 404 Not Found
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+X-Powered-By: Next.js
+ETag: "7zzl4pjo7b5av"
+Content-Type: text/html; charset=utf-8
+Content-Length: 6871
+Date: Wed, 19 Aug 2026 07:03:25 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+### [denied gated root] curl -s -D - -o /dev/null -X GET http://127.0.0.1:3491/internal/ops
+HTTP/1.1 404 Not Found
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+X-Powered-By: Next.js
+ETag: "7zzl4pjo7b5av"
+Content-Type: text/html; charset=utf-8
+Content-Length: 6871
+Date: Wed, 19 Aug 2026 07:03:25 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+### [near-miss prefix] curl -s -D - -o /dev/null -X GET http://127.0.0.1:3491/internal/op
+HTTP/1.1 404 Not Found
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+X-Powered-By: Next.js
+ETag: "7zzl4pjo7b5av"
+Content-Type: text/html; charset=utf-8
+Content-Length: 6871
+Date: Wed, 19 Aug 2026 07:03:25 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+### [sibling prefix] curl -s -D - -o /dev/null -X GET http://127.0.0.1:3491/internal/opsx
+HTTP/1.1 404 Not Found
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+X-Powered-By: Next.js
+ETag: "7zzl4pjo7b5av"
+Content-Type: text/html; charset=utf-8
+Content-Length: 6871
+Date: Wed, 19 Aug 2026 07:03:25 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+### [denied by unresolvable caller IP] curl -s -D - -o /dev/null -X GET http://127.0.0.1:3492/internal/ops/tenants
+HTTP/1.1 404 Not Found
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+X-Powered-By: Next.js
+ETag: "7zzl4pjo7b5av"
+Content-Type: text/html; charset=utf-8
+Content-Length: 6871
+Date: Wed, 19 Aug 2026 07:03:25 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+## forged internal denial flag from the old mechanism — now read by nothing
+### curl -H 'x-nb-ops-denied: 1' /internal/ops/tenants (denied server)
+HTTP/1.1 404 Not Found
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+X-Powered-By: Next.js
+ETag: "7zzl4pjo7b5av"
+Content-Type: text/html; charset=utf-8
+Content-Length: 6871
+Date: Wed, 19 Aug 2026 07:03:25 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+## API-side Defect 1 regression spot-check (unchanged by this dispatch)
+### http://127.0.0.1:3492/api/internal/ops/tenants
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+Not Found
+### http://127.0.0.1:3492/api/nothing-here
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+Not Found
+### http://127.0.0.1:3492/api/internal/ops/tenants/00000000-0000-0000-0000-000000000000
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+Not Found
+## untouched surfaces
+/                                                            307
+/login                                                       200
+/forgot-password                                             200
+/_next/static/chunks/webpack-5f2f26eafa41d6a6.js             200

@@ -1,0 +1,30 @@
+// Mirrors `precall-page.component.scss`'s `.la-precall`/`.la-precall--dead-end`
+// pair exactly (this SPA's shared "single centered message" dead-end look) —
+// duplicated rather than shared cross-feature since it's four rules, and
+// this feature has no other reason to import from `features/precall`.
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background: #101317;
+  color: #f2f2f2;
+}
+
+.la-precall {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.la-precall--dead-end {
+  text-align: center;
+  gap: 8px;
+
+  h1 {
+    outline: none;
+  }
+}

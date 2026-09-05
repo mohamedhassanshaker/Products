@@ -1,0 +1,35 @@
+{
+  "cookies": [
+    {
+      "name": "nb_session",
+      "value": "eyJhbGciOiJIUzI1NiJ9.eyJ0ZW5hbnRJZCI6IjAxYTAwNzlhLWE3ZjQtNzAwMC05NGJmLTU4MDY0ZDRlNDJlOSIsInVzZXJJZCI6IjAxYTAwNzlhLWE4NjktNzdkOC1hNWExLWQyOWJjNDcxMzc0YyIsInJvbGVJZHMiOlsiMDFhMDA3OWEtYTgyOC03NjZjLTk1YmItNGVkYTQ0MmYxNWJiIl0sInBlcm1pc3Npb25zIjp7ImNoYW5uZWxzIjoiV3JpdGUiLCJkZXNpZ25lciI6IldyaXRlIiwiYXVkaXRfbG9nIjoiV3JpdGUiLCJyZXBvcnRpbmciOiJXcml0ZSIsImEyYV9jb25maWciOiJXcml0ZSIsImNvbm5lY3RvcnMiOiJXcml0ZSIsImVzY2FsYXRpb25zIjoiV3JpdGUiLCJ1c2Vyc19yb2xlcyI6IldyaXRlIiwiY29udmVyc2F0aW9ucyI6IldyaXRlIiwiYWdlbnRfcGxhdGZvcm0iOiJXcml0ZSIsImFwcHJvdmFsX3F1ZXVlIjoiV3JpdGUiLCJkZXZlbG9wZXJfcG9ydGFsIjoiV3JpdGUiLCJ0b29sX3Blcm1pc3Npb25zIjoiV3JpdGUiLCJhZ2VudF90b29sX2NvbmZpZyI6IldyaXRlIiwic2VjdXJpdHlfc2V0dGluZ3MiOiJXcml0ZSJ9LCJpYXQiOjE3ODY4MzQzODAsImV4cCI6MTc4Njg2MzE4MH0.jjRbIISsArbpYBOJOvPVCawU1HOvKAyLAiOzZ3Zq_10",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "__next_hmr_refresh_hash__",
+      "value": "3083ad1fb3ea18e69fb9ef07d20076f7633457081244afec",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:3004",
+      "localStorage": [
+        {
+          "name": "chakra-ui-color-mode",
+          "value": "light"
+        }
+      ]
+    }
+  ]
+}

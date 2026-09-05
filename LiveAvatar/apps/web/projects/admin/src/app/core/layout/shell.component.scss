@@ -1,0 +1,84 @@
+.la-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+  background: var(--la-primary, #1b4b8a);
+  color: var(--la-on-primary, #fff);
+  padding: 8px 16px;
+
+  &:focus {
+    left: 8px;
+    top: 8px;
+  }
+}
+
+.la-shell {
+  height: 100vh;
+
+  &__sidenav {
+    width: 256px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--la-outline, #74777f);
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    text-decoration: none;
+    color: var(--la-on-surface, #1c1b1f);
+    font-weight: 500;
+  }
+
+  &__nav-item {
+    display: block;
+    padding: 0 16px;
+
+    &--disabled {
+      color: var(--la-on-surface-variant, #44474f);
+      cursor: default;
+    }
+  }
+
+  &__toolbar {
+    display: flex;
+    gap: 12px;
+  }
+
+  &__toolbar-spacer {
+    flex: 1 1 auto;
+  }
+
+  &__user-email {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__role-chip {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: var(--la-primary-container, #d6e3f8);
+    color: var(--la-on-primary-container, #0a2a52);
+  }
+
+  &__content {
+    padding: 24px;
+
+    // UX_GUIDELINES §1.4 breakpoint table: 16px page padding on tablet/phone.
+    @media (max-width: 1279px) {
+      padding: 16px;
+    }
+  }
+
+  &__hamburger {
+    // Toolbar hamburger only renders below 1280px (UX_GUIDELINES §4.6);
+    // give it the same leading position the brand/title occupies on desktop.
+    margin-right: 4px;
+  }
+}

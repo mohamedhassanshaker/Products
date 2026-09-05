@@ -1,0 +1,300 @@
+# Production-oriented local orchestration (HLD §8.1/§8.2). Mirrors the real
+# deployment topology (`web`, `agent`, `livekit`, `postgres`, `redis`) using
+# the images this repo builds — distinct from docker-compose.dev.yml, which
+# is a lighter dev-loop convenience file (Postgres/Redis/LiveKit `--dev`
+# only, no application images, no TLS, no resource limits).
+#
+# GPU workers (Deepgram self-hosted, faster-whisper, Fish Speech, bitHuman)
+# are explicitly NOT modelled here — they are operator-provisioned per
+# ADR-001 §4 and addressed by the agent via `ProviderCredential.endpoint_url`,
+# not built or run by this repo (BL-028 GPU autoscaling is an explicit P2
+# non-goal).
+#
+# Usage:
+#   cp .env.example .env               # fill in real secrets, never commit .env
+#   mkdir -p secrets && ...             # populate one file per credential_ref
+#   docker compose build
+#   docker compose run --rm migrate
+#   docker compose up -d
+#
+# See docs/deployment/DEPLOYMENT.md for the full runbook.
+
+services:
+  postgres:
+    # pgvector/pgvector:pg16 (not plain postgres:16-alpine) — the
+    # `20260902202319_knowledge_rag` migration (Phase 12a/12b RAG) requires
+    # the `vector` extension, which plain postgres images don't ship. Same
+    # image swap every disposable QA environment in this repo's history has
+    # had to make; fixed here at the source so `docker compose up` works
+    # out of the box. Built on top of the same postgres:16 base, so it's a
+    # drop-in replacement with an identical env var interface.
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-liveavatar}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: ${POSTGRES_DB:-liveavatar}
+    volumes:
+      - liveavatar_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-liveavatar} -d ${POSTGRES_DB:-liveavatar}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    deploy:
+      resources:
+        limits: { cpus: '2', memory: 2g }
+        reservations: { cpus: '0.5', memory: 512m }
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes']
+    volumes:
+      - liveavatar_redis:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    deploy:
+      resources:
+        limits: { cpus: '1', memory: 512m }
+        reservations: { cpus: '0.1', memory: 64m }
+
+  livekit:
+    image: livekit/livekit-server:v1.8.0
+    restart: unless-stopped
+    # `deploy/livekit/livekit.yaml` ships with a deliberately-unsubstituted
+    # `__LIVEKIT_API_KEY__` placeholder (see that file's header) — mounting
+    # it straight to LiveKit's config path with no substitution step is what
+    # made every service crash-loop (D-1: "api_key is required to use
+    # webhooks"). Render it here instead: mount the template read-only under
+    # a different path, `sed`-substitute `$LIVEKIT_API_KEY` (read from this
+    # container's own env at *runtime*, hence `$$` below so compose does not
+    # try to interpolate it itself) into a writable location, then exec the
+    # real server against the rendered file.
+    entrypoint: ['sh', '-c']
+    command:
+      - |
+        set -e
+        sed "s/__LIVEKIT_API_KEY__/$$LIVEKIT_API_KEY/" /etc/livekit/livekit.yaml.template > /tmp/livekit.yaml
+        exec /livekit-server --config /tmp/livekit.yaml
+    environment:
+      # `<key>: <secret>` — never baked into the image, sourced from .env /
+      # the orchestrator's secret store (LLD §5.3).
+      LIVEKIT_KEYS: '${LIVEKIT_API_KEY}: ${LIVEKIT_API_SECRET}'
+      # Discrete key (not just the `<key>: <secret>` pair above) so the
+      # substitution script above can read it as a plain env var at runtime.
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
+    volumes:
+      - ./deploy/livekit/livekit.yaml:/etc/livekit/livekit.yaml.template:ro
+    ports:
+      - '7880:7880' # signalling + HTTP (health)
+      - '7881:7881' # RTC TCP fallback
+      # Trimmed RTC UDP range for local compose; widen in production. Kept
+      # below 49152 deliberately (D-5): Windows' default dynamic/ephemeral
+      # UDP port range is 49152-65535, and any host process transiently
+      # holding a port in that window makes `docker compose up` fail
+      # non-deterministically with "bind: Only one usage of each socket
+      # address is normally permitted" — reproduced live in QA. Linux's
+      # default ephemeral range (32768-60999) still overlaps a `50000-50100`
+      # range too, so this isn't a Windows-only nicety.
+      - '20000-20100:20000-20100/udp'
+    networks:
+      default:
+        aliases: [livekit]
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:7880/']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    deploy:
+      resources:
+        limits: { cpus: '2', memory: 1g }
+        reservations: { cpus: '0.25', memory: 256m }
+
+  # One-shot: `prisma migrate deploy` (forward-only, HLD §6/§8.3) then the
+  # idempotent ProviderDefinition catalog seed (HLD §6: "idempotent upserts
+  # run on every boot" — run here, before `web` starts, rather than wired
+  # into NestFactory bootstrap, since that is the only place this project
+  # currently invokes it: `pnpm --filter @liveavatar/api prisma:seed`).
+  migrate:
+    image: ${WEB_IMAGE:-liveavatar/web}:${WEB_IMAGE_TAG:-latest}
+    restart: 'no'
+    entrypoint: ['sh', '-c']
+    command:
+      - |
+        set -e
+        npx prisma migrate deploy
+        npx tsx prisma/seed.ts
+    environment: &web-env
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?JWT_ACCESS_SECRET is required}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?JWT_REFRESH_SECRET is required}
+      BOOTSTRAP_SECRET: ${BOOTSTRAP_SECRET:?BOOTSTRAP_SECRET is required}
+      LIVEKIT_URL: ${LIVEKIT_URL:-ws://livekit:7880}
+      # Browser-reachable LiveKit address (LLD §5.1's `ws_url` returned to the
+      # conversation SPA's livekit-client, and this API's own CSP
+      # `connect-src` — see `publicLiveKitConnectSrc` in `main.ts`).
+      # `LIVEKIT_URL` above is the cluster-internal hostname the API/agent use
+      # server-to-server; a browser outside the compose network can never
+      # resolve it, so this must be set separately whenever the two differ
+      # (any compose/k8s deployment) and only matches `LIVEKIT_URL` in the
+      # rare case where the same `wss://` hostname is reachable from both.
+      LIVEKIT_PUBLIC_URL: ${LIVEKIT_PUBLIC_URL:-}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY:?LIVEKIT_API_KEY is required}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET:?LIVEKIT_API_SECRET is required}
+      AGENT_NAME: ${AGENT_NAME:-avatar-agent}
+      INTERNAL_TOKEN: ${INTERNAL_TOKEN:?INTERNAL_TOKEN is required}
+      ADMIN_ORIGIN: ${ADMIN_ORIGIN:-https://admin.example.com}
+      # Phase 12a (BL-044) — where the `knowledge-ingest` BullMQ job reaches
+      # the standalone embedding process (`ai-embedding` service below), not
+      # the `agent` LiveKit worker's own internal port.
+      EMBEDDING_SERVICE_URL: ${EMBEDDING_SERVICE_URL:-http://ai-embedding-internal:8082}
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  web:
+    image: ${WEB_IMAGE:-liveavatar/web}:${WEB_IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    environment: *web-env
+    volumes:
+      - ./secrets:/app/apps/api/secrets:ro
+      - ./avatars:/app/avatars:ro # read-only mirror of the agent's mount, so the control plane's `file://` probe can check the model directory exists
+    ports:
+      - '8098:8080' # public — the only port a real deployment should route external traffic to (remapped host-side: 8080/8090/8095 all already in use by other local processes on this machine)
+      - '8081:8081' # cluster-only in production (NFR-3); exposed to the host here only for local debugging
+    networks:
+      default:
+        aliases: [web-internal] # matches deploy/livekit/livekit.yaml's webhook URL and k8s's web-internal Service name
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://127.0.0.1:8080/api/health']
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    deploy:
+      resources:
+        limits: { cpus: '2', memory: 1g }
+        reservations: { cpus: '0.5', memory: 256m }
+
+  agent:
+    image: ${AGENT_IMAGE:-liveavatar/agent}:${AGENT_IMAGE_TAG:-latest}
+    build:
+      context: apps/agent
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      CONTROL_PLANE_INTERNAL_URL: ${CONTROL_PLANE_INTERNAL_URL:-http://web-internal:8081}
+      INTERNAL_TOKEN: ${INTERNAL_TOKEN:?INTERNAL_TOKEN is required}
+      # `DirectorySecretStore` (apps/agent/src/avatar_agent/secrets/directory_store.py)
+      # resolves `credential_ref` relative to this dir, and every fixture/doc
+      # in this repo uses `credential_ref: "secrets/<name>"` (e.g.
+      # `apps/agent/fixtures/agent-config/valid/example-a.yaml`). The
+      # `./secrets:/app/secrets:ro` mount below puts files directly at
+      # `/app/secrets/<name>` (no nested `secrets/` folder), so this must be
+      # `/app` (one level up), not `/app/secrets` — that mismatch made every
+      # `credential_ref` fail to resolve (`SecretNotFoundError`) the first
+      # time this was ever actually exercised end-to-end with a real agent.
+      SECRETS_DIR: /app
+      LIVEKIT_URL: ${LIVEKIT_URL:-ws://livekit:7880}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY:?LIVEKIT_API_KEY is required}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET:?LIVEKIT_API_SECRET is required}
+      AGENT_NAME: ${AGENT_NAME:-avatar-agent}
+      MAX_CONCURRENT_JOBS: ${MAX_CONCURRENT_JOBS:-10}
+      # AI subsystem — provider-agnostic, env-driven (ADR-001 §3). Never a
+      # baked-in key or baseURL; per-tenant overrides (endpoint_url,
+      # credential_ref) still take precedence where the published config sets them.
+      AI_PROVIDER: ${AI_PROVIDER:-openai}
+      AI_MODEL_CONVERSATION: ${AI_MODEL_CONVERSATION:-gpt-4o-mini}
+      AI_MODEL_SUMMARY: ${AI_MODEL_SUMMARY:-gpt-4o-mini}
+      AI_BASE_URL: ${AI_BASE_URL:-}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_REQUEST_TIMEOUT_MS: ${AI_REQUEST_TIMEOUT_MS:-15000}
+      AI_CONNECT_TIMEOUT_MS: ${AI_CONNECT_TIMEOUT_MS:-5000}
+    volumes:
+      - ./secrets:/app/secrets:ro
+      - ./avatars:/app/avatars:ro
+    depends_on:
+      web: { condition: service_healthy }
+      livekit: { condition: service_healthy }
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://127.0.0.1:8081/']
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    deploy:
+      resources:
+        limits: { cpus: '4', memory: 4g }
+        reservations: { cpus: '1', memory: 1g }
+
+  # Phase 12a (BL-044, ARCHITECTURE_NOTES.md §4.3) — the embedding process:
+  # a *second* deployment target built from the exact same `apps/agent`
+  # image as the `agent` LiveKit worker above (shares `ports`/`registry`/
+  # `adapters`, not a second codebase), just entered via `uvicorn` instead
+  # of the worker's own `python -m avatar_agent start`. Reached by the API's
+  # `knowledge-ingest` BullMQ job over internal HTTP (`EMBEDDING_SERVICE_URL`,
+  # set on the `web` service below). Minimal wiring only — proves the second
+  # process starts and answers `/healthz`; real autoscaling/production
+  # sizing of this target is a deliberate follow-up (plan doc's Phase 12a
+  # "Out of scope" list), not solved here.
+  #
+  # Phase 12b (BL-045/047/048) adds `/retrieve-preview` to this same process
+  # (the Retrieval playground's real code path) — unlike `/embed`, this route
+  # calls *out* to Nest's `/internal/knowledge/search` (hybrid search), so
+  # this service now also needs `CONTROL_PLANE_INTERNAL_URL`/`INTERNAL_TOKEN`
+  # for that outbound direction — the exact same two env vars the `agent`
+  # LiveKit worker already uses for its own `ControlPlaneClient` (`agent`
+  # service below), reused here rather than inventing a second pair.
+  ai-embedding:
+    image: ${AGENT_IMAGE:-liveavatar/agent}:${AGENT_IMAGE_TAG:-latest}
+    build:
+      context: apps/agent
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    entrypoint: ['uvicorn', 'avatar_agent.services.ai_service:app', '--host', '0.0.0.0', '--port', '8082']
+    environment:
+      INTERNAL_TOKEN: ${INTERNAL_TOKEN:?INTERNAL_TOKEN is required}
+      CONTROL_PLANE_INTERNAL_URL: ${CONTROL_PLANE_INTERNAL_URL:-http://web-internal:8081}
+      # `DirectorySecretStore` (apps/agent/src/avatar_agent/secrets/directory_store.py)
+      # resolves `credential_ref` relative to this dir, and every fixture/doc
+      # in this repo uses `credential_ref: "secrets/<name>"` (e.g.
+      # `apps/agent/fixtures/agent-config/valid/example-a.yaml`). The
+      # `./secrets:/app/secrets:ro` mount below puts files directly at
+      # `/app/secrets/<name>` (no nested `secrets/` folder), so this must be
+      # `/app` (one level up), not `/app/secrets` — that mismatch made every
+      # `credential_ref` fail to resolve (`SecretNotFoundError`) the first
+      # time this was ever actually exercised end-to-end with a real agent.
+      SECRETS_DIR: /app
+      AI_BASE_URL: ${AI_BASE_URL:-}
+      AI_API_KEY: ${AI_API_KEY:-}
+    volumes:
+      - ./secrets:/app/secrets:ro
+    networks:
+      default:
+        aliases: [ai-embedding-internal] # matches EMBEDDING_SERVICE_URL below
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://127.0.0.1:8082/healthz']
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits: { cpus: '1', memory: 1g }
+        reservations: { cpus: '0.25', memory: 256m }
+
+volumes:
+  liveavatar_pg:
+  liveavatar_redis:

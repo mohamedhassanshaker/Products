@@ -1,0 +1,114 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit tool' : 'New tool' }}</h2>
+
+<mat-dialog-content>
+  @if (dialogAlert()) {
+    <div class="la-dialog-alert" role="alert">{{ dialogAlert() }}</div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" [attr.aria-busy]="submitting()">
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" maxlength="80" [attr.aria-required]="true" aria-describedby="la-tool-name-error" />
+      @if (form.controls.name.hasError('server')) {
+        <mat-error id="la-tool-name-error">{{ form.controls.name.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Method</mat-label>
+      <mat-select formControlName="method">
+        @for (m of methods; track m) {
+          <mat-option [value]="m">{{ m }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>URL</mat-label>
+      <input matInput type="url" formControlName="url" maxlength="2048" [attr.aria-required]="true" aria-describedby="la-tool-url-error" />
+      @if (form.controls.url.hasError('server')) {
+        <mat-error id="la-tool-url-error">{{ form.controls.url.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+    <p class="la-dialog-helper">Must be an https URL. Internal/loopback hosts are rejected.</p>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Description (optional)</mat-label>
+      <textarea matInput formControlName="description" rows="2" maxlength="500"></textarea>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="requires_credential">This tool requires a credential to call</mat-checkbox>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Credential reference{{ form.controls.requires_credential.value ? '' : ' (optional)' }}</mat-label>
+      <input matInput formControlName="credential_ref" maxlength="256" autocomplete="off" aria-describedby="la-tool-credential-error" />
+      @if (form.controls.credential_ref.hasError('server')) {
+        <mat-error id="la-tool-credential-error">{{ form.controls.credential_ref.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+    <p class="la-dialog-helper">
+      A reference to a secret already stored in your secret manager — never paste the actual secret here. Test-invoke
+      never resolves this to a real credential (the control plane does not hold secret values).
+    </p>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Args schema (JSON, optional)</mat-label>
+      <textarea matInput formControlName="args_schema_json" rows="3"></textarea>
+      @if (argsSchemaJsonError()) {
+        <mat-error>{{ argsSchemaJsonError() }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Lane</mat-label>
+      <mat-select formControlName="lane">
+        @for (l of lanes; track l) {
+          <mat-option [value]="l">{{ l === 'foreground' ? 'Foreground (may block speech)' : 'Background (never blocks speech)' }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Timeout (ms)</mat-label>
+      <input matInput type="number" min="100" max="60000" formControlName="timeout_ms" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Per-session cap (optional)</mat-label>
+      <input matInput type="number" min="0" formControlName="per_session_cap" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Per-turn cap (optional)</mat-label>
+      <input matInput type="number" min="0" formControlName="per_turn_cap" />
+    </mat-form-field>
+
+    <mat-checkbox formControlName="consequential">
+      Consequential (writes, payments, bookings, cancellations)
+    </mat-checkbox>
+
+    @if (form.controls.consequential.value) {
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Autonomous-use acknowledgement (optional)</mat-label>
+        <textarea matInput formControlName="autonomous_use_ack_text" rows="2" maxlength="1000"></textarea>
+      </mat-form-field>
+      <p class="la-dialog-helper">
+        A written opt-out of human approval for this consequential tool while no HITL gate is attached to it (V-6). Leave
+        blank if you plan to attach a gate in the HITL tab instead.
+      </p>
+    }
+
+    <mat-checkbox formControlName="enabled">Enabled</mat-checkbox>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" type="button" [disabled]="submitDisabled()" (click)="onSubmit()">
+    @if (submitting()) {
+      <mat-spinner diameter="20" />
+    } @else {
+      {{ isEdit ? 'Save' : 'Create' }}
+    }
+  </button>
+</mat-dialog-actions>

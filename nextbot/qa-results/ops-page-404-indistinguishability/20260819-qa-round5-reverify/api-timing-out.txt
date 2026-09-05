@@ -1,0 +1,29 @@
+
+### A. denied caller (3491): ops api vs unmatched api vs other real api routes (N=400, shuffled order, first 20 dropped)
+   ops-api /api/internal/ops/tenants       {"n":380,"mean":2.421,"p50":2.223,"p90":3.235,"p99":5.59,"min":1.32,"max":6.577}
+   ops-api /api/internal/ops/session       {"n":380,"mean":2.547,"p50":2.323,"p90":3.46,"p99":4.735,"min":1.213,"max":7.321}
+   unmatched /api/zzz/tenants              {"n":380,"mean":2.522,"p50":2.312,"p90":3.262,"p99":6.071,"min":1.396,"max":9.545}
+   unmatched /api/internal/xps/tenants     {"n":380,"mean":2.539,"p50":2.355,"p90":3.378,"p99":4.923,"min":1.259,"max":5.503}
+   unmatched /api/qqq/qqq                  {"n":380,"mean":2.483,"p50":2.295,"p90":3.302,"p99":4.738,"min":1.288,"max":5.653}
+   real-route /api/v1/health               {"n":380,"mean":2.561,"p50":2.335,"p90":3.36,"p99":5.693,"min":1.148,"max":7.538}
+   unmatched /api/v1/zzzzzz                {"n":380,"mean":2.571,"p50":2.315,"p90":3.413,"p99":4.971,"min":1.428,"max":10.05}
+   -> ops-api /api/internal/ops/tenants        vs xps control: p50 delta -0.132 ms  z=-4.732 p=0
+   -> ops-api /api/internal/ops/session        vs xps control: p50 delta -0.032 ms  z=-0.465 p=0.51068
+   -> unmatched /api/zzz/tenants               vs xps control: p50 delta -0.043 ms  z=-1.267 p=0.07313
+   -> unmatched /api/qqq/qqq                   vs xps control: p50 delta -0.060 ms  z=-1.921 p=0.00658
+   -> real-route /api/v1/health                vs xps control: p50 delta -0.020 ms  z=-0.207 p=0.76933
+   -> unmatched /api/v1/zzzzzz                 vs xps control: p50 delta -0.040 ms  z=-0.021 p=0.97633
+
+### B. gate dependence: ops api under denied vs allowed callers (N=400, shuffled order, first 20 dropped)
+   3491 denied   ops-api                   {"n":380,"mean":2.604,"p50":2.531,"p90":2.981,"p99":5.33,"min":1.555,"max":7.138}
+   3491 denied   unmatched                 {"n":380,"mean":2.698,"p50":2.672,"p90":3.116,"p99":4.654,"min":1.205,"max":5.175}
+   3492 allowed  ops-api                   {"n":380,"mean":4.245,"p50":3.816,"p90":5.099,"p99":13.077,"min":2.694,"max":30.623}
+   3492 allowed  unmatched                 {"n":380,"mean":3.104,"p50":3.016,"p90":3.866,"p99":5.268,"min":1.686,"max":7.638}
+   3492 denied   ops-api                   {"n":380,"mean":2.951,"p50":2.771,"p90":3.78,"p99":5.463,"min":1.355,"max":9.084}
+   3492 denied   unmatched                 {"n":380,"mean":3.075,"p50":2.927,"p90":3.827,"p99":5.444,"min":1.315,"max":9.787}
+   3493 denied   ops-api                   {"n":380,"mean":3.193,"p50":3.008,"p90":4.086,"p99":5.075,"min":2.051,"max":6}
+   3493 denied   unmatched                 {"n":380,"mean":3.382,"p50":3.208,"p90":4.357,"p99":5.637,"min":1.963,"max":9.432}
+   -> 3491 denied  : ops-api - unmatched p50 delta -0.141 ms  z=-5.54 p=0
+   -> 3492 allowed : ops-api - unmatched p50 delta 0.800 ms  z=16.866 p=0
+   -> 3492 denied  : ops-api - unmatched p50 delta -0.156 ms  z=-4.442 p=0
+   -> 3493 denied  : ops-api - unmatched p50 delta -0.200 ms  z=-4.055 p=0

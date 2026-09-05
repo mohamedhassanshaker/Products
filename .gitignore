@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/.vs
+/.vs
+/LiveAvatar/avatars/coach_mason_resilience_guide_20251122_143604_311004.imx
+/LiveAvatar/bitHuman
+/nextbot/.data-test/knowledge-uploads

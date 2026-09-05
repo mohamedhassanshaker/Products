@@ -1,0 +1,7 @@
+/internal/ops            status=404 domHtmlLen=6467 title=NextBot Admin Console
+/internal/ops            status=404 domHtmlLen=7175 title=NextBot Admin Console
+/internal/xps            status=404 domHtmlLen=7175 title=NextBot Admin Console
+/internal/ops/tenants    status=404 domHtmlLen=7175 title=NextBot Admin Console
+/internal/xps/tenants    status=404 domHtmlLen=7175 title=NextBot Admin Console
+/nothing                 status=404 domHtmlLen=7175 title=NextBot Admin Console
+/internal/ops            status=404 domHtmlLen=7175 title=NextBot Admin Console

@@ -1,0 +1,16 @@
+
+--- n=50 samples/path, 40 trials, port 3491 (denied caller) ---
+  /internal/ops/tenants        slower-than-control in  12/40 ( 30%)  GATED page (the security boundary)
+  /internal/ops                slower-than-control in  17/40 ( 43%)  GATED root
+  /internal/ops/login          slower-than-control in  17/40 ( 43%)  GATED login
+  /internal/ops/tenants/new    slower-than-control in  20/40 ( 50%)  GATED deep
+  /internal/ops/nope-not-a-page slower-than-control in  23/40 ( 57%)  GATED-prefix nonexistent leaf
+  /internal/qqq/tenants        slower-than-control in  20/40 ( 50%)  control missing A (same shape)
+  /internal/rrr/tenants        slower-than-control in  19/40 ( 48%)  control missing B (same shape)
+  /admin/nothing               slower-than-control in  22/40 ( 55%)  control missing C (other shape)
+  /internal/opsx/tenants       slower-than-control in  16/40 ( 40%)  NEAR-MISS: ops-shaped but not ops
+  /internal/ops-x/tenants      slower-than-control in  19/40 ( 48%)  NEAR-MISS: ops-shaped but not ops
+  /nothing                     slower-than-control in  26/40 ( 65%)  control: nothing like ops at all (depth 1)
+  /a/b/c/d/e                   slower-than-control in  20/40 ( 50%)  control: nothing like ops at all (depth 5)
+  /api/internal/ops/tenants    slower-than-control in  40/40 (100%)  API gated (middleware now runs on /api)
+  /api/nothing-at-all          slower-than-control in  40/40 (100%)  API control missing

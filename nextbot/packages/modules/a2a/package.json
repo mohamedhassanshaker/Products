@@ -1,0 +1,18 @@
+{
+  "name": "@nextbot/a2a",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Reserved module scaffold for BL item(s) owning a2a (see docs/architecture/LLD.md §2.1). Implemented in its own dev phase.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir ."
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

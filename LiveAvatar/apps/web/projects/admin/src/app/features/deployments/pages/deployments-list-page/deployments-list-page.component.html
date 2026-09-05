@@ -1,0 +1,159 @@
+<la-page-header title="Deployments">
+  @if (authStore.isOperator()) {
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      [disabled]="createDisabled()"
+      [matTooltip]="createDisabled() ? 'This platform instance supports at most 500 tenants.' : ''"
+      [matTooltipDisabled]="!createDisabled()"
+      (click)="openCreateDialog()"
+    >
+      Create deployment
+    </button>
+  }
+</la-page-header>
+
+<div class="la-deployments-filters">
+  <mat-form-field appearance="outline" class="la-deployments-filters__search">
+    <mat-label>Search deployments</mat-label>
+    <input matInput [formControl]="searchControl" maxlength="80" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="la-deployments-filters__status">
+    <mat-label>Status</mat-label>
+    <mat-select [formControl]="statusControl">
+      <mat-option value="all">All</mat-option>
+      <mat-option value="active">Active</mat-option>
+      <mat-option value="paused">Paused</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading deployments" />
+}
+
+<div class="la-deployments-table" [attr.aria-busy]="loading()">
+  @if (loadError()) {
+    <la-empty-state
+      variant="error"
+      icon="error_outline"
+      title="Could not load deployments"
+      body="Could not load deployments. Try again."
+      actionLabel="Retry"
+      (action)="retry()"
+    />
+  } @else if (!loading() && total() === 0 && hasActiveFilters()) {
+    <la-empty-state
+      icon="search_off"
+      title="No matching deployments"
+      body="No deployments match your filters."
+      actionLabel="Clear filters"
+      (action)="clearFilters()"
+    />
+  } @else if (!loading() && total() === 0 && authStore.isOperator()) {
+    <la-empty-state
+      icon="inbox"
+      title="No deployments yet"
+      body="Create a deployment to configure providers and start conversations."
+      actionLabel="Create deployment"
+      (action)="openCreateDialog()"
+    />
+  } @else if (!loading() && total() === 0) {
+    <la-empty-state
+      icon="inbox"
+      title="No deployments assigned"
+      body="No deployments are assigned to you. Contact an operator."
+    />
+  } @else {
+    <table mat-table [dataSource]="items()" aria-label="Deployments">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let row" data-label="Name">
+          <a [routerLink]="['/tenants', row.id, 'builder']">{{ row.name }}</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="slug">
+        <th mat-header-cell *matHeaderCellDef>Slug</th>
+        <td mat-cell *matCellDef="let row" data-label="Slug">{{ row.slug }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="providers">
+        <th mat-header-cell *matHeaderCellDef>Providers</th>
+        <td mat-cell *matCellDef="let row" data-label="Providers">
+          @if (row.provider_stack_summary) {
+            {{ row.provider_stack_summary }}
+          } @else {
+            <span aria-label="Not configured">—</span>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let row" data-label="Status">
+          @if (row.status === 'active') {
+            <la-status-chip tone="success" icon="check_circle" label="Active" />
+          } @else {
+            <la-status-chip tone="caution" icon="pause_circle" label="Paused" />
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="updatedAt">
+        <th mat-header-cell *matHeaderCellDef>Last modified</th>
+        <td mat-cell *matCellDef="let row" data-label="Last modified" [title]="row.updated_at">
+          {{ relativeTime(row.updated_at) }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row" data-label="Actions">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="rowMenu"
+            [attr.aria-label]="'Actions for ' + row.name"
+            (click)="$event.stopPropagation()"
+          >
+            <mat-icon aria-hidden="true">more_vert</mat-icon>
+          </button>
+          <mat-menu #rowMenu="matMenu">
+            <button mat-menu-item type="button" (click)="goToBuilder(row)">Open builder</button>
+            <button mat-menu-item type="button" (click)="goToProviderCredentials(row)">
+              Manage provider credentials
+            </button>
+            <button mat-menu-item type="button" (click)="goToAlerts(row)">Alerts &amp; failover</button>
+            <button mat-menu-item type="button" (click)="goToResidency(row)">Data residency</button>
+            <a mat-menu-item [href]="conversationLink(row)" target="_blank" rel="noopener">Open conversation experience</a>
+            <button mat-menu-item type="button" (click)="openRenameDialog(row)">Rename</button>
+            @if (authStore.isOperator()) {
+              <button mat-menu-item type="button" (click)="pauseOrActivate(row)">
+                {{ row.status === 'active' ? 'Pause' : 'Activate' }}
+              </button>
+            }
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        tabindex="0"
+        (click)="goToBuilder(row)"
+        (keydown.enter)="goToBuilder(row)"
+      ></tr>
+    </table>
+
+    <mat-paginator
+      [length]="total()"
+      [pageIndex]="page() - 1"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onPageEvent($event)"
+    />
+  }
+</div>

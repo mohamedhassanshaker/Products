@@ -1,0 +1,46 @@
+# Pre-deploy Job (HLD §8.3 step 7: "prisma migrate deploy as a pre-deploy
+# Job, then rolling update of web, then agent. Order matters: migrations are
+# forward-compatible so web old+new can overlap during the roll.") Also runs
+# the ProviderDefinition catalog seed (idempotent upserts, HLD §6) since this
+# project's only existing seed entrypoint is the manual
+# `prisma:seed`/`tsx prisma/seed.ts` script, not something wired into Nest's
+# bootstrap — running it here keeps that contract without inventing an
+# OnModuleInit hook nexus-dev never built.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: liveavatar-migrate
+  namespace: liveavatar
+spec:
+  backoffLimit: 2
+  template:
+    metadata:
+      # D-7 fix: the pod template previously carried NO labels at all, so
+      # `k8s/networkpolicy.yaml`'s `default-deny-all` gave it DNS-only
+      # egress with nothing allowing Postgres — deploy #1 only "worked" by
+      # accident of apply ordering (networkpolicy.yaml applied after this
+      # Job in DEPLOYMENT.md §3), and every subsequent upgrade's migration
+      # would hang until its 300s `kubectl wait` timeout and fail. This
+      # label is matched by networkpolicy.yaml's `migrate-egress` policy.
+      labels: { app: migrate }
+    spec:
+      serviceAccountName: liveavatar-migrate
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: migrate
+          image: liveavatar/web:REPLACE_ME_TAG # must match the tag about to be rolled out to web-deployment.yaml
+          command: ['sh', '-c', 'npx prisma migrate deploy && npx tsx prisma/seed.ts']
+          envFrom:
+            - configMapRef: { name: liveavatar-web-config }
+            - secretRef: { name: liveavatar-web-secrets }
+          resources:
+            requests: { cpu: '100m', memory: '256Mi' }
+            limits: { cpu: '500m', memory: '512Mi' }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false # prisma writes a small query-engine cache under node_modules/.prisma at runtime
+            capabilities: { drop: ['ALL'] }

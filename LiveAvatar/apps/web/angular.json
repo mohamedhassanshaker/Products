@@ -1,0 +1,103 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "admin": {
+      "projectType": "application",
+      "root": "projects/admin",
+      "sourceRoot": "projects/admin/src",
+      "prefix": "la-admin",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/admin",
+            "index": "projects/admin/src/index.html",
+            "browser": "projects/admin/src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/admin/tsconfig.app.json",
+            "assets": [
+              { "glob": "favicon.ico", "input": "projects/admin/src", "output": "/" },
+              { "glob": "**/*", "input": "projects/admin/src/assets", "output": "/assets" }
+            ],
+            "styles": ["projects/admin/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                { "type": "initial", "maximumWarning": "1mb", "maximumError": "2mb" },
+                { "type": "anyComponentStyle", "maximumWarning": "4kb", "maximumError": "8kb" }
+              ],
+              "outputHashing": "all",
+              "optimization": { "scripts": true, "styles": true, "fonts": false }
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "servePath": "/admin/"
+          },
+          "configurations": {
+            "production": { "buildTarget": "admin:build:production" },
+            "development": { "buildTarget": "admin:build:development" }
+          },
+          "defaultConfiguration": "development"
+        }
+      }
+    },
+    "conversation": {
+      "projectType": "application",
+      "root": "projects/conversation",
+      "sourceRoot": "projects/conversation/src",
+      "prefix": "la-conv",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/conversation",
+            "index": "projects/conversation/src/index.html",
+            "browser": "projects/conversation/src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "projects/conversation/tsconfig.app.json",
+            "assets": [],
+            "styles": ["projects/conversation/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [{ "type": "initial", "maximumWarning": "1mb", "maximumError": "2mb" }],
+              "outputHashing": "all",
+              "optimization": { "scripts": true, "styles": true, "fonts": false }
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "servePath": "/c/"
+          },
+          "configurations": {
+            "production": { "buildTarget": "conversation:build:production" },
+            "development": { "buildTarget": "conversation:build:development" }
+          },
+          "defaultConfiguration": "development"
+        }
+      }
+    }
+  }
+}

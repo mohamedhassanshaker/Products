@@ -1,0 +1,68 @@
+[importlinter]
+root_package = avatar_agent
+include_external_packages = True
+
+[importlinter:contract:layers]
+name = Agent layering
+type = layers
+layers =
+    avatar_agent.entrypoint
+    avatar_agent.orchestration
+    avatar_agent.registry
+    avatar_agent.adapters
+    avatar_agent.ports
+
+[importlinter:contract:vendor-sdk-isolation]
+name = Vendor SDKs only inside adapters
+type = forbidden
+# `allow_indirect_imports = True`: this contract's real guarantee is that
+# `orchestration`/`telemetry`/`residency`/`summary`/`contracts`/`ports` never
+# **directly** `import openai`/`anthropic`/etc. `entrypoint` legitimately
+# reaches a vendor SDK *indirectly* through `registry` (its whole job is
+# "parse metadata -> fetch config -> build pipeline [via registry.resolve_*]
+# -> run", LLD §3.3) — checking transitive reachability would make that
+# design impossible to satisfy, so indirect imports are allowed here and the
+# direct-import rule is what's actually enforced (and is also grep-checked
+# per LLD §7.3, as a second, independent signal).
+allow_indirect_imports = True
+source_modules =
+    avatar_agent.orchestration
+    avatar_agent.entrypoint
+    avatar_agent.telemetry
+    avatar_agent.residency
+    avatar_agent.summary
+    avatar_agent.contracts
+    avatar_agent.ports
+forbidden_modules =
+    openai
+    anthropic
+    google
+    deepgram
+    faster_whisper
+    elevenlabs
+    bithuman
+    websockets
+
+[importlinter:contract:orchestration-uses-ports]
+name = Only entrypoint/registry compose adapters directly
+type = forbidden
+# QA fix (phase4-agent-python D-3): this contract used to name only
+# `avatar_agent.orchestration` as a `source_module`, which left a
+# reproducible loophole — live-probed and confirmed — where
+# `telemetry`/`residency`/`summary`/`contracts`/`ports` (every other
+# vendor-sdk-isolation `source_module` besides `entrypoint`/`registry`,
+# which legitimately compose adapters, LLD §3.3/§7.3) could import an
+# `adapters/**` submodule directly (reaching a vendor SDK indirectly)
+# without breaking any of the other two contracts. `entrypoint` isn't
+# listed here even though it's also in `vendor-sdk-isolation`'s list — it
+# legitimately imports `adapters.transport.livekit` directly (no `registry`
+# factory exists for transport, only for stt/llm/tts/avatar), matching the
+# `layers` contract's ordering (`entrypoint` sits above `adapters`).
+source_modules =
+    avatar_agent.orchestration
+    avatar_agent.telemetry
+    avatar_agent.residency
+    avatar_agent.summary
+    avatar_agent.contracts
+    avatar_agent.ports
+forbidden_modules = avatar_agent.adapters

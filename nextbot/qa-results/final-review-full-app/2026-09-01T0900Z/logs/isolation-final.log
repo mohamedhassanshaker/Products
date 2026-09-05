@@ -1,0 +1,59 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mD:/work/products/nextbot[39m
+
+ [32m✓[39m [35m|isolation|[39m packages/db/src/platform-shared-write-denied.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 325[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/db/src/rls-coverage.isolation.test.ts [2m([22m[2m108 tests[22m[2m)[22m[33m 695[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/authz/src/application/authz-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 459[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/channels/src/application/channel-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 505[2mms[22m[39m
+   [33m[2m✓[22m[39m channel tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22ma tenant scoped to A reads zero rows of B's channel (incl. by direct id lookup) [33m352[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/connectors/src/application/connector-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 499[2mms[22m[39m
+   [33m[2m✓[22m[39m connector/credential tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22ma tenant scoped to A reads zero rows of B's connector (incl. by direct id lookup) [33m312[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/iam/src/application/iam-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 617[2mms[22m[39m
+   [33m[2m✓[22m[39m iam tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22ma tenant scoped to A reads zero rows of B's app_user, even querying by B's own id [33m346[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/channels/src/application/whatsapp-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 622[2mms[22m[39m
+   [33m[2m✓[22m[39m WhatsApp/Meta-family tenant isolation (BL-15)[2m > [22ma tenant scoped to A reads zero rows of B's meta_business_account [33m382[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/conversations/src/application/conversation-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 503[2mms[22m[39m
+   [33m[2m✓[22m[39m conversation/message tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22ma tenant scoped to A reads zero rows of B's conversation [33m310[2mms[22m[39m
+[90mstderr[2m | packages/graph-store/src/tenant-session.isolation.test.ts[2m > [22m[2mADR-0018 §6 — graph-store cross-tenant isolation (real Neo4j)[2m > [22m[2mtest 2 (Forbidden mapping) is never mistaken for GraphStoreUnavailableError — the distinct failure classes stay distinct end to end
+[22m[39m[graph-store] SECURITY ALERT — Neo4j rejected an operation as a security violation {
+  tenantId: [32m'0f5886bc-3c09-48de-b6dc-33a9e8a9c00d'[39m,
+  database: [32m't-c53da50ea1f549758fc635546bd44afd'[39m,
+  code: [32m'Neo.ClientError.Security.Forbidden'[39m
+}
+
+ [32m✓[39m [35m|isolation|[39m packages/graph-store/src/tenant-session.isolation.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 2581[2mms[22m[39m
+   [33m[2m✓[22m[39m ADR-0018 §6 — graph-store cross-tenant isolation (real Neo4j)[2m > [22mtest 4b — a brand-new tenant's provisioning reports created:true exactly once [33m807[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/tool-registry/src/application/tool-registry-isolation.isolation.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 388[2mms[22m[39m
+   [33m[2m✓[22m[39m tool-registry tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22ma tenant scoped to A reads zero rows of B's tool catalog [33m387[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/escalations/src/application/escalation-isolation.isolation.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1030[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation/agent_queue tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22ma tenant scoped to A reads zero rows of B's escalation [33m370[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/tenancy/src/application/tenant-isolation.isolation.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 5571[2mms[22m[39m
+   [33m[2m✓[22m[39m tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22ma tenant scoped to A reads zero rows of B's tenant_data_policy [33m1460[2mms[22m[39m
+   [33m[2m✓[22m[39m tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22ma tenant scoped to A reads zero rows of B's tenant_runtime_quota [33m1301[2mms[22m[39m
+   [33m[2m✓[22m[39m tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22ma tenant scoped to A reads zero rows of B's tenant_database_route [33m1275[2mms[22m[39m
+   [33m[2m✓[22m[39m tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22man INSERT under A's context with B's tenant_id is rejected by WITH CHECK [33m1266[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/knowledge/src/knowledge-isolation.isolation.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 426[2mms[22m[39m
+   [33m[2m✓[22m[39m knowledge_collection tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22ma tenant scoped to A reads zero rows of B's knowledge_collection (incl. by direct id lookup) [33m425[2mms[22m[39m
+[90mstderr[2m | packages/modules/teams/src/application/delegation-event-isolation.isolation.test.ts[2m > [22m[2mModule E tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22m[2mtenant A reads ZERO rows of B's team / team_version / team_member / delegation_event
+[22m[39m[agent-platform] createAgentDefinitionVersion: no Git connection for tenant 01a05b3a-6196-7841-b587-7c8603705823 — version 01a05b3a-61ae-72db-ae28-dddcf6fe628a@1.0.0 created without a Git commit.
+
+[90mstderr[2m | packages/modules/teams/src/application/delegation-event-isolation.isolation.test.ts[2m > [22m[2mModule E tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22m[2mtenant A reads ZERO rows of B's team / team_version / team_member / delegation_event
+[22m[39m[agent-platform] createAgentDefinitionVersion: no Git connection for tenant 01a05b3a-6196-7841-b587-7c8603705823 — version 01a05b3a-6237-70a7-8f26-1af387f67364@1.0.0 created without a Git commit.
+
+[90mstderr[2m | packages/modules/teams/src/application/delegation-event-isolation.isolation.test.ts[2m > [22m[2mModule E tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22m[2mtenant A cannot WRITE a team_version into tenant B (the WITH CHECK half of the policy)
+[22m[39m[agent-platform] createAgentDefinitionVersion: no Git connection for tenant 01a05b3a-63d0-7226-bfc1-46144b170379 — version 01a05b3a-63d7-7a10-af22-410c1195f342@1.0.0 created without a Git commit.
+
+[90mstderr[2m | packages/modules/teams/src/application/delegation-event-isolation.isolation.test.ts[2m > [22m[2mModule E tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22m[2mtenant A cannot WRITE a team_version into tenant B (the WITH CHECK half of the policy)
+[22m[39m[agent-platform] createAgentDefinitionVersion: no Git connection for tenant 01a05b3a-63d0-7226-bfc1-46144b170379 — version 01a05b3a-6425-7440-ab42-a229a563d274@1.0.0 created without a Git commit.
+
+ [32m✓[39m [35m|isolation|[39m packages/modules/teams/src/application/delegation-event-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 932[2mms[22m[39m
+   [33m[2m✓[22m[39m Module E tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22mtenant A reads ZERO rows of B's team / team_version / team_member / delegation_event [33m604[2mms[22m[39m
+   [33m[2m✓[22m[39m Module E tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22mtenant A cannot WRITE a team_version into tenant B (the WITH CHECK half of the policy) [33m323[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/agent-platform/src/application/agent-platform-isolation.isolation.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 1401[2mms[22m[39m
+   [33m[2m✓[22m[39m agent-platform tenant isolation (ADR-0001 §6 / LLD §3.2)[2m > [22ma tenant scoped to A reads zero rows of B's agent_definition/agent_definition_version [33m364[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m15 passed[39m[22m[90m (15)[39m
+[2m      Tests [22m [1m[32m151 passed[39m[22m[90m (151)[39m
+[2m   Start at [22m 08:28:54
+[2m   Duration [22m 14.38s[2m (transform 4.61s, setup 308ms, collect 60.17s, tests 16.55s, environment 2ms, prepare 3.55s)[22m
+

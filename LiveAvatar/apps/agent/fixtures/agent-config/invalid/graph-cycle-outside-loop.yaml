@@ -1,0 +1,84 @@
+version: 1
+deployment:
+  tenant_id: "99999999-9999-9999-9999-999999999999"
+  name: "Graph Cycle Outside Loop"
+transport:
+  provider: livekit
+  room_namespace: graph-cycle-outside-loop
+stt:
+  provider: deepgram
+  language: en-US
+reasoning:
+  entry_node_id: router-1
+  background_entry_node_ids: []
+  turn_budget_ms: 3000
+  graph:
+    # R-G5/V-4: this Router branch points back at an earlier node with no
+    # Loop node involved at all — a real cycle (router-1 -> llm-1 ->
+    # router-1) that must be rejected regardless of the Loop node type not
+    # being used anywhere in this graph.
+    - id: router-1
+      type: router
+      name: Intent router
+      lane: foreground
+      on_error: { action: degrade }
+      on_deadline: { action: degrade }
+      branches:
+        - condition: 'utterance == "retry"'
+          next_node_id: llm-1
+      default_next_node_id: llm-1
+    - id: llm-1
+      type: llm
+      name: Compose answer
+      lane: foreground
+      on_error: { action: degrade }
+      on_deadline: { action: degrade }
+      provider: openai
+      model: gpt-4o-mini
+      retry:
+        max_attempts: 2
+        backoff_ms: [200, 400]
+      next_node_id: router-1
+tts:
+  provider: fish-speech
+  voice_id: v1
+avatar:
+  provider: bithuman
+  avatar_id: a1
+agent:
+  runtime: langgraph
+  system_prompt: "hi"
+  tools: []
+  memory:
+    enabled: true
+    window_turns: 16
+knowledge:
+  pipeline:
+    rewrite:
+      enabled: true
+      context_turns: 3
+      budget_ms: 150
+    hybrid_search:
+      vector_weight: 0.6
+      keyword_weight: 0.4
+      candidates: 20
+      budget_ms: 100
+    metadata_filter:
+      enabled: false
+      budget_ms: 20
+    rerank:
+      enabled: false
+    threshold:
+      min_score: 0.5
+      budget_ms: 10
+    inject:
+      token_cap: 1200
+      citation_format: numbered
+      budget_ms: 30
+skills: []
+privacy:
+  send_to_remote_llm: prompt_text_only
+  retain_transcripts_days: 90
+  recordings_enabled: false
+alerts:
+  degraded_mode_message: "hold on"

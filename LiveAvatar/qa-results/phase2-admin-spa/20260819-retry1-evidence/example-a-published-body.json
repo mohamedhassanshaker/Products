@@ -1,0 +1,30 @@
+{
+  "config": {
+    "version": 1,
+    "transport": {
+      "provider": "livekit"
+    },
+    "agent": {
+      "tools": []
+    },
+    "stt": {
+      "provider": "deepgram",
+      "credential_ref": "cred-deepgram-1"
+    },
+    "llm": {
+      "primary": {
+        "provider": "openai",
+        "credential_ref": "cred-openai-1"
+      }
+    },
+    "tts": {
+      "provider": "fish-speech",
+      "credential_ref": "cred-fish-1"
+    },
+    "avatar": {
+      "provider": "bithuman",
+      "credential_ref": "cred-bithuman-1"
+    }
+  },
+  "save_as": "published"
+}

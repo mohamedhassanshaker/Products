@@ -1,0 +1,121 @@
+version: 1
+deployment:
+  tenant_id: "66666666-6666-6666-6666-666666666666"
+  name: "Parallel Join All"
+transport:
+  provider: livekit
+  room_namespace: parallel-join-all
+stt:
+  provider: deepgram
+  language: en-US
+reasoning:
+  entry_node_id: parallel-1
+  background_entry_node_ids: []
+  turn_budget_ms: 2500
+  graph:
+    - id: parallel-1
+      type: parallel
+      name: Gather order context
+      lane: foreground
+      on_error: { action: degrade }
+      on_deadline: { action: degrade }
+      branches:
+        - id: branch-order
+          entry_node_id: tool-order
+          budget_ms: 900
+        - id: branch-shipping
+          entry_node_id: tool-shipping
+          budget_ms: 900
+      join_policy: all
+      on_branch_error: continue_partial
+      next_node_id: llm-1
+    - id: tool-order
+      type: tool
+      name: Lookup order
+      lane: foreground
+      on_error: { action: degrade }
+      on_deadline: { action: degrade }
+      api_ref: order-lookup
+      argument_mapping:
+        order_id: "$utterance"
+      next_node_id: null
+    - id: tool-shipping
+      type: tool
+      name: Lookup shipping ETA
+      lane: foreground
+      on_error: { action: degrade }
+      on_deadline: { action: degrade }
+      api_ref: shipping-eta
+      argument_mapping:
+        order_id: "$utterance"
+      next_node_id: null
+    - id: llm-1
+      type: llm
+      name: Compose answer
+      lane: foreground
+      on_error: { action: degrade }
+      on_deadline: { action: degrade }
+      provider: openai
+      model: gpt-4o-mini
+      retry:
+        max_attempts: 2
+        backoff_ms: [200, 400]
+      next_node_id: speak-1
+    - id: speak-1
+      type: speak
+      name: Speak answer
+      lane: foreground
+      on_error: { action: end_turn }
+      on_deadline: { action: end_turn }
+      mode: llm_output
+      interruptible: true
+      next_node_id: end-1
+    - id: end-1
+      type: end
+      name: End turn
+      lane: foreground
+      on_error: { action: end_turn }
+      on_deadline: { action: end_turn }
+tts:
+  provider: fish-speech
+  voice_id: v1
+avatar:
+  provider: bithuman
+  avatar_id: a1
+agent:
+  runtime: langgraph
+  system_prompt: "hi"
+  tools: []
+  memory:
+    enabled: true
+    window_turns: 16
+knowledge:
+  pipeline:
+    rewrite:
+      enabled: true
+      context_turns: 3
+      budget_ms: 150
+    hybrid_search:
+      vector_weight: 0.6
+      keyword_weight: 0.4
+      candidates: 20
+      budget_ms: 100
+    metadata_filter:
+      enabled: false
+      budget_ms: 20
+    rerank:
+      enabled: false
+    threshold:
+      min_score: 0.5
+      budget_ms: 10
+    inject:
+      token_cap: 1200
+      citation_format: numbered
+      budget_ms: 30
+skills: []
+privacy:
+  send_to_remote_llm: prompt_text_only
+  retain_transcripts_days: 90
+  recordings_enabled: false
+alerts:
+  degraded_mode_message: "hold on"

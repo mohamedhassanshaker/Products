@@ -1,0 +1,225 @@
+{
+  "results": [
+    {
+      "step": "Login",
+      "status": "PASS",
+      "note": "http://127.0.0.1:25710/admin/deployments"
+    },
+    {
+      "step": "Shell redirects to /overview by default",
+      "status": "PASS",
+      "note": "http://127.0.0.1:25710/admin/tenants/93b10cb9-ad7d-4d55-96c6-ed67ef7c3cc2/builder/overview"
+    },
+    {
+      "step": "9 tabs shown in documented order",
+      "status": "PASS",
+      "note": "[\"Overview\",\"Pipeline\",\"Reasoning\",\"Skills\",\"Tools\",\"Knowledge\",\"Dynamics\",\"HITL\",\"Privacy\"]"
+    },
+    {
+      "step": "Overview: no Diff button present",
+      "status": "PASS",
+      "note": "count=0"
+    },
+    {
+      "step": "Overview: no Last Eval card present",
+      "status": "PASS",
+      "note": "count=0"
+    },
+    {
+      "step": "Publish button disabled while config incomplete",
+      "status": "PASS",
+      "note": "disabled=true"
+    },
+    {
+      "step": "Pipeline shows validation errors for unset STT/TTS/Avatar",
+      "status": "PASS",
+      "note": "errorCount=3"
+    },
+    {
+      "step": "Pipeline: STT/TTS/Avatar configured, errors clear",
+      "status": "PASS",
+      "note": "remainingErrors=0"
+    },
+    {
+      "step": "Pipeline: Save Draft succeeded",
+      "status": "PASS",
+      "note": "clicked Save Draft"
+    },
+    {
+      "step": "Reasoning: default graph created from empty state",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "step": "Reasoning: byte-counter reflects system prompt",
+      "status": "PASS",
+      "note": "160 / 32768 bytes"
+    },
+    {
+      "step": "Reasoning: core instructions section (system_prompt/runtime/memory) editable",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "step": "Reasoning: Speak + End nodes added (3-node graph)",
+      "status": "PASS",
+      "note": "nodeCount=3"
+    },
+    {
+      "step": "Reasoning: wired LLM -> Speak -> End",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "step": "Reasoning: Save Draft",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "step": "Skills: create + fill + publish",
+      "status": "PASS",
+      "note": "canPublish=true"
+    },
+    {
+      "step": "Skills: library list reflects new skill",
+      "status": "PASS",
+      "note": "count=1"
+    },
+    {
+      "step": "Tools: ack field hidden before marking consequential",
+      "status": "PASS",
+      "note": "count=0"
+    },
+    {
+      "step": "Tools: autonomous_use_ack_text field appears once consequential is checked",
+      "status": "PASS",
+      "note": "count=1"
+    },
+    {
+      "step": "Tools: created tool appears in list",
+      "status": "PASS",
+      "note": "count=2"
+    },
+    {
+      "step": "Knowledge: Sources/Pipeline/Playground sub-tabs render",
+      "status": "PASS",
+      "note": "[\"Sources\",\"Pipeline\",\"Playground\"]"
+    },
+    {
+      "step": "Knowledge: uploaded source appears in Sources list",
+      "status": "PASS",
+      "note": "count=1"
+    },
+    {
+      "step": "Knowledge: Pipeline + Playground sub-tabs render without error",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "step": "Dynamics: values persisted after reload",
+      "status": "PASS",
+      "note": "silence=900 reprompts=3 tokens=250"
+    },
+    {
+      "step": "HITL: reviewer group created",
+      "status": "PASS",
+      "note": "count=1"
+    },
+    {
+      "step": "HITL: whisper gate type visibly disabled with reason",
+      "status": "PASS",
+      "note": "disabled=true comingSoonBadge=1"
+    },
+    {
+      "step": "HITL: post_hoc gate type visibly disabled with reason",
+      "status": "PASS",
+      "note": "disabled=true comingSoonBadge=1"
+    },
+    {
+      "step": "HITL: gate created with all 6 R-H1 fields",
+      "status": "PASS",
+      "note": "count=1"
+    },
+    {
+      "step": "Privacy tab shows Residency content",
+      "status": "PASS",
+      "note": "heading=\"QA V2 Builder Tenant · Agent Builder\nManage provider credentials\nBack to deployments\""
+    },
+    {
+      "step": "Privacy: residency setting save exercised",
+      "status": "PASS",
+      "note": "set retention to 45 days"
+    },
+    {
+      "step": "Legacy route /tools redirects to .../builder/tools",
+      "status": "PASS",
+      "note": "http://127.0.0.1:25710/admin/tenants/93b10cb9-ad7d-4d55-96c6-ed67ef7c3cc2/builder/tools"
+    },
+    {
+      "step": "Legacy route /reasoning redirects to .../builder/reasoning",
+      "status": "PASS",
+      "note": "http://127.0.0.1:25710/admin/tenants/93b10cb9-ad7d-4d55-96c6-ed67ef7c3cc2/builder/reasoning"
+    },
+    {
+      "step": "Legacy route /knowledge redirects to .../builder/knowledge",
+      "status": "PASS",
+      "note": "http://127.0.0.1:25710/admin/tenants/93b10cb9-ad7d-4d55-96c6-ed67ef7c3cc2/builder/knowledge"
+    },
+    {
+      "step": "Legacy route /skills redirects to .../builder/skills",
+      "status": "PASS",
+      "note": "http://127.0.0.1:25710/admin/tenants/93b10cb9-ad7d-4d55-96c6-ed67ef7c3cc2/builder/skills"
+    },
+    {
+      "step": "Legacy route /hitl redirects to .../builder/hitl",
+      "status": "PASS",
+      "note": "http://127.0.0.1:25710/admin/tenants/93b10cb9-ad7d-4d55-96c6-ed67ef7c3cc2/builder/hitl"
+    },
+    {
+      "step": "Legacy route /residency redirects to .../builder/privacy",
+      "status": "PASS",
+      "note": "http://127.0.0.1:25710/admin/tenants/93b10cb9-ad7d-4d55-96c6-ed67ef7c3cc2/builder/privacy"
+    },
+    {
+      "step": "Overview: Media pipeline shows configured providers",
+      "status": "PASS",
+      "note": "MEDIA PIPELINE\n\ntransport\ncheck_circle livekit\n\nstt\ncheck_circle deepgram\n\ntts\ncheck_circle elevenlabs\n\navatar\ncheck_circle bithuman\n\nedit ▸\nREASONING\n\n3 nodes in the graph\n\nEntry point\nAnswer\n\nedit ▸\nCAPABILITIES\n\nSkills\n1 attached · ~23 tok base cost edit ▸\n\nTools\n0 always-on edit ▸\n\nKnowledge\n1 source · 1 chunks edit ▸\n\nHITL\n1 gate edit ▸\n\nBEHAVIOUR\n\nBarge-in\nenabled, high\n\nEndpointing\n900 ms\n\n"
+    },
+    {
+      "step": "Overview: Capabilities shows skills/tools/knowledge/HITL counts",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "step": "Overview edit-> (Media pipeline) navigates to Pipeline tab",
+      "status": "PASS",
+      "note": "http://127.0.0.1:25710/admin/tenants/93b10cb9-ad7d-4d55-96c6-ed67ef7c3cc2/builder/pipeline"
+    },
+    {
+      "step": "Overview edit-> (Reasoning) navigates to Reasoning tab",
+      "status": "PASS",
+      "note": "http://127.0.0.1:25710/admin/tenants/93b10cb9-ad7d-4d55-96c6-ed67ef7c3cc2/builder/reasoning"
+    },
+    {
+      "step": "Overview: right rail shows turn budget/cost/validation",
+      "status": "PASS",
+      "note": "TURN BUDGET\ncritical path\n900ms / 3000ms — 30% of budget\nBASE PROMPT (ESTIMATE)\n\n63 tok — core 40 · tools 0 · skills 23\n\nVALIDATION\n\ncheck_circle 0 errors\n\n⚡ Test call\nLIVE YAML\nversion: 1\ntransport:\n"
+    },
+    {
+      "step": "Save Draft -> reload keeps configuration",
+      "status": "PASS",
+      "note": "MEDIA PIPELINE\n\ntransport\ncheck_circle livekit\n\nstt\ncheck_circle deepgram\n\ntts\ncheck_circle elevenlabs\n\navatar\ncheck_circle bithuman\n\nedit ▸\nREASONING\n\n3 nodes in the graph\n\nEntry point\nAnswer\n\nedit ▸"
+    },
+    {
+      "step": "Publish button state before final publish attempt",
+      "status": "INFO",
+      "note": "disabled=false"
+    },
+    {
+      "step": "Publish outcome",
+      "status": "PASS (published)",
+      "note": "[]"
+    }
+  ],
+  "consoleErrors": []
+}

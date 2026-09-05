@@ -1,0 +1,70 @@
+{
+  "goldenPathNavigatedToCall": true,
+  "goldenPathErrorsAtHandoff": [],
+  "cameraButtonVisibleWhenOptedIn": true,
+  "micMeterPresent": true,
+  "spinnerVisibleBox": {
+    "x": 614.0516357421875,
+    "y": 281.0516357421875,
+    "width": 51.896728515625,
+    "height": 51.896728515625
+  },
+  "micLevelReactiveTest": {
+    "before": "0%",
+    "after": "80%"
+  },
+  "goldenPathReachedEnded": true,
+  "goldenPathErrorsFull": [
+    "console: ERROR ConnectionError: Client initiated disconnect\n    at _ConnectionError.cancelled (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/livekit-client.js?v=db5004a8:10790:12)\n    at http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/livekit-client.js?v=db5004a8:28555:169\n    at Generator.next (<anonymous>)\n    at fulfilled (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/livekit-client.js?v=db5004a8:7655:24)\n    at _ZoneDelegate.invoke (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/zone__js.js?v=db5004a8:334:158)\n    at Object.onInvoke (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-CWXP774H.js?v=db5004a8:7917:25)\n    at _ZoneDelegate.invoke (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/zone__js.js?v=db5004a8:334:46)\n    at ZoneImpl.run (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/zone__js.js?v=db5004a8:103:35)\n    at http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/zone__js.js?v=db5004a8:2016:30\n    at _ZoneDelegate.invokeTask (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/zone__js.js?v=db5004a8:360:171)"
+  ],
+  "directLoadGuardRedirectedToPrecall": true,
+  "directLoadGuardUrl": "http://localhost:4300/c/demo-tenant",
+  "directLoadGuardErrors": [],
+  "reconnectingBannerVisible": true,
+  "reconnectFailedRedirected": true,
+  "reconnectFailedUrl": "http://localhost:4300/c/demo-tenant",
+  "reconnectFailedErrors": [],
+  "cameraDefaultUnchecked": true,
+  "cameraButtonHiddenWhenOptedOut": true,
+  "cameraOptOutErrors": [],
+  "cameraCheckboxHitTarget": {
+    "width": 48,
+    "height": 48
+  },
+  "reducedMotionSpinnerStyle": {
+    "animationName": "none",
+    "animationDuration": "0s",
+    "animationPlayState": "running",
+    "animationIterationCount": "1"
+  },
+  "reducedMotionMicMeterTransition": {
+    "transition": "none"
+  },
+  "cameraIconChanges": {
+    "iconBefore": "📷",
+    "iconAfter": "🚫",
+    "labelBefore": "📷\nCamera on",
+    "labelAfter": "🚫\nCamera off",
+    "iconChanged": true
+  },
+  "errorState_mic-denied": [
+    "Microphone access is required to start. Allow the microphone in your browser and retry."
+  ],
+  "errorState_mic-denied_pageErrors": [],
+  "errorState_transport-unavailable": [
+    "Cannot reach the media server. Check your network or try again."
+  ],
+  "errorState_transport-unavailable_pageErrors": [],
+  "errorState_config-incomplete": [
+    "This assistant is not available right now."
+  ],
+  "errorState_config-incomplete_pageErrors": [],
+  "errorState_tenant-paused": [
+    "This assistant is not available right now."
+  ],
+  "errorState_tenant-paused_pageErrors": [],
+  "errorState_not-found": [
+    "This assistant is not available right now."
+  ],
+  "errorState_not-found_pageErrors": []
+}

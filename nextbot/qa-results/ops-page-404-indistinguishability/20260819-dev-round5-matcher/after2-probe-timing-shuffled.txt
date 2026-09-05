@@ -1,0 +1,12 @@
+denied-gated  (3491 unconfigured)           {"n":380,"mean":2.505,"p50":2.436,"p90":3.056,"p99":4.094}
+missing-path  (3491 unconfigured)           {"n":380,"mean":2.473,"p50":2.408,"p90":3.047,"p99":4.239}
+missing-path2 (3491 unconfigured)           {"n":380,"mean":2.519,"p50":2.493,"p90":3.046,"p99":5.038}
+denied-gated  (3492 bad IP, checks run)     {"n":380,"mean":2.652,"p50":2.541,"p90":3.205,"p99":5.13}
+missing-path  (3492 bad IP)                 {"n":380,"mean":2.655,"p50":2.572,"p90":3.279,"p99":4.846}
+denied-gated  (3493 spoof XFF, checks run)  {"n":380,"mean":2.61,"p50":2.581,"p90":3.157,"p99":4.275}
+missing-path  (3493 spoof XFF)              {"n":380,"mean":2.624,"p50":2.604,"p90":3.13,"p99":4.34}
+ALLOWED rewrite->console (3492)             {"n":380,"mean":7.543,"p50":7.303,"p90":9.067,"p99":12.438}
+
+unconfigured:      gated-vs-missing p50 delta = 0.028 ms
+configured/denied: gated-vs-missing p50 delta = -0.031 ms
+noproxy/denied:    gated-vs-missing p50 delta = -0.023 ms

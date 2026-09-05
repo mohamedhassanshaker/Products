@@ -1,0 +1,38 @@
+### 1. login page
+  url: http://127.0.0.1:3492/internal/ops/login | title: NextBot Admin Console | token field: 1
+### 2. wrong token
+  url: http://127.0.0.1:3492/internal/ops/login | body: Platform Manager sign-in Operator token Invalid operator token. Sign in
+### 3. correct token -> tenants
+  url: http://127.0.0.1:3492/internal/ops/tenants
+  shell 'Platform Manager' visible: true
+  body text: Platform Manager Tenants Sign out Tenants Provision new tenant Filter by name or slug
+  nav Tenants href: /internal/ops/tenants
+### 4. URL / history / referer leakage of the secret segment
+  url contains secret: false
+  history.length: 3 | location.href: http://127.0.0.1:3492/internal/ops/tenants | document.referrer: ""
+  requests whose Referer header carried the secret: 0
+  requests whose URL carried the secret: 3 script /_next/static/chunks/app/internal/ops/nb-c-4f21c8a7e3d9b605/login/page-9fd18ace14cebee3.js | script /_next/static/chunks/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/tenants/page-f93693b12de2c0c1.js | script /_next/static/chunks/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/layout-39538a60f33dae47.js
+### 5. SPA navigation (no full reload)
+  !! provision link not found; body: Platform Manager Tenants Sign out Tenants Provision new tenant Filter by name or slug
+### 6. operator mistypes a console path
+  url: http://127.0.0.1:3492/internal/ops/definitely-not-a-console-page | text: 404 This page could not be found.
+### 7. operator requests the secret path directly
+  status: 404 | url: http://127.0.0.1:3492/internal/ops/nb-c-4f21c8a7e3d9b605/tenants | text: 404 This page could not be found.
+### 8. sign out
+  sign-out button present: 1
+  url after sign out: http://127.0.0.1:3492/internal/ops/login | token field: 1
+  revisiting /tenants after sign out -> status 200 url http://127.0.0.1:3492/internal/ops/login
+
+  browser console errors during operator flow (2):
+   - Failed to load resource: the server responded with a status of 404 (Not Found)
+   - Failed to load resource: the server responded with a status of 404 (Not Found)
+
+### 9. denied caller in a real browser: gated vs genuinely missing
+  {"p":"/internal/ops","status":404,"title":"NextBot Admin Console","text":"404 This page could not be found.","htmlLen":6545,"hasSecret":false}
+  {"p":"/internal/ops/login","status":404,"title":"NextBot Admin Console","text":"404 This page could not be found.","htmlLen":7175,"hasSecret":false}
+  {"p":"/internal/ops/tenants","status":404,"title":"NextBot Admin Console","text":"404 This page could not be found.","htmlLen":7175,"hasSecret":false}
+  {"p":"/internal/ops/nb-c-4f21c8a7e3d9b605/tenants","status":404,"title":"NextBot Admin Console","text":"404 This page could not be found.","htmlLen":7175,"hasSecret":false}
+  {"p":"/internal/xps/tenants","status":404,"title":"NextBot Admin Console","text":"404 This page could not be found.","htmlLen":7175,"hasSecret":false}
+  {"p":"/definitely-nothing-here","status":404,"title":"NextBot Admin Console","text":"404 This page could not be found.","htmlLen":7175,"hasSecret":false}
+  distinct rendered views: 2 (1 == indistinguishable in-browser)
+  any page HTML leaking the secret to a denied caller: false

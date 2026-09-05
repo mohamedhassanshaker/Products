@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NextBot — Interactive Screen Wireframes</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <div class="sb-brand">
+        <div class="logo">N</div>
+        <div>
+          <div class="name">NextBot Platform</div>
+          <div class="sub">Interactive Screen Inventory v3.1</div>
+        </div>
+      </div>
+      <input id="searchBox" type="text" placeholder="Search screens… (id, title, PRD ref)">
+      <div class="sb-filters">
+        <span id="toggle-critical" class="sb-toggle">Launch-critical only</span>
+      </div>
+      <div class="sb-nav" id="sb-nav"></div>
+      <div class="sb-footer">
+        <span class="leg"><i class="i-c"></i>Launch-critical</span>
+        <span class="leg"><i class="i-p"></i>Post-launch</span>
+      </div>
+    </aside>
+    <main id="main">
+      <header id="topbar">
+        <div class="mode-switch">
+          <button id="mode-browse" class="active">Browse screens</button>
+          <button id="mode-story">Interactive stories</button>
+        </div>
+        <div class="tb-title" id="tb-title"></div>
+        <div class="tb-spacer"></div>
+        <div class="tb-count" id="tb-count"></div>
+      </header>
+      <section id="content"></section>
+    </main>
+  </div>
+
+  <script src="js/data-a.js"></script>
+  <script src="js/data-b.js"></script>
+  <script src="js/data-b2.js"></script>
+  <script src="js/data-b3.js"></script>
+  <script src="js/data-b3a.js"></script>
+  <script src="js/data-b15.js"></script>
+  <script src="js/data-cde.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

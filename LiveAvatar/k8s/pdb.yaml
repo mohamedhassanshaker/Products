@@ -1,0 +1,22 @@
+# NFR-2: control-plane downtime must not drop in-flight rooms; a voluntary
+# disruption (node drain, cluster upgrade) should never take every `web` or
+# every `agent` replica down at once.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: web
+  namespace: liveavatar
+spec:
+  minAvailable: 1
+  selector: { matchLabels: { app: web } }
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: agent
+  namespace: liveavatar
+spec:
+  # Never voluntarily evict every worker at once — each pod may be holding
+  # live WebRTC sessions with a 300s graceful drain (agent-deployment.yaml).
+  maxUnavailable: 1
+  selector: { matchLabels: { app: agent } }

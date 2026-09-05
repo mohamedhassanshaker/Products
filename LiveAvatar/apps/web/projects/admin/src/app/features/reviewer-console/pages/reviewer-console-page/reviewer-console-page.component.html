@@ -1,0 +1,149 @@
+<la-page-header
+  [title]="(tenant()?.name ?? 'Deployment') + ' · Approvals'"
+  [subtitle]="queue().length + ' waiting'"
+/>
+
+@if (store.status() === 'loading') {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading approvals" />
+}
+
+@if (store.loadError()) {
+  <la-empty-state
+    variant="error"
+    icon="error_outline"
+    title="Could not load the approval queue"
+    body="Try again."
+    actionLabel="Retry"
+    (action)="retry()"
+  />
+} @else if (store.status() === 'ready' && queue().length === 0) {
+  <la-empty-state icon="check_circle" title="Nothing waiting" body="Every gate is caught up — check back later." />
+} @else if (store.status() === 'ready') {
+  <div class="la-reviewer-console">
+    <section class="la-reviewer-console__queue" aria-label="Queue">
+      <ul role="list" class="la-reviewer-console__queue-list">
+        @for (decision of queue(); track decision.id) {
+          <li role="listitem">
+            <button
+              type="button"
+              class="la-reviewer-console__queue-item"
+              [class.la-reviewer-console__queue-item--selected]="selected()?.id === decision.id"
+              (click)="select(decision)"
+            >
+              <span class="la-reviewer-console__queue-item-title">{{ decision.proposed_action.summary }}</span>
+              <span class="la-reviewer-console__queue-item-meta">
+                @if (remainingSeconds(decision) !== null) {
+                  {{ remainingSeconds(decision) }}s left of {{ slaSeconds(decision) }}s
+                } @else {
+                  {{ elapsedSeconds(decision) }}s elapsed
+                }
+              </span>
+              @if (slaSeconds(decision)) {
+                <mat-progress-bar
+                  class="la-reviewer-console__queue-item-progress"
+                  mode="determinate"
+                  [value]="progressPercent(decision)"
+                  [attr.aria-label]="'SLA elapsed ' + progressPercent(decision).toFixed(0) + '%'"
+                />
+              }
+            </button>
+          </li>
+        }
+      </ul>
+    </section>
+
+    <section class="la-reviewer-console__detail" aria-label="Decision detail">
+      @if (!selected()) {
+        <p class="la-reviewer-console__empty-detail">Select a queue item to review it.</p>
+      } @else {
+        @let decision = selected()!;
+        <h2>{{ decision.proposed_action.summary }}</h2>
+
+        <p class="la-reviewer-console__countdown" aria-live="polite">
+          @if (remainingSeconds(decision) !== null) {
+            {{ remainingSeconds(decision) }}s of {{ slaSeconds(decision) }}s remaining before this gate's timeout behaviour fires.
+          } @else {
+            {{ elapsedSeconds(decision) }}s elapsed — no SLA could be resolved for this gate.
+          }
+        </p>
+
+        <h3>Proposed action</h3>
+        <dl class="la-reviewer-console__facts">
+          <dt>Kind</dt>
+          <dd>{{ decision.proposed_action.kind === 'tool_call' ? 'Tool call' : 'Spoken text' }}</dd>
+        </dl>
+        @if (decision.proposed_action.arguments) {
+          <mat-form-field appearance="outline" class="la-reviewer-console__field">
+            <mat-label>Arguments (editable — used only by Edit &amp; approve)</mat-label>
+            <textarea
+              matInput
+              rows="5"
+              [ngModel]="editedArgumentsJson()"
+              (ngModelChange)="onEditedArgumentsChange($event)"
+            ></textarea>
+            @if (editedArgumentsError()) {
+              <mat-error>{{ editedArgumentsError() }}</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        @if (decision.proposed_action.model_reasoning) {
+          <h3>Why the agent proposed this</h3>
+          <p class="la-reviewer-console__reasoning">{{ decision.proposed_action.model_reasoning }}</p>
+        }
+
+        @if (decision.proposed_action.retrieved_sources?.length) {
+          <h3>Retrieved sources</h3>
+          <ul>
+            @for (source of decision.proposed_action.retrieved_sources; track source) {
+              <li>{{ source }}</li>
+            }
+          </ul>
+        }
+
+        @if (decision.proposed_action.caller_identity) {
+          <h3>Caller</h3>
+          <p>{{ decision.proposed_action.caller_identity }}</p>
+        }
+
+        @if (decision.proposed_action.transcript_excerpt?.length) {
+          <h3>Transcript</h3>
+          <div class="la-reviewer-console__transcript">
+            @for (line of decision.proposed_action.transcript_excerpt; track $index) {
+              <p>{{ line }}</p>
+            }
+          </div>
+        }
+
+        <mat-form-field appearance="outline" class="la-reviewer-console__field">
+          <mat-label>Note (optional on approve, recommended on deny)</mat-label>
+          <textarea matInput rows="2" [ngModel]="justificationNote()" (ngModelChange)="justificationNote.set($event)"></textarea>
+        </mat-form-field>
+
+        <div class="la-reviewer-console__actions">
+          <button mat-stroked-button color="warn" type="button" [disabled]="store.deciding()" (click)="deny()">
+            <mat-icon aria-hidden="true">close</mat-icon>
+            Deny
+          </button>
+          <button
+            mat-stroked-button
+            type="button"
+            [disabled]="store.deciding() || !!editedArgumentsError()"
+            (click)="editAndApprove()"
+          >
+            <mat-icon aria-hidden="true">edit</mat-icon>
+            Edit &amp; approve
+          </button>
+          <button mat-flat-button color="primary" type="button" [disabled]="store.deciding()" (click)="approve()">
+            <mat-icon aria-hidden="true">check</mat-icon>
+            Approve
+          </button>
+        </div>
+
+        @if (store.decideError()) {
+          <p class="la-reviewer-console__error" role="alert">{{ store.decideError() }}</p>
+        }
+      }
+    </section>
+  </div>
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@nextbot/tool-registry",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "BL-03: tool catalog, agent tool registry, permission matrix + resolver (LLD §3.6).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir ."
+  },
+  "dependencies": {
+    "@nextbot/connectors": "workspace:*",
+    "@nextbot/contracts": "workspace:*",
+    "@nextbot/db": "workspace:*",
+    "@nextbot/mcp-client": "workspace:*",
+    "@nextbot/secrets": "workspace:*",
+    "@nextbot/tenancy": "workspace:*",
+    "drizzle-orm": "^0.36.1"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

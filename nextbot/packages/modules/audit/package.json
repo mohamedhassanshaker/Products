@@ -1,0 +1,29 @@
+{
+  "name": "@nextbot/audit",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Phase 17 (BL-10): append-only audit log, outbox consumer, retention purge helpers (LLD §3.x, FR-ADM-03/NFR-5).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir .",
+    "test:isolation": "vitest run --project isolation --dir ."
+  },
+  "dependencies": {
+    "@nextbot/contracts": "workspace:*",
+    "@nextbot/db": "workspace:*",
+    "@nextbot/tenancy": "workspace:*",
+    "drizzle-orm": "^0.36.1",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "@types/pg": "^8.11.10",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

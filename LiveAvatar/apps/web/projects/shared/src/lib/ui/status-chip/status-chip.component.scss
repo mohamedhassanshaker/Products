@@ -1,0 +1,32 @@
+.la-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+
+  &__icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &--success {
+    color: var(--la-success, #1b7f4e);
+  }
+
+  &--caution {
+    color: var(--la-caution, #8b5a00);
+  }
+
+  &--neutral {
+    color: var(--la-on-surface-variant, #44474f);
+  }
+
+  &--error {
+    color: var(--la-error, #b3261e);
+  }
+}

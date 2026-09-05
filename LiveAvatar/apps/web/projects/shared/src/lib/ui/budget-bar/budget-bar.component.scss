@@ -1,0 +1,58 @@
+.la-budget-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+
+  &__label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--la-on-surface-variant, #44474f);
+  }
+
+  &__track {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--la-surface-variant, #e1e2ec);
+    overflow: hidden;
+  }
+
+  &__fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.2s ease;
+  }
+
+  &__status {
+    font-size: 12px;
+    color: var(--la-on-surface-variant, #44474f);
+  }
+
+  &--success {
+    .la-budget-bar__fill {
+      background: var(--la-success, #1b7f4e);
+    }
+    .la-budget-bar__status {
+      color: var(--la-success, #1b7f4e);
+    }
+  }
+
+  &--caution {
+    .la-budget-bar__fill {
+      background: var(--la-caution, #8b5a00);
+    }
+    .la-budget-bar__status {
+      color: var(--la-caution, #8b5a00);
+    }
+  }
+
+  &--error {
+    .la-budget-bar__fill {
+      background: var(--la-error, #b3261e);
+    }
+    .la-budget-bar__status {
+      color: var(--la-error, #b3261e);
+      font-weight: 600;
+    }
+  }
+}

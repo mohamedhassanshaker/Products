@@ -1,0 +1,16 @@
+node:_http_client:185
+      throw new ERR_UNESCAPED_CHARACTERS('Request path');
+            ^
+
+TypeError [ERR_UNESCAPED_CHARACTERS]: Request path contains unescaped characters
+    at new ClientRequest (node:_http_client:185:13)
+    at Object.request (node:http:102:10)
+    at file:///D:/work/products/nextbot/qa-results/ops-page-404-indistinguishability/20260819-qa-round5-reverify/harness/lib.mjs:17:22
+    at new Promise (<anonymous>)
+    at timeit (file:///D:/work/products/nextbot/qa-results/ops-page-404-indistinguishability/20260819-qa-round5-reverify/harness/lib.mjs:15:10)
+    at file:///D:/work/products/nextbot/qa-results/ops-page-404-indistinguishability/20260819-qa-round5-reverify/harness/sitewide-perf.mjs:22:109
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  code: 'ERR_UNESCAPED_CHARACTERS'
+}
+
+Node.js v22.16.0

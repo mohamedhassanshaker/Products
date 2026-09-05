@@ -1,0 +1,136 @@
+// Two-pane queue + detail layout, same ≥1280px two-column/<1280px stacked
+// breakpoint rule the main builder already established
+// (`builder-shared.scss`'s `.la-builder-layout`, originally
+// `agent-builder-page.component.scss` before Phase 16's builder shell, §10.4
+// precedent) — this is the third screen reusing that exact rule
+// (`docs/v2/UX_SCOPE.md`'s own "Responsive" note flags it as worth
+// extracting; kept duplicated here for now, consistent with how
+// `skills-library-page`/`hitl-gates-page` also duplicate the stacked-table
+// pattern rather than a shared partial).
+.la-reviewer-console {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.la-reviewer-console__queue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.la-reviewer-console__queue-item {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--la-outline, #74777f);
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+
+  &--selected {
+    border-color: var(--la-primary, #2f5fdb);
+    background: var(--la-primary-container, #dee0ff);
+  }
+}
+
+.la-reviewer-console__queue-item-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.la-reviewer-console__queue-item-meta {
+  font-size: 12px;
+  color: var(--la-on-surface-variant, #44474f);
+}
+
+.la-reviewer-console__queue-item-progress {
+  margin-top: 4px;
+}
+
+.la-reviewer-console__detail {
+  border: 1px solid var(--la-outline, #74777f);
+  border-radius: 8px;
+  padding: 16px;
+
+  h2 {
+    margin-top: 0;
+  }
+
+  h3 {
+    font-size: 13px;
+    margin: 16px 0 4px;
+  }
+}
+
+.la-reviewer-console__empty-detail {
+  color: var(--la-on-surface-variant, #44474f);
+}
+
+.la-reviewer-console__countdown {
+  font-size: 13px;
+  color: var(--la-on-surface-variant, #44474f);
+}
+
+.la-reviewer-console__facts {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  margin: 0 0 8px;
+
+  dt {
+    font-weight: 500;
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.la-reviewer-console__reasoning {
+  font-size: 13px;
+  background: var(--la-surface-variant, #e1e2ec);
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.la-reviewer-console__transcript {
+  background: var(--la-surface-variant, #e1e2ec);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+
+  p {
+    margin: 4px 0;
+  }
+}
+
+.la-reviewer-console__field {
+  width: 100%;
+  display: block;
+}
+
+.la-reviewer-console__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.la-reviewer-console__error {
+  color: var(--la-error, #b3261e);
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+@media (max-width: 1279px) {
+  .la-reviewer-console {
+    grid-template-columns: 1fr;
+  }
+}

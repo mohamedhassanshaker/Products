@@ -1,0 +1,98 @@
+<la-page-header title="Sessions">
+  <la-tenant-select label="Tenant" (tenantChange)="onTenantChange($event)" />
+
+  <mat-form-field appearance="outline" class="la-sessions__search">
+    <mat-label>Search transcript</mat-label>
+    <input matInput type="text" maxlength="200" [formControl]="searchControl" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Status</mat-label>
+    <mat-select [formControl]="statusControl">
+      <mat-option value="all">All</mat-option>
+      <mat-option value="active">Active</mat-option>
+      <mat-option value="ended">Ended</mat-option>
+      <mat-option value="failed">Failed</mat-option>
+      <mat-option value="abandoned">Abandoned</mat-option>
+    </mat-select>
+  </mat-form-field>
+</la-page-header>
+
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading" />
+}
+
+@if (needsTenantChoice()) {
+  <la-empty-state icon="business" title="Choose a deployment" body="Choose a deployment to view its session logs." />
+} @else if (loadError() && !loading()) {
+  <la-empty-state
+    variant="error"
+    icon="error"
+    title="Could not load sessions"
+    body="Could not load sessions. Try again."
+    actionLabel="Retry"
+    (action)="retry()"
+  />
+} @else if (!loading() && total() === 0) {
+  <la-empty-state
+    icon="inbox"
+    title="No sessions found"
+    body="No sessions match your filters."
+    [actionLabel]="hasActiveFilters() ? 'Clear filters' : undefined"
+    (action)="clearFilters()"
+  />
+} @else {
+  <table mat-table [dataSource]="items()" class="la-sessions__table">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Session ID</th>
+      <td mat-cell *matCellDef="let row" data-label="Session ID" [title]="row.id">{{ row.id.slice(0, 8) }}…</td>
+    </ng-container>
+    <ng-container matColumnDef="tenant">
+      <th mat-header-cell *matHeaderCellDef>Tenant</th>
+      <td mat-cell *matCellDef="let row" data-label="Tenant">{{ row.tenant_slug }}</td>
+    </ng-container>
+    <ng-container matColumnDef="started">
+      <th mat-header-cell *matHeaderCellDef>Started</th>
+      <td mat-cell *matCellDef="let row" data-label="Started" [title]="row.started_at">{{ relativeTime(row.started_at) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef>Duration</th>
+      <td mat-cell *matCellDef="let row" data-label="Duration">{{ duration(row.duration_ms) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let row" data-label="Status">
+        <la-status-chip
+          [tone]="row.status === 'ended' ? 'success' : row.status === 'failed' ? 'error' : row.status === 'active' ? 'neutral' : 'caution'"
+          [icon]="row.status === 'ended' ? 'check_circle' : row.status === 'failed' ? 'error' : row.status === 'active' ? 'autorenew' : 'schedule'"
+          [label]="row.status"
+        />
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="providerStack">
+      <th mat-header-cell *matHeaderCellDef>Provider stack</th>
+      <td mat-cell *matCellDef="let row" data-label="Provider stack">{{ providerStackSummary(row.provider_stack) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="errorCode">
+      <th mat-header-cell *matHeaderCellDef>Error code</th>
+      <td mat-cell *matCellDef="let row" data-label="Error code">{{ row.error_code ?? '—' }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      tabindex="0"
+      (click)="openDetail(row)"
+      (keydown.enter)="openDetail(row)"
+    ></tr>
+  </table>
+
+  <mat-paginator
+    [length]="total()"
+    [pageSize]="pageSize()"
+    [pageIndex]="page() - 1"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="onPageEvent($event)"
+  />
+}

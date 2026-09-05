@@ -1,0 +1,9 @@
+.la-provider-badge {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+
+  &__name {
+    font-weight: 500;
+  }
+}

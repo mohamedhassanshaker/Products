@@ -1,0 +1,26 @@
+{
+  "name": "@nextbot/pii",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Phase 17 (BL-10): PII detection/masking, guardrail authoring, DSR tool (LLD §3.x, FR-SEC-04, B.8.4).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir .",
+    "test:isolation": "vitest run --project isolation --dir ."
+  },
+  "dependencies": {
+    "@nextbot/contracts": "workspace:*",
+    "@nextbot/db": "workspace:*",
+    "drizzle-orm": "^0.36.1"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "note": "Retry-1 real-browser search verification (Dev-15b, BL-12). Captured via Playwright/Chromium against real compiled dist/main.js + real MySQL/Qdrant.",
+  "curriculumUrl": "http://127.0.0.1:3901/curricula/d8e2c8eb-386d-4f71-8b08-106644da79f2",
+  "enterSubmit": {
+    "query": "cell membrane",
+    "urlBeforeAndAfter_identical_noReload": true,
+    "requests": ["GET /api/curricula/:id/search?q=cell%20membrane -> 200"]
+  },
+  "buttonSubmit": {
+    "query": "mitochondria",
+    "requests": ["GET /api/curricula/:id/search?q=mitochondria -> 200"]
+  },
+  "emptyResubmit": {
+    "query": "",
+    "requests": []
+  },
+  "noResultsQuery": {
+    "query": "quantum entanglement zebra unicorn",
+    "requests": ["GET /api/curricula/:id/search?q=quantum...unicorn -> 200"],
+    "note": "Returned existing chunks rather than a genuine empty result set -- pre-existing NullEmbeddingsAdapter hash-based pseudo-vector limitation, already documented as Finding 3 in the original REPORT.md and in nexus-dev's own fix-pass notes; not a regression from this fix and out of this retry's scope."
+  },
+  "consoleErrors": []
+}

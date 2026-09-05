@@ -1,0 +1,180 @@
+# ExamLand — docker-compose (Next.js + Chakra UI v3 + in-process ADK/OpenRouter stack).
+#
+# This is the canonical, single production compose file for the whole application, replacing the
+# legacy NestJS+Angular+Python-AI-microservice stack's own docker-compose.yml as of the migration
+# plan's Phase 10 ("New docker-compose + seed" / legacy decommission — see
+# docs/plans/nextjs-rewrite-phase10-plan.md for the full migration history). Five services:
+# `web` (ROLE=web), `worker` (ROLE=worker, same image), `mysql`, `qdrant`, `mailhog`. No
+# `ai-engine`/`certs-init`/mTLS material at all — the single biggest compose simplification this
+# migration achieves (in-process AI via @google/adk + OpenRouter, no second service/mTLS hop).
+#
+# This file was merged in from the transition-era `docker-compose.next.yml` (Phase 10 sub-slice
+# "10a") once legacy was fully decommissioned: the `NEXT_`-prefixed variable names and the pinned
+# `examland-next` project name existed only to let this stack coexist side-by-side with the legacy
+# one during the migration's transition period — both are now unnecessary and have been dropped.
+#
+# Usage:
+#   docker compose up -d --build
+#   curl http://localhost:3010/api/health
+#   docker compose run --rm web npm run seed
+#   # Browse http://localhost:3010 with Host: demo-starter.examland.local (or curl -H 'Host: ...')
+#   # MailHog UI: http://localhost:8025
+#
+# Note on the web port: 3010 (not 3000) is used because an unrelated, pre-existing container
+# (`flowise`) occupies host port 3000 on this development machine — confirmed via `docker ps`
+# immediately before this file was written. If deploying somewhere without that conflict, override
+# via `WEB_HTTP_PORT` (see below) or edit the `ports:` mapping directly.
+
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: examland_dev_root
+      MYSQL_DATABASE: examland_platform
+      MYSQL_USER: examland
+      MYSQL_PASSWORD: examland_dev
+    ports:
+      - '3306:3306'
+    volumes:
+      - examland_mysql_data:/var/lib/mysql
+      # Tenant provisioning's CreateSchemaStep issues `CREATE DATABASE IF NOT EXISTS t_<slug>_<hash>`
+      # — the MySQL image only auto-grants MYSQL_USER full privileges on MYSQL_DATABASE
+      # (examland_platform), so this grants the same user CREATE/manage on any `t_*`-prefixed schema.
+      # See docker/mysql-init/01-grant-tenant-schema-privileges.sql for the full rationale. Only runs
+      # once, on this container's first boot against an empty volume.
+      - ./docker/mysql-init/01-grant-tenant-schema-privileges.sql:/docker-entrypoint-initdb.d/01-grant-tenant-schema-privileges.sql:ro
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-uroot', '-pexamland_dev_root']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    restart: unless-stopped
+    ports:
+      - '6333:6333'
+      - '6334:6334'
+    volumes:
+      - examland_qdrant_data:/qdrant/storage
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: unless-stopped
+    ports:
+      - '1025:1025' # SMTP
+      - '8025:8025' # web UI
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/next/Dockerfile
+    image: examland-app:${IMAGE_TAG:-local}
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+      mailhog:
+        condition: service_started
+    environment: &app_env
+      ROLE: web
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: '3000'
+      PUBLIC_APEX_DOMAIN: ${PUBLIC_APEX_DOMAIN:-examland.local}
+      RESERVED_SUBDOMAINS: ${RESERVED_SUBDOMAINS:-admin,www,api,app,auth,static,mail,status}
+      DEFAULT_TENANT_SUBDOMAIN: ${DEFAULT_TENANT_SUBDOMAIN:-default}
+
+      DB_HOST: mysql
+      DB_PORT: '3306'
+      DB_USER: examland
+      DB_PASSWORD: examland_dev
+      DB_PLATFORM_SCHEMA: ${DB_PLATFORM_SCHEMA:-examland_platform}
+      DB_SYNCHRONIZE: 'false'
+
+      JWT_TENANT_SECRET: ${JWT_TENANT_SECRET:?Set JWT_TENANT_SECRET in .env (see .env.example)}
+      JWT_PLATFORM_SECRET: ${JWT_PLATFORM_SECRET:?Set JWT_PLATFORM_SECRET in .env (see .env.example) — must differ from JWT_TENANT_SECRET}
+      FILE_SIGNING_SECRET: ${FILE_SIGNING_SECRET:?Set FILE_SIGNING_SECRET in .env (see .env.example)}
+      BCRYPT_COST: ${BCRYPT_COST:-12}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_AUTH_BRIDGE_ORIGIN: ${GOOGLE_AUTH_BRIDGE_ORIGIN:-}
+
+      PLATFORM_ADMIN_BOOTSTRAP_EMAIL: ${PLATFORM_ADMIN_BOOTSTRAP_EMAIL:-platform-admin@examland.local}
+      PLATFORM_ADMIN_BOOTSTRAP_PASSWORD: ${PLATFORM_ADMIN_BOOTSTRAP_PASSWORD:-}
+
+      # AI — disabled by default (HLD §8.4's "AI-optional production deployment, no override flag"
+      # requirement, replaced by this app's own in-app AI_ENABLED feature flag per the migration
+      # plan's spec amendment). Set AI_ENABLED=true + a real OPENROUTER_API_KEY to enable.
+      AI_ENABLED: ${AI_ENABLED:-false}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_BASE_URL: ${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+
+      # `EMBEDDINGS_PROVIDER` must not be `null` — `next start` (this image's runtime CMD) forces
+      # `NODE_ENV=production` regardless of the `NODE_ENV` value above, which trips env.schema.ts's
+      # deployed-environment guard rejecting a `null` provider outright. `openai-compatible` with an
+      # empty key is a fully valid "configured but not live" shape.
+      EMBEDDINGS_PROVIDER: ${EMBEDDINGS_PROVIDER:-openai-compatible}
+      EMBEDDINGS_BASE_URL: ${EMBEDDINGS_BASE_URL:-https://api.openai.com/v1}
+      EMBEDDINGS_API_KEY: ${EMBEDDINGS_API_KEY:-}
+      EMBEDDINGS_MODEL: ${EMBEDDINGS_MODEL:-text-embedding-3-small}
+      EMBEDDING_DIMS: ${EMBEDDING_DIMS:-1536}
+
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_API_KEY: ${QDRANT_API_KEY:-}
+      VECTOR_COLLECTION_PREFIX: ${VECTOR_COLLECTION_PREFIX:-examland}
+
+      STORAGE_DRIVER: local
+      STORAGE_ROOT: /app/storage
+
+      SMTP_HOST: mailhog
+      SMTP_PORT: '1025'
+      SMTP_FROM: ${SMTP_FROM:-no-reply@examland.local}
+
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      LOG_DIR: /app/logs
+    ports:
+      - '${WEB_HTTP_PORT:-3010}:3000'
+    volumes:
+      - examland_app_storage:/app/storage
+      - examland_app_logs:/app/logs
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/next/Dockerfile
+    image: examland-app:${IMAGE_TAG:-local}
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+      mailhog:
+        condition: service_started
+    # Same image as `web`, same environment block (YAML anchor `*app_env`), only `ROLE` differs.
+    environment:
+      <<: *app_env
+      ROLE: worker
+    volumes:
+      - examland_app_storage:/app/storage
+      - examland_app_logs:/app/logs
+    # No `ports:` — the worker process opens no HTTP listener.
+    healthcheck:
+      disable: true
+
+volumes:
+  examland_mysql_data:
+  examland_qdrant_data:
+  examland_app_storage:
+  examland_app_logs:

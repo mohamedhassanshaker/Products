@@ -1,0 +1,96 @@
+# HLD §9: "agent | one job per session... replicas x max_concurrent_jobs per
+# worker | 50 concurrent sessions (NFR-7 soft) | ... workers drain gracefully
+# (finish in-flight jobs, accept no new dispatch) so a deploy never kills a
+# live conversation."
+#
+# No HorizontalPodAutoscaler here, deliberately: the scaling signal is
+# concurrent LiveKit job count, which this project does not currently expose
+# as a Prometheus/custom-metrics-API metric (livekit-agents' own health
+# server, apps/agent/Dockerfile's HEALTHCHECK, is a liveness probe, not a
+# load metric). Wiring a custom-metrics HPA on an unverified metric would be
+# speculative infra, not something the HLD actually specifies — replicas is
+# a capacity-planning knob instead: `ceil(target_concurrent_sessions /
+# MAX_CONCURRENT_JOBS)` with headroom (HLD §9), set manually per environment
+# until a real per-worker job-count metric exists to automate it.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent
+  namespace: liveavatar
+  labels: { app: agent }
+spec:
+  replicas: 3 # example sizing for a 50-concurrent-session (NFR-7) target at MAX_CONCURRENT_JOBS=10, with headroom — tune per environment
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxUnavailable: 0, maxSurge: 1 }
+  selector:
+    matchLabels: { app: agent }
+  template:
+    metadata:
+      labels: { app: agent }
+    spec:
+      serviceAccountName: liveavatar-agent
+      automountServiceAccountToken: false
+      # GPU scheduling placeholder — NOT active by default (commented out).
+      # Confirmed with the user/orchestrator: GPU-accelerated workers run
+      # in-cluster, on a separate GPU-labeled/tainted node pool, not over an
+      # external network/VPN path (see docs/deployment/DEPLOYMENT.md §6.3).
+      # This `agent` Deployment itself stays CPU-only (ADR-001 §4) and is
+      # correctly scheduled onto general-purpose nodes as-is. If/when the
+      # operator deploys a GPU-accelerated variant of this workload (a
+      # separate Deployment, not this one — e.g. an in-process GPU adapter
+      # per HLD's "CUDA only if..." note), uncomment and adapt the
+      # nodeSelector/tolerations below to that node pool's actual labels/
+      # taints so it can't accidentally land on a general-purpose node.
+      # nodeSelector:
+      #   workload-type: gpu               # adapt to your node pool's real label
+      # tolerations:
+      #   - key: nvidia.com/gpu
+      #     operator: Exists
+      #     effect: NoSchedule              # adapt to your node pool's real taint
+      # LiveKit Agents' own CLI drains in-flight jobs on SIGTERM (accepts no
+      # new dispatch, finishes current sessions) before exiting — give it
+      # real headroom above the platform's own conversation length budget
+      # rather than the Kubernetes default 30s.
+      terminationGracePeriodSeconds: 300
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
+      containers:
+        - name: agent
+          image: liveavatar/agent:REPLACE_ME_TAG # CI sets this to the built commit SHA (or release tag)
+          ports:
+            - { name: health, containerPort: 8081 }
+          envFrom:
+            - configMapRef: { name: liveavatar-agent-config }
+            - secretRef: { name: liveavatar-agent-secrets }
+          volumeMounts:
+            - { name: secrets, mountPath: /app/secrets, readOnly: true }
+            - { name: tmp, mountPath: /tmp }
+          resources:
+            # I/O + moderate CPU per concurrent session (STT/LLM/TTS streams
+            # are network-bound; GPU-heavy work happens on operator-provisioned
+            # GPU workers reached over the network, not in this pod — HLD §2.1).
+            requests: { cpu: '500m', memory: '512Mi' }
+            limits: { cpu: '2', memory: '2Gi' }
+          readinessProbe:
+            httpGet: { path: /, port: health }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet: { path: /, port: health }
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ['ALL'] }
+      volumes:
+        - name: secrets
+          secret:
+            secretName: liveavatar-provider-credentials
+        - name: tmp
+          emptyDir: {}

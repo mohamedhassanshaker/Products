@@ -1,0 +1,90 @@
+<section class="la-turn-budget-panel" aria-label="Turn budget">
+  @if (!criticalPath()) {
+    <p class="la-dialog-helper">Fix the validation errors above to see the critical path.</p>
+  } @else {
+    <div class="la-turn-budget-panel__section">
+      <h3>Critical path</h3>
+      @if (longestPath()?.unbounded) {
+        <p class="la-turn-budget-panel__unbounded" role="status">
+          <mat-icon aria-hidden="true">all_inclusive</mat-icon>
+          Unbounded — {{ criticalPathLabel() || 'this path' }} passes through a HITL gate (R-H4). A blocking gate's wait
+          time cannot be estimated, so it is never counted toward the turn budget.
+        </p>
+      } @else {
+        <la-budget-bar
+          [usedMs]="criticalPath()!.critical_path_ms"
+          [totalMs]="criticalPath()!.turn_budget_ms"
+          [label]="criticalPathLabel() || 'Longest foreground chain'"
+        />
+      }
+    </div>
+
+    <div class="la-turn-budget-panel__section">
+      <h3>
+        All paths
+        @if (overBudgetPathCount() > 0) {
+          <span class="la-turn-budget-panel__warning" role="status">
+            <mat-icon aria-hidden="true">warning</mat-icon>
+            {{ overBudgetPathCount() }} path{{ overBudgetPathCount() === 1 ? '' : 's' }} over budget
+          </span>
+        }
+        @if (hasUnboundedPath()) {
+          <span class="la-turn-budget-panel__warning" role="status">
+            <mat-icon aria-hidden="true">all_inclusive</mat-icon>
+            unbounded path present
+          </span>
+        }
+      </h3>
+      <ul class="la-turn-budget-panel__paths" role="list">
+        @for (path of criticalPath()!.paths; track $index) {
+          <li role="listitem">
+            @if (path.unbounded) {
+              <p class="la-turn-budget-panel__unbounded">
+                <mat-icon aria-hidden="true">all_inclusive</mat-icon>
+                {{ pathLabel(path) }} — unbounded (HITL gate, R-H4)
+              </p>
+            } @else {
+              <la-budget-bar [usedMs]="path.total_ms" [totalMs]="criticalPath()!.turn_budget_ms" [label]="pathLabel(path)" />
+            }
+          </li>
+        } @empty {
+          <li class="la-dialog-helper">No path reaches a terminal node yet — check the graph's entry node and edges.</li>
+        }
+      </ul>
+    </div>
+
+    <div class="la-turn-budget-panel__section">
+      <h3>When the hard deadline is hit</h3>
+      @if (entryNode(); as entry) {
+        <p>
+          Entry node "{{ entry.name }}": <strong>{{ entry.on_deadline.action }}</strong>
+          @if (entryNodeOnDeadlineTargetName(); as targetName) {
+            → {{ targetName }}
+          }
+          <button mat-button type="button" (click)="editEntryNode()">Edit ▸</button>
+        </p>
+        <p class="la-dialog-helper">
+          Every node has its own `on_deadline` edge, editable from its inspector — this shows the entry node's as a
+          representative default.
+        </p>
+      }
+    </div>
+  }
+
+  <div class="la-turn-budget-panel__section">
+    <h3>Optimisations</h3>
+    <ul class="la-turn-budget-panel__optimisations" role="list">
+      @for (item of deferredOptimisations; track item.label) {
+        <li role="listitem" [matTooltip]="item.reason">
+          <mat-checkbox [checked]="false" [disabled]="true">
+            {{ item.label }}
+            @if (item.savesHint) {
+              <span class="la-turn-budget-panel__hint"> — {{ item.savesHint }}</span>
+            }
+          </mat-checkbox>
+          <p class="la-dialog-helper">{{ item.reason }}</p>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

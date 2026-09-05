@@ -1,0 +1,27 @@
+port 3491, N=400 interleaved samples/path, per-round SHUFFLED order, sorted by p50 (ms)
+  NEARMISS  /internal/opsx/tenants                        {"n":380,"mean":1.873,"p50":1.784,"p90":2.138,"p99":3.576,"min":1.018,"max":3.86}
+  NEARMISS  /internal/ops-x/tenants                       {"n":380,"mean":1.892,"p50":1.796,"p90":2.174,"p99":3.855,"min":0.938,"max":4.322}
+  GATED     /internal/ops/login                           {"n":380,"mean":1.889,"p50":1.797,"p90":2.167,"p99":3.494,"min":1.098,"max":3.612}
+  MISSING   /internal/zzz/tenants                         {"n":380,"mean":1.921,"p50":1.802,"p90":2.308,"p99":3.629,"min":0.893,"max":8.823}
+  GATED     /internal/ops/zzzzzz                          {"n":380,"mean":1.902,"p50":1.81,"p90":2.211,"p99":3.575,"min":1.017,"max":4.194}
+  MISSING   /internal/xps/tenants                         {"n":380,"mean":1.907,"p50":1.81,"p90":2.267,"p99":3.601,"min":0.922,"max":4.939}
+  MISSING   /admin/nothing/at/all                         {"n":380,"mean":1.881,"p50":1.81,"p90":2.196,"p99":3.198,"min":0.968,"max":5.085}
+  GATED     /internal/ops                                 {"n":380,"mean":1.902,"p50":1.812,"p90":2.255,"p99":3.368,"min":1.496,"max":3.845}
+  MISSING   /aaaaaaaaaaaa/bbbbbb                          {"n":380,"mean":1.902,"p50":1.814,"p90":2.237,"p99":3.315,"min":0.944,"max":3.857}
+  NEARMISS  /internal/opsy/tenants                        {"n":380,"mean":1.914,"p50":1.817,"p90":2.211,"p99":3.794,"min":1.506,"max":4.494}
+  MISSING   /nothing-here-at-all                          {"n":380,"mean":1.889,"p50":1.817,"p90":2.198,"p99":3.55,"min":0.946,"max":4.588}
+  MISSING   /internal/qqq/tenants                         {"n":380,"mean":1.9,"p50":1.818,"p90":2.203,"p99":3.826,"min":0.923,"max":4.451}
+  GATED     /internal/ops/tenants/new                     {"n":380,"mean":1.913,"p50":1.821,"p90":2.249,"p99":3.749,"min":1.11,"max":8.585}
+  GATED     /internal/ops/tenants                         {"n":380,"mean":1.937,"p50":1.822,"p90":2.22,"p99":4.101,"min":0.899,"max":9.71}
+  SECRETPFX /internal/ops/nb-c-4f21c8a7e3d9b605/tenants   {"n":380,"mean":1.979,"p50":1.865,"p90":2.366,"p99":3.424,"min":1.043,"max":6.191}
+  APIGATED  /api/internal/ops/tenants                     {"n":380,"mean":2.444,"p50":2.355,"p90":2.871,"p99":4.292,"min":1.441,"max":4.768}
+  APIMISS   /api/xxxxxxxx/tenants                         {"n":380,"mean":2.584,"p50":2.483,"p90":3.003,"p99":4.774,"min":1.325,"max":5.117}
+
+p50 spread across all 17 paths: 0.699 ms
+  GATED      p50 range 1.797 - 1.822
+  NEARMISS   p50 range 1.784 - 1.817
+  MISSING    p50 range 1.802 - 1.818
+  SECRETPFX  p50 range 1.865 - 1.865
+  APIGATED   p50 range 2.355 - 2.355
+  APIMISS    p50 range 2.483 - 2.483
+  GATED paths' rank positions (0=fastest of 17): 2, 4, 7, 12, 13

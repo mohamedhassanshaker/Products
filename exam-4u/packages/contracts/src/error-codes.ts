@@ -1,0 +1,272 @@
+/**
+ * The single `ErrorCode` union for the whole system (LLD §1 "packages/contracts", §13.2).
+ *
+ * This is a cross-cutting, already-settled architecture artifact (LLD §13.2's full catalog is
+ * reproduced verbatim here, not invented in this phase) rather than business logic: no service
+ * behavior for any of these codes exists yet except the generic ones actually thrown by the
+ * Dev-0a skeleton (`VALIDATION_FAILED`, `INTERNAL_ERROR`, `UNAUTHENTICATED`, `FORBIDDEN`,
+ * `NOT_FOUND`). Seeding the full catalog now — rather than growing it phase-by-phase — is what
+ * lets `ERROR_CODE_HTTP_STATUS` below stay a total, compile-time-checked map (LLD §13.2: "adding a
+ * code without adding it to the HTTP mapping table is a compile error"), which is the entire point
+ * of centralizing it in `packages/contracts`. Later phases must not redefine or duplicate this
+ * union — they only add codes here if the LLD catalog is amended.
+ */
+export type ErrorCode =
+  // 400 — validation / malformed input
+  | 'VALIDATION_FAILED'
+  | 'INVALID_SUBDOMAIN'
+  | 'TENANT_NAME_REQUIRED'
+  | 'INVALID_NAME'
+  | 'WEAK_PASSWORD'
+  | 'CURRENT_PASSWORD_INCORRECT'
+  | 'RESET_TOKEN_EXPIRED'
+  | 'RESET_TOKEN_INVALID'
+  | 'INVALID_ZIP_STRUCTURE'
+  | 'INVALID_QUESTION_FILE'
+  | 'EMPTY_MODULE'
+  | 'QUESTION_COUNT_MISMATCH'
+  | 'INVALID_CONTEXT_WEIGHT'
+  | 'INVALID_FILE_SIGNATURE'
+  | 'INVALID_EXTENSION'
+  | 'EMPTY_FILE'
+  | 'NO_EXTRACTABLE_TEXT'
+  | 'EMPTY_PROMPT'
+  | 'INVALID_QUESTION_COUNT'
+  | 'NO_ELIGIBLE_QUESTIONS'
+  | 'UNSUPPORTED_IMAGE_TYPE'
+  | 'PATH_TRAVERSAL_REJECTED'
+  | 'UNRECOGNIZED_CONTENT_TYPE'
+  | 'INVALID_COLOR_FORMAT'
+  | 'INVALID_MODEL_ID'
+  // 401 — authentication
+  | 'UNAUTHENTICATED'
+  | 'INVALID_CREDENTIALS'
+  | 'TOKEN_EXPIRED'
+  | 'GOOGLE_TOKEN_INVALID'
+  | 'GOOGLE_NOT_CONFIGURED'
+  | 'WEBHOOK_SIGNATURE_INVALID'
+  // 403 — authorization
+  | 'FORBIDDEN'
+  | 'TENANT_SUSPENDED'
+  | 'REGISTRATION_DISABLED'
+  | 'GOOGLE_SIGNIN_DISABLED'
+  | 'USER_INACTIVE'
+  | 'NOT_CURRICULUM_OWNER'
+  | 'NOT_ATTEMPT_OWNER'
+  | 'NOT_SESSION_OWNER'
+  | 'FEATURE_NOT_ENABLED'
+  | 'LINK_INVALID_OR_EXPIRED'
+  // 404 — not found
+  | 'NOT_FOUND'
+  | 'TENANT_NOT_FOUND'
+  | 'USER_NOT_FOUND'
+  | 'ROLE_NOT_FOUND'
+  | 'PERMISSION_NOT_FOUND'
+  | 'EXAM_TYPE_NOT_FOUND'
+  | 'CURRICULUM_NOT_FOUND'
+  | 'DOCUMENT_NOT_FOUND'
+  | 'SESSION_NOT_FOUND'
+  | 'ATTEMPT_NOT_FOUND'
+  | 'QUESTION_NOT_FOUND'
+  | 'PACKAGE_NOT_FOUND'
+  | 'FEATURE_NOT_FOUND'
+  | 'SUBJECT_NOT_FOUND'
+  | 'TAXONOMY_ENTRY_NOT_FOUND'
+  | 'MODEL_NOT_FOUND'
+  // 409 — conflict
+  | 'SUBDOMAIN_TAKEN'
+  | 'SUBDOMAIN_IMMUTABLE'
+  | 'INVALID_TENANT_STATE'
+  | 'TENANT_NOT_PURGE_ELIGIBLE'
+  | 'EMAIL_ALREADY_REGISTERED'
+  | 'FEATURE_KEY_EXISTS'
+  | 'FEATURE_KEY_IMMUTABLE'
+  | 'FEATURE_IN_USE'
+  | 'PACKAGE_KEY_EXISTS'
+  | 'PACKAGE_INACTIVE'
+  | 'ROLE_NAME_EXISTS'
+  | 'ROLE_IN_USE'
+  | 'PERMISSION_IN_USE'
+  | 'SYSTEM_ROLE_PROTECTED'
+  | 'LAST_ADMIN_PROTECTED'
+  | 'TAXONOMY_ENTRY_IN_USE'
+  | 'EXAM_TYPE_NAME_EXISTS'
+  | 'EXAM_TYPE_HAS_ACTIVE_ATTEMPTS'
+  | 'APPEND_NOT_SUPPORTED_FOR_LEGACY_ZIP'
+  | 'ATTEMPT_ALREADY_IN_PROGRESS'
+  | 'ATTEMPT_NOT_IN_PROGRESS'
+  | 'MIGRATION_RUN_IN_PROGRESS'
+  | 'MODEL_ALREADY_APPROVED'
+  | 'DEFAULT_MODEL_REQUIRED'
+  | 'MODEL_IN_USE'
+  | 'MODEL_NOT_APPROVED'
+  | 'MODEL_DISABLED'
+  // 413 — payload too large
+  | 'FILE_TOO_LARGE'
+  // 416 — range
+  | 'RANGE_NOT_SATISFIABLE'
+  // 422 — unprocessable
+  | 'INSUFFICIENT_QUESTION_BANK'
+  | 'EMPTY_QUESTION_BANK'
+  | 'NO_QUESTIONS_GENERATED'
+  | 'INSUFFICIENT_COLOR_CONTRAST'
+  // 429 — rate/limit
+  | 'FEATURE_LIMIT_REACHED'
+  | 'RATE_LIMITED'
+  // 500 — internal
+  | 'INTERNAL_ERROR'
+  | 'TENANT_PROVISIONING_FAILED'
+  // Amended 2026-08-08 (Dev-14, LLD §13.2): narrowed to mean ONLY "the engine reported a content
+  // failure we chose to surface" (e.g. AI_OUTPUT_INVALID escalated by a caller). Any transport or
+  // availability failure (engine unreachable, TLS failure, breaker open, 5xx/429/timeout after
+  // retries) is `AI_SERVICE_UNAVAILABLE` below, never this code.
+  | 'AI_PROVIDER_FAILED'
+  | 'SESSION_RECOVERY_EXHAUSTED'
+  // 503 — unavailable
+  | 'TENANT_UNAVAILABLE'
+  | 'BILLING_NOT_CONFIGURED'
+  | 'AI_DISABLED'
+  | 'AI_NOT_CONFIGURED'
+  // Added 2026-08-08 (Dev-14, LLD §7.11): AiServiceClient's transport/availability failure code —
+  // connection refused/DNS/timeout/5xx-429-504-after-retries/open breaker/TLS handshake failure.
+  | 'AI_SERVICE_UNAVAILABLE'
+  | 'VECTOR_STORE_UNAVAILABLE';
+
+/**
+ * HTTP status enum, duplicated here (rather than imported from `@nestjs/common`) to keep this
+ * package free of runtime/framework dependencies per LLD §1 ("packages/contracts... no Nest/Angular
+ * imports, no runtime dependencies — only types, enums, and const objects").
+ */
+export enum HttpStatusCode {
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  FORBIDDEN = 403,
+  NOT_FOUND = 404,
+  CONFLICT = 409,
+  PAYLOAD_TOO_LARGE = 413,
+  RANGE_NOT_SATISFIABLE = 416,
+  UNPROCESSABLE_ENTITY = 422,
+  TOO_MANY_REQUESTS = 429,
+  INTERNAL_SERVER_ERROR = 500,
+  SERVICE_UNAVAILABLE = 503,
+}
+
+/**
+ * Total map from every `ErrorCode` to its HTTP status (LLD §13.2). `Record<ErrorCode, HttpStatusCode>`
+ * makes omitting a mapping for a newly added code a compile-time error, which is the mechanism the
+ * LLD relies on to keep this table complete as the codebase grows.
+ */
+export const ERROR_CODE_HTTP_STATUS: Record<ErrorCode, HttpStatusCode> = {
+  VALIDATION_FAILED: HttpStatusCode.BAD_REQUEST,
+  INVALID_SUBDOMAIN: HttpStatusCode.BAD_REQUEST,
+  TENANT_NAME_REQUIRED: HttpStatusCode.BAD_REQUEST,
+  INVALID_NAME: HttpStatusCode.BAD_REQUEST,
+  WEAK_PASSWORD: HttpStatusCode.BAD_REQUEST,
+  CURRENT_PASSWORD_INCORRECT: HttpStatusCode.BAD_REQUEST,
+  RESET_TOKEN_EXPIRED: HttpStatusCode.BAD_REQUEST,
+  RESET_TOKEN_INVALID: HttpStatusCode.BAD_REQUEST,
+  INVALID_ZIP_STRUCTURE: HttpStatusCode.BAD_REQUEST,
+  INVALID_QUESTION_FILE: HttpStatusCode.BAD_REQUEST,
+  EMPTY_MODULE: HttpStatusCode.BAD_REQUEST,
+  QUESTION_COUNT_MISMATCH: HttpStatusCode.BAD_REQUEST,
+  INVALID_CONTEXT_WEIGHT: HttpStatusCode.BAD_REQUEST,
+  INVALID_FILE_SIGNATURE: HttpStatusCode.BAD_REQUEST,
+  INVALID_EXTENSION: HttpStatusCode.BAD_REQUEST,
+  EMPTY_FILE: HttpStatusCode.BAD_REQUEST,
+  NO_EXTRACTABLE_TEXT: HttpStatusCode.BAD_REQUEST,
+  EMPTY_PROMPT: HttpStatusCode.BAD_REQUEST,
+  INVALID_QUESTION_COUNT: HttpStatusCode.BAD_REQUEST,
+  NO_ELIGIBLE_QUESTIONS: HttpStatusCode.BAD_REQUEST,
+  UNSUPPORTED_IMAGE_TYPE: HttpStatusCode.BAD_REQUEST,
+  PATH_TRAVERSAL_REJECTED: HttpStatusCode.BAD_REQUEST,
+  UNRECOGNIZED_CONTENT_TYPE: HttpStatusCode.BAD_REQUEST,
+  INVALID_COLOR_FORMAT: HttpStatusCode.BAD_REQUEST,
+  INVALID_MODEL_ID: HttpStatusCode.BAD_REQUEST,
+
+  UNAUTHENTICATED: HttpStatusCode.UNAUTHORIZED,
+  INVALID_CREDENTIALS: HttpStatusCode.UNAUTHORIZED,
+  TOKEN_EXPIRED: HttpStatusCode.UNAUTHORIZED,
+  GOOGLE_TOKEN_INVALID: HttpStatusCode.UNAUTHORIZED,
+  GOOGLE_NOT_CONFIGURED: HttpStatusCode.UNAUTHORIZED,
+  WEBHOOK_SIGNATURE_INVALID: HttpStatusCode.UNAUTHORIZED,
+
+  FORBIDDEN: HttpStatusCode.FORBIDDEN,
+  TENANT_SUSPENDED: HttpStatusCode.FORBIDDEN,
+  REGISTRATION_DISABLED: HttpStatusCode.FORBIDDEN,
+  GOOGLE_SIGNIN_DISABLED: HttpStatusCode.FORBIDDEN,
+  USER_INACTIVE: HttpStatusCode.FORBIDDEN,
+  NOT_CURRICULUM_OWNER: HttpStatusCode.FORBIDDEN,
+  NOT_ATTEMPT_OWNER: HttpStatusCode.FORBIDDEN,
+  NOT_SESSION_OWNER: HttpStatusCode.FORBIDDEN,
+  FEATURE_NOT_ENABLED: HttpStatusCode.FORBIDDEN,
+  LINK_INVALID_OR_EXPIRED: HttpStatusCode.FORBIDDEN,
+
+  NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  TENANT_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  USER_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  ROLE_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  PERMISSION_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  EXAM_TYPE_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  CURRICULUM_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  DOCUMENT_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  SESSION_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  ATTEMPT_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  QUESTION_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  PACKAGE_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  FEATURE_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  SUBJECT_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  TAXONOMY_ENTRY_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+  MODEL_NOT_FOUND: HttpStatusCode.NOT_FOUND,
+
+  SUBDOMAIN_TAKEN: HttpStatusCode.CONFLICT,
+  SUBDOMAIN_IMMUTABLE: HttpStatusCode.CONFLICT,
+  INVALID_TENANT_STATE: HttpStatusCode.CONFLICT,
+  TENANT_NOT_PURGE_ELIGIBLE: HttpStatusCode.CONFLICT,
+  EMAIL_ALREADY_REGISTERED: HttpStatusCode.CONFLICT,
+  FEATURE_KEY_EXISTS: HttpStatusCode.CONFLICT,
+  FEATURE_KEY_IMMUTABLE: HttpStatusCode.CONFLICT,
+  FEATURE_IN_USE: HttpStatusCode.CONFLICT,
+  PACKAGE_KEY_EXISTS: HttpStatusCode.CONFLICT,
+  PACKAGE_INACTIVE: HttpStatusCode.CONFLICT,
+  ROLE_NAME_EXISTS: HttpStatusCode.CONFLICT,
+  ROLE_IN_USE: HttpStatusCode.CONFLICT,
+  PERMISSION_IN_USE: HttpStatusCode.CONFLICT,
+  SYSTEM_ROLE_PROTECTED: HttpStatusCode.CONFLICT,
+  LAST_ADMIN_PROTECTED: HttpStatusCode.CONFLICT,
+  TAXONOMY_ENTRY_IN_USE: HttpStatusCode.CONFLICT,
+  EXAM_TYPE_NAME_EXISTS: HttpStatusCode.CONFLICT,
+  EXAM_TYPE_HAS_ACTIVE_ATTEMPTS: HttpStatusCode.CONFLICT,
+  APPEND_NOT_SUPPORTED_FOR_LEGACY_ZIP: HttpStatusCode.CONFLICT,
+  ATTEMPT_ALREADY_IN_PROGRESS: HttpStatusCode.CONFLICT,
+  ATTEMPT_NOT_IN_PROGRESS: HttpStatusCode.CONFLICT,
+  MIGRATION_RUN_IN_PROGRESS: HttpStatusCode.CONFLICT,
+  MODEL_ALREADY_APPROVED: HttpStatusCode.CONFLICT,
+  DEFAULT_MODEL_REQUIRED: HttpStatusCode.CONFLICT,
+  MODEL_IN_USE: HttpStatusCode.CONFLICT,
+  MODEL_NOT_APPROVED: HttpStatusCode.CONFLICT,
+  MODEL_DISABLED: HttpStatusCode.CONFLICT,
+
+  FILE_TOO_LARGE: HttpStatusCode.PAYLOAD_TOO_LARGE,
+
+  RANGE_NOT_SATISFIABLE: HttpStatusCode.RANGE_NOT_SATISFIABLE,
+
+  INSUFFICIENT_QUESTION_BANK: HttpStatusCode.UNPROCESSABLE_ENTITY,
+  EMPTY_QUESTION_BANK: HttpStatusCode.UNPROCESSABLE_ENTITY,
+  NO_QUESTIONS_GENERATED: HttpStatusCode.UNPROCESSABLE_ENTITY,
+  INSUFFICIENT_COLOR_CONTRAST: HttpStatusCode.UNPROCESSABLE_ENTITY,
+
+  FEATURE_LIMIT_REACHED: HttpStatusCode.TOO_MANY_REQUESTS,
+  RATE_LIMITED: HttpStatusCode.TOO_MANY_REQUESTS,
+
+  INTERNAL_ERROR: HttpStatusCode.INTERNAL_SERVER_ERROR,
+  TENANT_PROVISIONING_FAILED: HttpStatusCode.INTERNAL_SERVER_ERROR,
+  AI_PROVIDER_FAILED: HttpStatusCode.INTERNAL_SERVER_ERROR,
+  SESSION_RECOVERY_EXHAUSTED: HttpStatusCode.INTERNAL_SERVER_ERROR,
+
+  TENANT_UNAVAILABLE: HttpStatusCode.SERVICE_UNAVAILABLE,
+  BILLING_NOT_CONFIGURED: HttpStatusCode.SERVICE_UNAVAILABLE,
+  AI_DISABLED: HttpStatusCode.SERVICE_UNAVAILABLE,
+  AI_NOT_CONFIGURED: HttpStatusCode.SERVICE_UNAVAILABLE,
+  AI_SERVICE_UNAVAILABLE: HttpStatusCode.SERVICE_UNAVAILABLE,
+  VECTOR_STORE_UNAVAILABLE: HttpStatusCode.SERVICE_UNAVAILABLE,
+};

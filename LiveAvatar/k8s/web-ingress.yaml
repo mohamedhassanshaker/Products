@@ -1,0 +1,28 @@
+# Public entry point for the admin SPA, conversation SPA, and /api/public/*
+# (HLD §7.2). Only `web-public` (:8080) is ever referenced here — never
+# `web-internal`. Assumes an ingress-nginx class; swap `ingressClassName` and
+# the cert-manager annotation for whatever your cluster actually runs
+# (this is a project-wide choice the HLD/ADR does not pin — see
+# docs/deployment/DEPLOYMENT.md's open questions).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  namespace: liveavatar
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod # replace with your issuer, or drop TLS block if terminating elsewhere
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: ['REPLACE_ME.example.com']
+      secretName: liveavatar-web-tls
+  rules:
+    - host: REPLACE_ME.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web-public
+                port: { number: 8080 }

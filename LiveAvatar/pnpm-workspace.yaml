@@ -1,0 +1,22 @@
+packages:
+  - 'apps/api'
+  - 'apps/web'
+  - 'packages/*'
+allowBuilds:
+  '@parcel/watcher': true
+  '@prisma/engines': true
+  '@scarf/scarf': false
+  cpu-features: false
+  esbuild: true
+  lmdb: false
+  msgpackr-extract: false
+  prisma: true
+  protobufjs: false
+  ssh2: false
+  unrs-resolver: true
+onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - '@prisma/engines'
+  - esbuild
+  - prisma
+  - unrs-resolver

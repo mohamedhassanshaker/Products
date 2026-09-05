@@ -1,0 +1,14 @@
+port 3491, N=400 interleaved samples/path, sorted by p50 (ms)
+p50=1.927   /_next/data/0XSckFWE-ie0ZFMWIbf50/internal/ops/tenants.json           GATED nextdata form
+p50=1.854   /internal/ops/nb-c-4f21c8a7e3d9b605/tenants                           internal secret prefix (known residual)
+p50=1.789   /internal/ops/tenants                                                 GATED
+p50=1.768   /internal/ops/nb-c-4f21c8a7e3d9b605x/tenants                          near-miss of secret prefix
+p50=1.767   /internal/ops                                                         GATED root
+p50=1.286   /_next/data/0XSckFWE-ie0ZFMWIbf50/internal/xps/tenants.json           control nextdata form
+p50=1.273   /internal/opsx/tenants                                                near-miss
+p50=1.252   /internal/xps/tenants                                                 control missing
+p50=1.247   /admin/nothing                                                        control missing
+p50=1.244   /internal/zzz/tenants                                                 control missing
+p50=1.241   /nothing                                                              control missing
+p50=1.239   /internal/op/tenants                                                  near-miss
+p50=1.237   /internal/ops-x/tenants                                               near-miss

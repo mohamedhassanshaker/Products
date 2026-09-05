@@ -1,0 +1,26 @@
+{
+  "name": "@nextbot/observability",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "OTel bootstrap, span helpers (LLD §11.9, FR-AGT-09). Pino logger + redaction config added when a later phase first needs file-based logging.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir ."
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/sdk-node": "^0.221.0",
+    "@opentelemetry/sdk-trace-node": "^2.10.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.221.0",
+    "@opentelemetry/sdk-metrics": "^2.10.0",
+    "@opentelemetry/exporter-metrics-otlp-http": "^0.221.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

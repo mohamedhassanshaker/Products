@@ -1,0 +1,16 @@
+{
+  "name": "@examland/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared API contract (DTO shapes, enums, error codes) consumed by both apps/api and apps/web. Zero runtime dependencies by design (LLD §1) so the client/server contract cannot drift without a build-time type error.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
+}

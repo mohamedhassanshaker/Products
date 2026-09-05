@@ -1,0 +1,70 @@
+version: 2
+deployment:
+  tenant_id: "11111111-1111-1111-1111-111111111111"
+  name: "Bad"
+transport:
+  provider: livekit
+  room_namespace: bad
+stt:
+  provider: deepgram
+  language: en-US
+reasoning:
+  entry_node_id: llm-1
+  background_entry_node_ids: []
+  turn_budget_ms: 3000
+  graph:
+    - id: llm-1
+      type: llm
+      name: Answer
+      lane: foreground
+      on_error: { action: degrade }
+      on_deadline: { action: degrade }
+      provider: openai
+      model: gpt-4o
+      retry:
+        max_attempts: 3
+        backoff_ms: [200, 400, 800]
+      next_node_id: null
+tts:
+  provider: fish-speech
+  voice_id: v1
+avatar:
+  provider: bithuman
+  avatar_id: a1
+agent:
+  runtime: langgraph
+  system_prompt: "hi"
+  tools: []
+  memory:
+    enabled: true
+    window_turns: 16
+knowledge:
+  pipeline:
+    rewrite:
+      enabled: true
+      context_turns: 3
+      budget_ms: 150
+    hybrid_search:
+      vector_weight: 0.6
+      keyword_weight: 0.4
+      candidates: 20
+      budget_ms: 100
+    metadata_filter:
+      enabled: false
+      budget_ms: 20
+    rerank:
+      enabled: false
+    threshold:
+      min_score: 0.5
+      budget_ms: 10
+    inject:
+      token_cap: 1200
+      citation_format: numbered
+      budget_ms: 30
+skills: []
+privacy:
+  send_to_remote_llm: prompt_text_only
+  retain_transcripts_days: 90
+  recordings_enabled: false
+alerts:
+  degraded_mode_message: "hold on"

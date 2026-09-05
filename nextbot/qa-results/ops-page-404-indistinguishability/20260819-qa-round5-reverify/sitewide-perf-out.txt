@@ -1,0 +1,13 @@
+port 3492, N=200 interleaved (shuffled order) samples/case, first 20 dropped
+  real page /login                  {"n":180,"mean":2.33,"p50":2.208,"p90":2.93,"p99":3.712,"min":1.076,"max":4.345}
+  real page / (root)                {"n":180,"mean":6.944,"p50":6.697,"p90":8.177,"p99":13.162,"min":3.373,"max":16.16}
+  missing page                      {"n":180,"mean":2.224,"p50":2.14,"p90":2.647,"p99":3.487,"min":1.464,"max":3.523}
+  missing page deep                 {"n":180,"mean":2.255,"p50":2.127,"p90":2.799,"p99":4.644,"min":1.273,"max":4.897}
+  api unmatched                     {"n":180,"mean":2.772,"p50":2.711,"p90":3.239,"p99":4.412,"min":1.554,"max":6.326}
+  api ops (guarded)                 {"n":180,"mean":2.672,"p50":2.555,"p90":3.139,"p99":5.074,"min":1.611,"max":6.503}
+  api v1 unmatched                  {"n":180,"mean":2.851,"p50":2.714,"p90":3.497,"p99":4.747,"min":1.528,"max":4.806}
+  gated ops page (denied)           {"n":180,"mean":2.26,"p50":2.183,"p90":2.705,"p99":3.626,"min":1.751,"max":5.252}
+  gated ops page (allowed)          {"n":180,"mean":6.863,"p50":6.544,"p90":8.197,"p99":10.012,"min":3.58,"max":20.088}
+  static chunk (matcher-excluded)   {"n":180,"mean":0.584,"p50":0.532,"p90":0.696,"p99":1.993,"min":0.304,"max":4.264}
+  favicon (matcher-excluded)        {"n":180,"mean":1.636,"p50":1.571,"p90":1.942,"p99":2.999,"min":0.827,"max":3.175}
+  _next/image (matcher-excluded)    {"n":180,"mean":3.729,"p50":3.541,"p90":4.471,"p99":8.164,"min":2.263,"max":11.289}

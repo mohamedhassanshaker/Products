@@ -1,0 +1,39 @@
+.la-knowledge-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 16px;
+
+  legend {
+    font-size: 12px;
+    color: var(--la-on-surface-variant, #44474f);
+    padding: 0 0 4px;
+  }
+}
+
+.la-knowledge-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.la-knowledge-soon {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--la-on-surface-variant, #44474f);
+  margin-left: 4px;
+}
+
+.la-knowledge-file {
+  &__label {
+    display: block;
+    font-size: 12px;
+    color: var(--la-on-surface-variant, #44474f);
+    margin-bottom: 4px;
+  }
+
+  &__error {
+    font-size: 12px;
+    color: var(--la-error, #b3261e);
+    margin: 4px 0 0;
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "results": [
+    {
+      "screen": "11 Post-call summary",
+      "scenario": "star rating APG radio pattern (roving tabindex + arrows + aria-checked)",
+      "pass": true,
+      "note": "{\"activeLabel\":\"3 stars\",\"activeRole\":\"radio\",\"checked\":[\"false\",\"false\",\"true\",\"false\",\"false\"],\"tabindexes\":[\"-1\",\"-1\",\"0\",\"-1\",\"-1\"]}"
+    }
+  ],
+  "consoleErrors": []
+}

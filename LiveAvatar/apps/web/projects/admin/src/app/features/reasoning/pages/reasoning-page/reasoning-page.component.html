@@ -1,0 +1,176 @@
+<la-page-header [title]="(tenant()?.name ?? 'Deployment') + ' · Reasoning'">
+  <a mat-button [routerLink]="['/tenants', tenantId, 'builder', 'overview']">Back to Agent Builder</a>
+</la-page-header>
+
+@if (store.status() === 'loading') {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading reasoning graph" />
+}
+
+@if (store.status() === 'error') {
+  <la-empty-state
+    variant="error"
+    icon="error_outline"
+    title="Could not load this deployment"
+    body="Try again."
+    actionLabel="Retry"
+    (action)="retry()"
+  />
+}
+
+@if (store.status() === 'ready') {
+  @if (store.conflict()) {
+    <div class="la-reasoning-banner" role="alert">
+      <span>Config was modified by another user. Reload and retry.</span>
+      <button mat-flat-button color="primary" type="button" (click)="reload()">Reload</button>
+    </div>
+  }
+
+  @if (store.saveAlert()) {
+    <div class="la-reasoning-banner" role="alert">{{ store.saveAlert() }}</div>
+  }
+
+  @if (store.validating()) {
+    <span class="la-reasoning-chip" aria-live="polite">Validating…</span>
+  }
+
+  <section class="la-reasoning-core">
+    <h2>Core instructions</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Runtime</mat-label>
+      <mat-select [ngModel]="store.agent().runtime" name="runtime" (ngModelChange)="onRuntime($event)">
+        <mat-option value="langgraph">LangGraph</mat-option>
+        <mat-option value="pydantic-ai">Pydantic AI</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>System prompt</mat-label>
+      <textarea matInput rows="6" [ngModel]="store.agent().system_prompt" name="systemPrompt" (ngModelChange)="onSystemPrompt($event)"></textarea>
+    </mat-form-field>
+    <p class="la-reasoning-helper" [class.la-reasoning-helper--error]="promptOverLimit()" aria-live="polite">
+      {{ promptByteLength() }} / {{ promptByteLimit }} bytes
+    </p>
+    @for (message of errorsForLayer('agent.system_prompt'); track message) {
+      <p class="la-reasoning-error">{{ message }}</p>
+    }
+
+    <mat-slide-toggle [ngModel]="store.agent().memory?.enabled" name="memoryEnabled" (ngModelChange)="onMemoryEnabled($event)">
+      Memory enabled
+    </mat-slide-toggle>
+    @if (store.agent().memory?.enabled) {
+      <mat-form-field appearance="outline">
+        <mat-label>Window (turns)</mat-label>
+        <input matInput type="number" min="1" max="64" [ngModel]="store.agent().memory?.window_turns" name="windowTurns" (ngModelChange)="onMemoryWindow($event)" />
+      </mat-form-field>
+    }
+  </section>
+
+  @if (!store.reasoning()) {
+    <la-empty-state
+      icon="psychology"
+      title="Set up the reasoning graph"
+      body="Choose the LLM this agent starts from — you can add Router, Tool, Retrieve, and Speak nodes after."
+    />
+    <div class="la-reasoning-empty-form">
+      <mat-form-field appearance="outline">
+        <mat-label>LLM provider</mat-label>
+        <mat-select [ngModel]="emptyStateProvider()" (ngModelChange)="emptyStateProvider.set($event)">
+          @for (def of llmDefinitions(); track def.key) {
+            <mat-option [value]="def.key">{{ def.display_name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Model</mat-label>
+        <input matInput [ngModel]="emptyStateModel()" (ngModelChange)="emptyStateModel.set($event)" placeholder="gpt-4o-mini" />
+      </mat-form-field>
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        [disabled]="!emptyStateProvider() || !emptyStateModel().trim()"
+        (click)="createDefaultGraph()"
+      >
+        Create graph
+      </button>
+    </div>
+  } @else {
+    @if (store.globalErrors().length > 0) {
+      <div class="la-reasoning-banner" role="alert">
+        <ul>
+          @for (error of store.globalErrors(); track error.message) {
+            <li>{{ error.message }}</li>
+          }
+        </ul>
+      </div>
+    }
+
+    <div class="la-reasoning-controls">
+      <mat-form-field appearance="outline">
+        <mat-label>Entry node</mat-label>
+        <mat-select [ngModel]="store.reasoning()!.entry_node_id" (ngModelChange)="store.setEntryNodeId($event)">
+          @for (node of store.reasoning()!.graph; track node.id) {
+            <mat-option [value]="node.id">{{ node.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Turn budget (ms)</mat-label>
+        <input matInput type="number" min="100" max="60000" [ngModel]="store.reasoning()!.turn_budget_ms" (ngModelChange)="store.setTurnBudgetMs($event)" />
+      </mat-form-field>
+
+      <button mat-flat-button [matMenuTriggerFor]="addNodeMenu" type="button">Add node ▾</button>
+      <mat-menu #addNodeMenu="matMenu">
+        @for (type of nodeTypes; track type) {
+          <button mat-menu-item type="button" (click)="addNode(type)">{{ type }}</button>
+        }
+      </mat-menu>
+    </div>
+
+    <la-turn-budget-panel [reasoning]="store.reasoning()!" [criticalPath]="store.criticalPath()" (openNode)="openInspector($event)" />
+
+    <ul class="la-reasoning-nodes" role="list">
+      @for (node of store.reasoning()!.graph; track node.id) {
+        <li role="listitem">
+          <la-node-card
+            [node]="node"
+            [allNodes]="store.reasoning()!.graph"
+            [errors]="errorsFor(node.id)"
+            [testResult]="testResultFor(node.id)"
+            [isEntry]="node.id === store.reasoning()!.entry_node_id"
+            (editNode)="openInspector(node.id)"
+            (deleteNode)="deleteNode(node)"
+            (jumpToNode)="openInspector($event)"
+          />
+        </li>
+      }
+    </ul>
+
+    <section class="la-reasoning-test-call">
+      <h2>Test call</h2>
+      <la-test-call-panel [tenantId]="tenantId" [config]="store.draftConfig()" (resultChange)="testCallResult.set($event)" />
+    </section>
+
+    <div class="la-reasoning-actions">
+      <button mat-button type="button" [disabled]="!store.dirty() || store.saving() !== null" (click)="saveDraft()">
+        @if (store.saving() === 'draft') { <mat-spinner diameter="20" /> } @else { Save Draft }
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        [disabled]="(store.configStatus() === 'published' && !store.hasUnpublishedChanges()) || !store.canPublish() || store.saving() !== null"
+        [matTooltip]="!store.canPublish() ? 'Fix validation errors to publish' : ''"
+        (click)="publish()"
+      >
+        @if (store.saving() === 'published') {
+          <mat-spinner diameter="20" />
+        } @else if (store.configStatus() === 'published' && !store.hasUnpublishedChanges()) {
+          <ng-container><mat-icon aria-hidden="true">check_circle</mat-icon> Published</ng-container>
+        } @else {
+          Publish
+        }
+      </button>
+    </div>
+  }
+}

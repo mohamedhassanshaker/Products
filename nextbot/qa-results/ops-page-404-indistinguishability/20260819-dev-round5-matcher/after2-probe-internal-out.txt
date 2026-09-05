@@ -1,0 +1,22 @@
+
+!! GATE-DEPENDENT at GET /internal/ops/nb-c-4f21c8a7e3d9b605.json rsc=false (2 sigs)
+   [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+   [ALLOW-ip-nosession,ALLOW-ip-session,ALLOW-ip-badsession] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache, no-sto
+
+!! GATE-DEPENDENT at GET /internal/ops/nb-c-4f21c8a7e3d9b605.json rsc=true (4 sigs)
+   [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+   [ALLOW-ip-nosession] => 200|x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json ~ x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-pr
+   [ALLOW-ip-session] => 200|x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json ~ x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-pr
+   [ALLOW-ip-badsession] => 200|x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json ~ x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-pr
+
+!! GATE-DEPENDENT at GET /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc rsc=false (2 sigs)
+   [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+   [ALLOW-ip-nosession,ALLOW-ip-session,ALLOW-ip-badsession] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: priv
+
+!! GATE-DEPENDENT at GET /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc rsc=true (4 sigs)
+   [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+   [ALLOW-ip-nosession] => 200|x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment ~ x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment ~ Vary: rsc, next-router-state-tree, ne
+   [ALLOW-ip-session] => 200|x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment ~ x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment ~ Vary: rsc, next-router-state-tree, ne
+   [ALLOW-ip-badsession] => 200|x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment ~ x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment ~ Vary: rsc, next-router-state-tree, ne
+
+internal-prefix gate-independence: 378 (path,shape,method,rsc) cases x 8 caller states; gate-dependent cases: 4

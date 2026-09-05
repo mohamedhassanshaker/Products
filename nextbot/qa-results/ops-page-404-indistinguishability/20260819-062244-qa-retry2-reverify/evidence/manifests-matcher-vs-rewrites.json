@@ -1,0 +1,63 @@
+{
+  "middlewareMatchers": [
+    {
+      "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/internal\\/ops(\\.json|\\.rsc|\\.segments\\/.+\\.segment\\.rsc)?[\\/#\\?]?$",
+      "originalSource": "/internal/ops"
+    },
+    {
+      "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/internal\\/ops(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\.json|\\.rsc|\\.segments\\/.+\\.segment\\.rsc)?[\\/#\\?]?$",
+      "originalSource": "/internal/ops/:path*"
+    }
+  ],
+  "rewrites": {
+    "beforeFiles": [
+      {
+        "source": "/internal/ops",
+        "destination": "/__nb_route_absent__/internal/ops",
+        "has": [
+          {
+            "type": "header",
+            "key": "x-nb-ops-denied"
+          }
+        ],
+        "regex": "^/internal/ops(?:/)?$"
+      },
+      {
+        "source": "/internal/ops/:path*",
+        "destination": "/__nb_route_absent__/internal/ops/:path*",
+        "has": [
+          {
+            "type": "header",
+            "key": "x-nb-ops-denied"
+          }
+        ],
+        "regex": "^/internal/ops(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+      },
+      {
+        "source": "/internal/ops:transport([^/].*)",
+        "destination": "/__nb_route_absent__/internal/ops:transport",
+        "has": [
+          {
+            "type": "header",
+            "key": "x-nb-ops-denied"
+          }
+        ],
+        "regex": "^/internal/ops([^/].*)(?:/)?$"
+      }
+    ],
+    "afterFiles": [],
+    "fallback": [
+      {
+        "source": "/:path*",
+        "destination": "/__nb_route_absent__/:path*",
+        "missing": [
+          {
+            "type": "header",
+            "key": "x-nb-ops-denied"
+          }
+        ],
+        "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+      }
+    ]
+  }
+}

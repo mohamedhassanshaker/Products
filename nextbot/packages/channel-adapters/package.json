@@ -1,0 +1,22 @@
+{
+  "name": "@nextbot/channel-adapters",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "One sub-module per channel type (LLD §8). ChannelAdapter port + registry.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir ."
+  },
+  "dependencies": {
+    "@nextbot/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

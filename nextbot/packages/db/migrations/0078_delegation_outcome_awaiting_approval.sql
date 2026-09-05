@@ -1,0 +1,18 @@
+-- Target Architecture Blueprint Phase 14 (BL-46, FR-ORC-04, LLD §14.7.3 step 5).
+--
+-- LLD §14.7.3 executes a delegation "as an ORDINARY tool call through
+-- orchestration's existing pipeline (the AgentAsTool tool row) — so Tier-3 stops at
+-- the Approval Queue at ANY depth". That has a consequence Phase 6's outcome
+-- vocabulary had no word for: when the DELEGATION ITSELF is Tier-2/Tier-3 (a member
+-- whose `delegation_tier` is above Tier-1), the hop suspends into the Approval
+-- Queue rather than completing. None of the eight existing outcomes describes that
+-- honestly — it is not `Denied` (nothing refused it), not `Escalated` (no
+-- Escalation record is raised), and not `Failed`/`Timeout`. Recording it as any of
+-- those would make the delegation tree lie about what happened to an approver
+-- looking at the very hop they are being asked to approve.
+--
+-- Purely additive: no existing row changes meaning, and the enum's eight prior
+-- values keep their exact semantics. Kept in its own single-statement migration
+-- because Postgres forbids using a freshly-added enum label in the same transaction
+-- it was added in (the same constraint `0070`/`0049`/`0039`-`0040` already record).
+ALTER TYPE delegation_outcome ADD VALUE 'AwaitingApproval';

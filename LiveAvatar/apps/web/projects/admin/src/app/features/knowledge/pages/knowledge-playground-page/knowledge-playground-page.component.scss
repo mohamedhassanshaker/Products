@@ -1,0 +1,151 @@
+.la-playground {
+  margin: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__query,
+  &__context {
+    display: block;
+    width: 100%;
+    max-width: 640px;
+  }
+
+  &__error {
+    color: var(--la-error, #b3261e);
+    font-size: 13px;
+  }
+
+  &__summary {
+    font-size: 13px;
+    margin: 0;
+  }
+}
+
+.la-playground-stage {
+  padding: 12px 16px;
+  border: 1px solid var(--la-outline-variant, #c4c6d0);
+  border-radius: 12px;
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  p {
+    margin: 4px 0;
+    font-size: 13px;
+  }
+}
+
+.la-playground-ms {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--la-on-surface-variant, #44474f);
+}
+
+.la-playground-hint {
+  color: var(--la-on-surface-variant, #44474f);
+  font-style: italic;
+}
+
+.la-playground-table {
+  width: 100%;
+
+  td[data-label='Excerpt'] {
+    max-width: 360px;
+    white-space: normal;
+  }
+}
+
+// Phone: same stacked-card pattern as Sources/Tools/Provider credentials/Sessions
+// (UX_GUIDELINES §9.14) — reused verbatim, not reinvented, per that pattern's
+// own "do not reintroduce that bug class in a new table" instruction.
+@media (max-width: 767px) {
+  .la-playground-table.mat-mdc-table,
+  .la-playground-table {
+    display: block;
+    height: auto;
+  }
+
+  .la-playground-table tbody,
+  .la-playground-table .mdc-data-table__content {
+    display: block;
+    height: auto;
+  }
+
+  .la-playground-table tr[mat-header-row],
+  .la-playground-table tr.mat-mdc-header-row {
+    display: none;
+  }
+
+  .la-playground-table tr[mat-row],
+  .la-playground-table tr.mat-mdc-row,
+  .la-playground-table tr.mdc-data-table__row {
+    display: block;
+    height: auto !important;
+    min-height: 0;
+    padding: 12px 0;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    overflow: visible;
+    border-bottom: 1px solid var(--la-outline, #74777f);
+  }
+
+  .la-playground-table td[mat-cell],
+  .la-playground-table td.mat-mdc-cell,
+  .la-playground-table td.mdc-data-table__cell {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    height: auto !important;
+    min-height: 0;
+    padding: 4px 0;
+    border: none;
+    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .la-playground-table tr[mat-row]:last-of-type,
+  .la-playground-table tr.mat-mdc-row:last-of-type {
+    margin-bottom: 16px;
+    border-bottom: none;
+  }
+
+  .la-playground-table td[mat-cell]::before {
+    content: attr(data-label);
+    font-weight: 500;
+    margin-right: 12px;
+    white-space: nowrap;
+  }
+}
+
+.la-playground-chunks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  li {
+    font-size: 13px;
+  }
+}
+
+.la-playground-total {
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--la-surface-variant, #e1e2ec);
+}
+
+.la-playground-error {
+  color: var(--la-error, #b3261e);
+  font-size: 13px;
+  margin: 8px 0 0;
+}

@@ -1,0 +1,72 @@
+# Self-hosted LiveKit SFU config (FR-TRANSPORT-1, HLD §2/§8.1). Mounted
+# read-only into the `livekit` container/pod — never baked into an image.
+#
+# Secrets (the API key/secret pair) are NOT set here: pass them via the
+# `LIVEKIT_KEYS` environment variable (`<key>: <secret>`, one per line),
+# exactly as docker-compose.dev.yml already does for local dev — this file
+# only holds non-secret topology/room settings.
+#
+# `webhook.api_key` below identifies *which* key LiveKit signs webhook
+# payloads with; it is the public key id, not the secret, but it still must
+# match whatever key you pass via LIVEKIT_KEYS for a given environment.
+# Left as `__LIVEKIT_API_KEY__` here deliberately so a forgotten
+# substitution fails loudly instead of silently signing with a wrong/example
+# key — never edit this committed file directly.
+#
+# This file is a TEMPLATE, not a ready-to-mount config. It is genuinely
+# substituted at container start, not just documented as needing it:
+#   - docker-compose.yml mounts this file read-only and the `livekit`
+#     service's `entrypoint`/`command` runs `sed` against it (reading
+#     `$LIVEKIT_API_KEY` from the container's own environment at runtime,
+#     not compose-interpolated into this file) into a writable path before
+#     exec'ing `/livekit-server` (the image's own binary path — it is not on
+#     `$PATH`) — see docker-compose.yml's `livekit` service.
+#   - k8s/livekit.yaml runs the same substitution via an initContainer that
+#     shares an `emptyDir` with the main container — see that file.
+
+port: 7880
+
+rtc:
+  tcp_port: 7881
+  # Trimmed to match docker-compose.yml's published UDP port range for local
+  # use; widen both together for real multi-participant load (a real
+  # production LiveKit typically wants several thousand ports). Deliberately
+  # kept below 49152 (D-5) — Windows' default ephemeral/dynamic port range is
+  # 49152-65535, and a range inside it makes `docker compose up` bind
+  # non-deterministically depending on what else the host has transiently
+  # allocated. Move both together if you change this.
+  port_range_start: 20000
+  port_range_end: 20100
+  # Set to true and provide node_ip in real multi-host deployments so
+  # clients traverse NAT correctly; false is correct here (single-host
+  # docker-compose, no NAT to traverse).
+  use_external_ip: false
+  # Without this, LiveKit auto-detects its own container-internal Docker
+  # bridge IP (confirmed live: "nodeIP": "172.18.0.5") and advertises THAT
+  # in its ICE candidates — not reliably reachable from the browser on the
+  # host, which made the very first WebRTC negotiation attempt on every
+  # call time out (it only ever recovered on a reconnect/ICE-restart retry,
+  # each one costing several seconds of "Still connecting..."). Pinning
+  # this to the loopback address the host's browser actually reaches the
+  # published `20000-20100/udp` range through fixes negotiation on the
+  # first attempt — standard LiveKit guidance for exactly this
+  # single-machine docker-compose topology.
+  node_ip: 127.0.0.1
+
+room:
+  # Auto-close a room with no participants after this many seconds. The
+  # control plane also sets `empty_timeout` per-room at creation time
+  # (ROOM_EMPTY_TIMEOUT_SECONDS, apps/api/src/modules/transport/domain/room.ts)
+  # — this is the server-wide fallback for rooms created any other way.
+  empty_timeout: 900
+  auto_create: false
+
+webhook:
+  api_key: __LIVEKIT_API_KEY__
+  urls:
+    # Cluster-internal DNS name of the `web` service's internal (:8081)
+    # ClusterIP — never the public ingress host (NFR-3).
+    - http://web-internal:8081/internal/livekit/webhooks
+
+logging:
+  level: info

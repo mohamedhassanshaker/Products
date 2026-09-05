@@ -1,0 +1,25 @@
+.la-dialog-field {
+  width: 100%;
+  display: block;
+}
+
+.la-dialog-helper {
+  font-size: 12px;
+  color: var(--la-on-surface-variant, #44474f);
+  margin: -8px 0 8px;
+}
+
+.la-dialog-alert {
+  background: #fdecea;
+  color: var(--la-error, #b3261e);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.la-dialog-readonly {
+  font-size: 14px;
+  color: var(--la-on-surface-variant, #44474f);
+  margin: -8px 0 16px;
+}

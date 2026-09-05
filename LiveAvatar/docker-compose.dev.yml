@@ -1,0 +1,44 @@
+# Local Postgres 16 + Redis for control-plane development and optional e2e
+# (e2e prefers @testcontainers/postgresql when Docker is available).
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: liveavatar
+      POSTGRES_PASSWORD: liveavatar
+      POSTGRES_DB: liveavatar
+    ports:
+      - '5432:5432'
+    volumes:
+      - liveavatar_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U liveavatar']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Self-hosted LiveKit (FR-TRANSPORT-1). `--dev` mode mints a fixed
+  # devkey/devsecretdevsecretdevsecret API key pair and listens on 7880 with
+  # no TLS — local/dev convenience only, never used in a deployed topology
+  # (nexus-deploy owns the production LiveKit config).
+  livekit:
+    image: livekit/livekit-server:latest
+    command: --dev --bind 0.0.0.0
+    environment:
+      LIVEKIT_KEYS: 'devkey: devsecretdevsecretdevsecret'
+    ports:
+      - '7880:7880'
+      - '7881:7881'
+
+volumes:
+  liveavatar_pg:

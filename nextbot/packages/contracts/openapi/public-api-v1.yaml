@@ -1,0 +1,325 @@
+openapi: 3.0.3
+info:
+  title: NextBot Public API
+  version: "1"
+  description: |
+    Target Architecture Blueprint Phase 18 (BL-49, FR-API-01). Programmatic access to
+    agent versions, skills, workflows, teams, and knowledge sources — the same
+    resources the Admin Console manages, subject to the SAME permission-module
+    gating (FR-ADM-02): this API is not a side-door around RBAC.
+
+    **Authentication**: `Authorization: Bearer nbk_<tenantSlug>.<keyId>.<secret>` — a
+    scoped service-account API key (FR-SEC-10, see Settings -> Service Accounts). A
+    key's effective permissions are the per-module MINIMUM of its own optional scope
+    and the service account's role-derived matrix; a key can only narrow what its
+    account can do, never widen it.
+
+    **Errors**: every non-2xx response is an RFC 9457 `application/problem+json`
+    body (`type`, `title`, `status`, optionally `code`/`fields`).
+
+    **Scope note (disclosed)**: this document covers only the CRUD/list/read
+    operations FR-API-01 names. Console-authoring-convenience/analytics surfaces
+    (diff, sandbox-run, validate-only, where-used/upgrade-consumers, graph explorer,
+    retrieval playground, coverage/freshness reports) remain console-only
+    (`/api/v1/admin/**`) as of this phase — see
+    `docs/plans/public-api-webhooks-otel-siem-plan.md` for the full list and
+    rationale. No auto-generation tool produced this document (none is configured in
+    this workspace) — it is hand-maintained against the same TypeBox request/response
+    schemas (`packages/contracts/src`) the routes themselves validate against; keep
+    both in sync when either changes.
+servers:
+  - url: /api/v1/external
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: "nbk_<tenantSlug>.<keyId>.<secret>"
+  schemas:
+    Problem:
+      type: object
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: { type: integer }
+        code: { type: string }
+        fields:
+          type: array
+          items:
+            type: object
+            properties:
+              path: { type: string }
+              code: { type: string }
+              message: { type: string }
+  responses:
+    Unauthorized:
+      description: Missing/invalid/expired bearer key.
+      content: { application/problem+json: { schema: { $ref: "#/components/schemas/Problem" } } }
+    Forbidden:
+      description: The key's effective permissions do not include the required module/level — the identical gate a console session would hit.
+      content: { application/problem+json: { schema: { $ref: "#/components/schemas/Problem" } } }
+    ValidationError:
+      description: Request body failed schema validation.
+      content: { application/problem+json: { schema: { $ref: "#/components/schemas/Problem" } } }
+paths:
+  /agent-platform/definitions:
+    get:
+      summary: List agent definitions
+      description: "RBAC: agent_platform=Read"
+      responses:
+        "200": { description: OK }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      summary: Create an agent definition
+      description: "RBAC: agent_platform=Write"
+      responses:
+        "201": { description: Created }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /agent-platform/definitions/{id}:
+    get:
+      summary: Get an agent definition
+      description: "RBAC: agent_platform=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses:
+        "200": { description: OK }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /agent-platform/definitions/{id}/versions:
+    get:
+      summary: List an agent definition's versions
+      description: "RBAC: agent_platform=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+    post:
+      summary: Create the next immutable agent definition version (Draft)
+      description: |
+        RBAC: agent_platform=Write. Immutability/promotion-gate rules apply
+        IDENTICALLY to a version created via this route — it is the same
+        application-service call the console's own route makes.
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses:
+        "201": { description: Created }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /agent-platform/versions/{id}:
+    get:
+      summary: Get an agent definition version
+      description: "RBAC: agent_platform=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+  /agent-platform/versions/{id}/submit-review:
+    post:
+      summary: Open a real Git PR/MR for review (or report git-not-connected)
+      description: "RBAC: agent_platform=Write"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+  /agent-platform/versions/{id}/promote:
+    post:
+      summary: Transition a version to the next lifecycle status
+      description: |
+        RBAC: agent_platform=Write. LLD promotion-gate rules (reviewer != author,
+        sandbox-test requirement, etc.) are enforced server-side, unchanged from the
+        console's own path.
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses:
+        "200": { description: OK }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /skills:
+    get:
+      summary: List skills
+      description: "RBAC: agent_platform=Read"
+      responses: { "200": { description: OK } }
+    post:
+      summary: Create a skill (with a real version 1)
+      description: "RBAC: agent_platform=Write"
+      responses: { "201": { description: Created } }
+  /skills/{id}:
+    get:
+      summary: Get a skill
+      description: "RBAC: agent_platform=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+  /skills/{id}/versions:
+    get:
+      summary: List a skill's versions
+      description: "RBAC: agent_platform=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+    post:
+      summary: Create the next skill version (Draft)
+      description: "RBAC: agent_platform=Write"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "201": { description: Created } }
+  /skills/{id}/versions/{versionId}:
+    get:
+      summary: Get a skill version
+      description: "RBAC: agent_platform=Read"
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      responses: { "200": { description: OK } }
+  /skills/{id}/versions/{versionId}/publish:
+    post:
+      summary: Publish a skill version
+      description: "RBAC: agent_platform=Write"
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      responses: { "200": { description: OK } }
+  /skills/{id}/versions/{versionId}/deprecate:
+    post:
+      summary: Deprecate a skill version
+      description: "RBAC: agent_platform=Write"
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      responses: { "200": { description: OK } }
+  /workflows:
+    get:
+      summary: List workflows
+      description: "RBAC: agent_platform=Read"
+      responses: { "200": { description: OK } }
+    post:
+      summary: Create a workflow (with a real version 1)
+      description: "RBAC: agent_platform=Write"
+      responses: { "201": { description: Created } }
+  /workflows/{id}:
+    get:
+      summary: Get a workflow
+      description: "RBAC: agent_platform=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+    patch:
+      summary: Update a workflow's description/status (the graph itself is immutable per version)
+      description: "RBAC: agent_platform=Write"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+  /workflows/{id}/versions:
+    get:
+      summary: List a workflow's versions
+      description: "RBAC: agent_platform=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+    post:
+      summary: Create the next immutable workflow version (Draft)
+      description: "RBAC: agent_platform=Write. Every LLD node-validation rule applies identically."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses:
+        "201": { description: Created }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /workflows/{id}/versions/{versionId}:
+    get:
+      summary: Get a workflow version
+      description: "RBAC: agent_platform=Read"
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      responses: { "200": { description: OK } }
+  /workflows/{id}/versions/{versionId}/transition:
+    post:
+      summary: Transition a workflow version (promotion gate enforced server-side)
+      description: "RBAC: agent_platform=Write"
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      responses: { "200": { description: OK } }
+  /teams:
+    get:
+      summary: List teams
+      description: "RBAC: agent_platform=Read"
+      responses: { "200": { description: OK } }
+    post:
+      summary: Create a team (with a real version 1)
+      description: "RBAC: agent_platform=Write"
+      responses: { "201": { description: Created } }
+  /teams/{id}:
+    get:
+      summary: Get a team
+      description: "RBAC: agent_platform=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+    patch:
+      summary: Update a team's description/status (composition is immutable per version)
+      description: "RBAC: agent_platform=Write"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+  /teams/{id}/versions:
+    get:
+      summary: List a team's versions
+      description: "RBAC: agent_platform=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+    post:
+      summary: Create the next immutable team version (Draft)
+      description: "RBAC: agent_platform=Write"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses:
+        "201": { description: Created }
+        "422": { $ref: "#/components/responses/ValidationError" }
+  /teams/{id}/versions/{versionId}:
+    get:
+      summary: Get a team version
+      description: "RBAC: agent_platform=Read"
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      responses: { "200": { description: OK } }
+  /teams/{id}/versions/{versionId}/transition:
+    post:
+      summary: Transition a team version (promotion gate enforced server-side)
+      description: "RBAC: agent_platform=Write"
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: versionId, in: path, required: true, schema: { type: string } }
+      responses: { "200": { description: OK } }
+  /knowledge/collections:
+    get:
+      summary: List knowledge collections
+      description: "RBAC: knowledge=Read"
+      responses: { "200": { description: OK } }
+    post:
+      summary: Create a knowledge collection
+      description: "RBAC: knowledge=Write AND knowledge_config=Write (creation sets both general fields and embedding/extraction route pins)"
+      responses: { "201": { description: Created } }
+  /knowledge/collections/{id}:
+    get:
+      summary: Get a knowledge collection
+      description: "RBAC: knowledge=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+    patch:
+      summary: Update a collection's general fields
+      description: "RBAC: knowledge=Write. Embedding/chunking config changes remain console-only via `.../config`, not exposed on this surface's initial cut."
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+    delete:
+      summary: Soft-delete a collection
+      description: "RBAC: knowledge=Write"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+  /knowledge/collections/{id}/sources:
+    get:
+      summary: List a collection's sources
+      description: "RBAC: knowledge=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+    post:
+      summary: Add a source to a collection
+      description: "RBAC: knowledge=Write"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "201": { description: Created } }
+  /knowledge/sources/{id}:
+    get:
+      summary: Get a source
+      description: "RBAC: knowledge=Read"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }
+    delete:
+      summary: Delete a source
+      description: "RBAC: knowledge=Write"
+      parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+      responses: { "200": { description: OK } }

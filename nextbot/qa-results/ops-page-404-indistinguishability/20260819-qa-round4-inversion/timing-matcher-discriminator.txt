@@ -1,0 +1,8 @@
+p50=2.193     /internal/ops/tenants
+p50=2.115     /internal/ops
+p50=2.087     /internal/ops/nb-c-4f21c8a7e3d9b605x/tenants
+p50=1.415     /internal/opsx/tenants
+p50=1.386     /internal/ops-x/tenants
+p50=1.387     /internal/op/tenants
+p50=1.385     /internal/xps/tenants
+p50=1.360     /nothing

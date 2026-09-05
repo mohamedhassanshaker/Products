@@ -1,0 +1,85 @@
+.la-knowledge-table {
+  width: 100%;
+
+  &__filename {
+    margin: 2px 0 0;
+    font-size: 11px;
+    color: var(--la-on-surface-variant, #44474f);
+  }
+
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    mat-icon {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+    }
+  }
+}
+
+// Phone: same stacked-card pattern as Tools / Provider credentials / Sessions
+// (UX_GUIDELINES §9.14) — reused verbatim per the Tools tab's own responsive
+// spec ("do not reintroduce that bug class in a new table").
+@media (max-width: 767px) {
+  .la-knowledge-table.mat-mdc-table,
+  .la-knowledge-table {
+    display: block;
+    height: auto;
+  }
+
+  .la-knowledge-table tbody,
+  .la-knowledge-table .mdc-data-table__content {
+    display: block;
+    height: auto;
+  }
+
+  .la-knowledge-table tr[mat-header-row],
+  .la-knowledge-table tr.mat-mdc-header-row {
+    display: none;
+  }
+
+  .la-knowledge-table tr[mat-row],
+  .la-knowledge-table tr.mat-mdc-row,
+  .la-knowledge-table tr.mdc-data-table__row {
+    display: block;
+    height: auto !important;
+    min-height: 0;
+    padding: 12px 0;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    overflow: visible;
+    border-bottom: 1px solid var(--la-outline, #74777f);
+  }
+
+  .la-knowledge-table td[mat-cell],
+  .la-knowledge-table td.mat-mdc-cell,
+  .la-knowledge-table td.mdc-data-table__cell {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    height: auto !important;
+    min-height: 0;
+    padding: 4px 0;
+    border: none;
+    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .la-knowledge-table tr[mat-row]:last-of-type,
+  .la-knowledge-table tr.mat-mdc-row:last-of-type {
+    margin-bottom: 16px;
+    border-bottom: none;
+  }
+
+  .la-knowledge-table td[mat-cell]::before {
+    content: attr(data-label);
+    font-weight: 500;
+    margin-right: 12px;
+    white-space: nowrap;
+  }
+}

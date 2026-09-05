@@ -1,0 +1,114 @@
+// Conversation SPA design language — deliberately distinct from the admin
+// SPA's Material shell (UX_GUIDELINES §11): a lightweight, unauthenticated,
+// touch-first single-purpose page, not a dashboard chrome.
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background: #101317;
+  color: #f2f2f2;
+}
+
+.la-precall {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.la-precall--dead-end {
+  text-align: center;
+  gap: 8px;
+
+  h1 {
+    outline: none;
+  }
+}
+
+.la-precall__preview {
+  flex: 1 1 33%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 480px;
+}
+
+.la-precall__preview-icon {
+  font-size: 96px;
+}
+
+.la-precall__form {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.la-precall__hint {
+  font-size: 14px;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.la-precall__alert {
+  background: #4a1f1f;
+  border: 1px solid #b3413b;
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.la-precall__field,
+.la-precall__toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.la-precall__toggle {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+input[type='text'] {
+  min-height: 48px;
+  padding: 0 12px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background: #1c1f24;
+  color: inherit;
+  font-size: 16px;
+}
+
+input[type='checkbox'] {
+  // Section 11.5 requires >= 48x48 CSS px hit targets on Screen 9 for the
+  // camera toggle specifically (a higher bar than NFR-4's general floor,
+  // which this previously met at 24x24 but not this screen's own
+  // requirement) — QA Phase 3 D-4.
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+}
+
+.la-precall__join {
+  min-height: 48px;
+  border-radius: 24px;
+  border: none;
+  background: #4c8dff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

@@ -1,0 +1,191 @@
+.la-session-detail__meta {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 16px;
+  margin: 0;
+
+  dt {
+    font-weight: 500;
+  }
+  dd {
+    margin: 0;
+  }
+}
+
+.la-session-detail__transcript,
+.la-session-detail__latency {
+  margin-top: 24px;
+}
+
+.la-session-detail__log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.la-session-detail__line {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.la-session-detail__line-role {
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.la-session-detail__hops-table {
+  width: 100%;
+}
+
+.la-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.la-session-detail__nodes {
+  margin-top: 24px;
+
+  &-summary {
+    font-size: 13px;
+    color: var(--la-on-surface-variant, #44474f);
+  }
+}
+
+.la-session-detail__node-cycle {
+  margin-bottom: 16px;
+
+  h3 {
+    font-size: 14px;
+    margin: 0 0 4px;
+  }
+}
+
+.la-session-detail__node-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th,
+  td {
+    text-align: left;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--la-outline, #74777f);
+  }
+
+  mat-icon {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+    vertical-align: text-bottom;
+    margin-right: 4px;
+  }
+}
+
+.la-session-detail__node-row--error {
+  color: var(--la-error, #b3261e);
+}
+
+// Phone: stack each node row's cells the same way the hops table does above.
+@media (max-width: 767px) {
+  .la-session-detail__node-table thead {
+    display: none;
+  }
+
+  .la-session-detail__node-table,
+  .la-session-detail__node-table tbody,
+  .la-session-detail__node-table tr {
+    display: block;
+  }
+
+  .la-session-detail__node-table tr {
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--la-outline, #74777f);
+  }
+
+  .la-session-detail__node-table td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: none;
+    padding: 4px 0;
+  }
+
+  .la-session-detail__node-table td::before {
+    content: attr(data-label);
+    font-weight: 500;
+  }
+}
+
+// Phone (proactive sweep, phase7-admin-spa QA D-6's recurring-class warning):
+// UX_GUIDELINES §14.7 explicitly calls out that this 6-column latency table
+// "doesn't fit 360px meaningfully" and must degrade to one stacked
+// row-per-cycle rather than a horizontally-scrolling table — the same
+// underlying defect class as the Sessions list (D-6), just not the row QA's
+// pass happened to screenshot. Same stacked-card pattern reused again.
+@media (max-width: 767px) {
+  .la-session-detail__hops-table.mat-mdc-table,
+  .la-session-detail__hops-table {
+    display: block;
+    height: auto;
+  }
+
+  .la-session-detail__hops-table tbody,
+  .la-session-detail__hops-table .mdc-data-table__content {
+    display: block;
+    height: auto;
+  }
+
+  .la-session-detail__hops-table tr[mat-header-row],
+  .la-session-detail__hops-table tr.mat-mdc-header-row {
+    display: none;
+  }
+
+  .la-session-detail__hops-table tr[mat-row],
+  .la-session-detail__hops-table tr.mat-mdc-row,
+  .la-session-detail__hops-table tr.mdc-data-table__row {
+    display: block;
+    height: auto !important;
+    min-height: 0;
+    padding: 12px 0;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    overflow: visible;
+    border-bottom: 1px solid var(--la-outline, #74777f);
+  }
+
+  .la-session-detail__hops-table td[mat-cell],
+  .la-session-detail__hops-table td.mat-mdc-cell,
+  .la-session-detail__hops-table td.mdc-data-table__cell {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    height: auto !important;
+    min-height: 0;
+    padding: 4px 0;
+    border: none;
+    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .la-session-detail__hops-table tr[mat-row]:last-of-type,
+  .la-session-detail__hops-table tr.mat-mdc-row:last-of-type {
+    margin-bottom: 16px;
+    border-bottom: none;
+  }
+
+  .la-session-detail__hops-table td[mat-cell]::before {
+    content: attr(data-label);
+    font-weight: 500;
+    margin-right: 12px;
+    white-space: nowrap;
+  }
+}

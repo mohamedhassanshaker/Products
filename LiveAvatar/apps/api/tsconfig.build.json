@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // D-4 root-cause fix (recurrence): `tsconfig.json` sets `incremental: true`
+    // with no explicit `tsBuildInfoFile`, so TypeScript's default location is
+    // OUTSIDE `outDir` (`./tsconfig.build.tsbuildinfo`, next to this config
+    // file). `nest-cli.json`'s `deleteOutDir: true` wipes `./dist` on every
+    // build but never touches that file — so a stale `.tsbuildinfo` from a
+    // prior build survives a `dist/` wipe, TypeScript's non-composite
+    // incremental check only compares source-file hashes (it does NOT verify
+    // declared outputs still exist on disk), concludes nothing changed, and
+    // `nest build` exits 0 while emitting nothing. Pinning the build-info
+    // file INSIDE `outDir` means `deleteOutDir` deletes it together with
+    // `dist/` on every build, so a wiped `dist/` can never coexist with a
+    // cache that still claims it's up to date — this is the actual defect,
+    // not a workaround like gitignoring the file (which only stopped it
+    // recurring inside a fresh Docker/CI checkout, not on any dev machine
+    // with a previously-built tree).
+    "tsBuildInfoFile": "./dist/.tsbuildinfo"
+  },
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}

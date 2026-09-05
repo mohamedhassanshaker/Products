@@ -1,0 +1,110 @@
+name: CI
+
+# Phase 0 CI skeleton (docs/plans/nextbot-plan.md): lint (incl. module-boundary rules)
+# -> typecheck -> unit -> integration. Deployment phase adds: build the 4 deployable
+# images -> container/dependency vulnerability scan (fails on critical) -> push
+# (tagged by commit SHA, plus a semver tag on release branches) -> deploy (manual
+# approval gate for production, per the orchestrator's autonomy boundaries — no
+# target environment/registry has been provisioned yet, see
+# docs/deployment/DEPLOYMENT.md, so `deploy` is a placeholder job until one is).
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/${{ github.repository }}
+
+jobs:
+  lint-typecheck-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint:boundaries
+      - run: pnpm typecheck
+      - run: pnpm test:unit
+
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: docker compose -f compose.test.yml up -d --wait
+      - run: pnpm --filter @nextbot/db run migrate:test
+      - run: pnpm test:integration
+      - run: pnpm test:isolation
+      - if: always()
+        run: docker compose -f compose.test.yml down -v
+
+  build-images:
+    needs: [lint-typecheck-unit, integration]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [web, gateway, worker, widget-embed]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/${{ matrix.app }}/Dockerfile
+          tags: nextbot-${{ matrix.app }}:${{ github.sha }}
+          load: true
+          cache-from: type=gha,scope=${{ matrix.app }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.app }}
+      - name: Trivy vulnerability scan (fail on critical)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: nextbot-${{ matrix.app }}:${{ github.sha }}
+          severity: CRITICAL
+          exit-code: "1"
+          ignore-unfixed: true
+      - name: SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          image: nextbot-${{ matrix.app }}:${{ github.sha }}
+          format: spdx-json
+          output-file: sbom-${{ matrix.app }}.spdx.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ matrix.app }}
+          path: sbom-${{ matrix.app }}.spdx.json
+      - name: Push (main branch only)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+          docker tag nextbot-${{ matrix.app }}:${{ github.sha }} ${{ env.IMAGE_PREFIX }}/nextbot-${{ matrix.app }}:${{ github.sha }}
+          docker tag nextbot-${{ matrix.app }}:${{ github.sha }} ${{ env.IMAGE_PREFIX }}/nextbot-${{ matrix.app }}:latest
+          docker push ${{ env.IMAGE_PREFIX }}/nextbot-${{ matrix.app }}:${{ github.sha }}
+          docker push ${{ env.IMAGE_PREFIX }}/nextbot-${{ matrix.app }}:latest
+
+  deploy-production:
+    needs: [build-images]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # Manual-approval gate: configure a GitHub Environment named "production" with
+    # required reviewers under repo Settings -> Environments before this job can run
+    # for real — deliberately left unconfigured here since no real production
+    # environment/target cluster has been provisioned yet (flagged in
+    # docs/deployment/DEPLOYMENT.md). Until then this job is a placeholder that
+    # documents the intended step rather than touching any real infrastructure.
+    environment: production
+    steps:
+      - run: |
+          echo "No production deploy target is configured yet."
+          echo "See docs/deployment/DEPLOYMENT.md 'Known gaps' — this job intentionally does not apply anything."

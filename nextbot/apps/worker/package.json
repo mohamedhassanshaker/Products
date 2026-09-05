@@ -1,0 +1,41 @@
+{
+  "name": "nextbot-worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "OBSERVABILITY/OPS — recurring scheduled jobs (Phase 18, BL-11): agent-platform Git PR reconciliation, conversation idle-sweep, audit outbox sync, MCP health-check, retention purge.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "start": "tsx src/main.ts"
+  },
+  "dependencies": {
+    "@nextbot/agent-platform": "workspace:*",
+    "@nextbot/approvals": "workspace:*",
+    "@nextbot/conversations": "workspace:*",
+    "@nextbot/audit": "workspace:*",
+    "@nextbot/escalations": "workspace:*",
+    "@nextbot/connectors": "workspace:*",
+    "@nextbot/tenancy": "workspace:*",
+    "@nextbot/mcp-registry": "workspace:*",
+    "@nextbot/model-gateway": "workspace:*",
+    "@nextbot/knowledge": "workspace:*",
+    "@nextbot/orchestration": "workspace:*",
+    "@nextbot/workflows": "workspace:*",
+    "@nextbot/contracts": "workspace:*",
+    "@nextbot/db": "workspace:*",
+    "@nextbot/mcp-client": "workspace:*",
+    "@nextbot/pii": "workspace:*",
+    "@nextbot/tool-registry": "workspace:*",
+    "@nextbot/webhooks": "workspace:*",
+    "@nextbot/telemetry-export": "workspace:*"
+  },
+  "devDependencies": {
+    "@nextbot/ai-registry": "workspace:*",
+    "@nextbot/channels": "workspace:*",
+    "@nextbot/testing": "workspace:*",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

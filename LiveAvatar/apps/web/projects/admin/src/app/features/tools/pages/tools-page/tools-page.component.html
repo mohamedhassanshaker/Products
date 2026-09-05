@@ -1,0 +1,132 @@
+<la-page-header [title]="(tenant()?.name ?? 'Deployment') + ' · Tools'">
+  <a mat-button [routerLink]="['/tenants', tenantId, 'builder', 'overview']">Back to Agent Builder</a>
+  <button mat-flat-button color="primary" type="button" (click)="openCreateDialog()">+ New tool</button>
+</la-page-header>
+
+@if (store.status() === 'loading') {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading tools" />
+}
+
+<section class="la-tools-attached" aria-live="polite">
+  <h3>Always available</h3>
+  <p class="la-tools-attached__hint">
+    In the base prompt, costs tokens on every turn.
+  </p>
+  @if (attachedTools().length === 0) {
+    <p class="la-tools-attached__empty">No tools attached. Use the "Attach" action below to add one.</p>
+  } @else {
+    <p class="la-tools-attached__summary">
+      {{ attachedTools().length }} tool{{ attachedTools().length === 1 ? '' : 's' }} ·
+      ~{{ attachedTokenEstimate() }} tokens (estimate)
+      @if (attachedOverLimit()) {
+        <span class="la-tools-attached__warn">
+          <mat-icon aria-hidden="true">warning</mat-icon>
+          over the recommended limit ({{ attachedLimit }})
+        </span>
+      } @else {
+        <span class="la-tools-attached__ok">
+          <mat-icon aria-hidden="true">check_circle</mat-icon>
+          under limit ({{ attachedLimit }})
+        </span>
+      }
+    </p>
+  }
+</section>
+
+@if (consequentialTools().length > 0) {
+  <section class="la-tools-consequential" role="note">
+    <h3>
+      <mat-icon aria-hidden="true">warning</mat-icon>
+      Consequential tools — {{ consequentialTools().length }} tool{{ consequentialTools().length === 1 ? '' : 's' }} can change state in your systems
+    </h3>
+    <p>Gating not available yet — coming in a later phase.</p>
+    <ul>
+      @for (tool of consequentialTools(); track tool.id) {
+        <li>{{ tool.name }}</li>
+      }
+    </ul>
+  </section>
+}
+
+@if (store.loadError()) {
+  <la-empty-state
+    variant="error"
+    icon="error_outline"
+    title="Could not load tools"
+    body="Try again."
+    actionLabel="Retry"
+    (action)="retry()"
+  />
+} @else if (store.status() === 'ready' && store.items().length === 0) {
+  <la-empty-state
+    icon="build_circle"
+    title="No tools yet"
+    body="Create a tool the agent can call."
+    actionLabel="+ New tool"
+    (action)="openCreateDialog()"
+  />
+} @else if (store.status() === 'ready') {
+  <table mat-table [dataSource]="store.items()" class="la-tools-table">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let row" data-label="Name">
+        {{ row.name }}
+        <p class="la-tools-table__api-ref">{{ row.api_ref }}</p>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="endpoint">
+      <th mat-header-cell *matHeaderCellDef>Method &amp; URL</th>
+      <td mat-cell *matCellDef="let row" [title]="row.url" class="la-tools-table__endpoint" data-label="Method & URL">
+        <span class="la-tools-table__method">{{ row.method }}</span> {{ row.url }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="lane">
+      <th mat-header-cell *matHeaderCellDef>Lane</th>
+      <td mat-cell *matCellDef="let row" data-label="Lane">{{ row.lane === 'background' ? 'Background' : 'Foreground' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="consequential">
+      <th mat-header-cell *matHeaderCellDef>Consequential</th>
+      <td mat-cell *matCellDef="let row" data-label="Consequential">
+        @if (row.consequential) {
+          <span class="la-tools-table__consequential"><mat-icon aria-hidden="true">warning</mat-icon> Yes</span>
+        } @else {
+          <span>No</span>
+        }
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="attached">
+      <th mat-header-cell *matHeaderCellDef>Always available</th>
+      <td mat-cell *matCellDef="let row" data-label="Always available">
+        {{ isAttached(row) ? 'Attached' : 'Not attached' }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row" data-label="Actions">
+        <button mat-icon-button [matMenuTriggerFor]="menu" [attr.aria-label]="'Actions for ' + row.name">
+          <mat-icon aria-hidden="true">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item type="button" (click)="testTool(row)" [disabled]="isTesting(row)">
+            {{ isTesting(row) ? 'Testing…' : 'Test' }}
+          </button>
+          <button mat-menu-item type="button" (click)="openEditDialog(row)">Edit</button>
+          <button mat-menu-item type="button" (click)="toggleAttach(row)">
+            {{ isAttached(row) ? 'Detach' : 'Attach' }}
+          </button>
+          <button mat-menu-item type="button" (click)="deleteTool(row)">Delete</button>
+        </mat-menu>
+        @if (testResultFor(row); as result) {
+          <p class="la-tools-table__test-result" [class.la-tools-table__test-result--ok]="result.ok">
+            {{ result.ok ? 'OK' : 'Failed' }}
+            @if (result.status) { · {{ result.status }} }
+            · {{ result.duration_ms }}ms
+            @if (result.credential_unresolved) { · credential not resolved in test mode }
+          </p>
+        }
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+}

@@ -1,0 +1,63 @@
+{
+  "nonexistentSlug": {
+    "bodyText": "\n    🧑‍💻This assistant is not available right now. Your name (optional)  Turn on camera  Join call \n  \n\n",
+    "errs": [
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ]
+  },
+  "configIncomplete": {
+    "alertText": [
+      "This assistant is not available right now."
+    ],
+    "errs": [
+      "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+    ]
+  },
+  "tenantPaused": {
+    "alertText": [
+      "This assistant is not available right now."
+    ],
+    "errs": [
+      "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    ]
+  },
+  "transportDown": {
+    "alertText": [
+      "Cannot reach the media server. Check your network or try again."
+    ],
+    "btnText": " Retry ",
+    "errs": [
+      "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ]
+  },
+  "micDenied": {
+    "alertText": [
+      "Microphone access is required to start. Allow the microphone in your browser and retry."
+    ],
+    "errs": []
+  },
+  "browserUnsupported": {
+    "heading": "This browser can't run a live call",
+    "focused": "H1:This browser can't run a live call",
+    "errs": []
+  },
+  "goldenPath": {
+    "url": "http://localhost:4300/c/demo-tenant",
+    "errs": [
+      "ERROR RuntimeError: NG04002: Cannot match any routes. URL Segment: 'c/demo-tenant/call'\n    at Recognizer.noMatchError (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/@angular_router.js?v=8686e93f:2978:12)\n    at http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/@angular_router.js?v=8686e93f:3010:20\n    at http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:3523:33\n    at OperatorSubscriber2._this._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:803:9)\n    at Subscriber2.error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:507:12)\n    at Subscriber2._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:530:24)\n    at Subscriber2.error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:507:12)\n    at Subscriber2._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:530:24)\n    at Subscriber2.error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:507:12)\n    at Subscriber2._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:530:24)"
+    ],
+    "errsAfter4s": [
+      "ERROR RuntimeError: NG04002: Cannot match any routes. URL Segment: 'c/demo-tenant/call'\n    at Recognizer.noMatchError (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/@angular_router.js?v=8686e93f:2978:12)\n    at http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/@angular_router.js?v=8686e93f:3010:20\n    at http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:3523:33\n    at OperatorSubscriber2._this._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:803:9)\n    at Subscriber2.error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:507:12)\n    at Subscriber2._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:530:24)\n    at Subscriber2.error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:507:12)\n    at Subscriber2._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:530:24)\n    at Subscriber2.error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:507:12)\n    at Subscriber2._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:530:24)"
+    ]
+  },
+  "directCallNav": {
+    "url": "http://localhost:4300/c/demo-tenant/call",
+    "errs": [
+      "ERROR RuntimeError: NG04002: Cannot match any routes. URL Segment: 'c/demo-tenant'\n    at Recognizer.noMatchError (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/@angular_router.js?v=8686e93f:2978:12)\n    at http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/@angular_router.js?v=8686e93f:3010:20\n    at http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:3523:33\n    at OperatorSubscriber2._this._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:803:9)\n    at Subscriber2.error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:507:12)\n    at Subscriber2._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:530:24)\n    at Subscriber2.error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:507:12)\n    at Subscriber2._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:530:24)\n    at Subscriber2.error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:507:12)\n    at Subscriber2._error (http://localhost:4300/c/@fs/D:/work/products/LiveAvatar/apps/web/.angular/cache/20.3.34/conversation/vite/deps/chunk-LWHWTQE3.js?v=8336b69f:530:24)"
+    ]
+  },
+  "endedStandin": {
+    "text": "\n    You've left the callThanks for calling in.Start a new call\n  \n\n",
+    "errs": []
+  }
+}

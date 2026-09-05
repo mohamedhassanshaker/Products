@@ -1,0 +1,7 @@
+# QA-only host-port remap: host 8080 is held by an unrelated product's
+# container on this shared sandbox. Container-internal ports untouched.
+services:
+  web:
+    ports: !override
+      - '18080:8080'
+      - '8081:8081'

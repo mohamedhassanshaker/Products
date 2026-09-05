@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextbot-worker
+  namespace: nextbot
+  labels: { app: nextbot-worker }
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxSurge: 1, maxUnavailable: 0 }
+  selector:
+    matchLabels: { app: nextbot-worker }
+  template:
+    metadata:
+      labels: { app: nextbot-worker }
+    spec:
+      serviceAccountName: nextbot-worker
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+      containers:
+        - name: worker
+          image: nextbot-worker:REPLACE_ME_TAG
+          envFrom:
+            - configMapRef: { name: nextbot-config }
+            - secretRef: { name: nextbot-secrets }
+          # Bumped 2026-09-01 (from requests 250m/256Mi, limits 1/512Mi) — this
+          # process's registered job roster (`apps/worker/src/index.ts`) has grown
+          # from the 5 jobs these original limits were sized for to 24 across this
+          # wave, including several genuinely heavier ones sharing this single
+          # process/event-loop: the knowledge ingestion pipeline's parse/chunk/
+          # embed stages and community detection (CPU + transient in-memory
+          # document/graph state — see `packages/modules/knowledge/README.md`'s
+          # "no `apps/ingest` deployable" disclosure this correction is downstream
+          # of), the workflow durable-execution pump, and the deployment shadow-
+          # eval run-pump (real provider round-trips). No load test was run in this
+          # environment to derive an exact figure (flagged, not invented) — this is
+          # a reasoned-headroom bump, not a measured one; treat it as a starting
+          # point to tune against real ingestion/workflow volume, not a final
+          # answer. See docs/deployment/DEPLOYMENT.md "apps/worker vs. the planned
+          # apps/ingest" for the full reasoning.
+          resources:
+            requests: { cpu: "500m", memory: "512Mi" }
+            limits: { cpu: "2", memory: "1536Mi" }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          # Gap fix, 2026-09-01 — see configmap.yaml's KNOWLEDGE_UPLOAD_STORE_ROOT
+          # comment: an `emptyDir` only prevents a crash under
+          # `readOnlyRootFilesystem: true`, it does NOT share this data with
+          # `web`'s pod(s) — disclosed gap, not silently fixed, see
+          # docs/deployment/DEPLOYMENT.md "Known gaps".
+          volumeMounts:
+            - { name: knowledge-uploads, mountPath: /data/knowledge-uploads }
+          # No HTTP surface (HLD §3.4/§7.1: "1-2 replicas + cron", scheduled/batch
+          # depth is the scaling driver, not request concurrency) — liveness is a
+          # process-alive check, same as the Dockerfile HEALTHCHECK. Flagged in
+          # DEPLOYMENT.md as a follow-up: a heartbeat file the scheduler touches per
+          # tick would be a materially better signal.
+          livenessProbe:
+            exec:
+              command: ["pgrep", "-f", "tsx.*src/main.ts"]
+            initialDelaySeconds: 15
+            periodSeconds: 30
+      volumes:
+        - { name: knowledge-uploads, emptyDir: {} }

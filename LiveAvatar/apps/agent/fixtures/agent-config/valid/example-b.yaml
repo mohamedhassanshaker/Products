@@ -1,0 +1,78 @@
+version: 1
+deployment:
+  tenant_id: "22222222-2222-2222-2222-222222222222"
+  name: "Example B"
+transport:
+  provider: livekit
+  room_namespace: example-b
+stt:
+  provider: faster-whisper
+  language: en-US
+  model: base
+reasoning:
+  entry_node_id: llm-1
+  background_entry_node_ids: []
+  turn_budget_ms: 3000
+  graph:
+    - id: llm-1
+      type: llm
+      name: Answer
+      lane: foreground
+      on_error: { action: degrade }
+      on_deadline: { action: degrade }
+      provider: anthropic
+      credential_ref: "secrets/anthropic"
+      model: claude-3-5-sonnet
+      fallback:
+        provider: google
+        credential_ref: "secrets/google"
+        model: gemini-1.5-pro
+      retry:
+        max_attempts: 3
+        backoff_ms: [200, 400, 800]
+      next_node_id: null
+tts:
+  provider: elevenlabs
+  credential_ref: "secrets/elevenlabs"
+  voice_id: v2
+avatar:
+  provider: alibaba-liveavatar
+  credential_ref: "secrets/alibaba-liveavatar"
+  avatar_id: a2
+agent:
+  runtime: pydantic-ai
+  system_prompt: "You are a helpful assistant for Example B."
+  tools: []
+  memory:
+    enabled: true
+    window_turns: 8
+knowledge:
+  pipeline:
+    rewrite:
+      enabled: true
+      context_turns: 3
+      budget_ms: 150
+    hybrid_search:
+      vector_weight: 0.6
+      keyword_weight: 0.4
+      candidates: 20
+      budget_ms: 100
+    metadata_filter:
+      enabled: false
+      budget_ms: 20
+    rerank:
+      enabled: false
+    threshold:
+      min_score: 0.5
+      budget_ms: 10
+    inject:
+      token_cap: 1200
+      citation_format: numbered
+      budget_ms: 30
+skills: []
+privacy:
+  send_to_remote_llm: prompt_and_transcript
+  retain_transcripts_days: 30
+  recordings_enabled: false
+alerts:
+  degraded_mode_message: "Hold on, reconnecting."

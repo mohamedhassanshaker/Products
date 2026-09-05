@@ -1,0 +1,23 @@
+{
+  "name": "liveavatar",
+  "private": true,
+  "packageManager": "pnpm@11.20.0",
+  "scripts": {
+    "build": "pnpm --filter @liveavatar/contracts build && pnpm --filter @liveavatar/api build && pnpm --filter @liveavatar/web build",
+    "lint": "pnpm --filter @liveavatar/contracts lint && pnpm --filter @liveavatar/api lint && pnpm --filter @liveavatar/web lint",
+    "test": "pnpm --filter @liveavatar/contracts test && pnpm --filter @liveavatar/api test && pnpm --filter @liveavatar/web test",
+    "test:cov": "pnpm --filter @liveavatar/api test:cov && pnpm --filter @liveavatar/web test:cov",
+    "dev:api": "pnpm --filter @liveavatar/api start:dev",
+    "dev:web": "pnpm --filter @liveavatar/web start",
+    "db:up": "docker compose -f docker-compose.dev.yml up -d",
+    "db:down": "docker compose -f docker-compose.dev.yml down"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import": "^2.31.0",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.18.0"
+  }
+}

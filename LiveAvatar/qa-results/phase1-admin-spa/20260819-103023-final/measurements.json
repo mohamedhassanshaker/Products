@@ -1,0 +1,34 @@
+{
+  "375": {
+    "rowCount": 6,
+    "rowOverlap": false,
+    "paginatorOverlap": false,
+    "labelWhiteSpace": "nowrap",
+    "labelWordBreak": "break-word",
+    "tableDisplay": "block"
+  },
+  "414": {
+    "rowCount": 6,
+    "rowOverlap": false,
+    "paginatorOverlap": false,
+    "labelWhiteSpace": "nowrap",
+    "labelWordBreak": "break-word",
+    "tableDisplay": "block"
+  },
+  "767": {
+    "rowCount": 6,
+    "rowOverlap": false,
+    "paginatorOverlap": false,
+    "labelWhiteSpace": "nowrap",
+    "labelWordBreak": "break-word",
+    "tableDisplay": "block"
+  },
+  "1280": {
+    "rowCount": 6,
+    "rowOverlap": false,
+    "paginatorOverlap": false,
+    "labelWhiteSpace": "normal",
+    "labelWordBreak": "normal",
+    "tableDisplay": "block"
+  }
+}

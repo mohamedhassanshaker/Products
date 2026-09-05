@@ -1,0 +1,17 @@
+node_modules/
+dist/
+dist-widget/
+dist-loader/
+.next/
+coverage/
+.turbo/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+!.env.test.example
+!.env.docker.example
+.DS_Store
+SEED_CREDENTIALS.md
+k8s/base/secrets.yaml
+helm/**/secrets.yaml

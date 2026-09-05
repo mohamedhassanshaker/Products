@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>New skill</h2>
+
+<mat-dialog-content>
+  @if (dialogAlert()) {
+    <div class="la-dialog-alert" role="alert">{{ dialogAlert() }}</div>
+  }
+
+  <form (ngSubmit)="onSubmit()" [attr.aria-busy]="submitting()">
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        name="skillName"
+        [ngModel]="name()"
+        (ngModelChange)="name.set($event)"
+        maxlength="80"
+        [attr.aria-required]="true"
+        aria-describedby="la-skill-name-error"
+      />
+      @if (nameError()) {
+        <mat-error id="la-skill-name-error">{{ nameError() }}</mat-error>
+      }
+    </mat-form-field>
+    <p class="la-dialog-helper">
+      You'll fill in the description, instructions, tools, and everything else in the editor next.
+    </p>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" type="button" [disabled]="submitDisabled()" (click)="onSubmit()">
+    @if (submitting()) {
+      <mat-spinner diameter="20" />
+    } @else {
+      Create
+    }
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,27 @@
+.la-residency__form {
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.la-residency__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.la-residency__helper {
+  font-size: 0.8125rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0 0 8px;
+}
+
+.la-residency__warning {
+  font-size: 0.875rem;
+  color: #7a5b00;
+}
+
+.la-residency__error {
+  color: #b3261e;
+}

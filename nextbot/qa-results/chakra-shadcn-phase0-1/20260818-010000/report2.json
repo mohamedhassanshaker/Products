@@ -1,0 +1,19 @@
+{
+  "consoleErrors": [
+    "A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn't match the server.\n- External changing data without sending a snapshot of it along with the HTML.\n- Invalid HTML tag nesting.\n\nIt can also happen if the client has a browser extension installed which messes with the HTML before React loaded.\n\n%s%s https://react.dev/link/hydration-mismatch \n\n  ...\n    <SegmentViewNode type=\"page\" pagePath=\"login/page...\">\n      <SegmentTrieNode>\n      <LoginPage>\n        <LoginForm>\n          <Card className=\"mx-auto mt...\">\n            <div data-slot=\"card\" data-size=\"default\" className={\"group/ca...\"}>\n              <main role=\"main\">\n                <h1>\n                <form action={function bound dispatchActionState}>\n                  <div className=\"flex flex-...\">\n                    <div>\n                    <div>\n                    <div>\n                    <LinkComponent>\n                    <Button>\n                    <Separator>\n                    <Tooltip>\n                      <TooltipRoot data-slot=\"tooltip\">\n                        <TooltipTrigger render={<span>}>\n                          <TooltipTrigger data-slot=\"tooltip-tr...\" render={<span>}>\n                            <span\n                              className=\"inline-block w-full\"\n                              tabIndex={0}\n                              onPointerDown={function}\n                              onPointerEnter={function}\n                              onMouseMove={function}\n                              onMouseLeave={function}\n                              onFocus={function}\n                              onBlur={function}\n                              onMouseOver={function}\n                              onClick={function}\n+                             id=\"base-ui-_R_3s9bn5rlb_\"\n-                             id=\"base-ui-_R_fh9bn5rlb_\"\n                              data-trigger-disabled={undefined}\n                              data-base-ui-tooltip-trigger=\"\"\n                              data-slot=\"tooltip-trigger\"\n                              ref={function}\n                            >\n                        ...\n    ...\n"
+  ],
+  "ariaPressedBefore": "false",
+  "tabIndex": "-1",
+  "ariaPressedAfter": "true",
+  "passwordType": "text",
+  "wrongPwAlertClass": "group/alert relative grid w-full gap-0.5 rounded-none border px-2.5 py-2 text-start text-xs has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pe-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0 *:[svg:not([class*='size-'])]:size-4 bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current",
+  "wrongPwAlertText": [
+    "Incorrect email or password.",
+    ""
+  ],
+  "lockoutAlertClass": "group/alert relative grid w-full gap-0.5 rounded-none border px-2.5 py-2 text-start text-xs has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pe-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0 *:[svg:not([class*='size-'])]:size-4 bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current",
+  "lockoutAlertText": [
+    "Incorrect email or password.",
+    ""
+  ]
+}

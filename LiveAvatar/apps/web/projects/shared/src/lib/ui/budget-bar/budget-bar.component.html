@@ -1,0 +1,16 @@
+<div class="la-budget-bar la-budget-bar--{{ tone() }}">
+  @if (label()) {
+    <span class="la-budget-bar__label">{{ label() }}</span>
+  }
+  <div
+    class="la-budget-bar__track"
+    role="progressbar"
+    [attr.aria-valuenow]="percent()"
+    aria-valuemin="0"
+    [attr.aria-valuemax]="100"
+    [attr.aria-label]="label() ? label() + ' budget' : 'Budget'"
+  >
+    <div class="la-budget-bar__fill" [style.width.%]="fillPercent()"></div>
+  </div>
+  <span class="la-budget-bar__status">{{ usedMs() }}ms / {{ totalMs() }}ms — {{ statusText() }}</span>
+</div>

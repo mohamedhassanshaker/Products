@@ -1,0 +1,84 @@
+version: 1
+deployment:
+  tenant_id: "33333333-3333-3333-3333-333333333333"
+  name: "Retrieve Node"
+transport:
+  provider: livekit
+  room_namespace: retrieve-node
+stt:
+  provider: deepgram
+  credential_ref: "secrets/deepgram"
+  language: en-US
+reasoning:
+  entry_node_id: retrieve-1
+  background_entry_node_ids: []
+  turn_budget_ms: 3000
+  graph:
+    - id: retrieve-1
+      type: retrieve
+      name: Look up knowledge base
+      lane: foreground
+      on_error: { action: goto, target_node_id: llm-1 }
+      on_deadline: { action: goto, target_node_id: llm-1 }
+      source_refs: ["11111111-aaaa-bbbb-cccc-111111111111"]
+      top_k: 5
+      budget_ms: 400
+      next_node_id: llm-1
+    - id: llm-1
+      type: llm
+      name: Answer
+      lane: foreground
+      on_error: { action: degrade }
+      on_deadline: { action: degrade }
+      provider: openai
+      credential_ref: "secrets/openai"
+      model: gpt-4o-mini
+      retry:
+        max_attempts: 2
+        backoff_ms: [200, 400]
+      next_node_id: null
+tts:
+  provider: fish-speech
+  credential_ref: "secrets/fish-speech"
+  voice_id: v1
+avatar:
+  provider: bithuman
+  credential_ref: "secrets/bithuman"
+  avatar_id: a1
+agent:
+  runtime: langgraph
+  system_prompt: "You answer using the knowledge base."
+  tools: []
+  memory:
+    enabled: false
+    window_turns: 0
+knowledge:
+  pipeline:
+    rewrite:
+      enabled: true
+      context_turns: 3
+      budget_ms: 150
+    hybrid_search:
+      vector_weight: 0.6
+      keyword_weight: 0.4
+      candidates: 20
+      budget_ms: 100
+    metadata_filter:
+      enabled: false
+      budget_ms: 20
+    rerank:
+      enabled: false
+    threshold:
+      min_score: 0.5
+      budget_ms: 10
+    inject:
+      token_cap: 1200
+      citation_format: numbered
+      budget_ms: 30
+skills: []
+privacy:
+  send_to_remote_llm: prompt_text_only
+  retain_transcripts_days: 90
+  recordings_enabled: false
+alerts:
+  degraded_mode_message: "Please hold."

@@ -1,0 +1,72 @@
+### valid-token rollup (status only)
+
+### wrong token
+HTTP/1.1 404 Not Found
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+content-length: 9
+content-type: text/plain; charset=utf-8
+date: Wed, 19 Aug 2026 11:50:09 GMT
+connection: keep-alive
+keep-alive: timeout=5
+
+Not Found
+### no credential
+HTTP/1.1 404 Not Found
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+content-length: 9
+content-type: text/plain; charset=utf-8
+date: Wed, 19 Aug 2026 11:50:09 GMT
+connection: keep-alive
+keep-alive: timeout=5
+
+Not Found
+### genuinely nonexistent ops path
+HTTP/1.1 404 Not Found
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+content-length: 9
+content-type: text/plain; charset=utf-8
+date: Wed, 19 Aug 2026 11:50:11 GMT
+connection: keep-alive
+keep-alive: timeout=5
+
+Not Found
+### genuinely nonexistent api path
+HTTP/1.1 404 Not Found
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+content-length: 9
+content-type: text/plain; charset=utf-8
+date: Wed, 19 Aug 2026 11:50:11 GMT
+connection: keep-alive
+keep-alive: timeout=5
+
+Not Found
+### POST on rollup with valid token
+HTTP/1.1 404 Not Found
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+content-length: 9
+content-type: text/plain; charset=utf-8
+date: Wed, 19 Aug 2026 11:50:11 GMT
+connection: keep-alive
+keep-alive: timeout=5
+
+Not Found
+### OPTIONS on rollup
+HTTP/1.1 404 Not Found
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+content-length: 9
+content-type: text/plain; charset=utf-8
+date: Wed, 19 Aug 2026 11:50:12 GMT
+connection: keep-alive
+keep-alive: timeout=5
+
+Not Found
+### no-proxy direct (disallowed IP) rollup
+HTTP/1.1 404 Not Found
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+content-length: 9
+content-type: text/plain; charset=utf-8
+Date: <stripped>
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+Not Found

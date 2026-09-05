@@ -1,0 +1,85 @@
+@use '@angular/material' as mat;
+
+// Self-hosted Material Symbols Outlined (D-4) — avoids a CDN dependency for
+// every icon+text status chip/action button (UX_GUIDELINES §1.2). The font
+// file lives in assets/fonts and ships in the app bundle itself.
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('assets/fonts/material-symbols-outlined.woff2') format('woff2');
+}
+
+// MatIconModule's default fontSet class is `material-icons` (Angular
+// Material has not been reconfigured with a custom MAT_ICON_DEFAULT_OPTIONS
+// fontSet), so every <mat-icon>ligature_name</mat-icon> in this app is
+// rendered through this class — map it to the self-hosted font above rather
+// than requiring a separately-named "Material Icons" font.
+.material-icons {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+html {
+  @include mat.theme(
+    (
+      color: (
+        theme-type: light,
+        primary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+:root {
+  --la-primary: #1b4b8a;
+  --la-on-primary: #ffffff;
+  --la-primary-container: #d6e3f8;
+  --la-on-primary-container: #0a2a52;
+  --la-surface: #f7f9fc;
+  --la-surface-container: #ffffff;
+  --la-on-surface: #1c1b1f;
+  --la-on-surface-variant: #44474f;
+  --la-outline: #74777f;
+  --la-error: #b3261e;
+  --la-on-error: #ffffff;
+  --la-success: #1b7f4e;
+  --la-caution: #8b5a00;
+  --la-focus: #1b4b8a;
+}
+
+body {
+  background: var(--la-surface);
+  color: var(--la-on-surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

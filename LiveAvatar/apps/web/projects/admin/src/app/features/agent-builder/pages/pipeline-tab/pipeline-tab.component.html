@@ -1,0 +1,125 @@
+@if (store.status() === 'loading') {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading Pipeline" />
+}
+
+@if (store.status() === 'error') {
+  <la-empty-state
+    variant="error"
+    icon="error_outline"
+    title="Could not load this deployment"
+    body="Try again from the Overview tab."
+    actionLabel="Retry"
+    (action)="store.load(tenantId)"
+  />
+}
+
+@if (store.status() === 'ready') {
+  <form class="la-builder-form">
+    <h2>Transport</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Transport</mat-label>
+      <mat-select [value]="'livekit'" disabled>
+        <mat-option value="livekit">LiveKit</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <p class="la-builder-helper">v1 supports only LiveKit as transport.</p>
+
+    <h2>Speech to text</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>STT provider</mat-label>
+      <mat-select [ngModel]="store.draft().stt?.provider" name="sttProvider" (ngModelChange)="onSttProvider($event)">
+        @for (def of definitionsFor('stt'); track def.key) {
+          <mat-option [value]="def.key" [disabled]="optionDisabled(def.key)">
+            {{ def.display_name }} — {{ def.hosting === 'remote' ? 'Remote' : 'Self-hosted' }}
+            @if (optionDisabled(def.key)) { (no credential configured) }
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    @if (hasMultipleCredentials(store.draft().stt?.provider)) {
+      <mat-form-field appearance="outline">
+        <mat-label>Credential</mat-label>
+        <mat-select [ngModel]="store.draft().stt?.credential_ref" name="sttCredential" (ngModelChange)="onSttCredential($event)">
+          @for (cred of credentialsFor(store.draft().stt?.provider); track cred.id) {
+            <mat-option [value]="cred.credential_ref" [disabled]="!cred.credential_ref">{{ cred.display_label || cred.endpoint_url }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+    @for (message of errorsFor('stt'); track message) {
+      <p class="la-builder-error">{{ message }}</p>
+    }
+    <mat-form-field appearance="outline">
+      <mat-label>Language</mat-label>
+      <input matInput [ngModel]="store.draft().stt?.language" name="sttLanguage" (ngModelChange)="onSttField({ language: $event })" placeholder="en-US" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>STT model (optional)</mat-label>
+      <input matInput [ngModel]="store.draft().stt?.model" name="sttModel" (ngModelChange)="onSttField({ model: $event })" placeholder="Provider default" />
+    </mat-form-field>
+
+    @for (message of errorsFor('privacy'); track message) {
+      <p class="la-builder-error">{{ message }}</p>
+    }
+
+    <h2>Text to speech</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>TTS provider</mat-label>
+      <mat-select [ngModel]="store.draft().tts?.provider" name="ttsProvider" (ngModelChange)="onTtsProvider($event)">
+        @for (def of definitionsFor('tts'); track def.key) {
+          <mat-option [value]="def.key" [disabled]="optionDisabled(def.key)">{{ def.display_name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    @if (hasMultipleCredentials(store.draft().tts?.provider)) {
+      <mat-form-field appearance="outline">
+        <mat-label>Credential</mat-label>
+        <mat-select [ngModel]="store.draft().tts?.credential_ref" name="ttsCredential" (ngModelChange)="onTtsCredential($event)">
+          @for (cred of credentialsFor(store.draft().tts?.provider); track cred.id) {
+            <mat-option [value]="cred.credential_ref" [disabled]="!cred.credential_ref">{{ cred.display_label || cred.endpoint_url }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+    <mat-form-field appearance="outline">
+      <mat-label>Voice id</mat-label>
+      <input matInput [ngModel]="store.draft().tts?.voice_id" name="voiceId" (ngModelChange)="onTtsVoiceId($event)" />
+    </mat-form-field>
+    @for (message of errorsFor('tts'); track message) {
+      <p class="la-builder-error">{{ message }}</p>
+    }
+
+    <h2>Avatar</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Avatar provider</mat-label>
+      <mat-select [ngModel]="store.draft().avatar?.provider" name="avatarProvider" (ngModelChange)="onAvatarProvider($event)">
+        @for (def of definitionsFor('avatar'); track def.key) {
+          <mat-option [value]="def.key" [disabled]="optionDisabled(def.key)" [matTooltip]="def.feature_gaps ?? ''">{{ def.display_name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    @if (featureGapsFor(store.draft().avatar?.provider); as gap) {
+      <p class="la-builder-helper la-builder-helper--caution" data-testid="avatar-feature-gap">
+        <mat-icon aria-hidden="true" inline="true">info</mat-icon>
+        {{ gap }}
+      </p>
+    }
+    @if (hasMultipleCredentials(store.draft().avatar?.provider)) {
+      <mat-form-field appearance="outline">
+        <mat-label>Credential</mat-label>
+        <mat-select [ngModel]="store.draft().avatar?.credential_ref" name="avatarCredential" (ngModelChange)="onAvatarCredential($event)">
+          @for (cred of credentialsFor(store.draft().avatar?.provider); track cred.id) {
+            <mat-option [value]="cred.credential_ref" [disabled]="!cred.credential_ref">{{ cred.display_label || cred.endpoint_url }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+    <mat-form-field appearance="outline">
+      <mat-label>Avatar id</mat-label>
+      <input matInput [ngModel]="store.draft().avatar?.avatar_id" name="avatarId" (ngModelChange)="onAvatarId($event)" />
+    </mat-form-field>
+    @for (message of errorsFor('avatar'); track message) {
+      <p class="la-builder-error">{{ message }}</p>
+    }
+  </form>
+}

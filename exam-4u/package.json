@@ -1,0 +1,44 @@
+{
+  "name": "examland",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ExamLand — SaaS multi-tenant exam platform (NestJS + Angular, single-image deployment).",
+  "engines": {
+    "node": ">=24.13.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "legacy/api",
+    "legacy/web"
+  ],
+  "scripts": {
+    "build:contracts": "npm run build -w packages/contracts",
+    "build:legacy-api": "npm run build:contracts && npm run build -w legacy/api",
+    "build:legacy-web": "npm run build:contracts && npm run build -w legacy/web",
+    "build:legacy": "npm run build:legacy-api && npm run build:legacy-web",
+    "build:next": "npm run build:contracts && npm run build -w apps/next",
+    "lint": "eslint \"apps/**/*.{ts,tsx}\" \"packages/**/*.ts\" --max-warnings=0",
+    "typecheck": "npm run typecheck -w packages/contracts",
+    "test:legacy": "npm run test -w legacy/api",
+    "test:legacy:cov": "npm run test:cov -w legacy/api",
+    "test:legacy:e2e": "npm run test:e2e -w legacy/api",
+    "start:legacy-api": "node legacy/api/dist/main.js",
+    "start:legacy-worker": "node legacy/api/dist/worker.js"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.31.0",
+    "typescript": "^5.6.3"
+  },
+  "overrides": {
+    "@angular/common": "20.3.27",
+    "@angular/compiler": "20.3.27",
+    "@angular/core": "20.3.27"
+  },
+  "dependencies": {
+    "playwright": "^1.62.1"
+  }
+}

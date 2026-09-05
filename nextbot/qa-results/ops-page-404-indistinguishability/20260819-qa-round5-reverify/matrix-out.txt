@@ -1,0 +1,2036 @@
+=== TEST 1: denial vs genuinely-missing (all denial reasons, all shapes) ===
+OK  denied-vs-missing GET|suffix:plain|rsc=false                         323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing HEAD|suffix:plain|rsc=false                        323 resp, 1 sig, status 404, body 0B/e3b0c44298fc1c14
+OK  denied-vs-missing POST|suffix:plain|rsc=false                        323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing OPTIONS|suffix:plain|rsc=false                     323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing PUT|suffix:plain|rsc=false                         323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing DELETE|suffix:plain|rsc=false                      323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|suffix:plain|rsc=true                          323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing HEAD|suffix:plain|rsc=true                         323 resp, 1 sig, status 404, body 0B/e3b0c44298fc1c14
+OK  denied-vs-missing POST|suffix:plain|rsc=true                         323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing OPTIONS|suffix:plain|rsc=true                      323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing PUT|suffix:plain|rsc=true                          323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing DELETE|suffix:plain|rsc=true                       323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing GET|nextdata+suffix:plain|rsc=false                323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|nextdata+suffix:plain|rsc=true                 323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing GET|nextdata-any+suffix:plain|rsc=false            323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|nextdata-any+suffix:plain|rsc=true             323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing GET|suffix:.rsc|rsc=false                          323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|suffix:.rsc|rsc=true                           323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing GET|nextdata+suffix:.rsc|rsc=false                 323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|nextdata+suffix:.rsc|rsc=true                  323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing GET|nextdata-any+suffix:.rsc|rsc=false             323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|nextdata-any+suffix:.rsc|rsc=true              323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing GET|suffix:.json|rsc=false                         323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|suffix:.json|rsc=true                          323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing GET|nextdata+suffix:.json|rsc=false                323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|nextdata+suffix:.json|rsc=true                 323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing GET|nextdata-any+suffix:.json|rsc=false            323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|nextdata-any+suffix:.json|rsc=true             323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing GET|suffix:.segments/__PAGE__.segment.rsc|rsc=false 323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|suffix:.segments/__PAGE__.segment.rsc|rsc=true 323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing GET|nextdata+suffix:.segments/__PAGE__.segment.rsc|rsc=false 323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|nextdata+suffix:.segments/__PAGE__.segment.rsc|rsc=true 323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  denied-vs-missing GET|nextdata-any+suffix:.segments/__PAGE__.segment.rsc|rsc=false 323 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  denied-vs-missing GET|nextdata-any+suffix:.segments/__PAGE__.segment.rsc|rsc=true 323 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+
+denied-vs-missing: 10982 responses, 34 buckets, 0 distinguishable
+
+=== TEST 2a: internal secret-segment probe - gate independence (allowed vs denied) ===
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket GET|suffix:plain|rsc=false
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket HEAD|suffix:plain|rsc=false
+--- signature (22 responses) e.g. unconfigured HEAD /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    e3b0c44298fc1c14
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured HEAD /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    e3b0c44298fc1c14
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured HEAD /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    e3b0c44298fc1c14
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured HEAD /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    e3b0c44298fc1c14
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured HEAD /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    e3b0c44298fc1c14
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket POST|suffix:plain|rsc=false
+--- signature (22 responses) e.g. unconfigured POST /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured POST /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured POST /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured POST /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured POST /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket OPTIONS|suffix:plain|rsc=false
+--- signature (22 responses) e.g. unconfigured OPTIONS /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured OPTIONS /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured OPTIONS /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured OPTIONS /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured OPTIONS /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket PUT|suffix:plain|rsc=false
+--- signature (22 responses) e.g. unconfigured PUT /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured PUT /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured PUT /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured PUT /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured PUT /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket DELETE|suffix:plain|rsc=false
+--- signature (22 responses) e.g. unconfigured DELETE /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured DELETE /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured DELETE /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured DELETE /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured DELETE /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket GET|suffix:plain|rsc=true
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-nextjs-rewritten-path: /internal/ops
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-nextjs-rewritten-path: /internal/ops/login
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants/new
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-nextjs-rewritten-path: /internal/ops/nope
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket HEAD|suffix:plain|rsc=true
+--- signature (22 responses) e.g. unconfigured HEAD /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-nextjs-rewritten-path: /internal/ops
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    e3b0c44298fc1c14
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured HEAD /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-nextjs-rewritten-path: /internal/ops/login
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    e3b0c44298fc1c14
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured HEAD /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    e3b0c44298fc1c14
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured HEAD /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants/new
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    e3b0c44298fc1c14
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured HEAD /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-nextjs-rewritten-path: /internal/ops/nope
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    e3b0c44298fc1c14
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket POST|suffix:plain|rsc=true
+--- signature (22 responses) e.g. unconfigured POST /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-nextjs-rewritten-path: /internal/ops
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured POST /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-nextjs-rewritten-path: /internal/ops/login
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured POST /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured POST /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants/new
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured POST /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-nextjs-rewritten-path: /internal/ops/nope
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket OPTIONS|suffix:plain|rsc=true
+--- signature (22 responses) e.g. unconfigured OPTIONS /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-nextjs-rewritten-path: /internal/ops
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured OPTIONS /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-nextjs-rewritten-path: /internal/ops/login
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured OPTIONS /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured OPTIONS /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants/new
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured OPTIONS /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-nextjs-rewritten-path: /internal/ops/nope
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket PUT|suffix:plain|rsc=true
+--- signature (22 responses) e.g. unconfigured PUT /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-nextjs-rewritten-path: /internal/ops
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured PUT /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-nextjs-rewritten-path: /internal/ops/login
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured PUT /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured PUT /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants/new
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured PUT /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-nextjs-rewritten-path: /internal/ops/nope
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket DELETE|suffix:plain|rsc=true
+--- signature (22 responses) e.g. unconfigured DELETE /internal/ops/nb-c-4f21c8a7e3d9b605
+    404
+    x-nextjs-rewritten-path: /internal/ops
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605
+--- signature (22 responses) e.g. unconfigured DELETE /internal/ops/nb-c-4f21c8a7e3d9b605/login
+    404
+    x-nextjs-rewritten-path: /internal/ops/login
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+--- signature (22 responses) e.g. unconfigured DELETE /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- signature (22 responses) e.g. unconfigured DELETE /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants/new
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+--- signature (22 responses) e.g. unconfigured DELETE /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+    404
+    x-nextjs-rewritten-path: /internal/ops/nope
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope
+OK  internal-probe GET|nextdata+suffix:plain|rsc=false                110 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  internal-probe GET|nextdata+suffix:plain|rsc=true                 110 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  internal-probe GET|nextdata-any+suffix:plain|rsc=false            110 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  internal-probe GET|nextdata-any+suffix:plain|rsc=true             110 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket GET|suffix:.rsc|rsc=false
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605.rsc
+    404
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/login.rsc
+    404
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.rsc
+    404
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.rsc
+    404
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/nope.rsc
+    404
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope.rsc
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket GET|suffix:.rsc|rsc=true
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605.rsc
+    404
+    x-nextjs-rewritten-path: /internal/ops
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/login.rsc
+    404
+    x-nextjs-rewritten-path: /internal/ops/login
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.rsc
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.rsc
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants/new
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/nope.rsc
+    404
+    x-nextjs-rewritten-path: /internal/ops/nope
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope.rsc
+OK  internal-probe GET|nextdata+suffix:.rsc|rsc=false                 110 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  internal-probe GET|nextdata+suffix:.rsc|rsc=true                  110 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  internal-probe GET|nextdata-any+suffix:.rsc|rsc=false             110 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  internal-probe GET|nextdata-any+suffix:.rsc|rsc=true              110 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+
+### internal-probe: DISTINGUISHABLE (6 signatures) in bucket GET|suffix:.json|rsc=false
+--- signature (19 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605.json
+    404
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.json
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+    404
+    x-middleware-rewrite: /internal/ops/login.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+    404
+    x-middleware-rewrite: /internal/ops/tenants.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+    404
+    x-middleware-rewrite: /internal/ops/tenants/new.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+    404
+    x-middleware-rewrite: /internal/ops/nope.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+--- signature (3 responses) e.g. ALLOWED-ip-no-session GET /internal/ops/nb-c-4f21c8a7e3d9b605.json
+    404
+    x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    X-Powered-By: Next.js
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Content-Type: text/html; charset=utf-8
+    Transfer-Encoding: chunked
+    42157788b8e5d94a
+    groups: internal-probe
+    ctxs: ALLOWED-ip-no-session,ALLOWED-ip-valid-session,ALLOWED-ip-bogus-session
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.json
+
+### internal-probe: DISTINGUISHABLE (8 signatures) in bucket GET|suffix:.json|rsc=true
+--- signature (19 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605.json
+    404
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.json
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+    404
+    x-nextjs-rewritten-path: /internal/ops/login.json
+    x-middleware-rewrite: /internal/ops/login.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants.json
+    x-middleware-rewrite: /internal/ops/tenants.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants/new.json
+    x-middleware-rewrite: /internal/ops/tenants/new.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+    404
+    x-nextjs-rewritten-path: /internal/ops/nope.json
+    x-middleware-rewrite: /internal/ops/nope.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+--- signature (1 responses) e.g. ALLOWED-ip-no-session GET /internal/ops/nb-c-4f21c8a7e3d9b605.json
+    200
+    x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json
+    x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    6d7cd28158874af2
+    groups: internal-probe
+    ctxs: ALLOWED-ip-no-session
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.json
+--- signature (1 responses) e.g. ALLOWED-ip-valid-session GET /internal/ops/nb-c-4f21c8a7e3d9b605.json
+    200
+    x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json
+    x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    1c6cc414f990601c
+    groups: internal-probe
+    ctxs: ALLOWED-ip-valid-session
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.json
+--- signature (1 responses) e.g. ALLOWED-ip-bogus-session GET /internal/ops/nb-c-4f21c8a7e3d9b605.json
+    200
+    x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json
+    x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.json
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    1ab4b5cd06026818
+    groups: internal-probe
+    ctxs: ALLOWED-ip-bogus-session
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.json
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket GET|nextdata+suffix:.json|rsc=false
+--- signature (22 responses) e.g. unconfigured GET /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605.json
+    404
+    x-nextjs-rewrite: /internal/ops
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+    404
+    x-nextjs-rewrite: /internal/ops/login
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+    404
+    x-nextjs-rewrite: /internal/ops/tenants
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+    404
+    x-nextjs-rewrite: /internal/ops/tenants/new
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+    404
+    x-nextjs-rewrite: /internal/ops/nope
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket GET|nextdata+suffix:.json|rsc=true
+--- signature (22 responses) e.g. unconfigured GET /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605.json
+    404
+    x-nextjs-rewrite: /internal/ops
+    x-nextjs-rewritten-path: /internal/ops
+    x-middleware-rewrite: /internal/ops
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+    404
+    x-nextjs-rewrite: /internal/ops/login
+    x-nextjs-rewritten-path: /internal/ops/login
+    x-middleware-rewrite: /internal/ops/login
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+    404
+    x-nextjs-rewrite: /internal/ops/tenants
+    x-nextjs-rewritten-path: /internal/ops/tenants
+    x-middleware-rewrite: /internal/ops/tenants
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+    404
+    x-nextjs-rewrite: /internal/ops/tenants/new
+    x-nextjs-rewritten-path: /internal/ops/tenants/new
+    x-middleware-rewrite: /internal/ops/tenants/new
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+    404
+    x-nextjs-rewrite: /internal/ops/nope
+    x-nextjs-rewritten-path: /internal/ops/nope
+    x-middleware-rewrite: /internal/ops/nope
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/OtlJai-VNCw7OAVOZPEbC/internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket GET|nextdata-any+suffix:.json|rsc=false
+--- signature (22 responses) e.g. unconfigured GET /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605.json
+    404
+    x-nextjs-rewrite: /_next/data/ANY-SEG/internal/ops.json
+    x-middleware-rewrite: /_next/data/ANY-SEG/internal/ops.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+    404
+    x-nextjs-rewrite: /_next/data/ANY-SEG/internal/ops/login.json
+    x-middleware-rewrite: /_next/data/ANY-SEG/internal/ops/login.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+    404
+    x-nextjs-rewrite: /_next/data/ANY-SEG/internal/ops/tenants.json
+    x-middleware-rewrite: /_next/data/ANY-SEG/internal/ops/tenants.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+    404
+    x-nextjs-rewrite: /_next/data/ANY-SEG/internal/ops/tenants/new.json
+    x-middleware-rewrite: /_next/data/ANY-SEG/internal/ops/tenants/new.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+    404
+    x-nextjs-rewrite: /_next/data/ANY-SEG/internal/ops/nope.json
+    x-middleware-rewrite: /_next/data/ANY-SEG/internal/ops/nope.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+
+### internal-probe: DISTINGUISHABLE (5 signatures) in bucket GET|nextdata-any+suffix:.json|rsc=true
+--- signature (22 responses) e.g. unconfigured GET /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605.json
+    404
+    x-nextjs-rewrite: /_next/data/ANY-SEG/internal/ops.json
+    x-nextjs-rewritten-path: /internal/ops
+    x-middleware-rewrite: /_next/data/ANY-SEG/internal/ops.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+    404
+    x-nextjs-rewrite: /_next/data/ANY-SEG/internal/ops/login.json
+    x-nextjs-rewritten-path: /internal/ops/login
+    x-middleware-rewrite: /_next/data/ANY-SEG/internal/ops/login.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/login.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+    404
+    x-nextjs-rewrite: /_next/data/ANY-SEG/internal/ops/tenants.json
+    x-nextjs-rewritten-path: /internal/ops/tenants
+    x-middleware-rewrite: /_next/data/ANY-SEG/internal/ops/tenants.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/tenants.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+    404
+    x-nextjs-rewrite: /_next/data/ANY-SEG/internal/ops/tenants/new.json
+    x-nextjs-rewritten-path: /internal/ops/tenants/new
+    x-middleware-rewrite: /_next/data/ANY-SEG/internal/ops/tenants/new.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.json
+--- signature (22 responses) e.g. unconfigured GET /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+    404
+    x-nextjs-rewrite: /_next/data/ANY-SEG/internal/ops/nope.json
+    x-nextjs-rewritten-path: /internal/ops/nope
+    x-middleware-rewrite: /_next/data/ANY-SEG/internal/ops/nope.json
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /_next/data/ANY-SEG/internal/ops/nb-c-4f21c8a7e3d9b605/nope.json
+
+### internal-probe: DISTINGUISHABLE (6 signatures) in bucket GET|suffix:.segments/__PAGE__.segment.rsc|rsc=false
+--- signature (19 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+    404
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/login.segments/__PAGE__.segment.rsc
+    404
+    x-middleware-rewrite: /internal/ops/login.segments/__PAGE__.segment
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login.segments/__PAGE__.segment.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.segments/__PAGE__.segment.rsc
+    404
+    x-middleware-rewrite: /internal/ops/tenants.segments/__PAGE__.segment
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.segments/__PAGE__.segment.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.segments/__PAGE__.segment.rsc
+    404
+    x-middleware-rewrite: /internal/ops/tenants/new.segments/__PAGE__.segment
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.segments/__PAGE__.segment.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/nope.segments/__PAGE__.segment.rsc
+    404
+    x-middleware-rewrite: /internal/ops/nope.segments/__PAGE__.segment
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    X-Powered-By: Next.js
+    ETag: "17ihcbdew9c5av"
+    Content-Type: text/html; charset=utf-8
+    Content-Length: 6871
+    bc75d5e985c16810
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope.segments/__PAGE__.segment.rsc
+--- signature (3 responses) e.g. ALLOWED-ip-no-session GET /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+    404
+    x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    X-Powered-By: Next.js
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Content-Type: text/html; charset=utf-8
+    Transfer-Encoding: chunked
+    79348accffc51775
+    groups: internal-probe
+    ctxs: ALLOWED-ip-no-session,ALLOWED-ip-valid-session,ALLOWED-ip-bogus-session
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+
+### internal-probe: DISTINGUISHABLE (8 signatures) in bucket GET|suffix:.segments/__PAGE__.segment.rsc|rsc=true
+--- signature (19 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+    404
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/login.segments/__PAGE__.segment.rsc
+    404
+    x-nextjs-rewritten-path: /internal/ops/login.segments/__PAGE__.segment
+    x-middleware-rewrite: /internal/ops/login.segments/__PAGE__.segment
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/login.segments/__PAGE__.segment.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.segments/__PAGE__.segment.rsc
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants.segments/__PAGE__.segment
+    x-middleware-rewrite: /internal/ops/tenants.segments/__PAGE__.segment
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants.segments/__PAGE__.segment.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.segments/__PAGE__.segment.rsc
+    404
+    x-nextjs-rewritten-path: /internal/ops/tenants/new.segments/__PAGE__.segment
+    x-middleware-rewrite: /internal/ops/tenants/new.segments/__PAGE__.segment
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new.segments/__PAGE__.segment.rsc
+--- signature (22 responses) e.g. unconfigured GET /internal/ops/nb-c-4f21c8a7e3d9b605/nope.segments/__PAGE__.segment.rsc
+    404
+    x-nextjs-rewritten-path: /internal/ops/nope.segments/__PAGE__.segment
+    x-middleware-rewrite: /internal/ops/nope.segments/__PAGE__.segment
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    x-nextjs-cache: HIT
+    x-nextjs-prerender: 1
+    x-nextjs-prerender: 1
+    x-nextjs-stale-time: 300
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    463a9169977c4f66
+    groups: internal-probe
+    ctxs: unconfigured,unconfigured+forged-x-nb-ops-denied,unconfigured+bogus-session,unconfigured+valid-token-cookie,unconfigured+spoofed-xff-allowed-ip,noproxy-spoofed-xff-allowed-ip,noproxy-spoofed-realip-allowed-ip,noproxy-spoofed-xff+valid-token
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605/nope.segments/__PAGE__.segment.rsc
+--- signature (1 responses) e.g. ALLOWED-ip-no-session GET /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+    200
+    x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment
+    x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    a457d3c729925e45
+    groups: internal-probe
+    ctxs: ALLOWED-ip-no-session
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+--- signature (1 responses) e.g. ALLOWED-ip-valid-session GET /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+    200
+    x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment
+    x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    a5d9e813532dc4b9
+    groups: internal-probe
+    ctxs: ALLOWED-ip-valid-session
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+--- signature (1 responses) e.g. ALLOWED-ip-bogus-session GET /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+    200
+    x-nextjs-rewritten-path: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment
+    x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment
+    Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+    Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+    Content-Type: text/x-component
+    Transfer-Encoding: chunked
+    89338def52d9dc89
+    groups: internal-probe
+    ctxs: ALLOWED-ip-bogus-session
+    sample: /internal/ops/nb-c-4f21c8a7e3d9b605.segments/__PAGE__.segment.rsc
+OK  internal-probe GET|nextdata+suffix:.segments/__PAGE__.segment.rsc|rsc=false 110 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  internal-probe GET|nextdata+suffix:.segments/__PAGE__.segment.rsc|rsc=true 110 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+OK  internal-probe GET|nextdata-any+suffix:.segments/__PAGE__.segment.rsc|rsc=false 110 resp, 1 sig, status 404, body 6871B/bc75d5e985c16810
+OK  internal-probe GET|nextdata-any+suffix:.segments/__PAGE__.segment.rsc|rsc=true 110 resp, 1 sig, status 404, body 3982B/463a9169977c4f66
+
+internal-probe: 3740 responses, 34 buckets, 22 distinguishable
+
+internal-probe plain-GET distinct signatures: 5
+  sig: 404|x-middleware-rewrite: /internal/ops ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-s
+    entries=22 allowed=3 denied=19
+  sig: 404|x-middleware-rewrite: /internal/ops/login ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-ne
+    entries=22 allowed=3 denied=19
+  sig: 404|x-middleware-rewrite: /internal/ops/tenants ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-
+    entries=22 allowed=3 denied=19
+  sig: 404|x-middleware-rewrite: /internal/ops/tenants/new ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 
+    entries=22 allowed=3 denied=19
+  sig: 404|x-middleware-rewrite: /internal/ops/nope ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nex
+    entries=22 allowed=3 denied=19
+
+=== internal-probe vs genuine-404 difference (documented residual) ===
+  genuine 404 headers: ["Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate","Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding","x-nextjs-cache: HIT","x-nextjs-prerender: 1","x-nextjs-prerender: 1","x-nextjs-stale-time: 300","X-Powered-By: Next.js","ETag: \"17ihcbdew9c5av\"","Content-Type: text/html; charset=utf-8","Content-Length: 6871"]
+  internal-probe hdrs: ["x-middleware-rewrite: /internal/ops","Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate","Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding","x-nextjs-cache: HIT","x-nextjs-prerender: 1","x-nextjs-prerender: 1","x-nextjs-stale-time: 300","X-Powered-By: Next.js","ETag: \"17ihcbdew9c5av\"","Content-Type: text/html; charset=utf-8","Content-Length: 6871"]
+  same body hash: true bc75d5e985c16810 bc75d5e985c16810 status 404/404
+
+TOTAL responses: 15232; failures: test1=0 test2a=22

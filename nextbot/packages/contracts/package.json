@@ -1,0 +1,22 @@
+{
+  "name": "@nextbot/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TypeBox schemas + inferred types — the shared type package (LLD §2.1). Every jsonb column, API body, and LLM structured-output contract is validated against a schema defined here.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir ."
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.33.15"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "uuidv7": "^1.0.2",
+    "vitest": "^2.1.2"
+  }
+}

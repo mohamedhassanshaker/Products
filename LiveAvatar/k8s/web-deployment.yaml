@@ -1,0 +1,68 @@
+# One Deployment for the whole "web" container per HLD §8.1/ADR-001 §4 (one
+# NestJS process pair — public :8080 + cluster-only :8081, run via
+# apps/api/deploy/docker-entrypoint.sh inside a single container). Exposed
+# through two Services (web-deployment's own web-public/web-internal
+# manifests) so :8081 can be ClusterIP-only while :8080 goes through Ingress.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: liveavatar
+  labels: { app: web }
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxUnavailable: 0, maxSurge: 1 }
+  selector:
+    matchLabels: { app: web }
+  template:
+    metadata:
+      labels: { app: web }
+    spec:
+      serviceAccountName: liveavatar-web
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 100
+        fsGroup: 100
+      containers:
+        - name: web
+          image: liveavatar/web:REPLACE_ME_TAG # CI sets this to the built commit SHA (or release tag)
+          ports:
+            - { name: public, containerPort: 8080 }
+            - { name: internal, containerPort: 8081 }
+          envFrom:
+            - configMapRef: { name: liveavatar-web-config }
+            - secretRef: { name: liveavatar-web-secrets }
+          volumeMounts:
+            - { name: secrets, mountPath: /app/apps/api/secrets, readOnly: true }
+            - { name: logs, mountPath: /app/apps/api/logs }
+            - { name: tmp, mountPath: /tmp }
+          resources:
+            requests: { cpu: '250m', memory: '384Mi' }
+            limits: { cpu: '1', memory: '768Mi' }
+          readinessProbe:
+            httpGet: { path: /api/health, port: public }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet: { path: /api/health, port: public }
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ['ALL'] }
+      volumes:
+        - name: secrets
+          secret:
+            secretName: liveavatar-provider-credentials
+        - name: logs
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}

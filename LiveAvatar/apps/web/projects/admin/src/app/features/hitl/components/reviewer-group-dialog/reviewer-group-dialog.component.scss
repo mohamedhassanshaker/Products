@@ -1,0 +1,19 @@
+.la-reviewer-group-dialog {
+  &__channels-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  &__channel-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 4px;
+
+    mat-form-field {
+      flex: 1;
+    }
+  }
+}

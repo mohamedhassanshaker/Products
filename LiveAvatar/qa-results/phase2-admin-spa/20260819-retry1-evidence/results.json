@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Regression: login flow reaches deployments list",
+    "pass": true,
+    "detail": "http://localhost:4200/admin/deployments"
+  },
+  {
+    "name": "Regression: deployments list shows rows",
+    "pass": true,
+    "detail": "rows=1"
+  },
+  {
+    "name": "D-2: catalog page - no cell overflows viewport width at 375px",
+    "pass": true,
+    "detail": "maxRight=225.609375"
+  },
+  {
+    "name": "D-2: catalog page - no row/row vertical overlap at 375px",
+    "pass": true
+  },
+  {
+    "name": "D-2: credentials page - no cell overflows viewport width at 375px",
+    "pass": true
+  },
+  {
+    "name": "D-2: credentials page - no row/row vertical overlap at 375px",
+    "pass": true
+  },
+  {
+    "name": "D-1: single-credential case shows NO secondary Credential dropdown (auto-resolved)",
+    "pass": true,
+    "detail": "count=0"
+  },
+  {
+    "name": "D-1: Example A published config has correct credential_ref for every credentialed layer",
+    "pass": true,
+    "detail": "{\"stt\":\"cred-deepgram-1\",\"llm_primary\":\"cred-openai-1\",\"tts\":\"cred-fish-1\",\"avatar\":\"cred-bithuman-1\"}"
+  },
+  {
+    "name": "D-3: Publish button switches to disabled Published state after successful in-sync publish",
+    "pass": true,
+    "detail": "count=1"
+  },
+  {
+    "name": "D-3: the Published-state button is actually disabled",
+    "pass": true,
+    "detail": "disabled=true"
+  },
+  {
+    "name": "D-3: Publish button reverts to enabled Publish state after editing a published+unchanged config",
+    "pass": true,
+    "detail": "count=1, disabled=false"
+  },
+  {
+    "name": "D-1: multi-credential case shows the secondary Credential dropdown",
+    "pass": true,
+    "detail": "count=1"
+  },
+  {
+    "name": "D-1: secondary dropdown lists both tenant credentials for the provider",
+    "pass": true
+  },
+  {
+    "name": "D-1: multi-credential selection is correctly reflected in the published config",
+    "pass": true,
+    "detail": "credential_ref=cred-openai-2"
+  }
+]

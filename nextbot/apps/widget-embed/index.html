@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- No host-page styles can reach this document (separate iframe origin
+         document) and nothing here reaches the host page either — the "scoped
+         theme/CSS build" requirement (ADR-0002 §4.2a) is about correctly
+         instancing Chakra inside this already-isolated document, not an extra
+         leak-prevention layer (docs/design/UX_GUIDELINES.md §5.1). -->
+    <title>NextBot Chat</title>
+    <style>
+      html,
+      body,
+      #root {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/widget/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+.la-turn-budget-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 16px 0 24px;
+  padding: 16px;
+  border: 1px solid var(--la-outline, #74777f);
+  border-radius: 8px;
+
+  &__section {
+    h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  &__warning {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--la-caution, #8b5a00);
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__paths,
+  &__optimisations {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__hint {
+    color: var(--la-on-surface-variant, #44474f);
+    font-size: 12px;
+  }
+
+  // Phase 14 (R-H4) — a path through a blocking HITL gate, called out
+  // distinctly from both a normal budget-bar row and the caution-colored
+  // "over budget" warning: unbounded is a structurally different situation
+  // (not estimated at all), not merely a bad number.
+  &__unbounded {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--la-on-surface-variant, #44474f);
+    margin: 0;
+
+    mat-icon {
+      flex-shrink: 0;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}

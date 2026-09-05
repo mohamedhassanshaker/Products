@@ -1,0 +1,64 @@
+<la-page-header title="GPU health" subtitle="Read-only. Scaling and provisioning happen outside this view.">
+  <mat-select [formControl]="roleControl" aria-label="Role filter">
+    <mat-option value="all">All roles</mat-option>
+    <mat-option value="stt">STT</mat-option>
+    <mat-option value="tts">TTS</mat-option>
+    <mat-option value="avatar">Avatar</mat-option>
+  </mat-select>
+  <la-tenant-select label="Tenant" (tenantChange)="onTenantChange($event)" />
+</la-page-header>
+
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading" />
+}
+
+@if (loadError() && !loading()) {
+  <la-empty-state
+    variant="error"
+    icon="error"
+    title="Could not load GPU nodes"
+    body="Could not load GPU nodes. Try again."
+    actionLabel="Retry"
+    (action)="retry()"
+  />
+} @else if (!loading() && total() === 0 && !hasActiveFilters()) {
+  <la-empty-state
+    icon="dns"
+    title="No GPU nodes reporting"
+    body="No GPU nodes are reporting. Agents may still run if provisioned outside this view."
+  />
+} @else if (!loading() && total() === 0) {
+  <la-empty-state
+    icon="dns"
+    title="No matching nodes"
+    body="No GPU nodes match your filters."
+    actionLabel="Clear filters"
+    (action)="clearFilters()"
+  />
+} @else {
+  <div class="la-gpu__grid">
+    @for (node of items(); track node.hostname) {
+      <div class="la-gpu__card">
+        <h2>{{ node.hostname }}</h2>
+        <la-status-chip tone="neutral" [icon]="roleIcon(node.role)" [label]="roleLabel(node.role)" />
+        <div class="la-gpu__metric">
+          <span>GPU utilization</span>
+          <mat-progress-bar mode="determinate" [value]="node.gpu_util_pct" [attr.aria-label]="'GPU utilization'" />
+          <span>{{ node.gpu_util_pct }}%</span>
+        </div>
+        <div class="la-gpu__metric">
+          <span>Memory utilization</span>
+          <mat-progress-bar mode="determinate" [value]="node.mem_util_pct" [attr.aria-label]="'Memory utilization'" />
+          <span>{{ node.mem_util_pct }}%</span>
+        </div>
+        <la-status-chip
+          [tone]="node.healthy ? 'success' : 'error'"
+          [icon]="node.healthy ? 'check_circle' : 'error'"
+          [label]="node.healthy ? 'Healthy' : 'Unhealthy'"
+        />
+        <span class="la-gpu__heartbeat" [title]="node.last_heartbeat_at">Last heartbeat: {{ relativeTime(node.last_heartbeat_at) }}</span>
+        <span class="la-gpu__autoscaler">Autoscaler: {{ node.autoscaler === 'external' ? 'External' : 'Not configured' }}</span>
+      </div>
+    }
+  </div>
+}

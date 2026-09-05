@@ -1,0 +1,30 @@
+{
+  "name": "@nextbot/knowledge",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Target Architecture Blueprint Phase 7b (BL-38, ADR-0018, LLD §14.4) — Module B: Knowledge and Graph RAG. Collections/sources + the full 9-stage ingestion pipeline (ingest -> parse -> chunk -> extract -> resolve -> build graph -> community detection -> summaries -> embed -> index), pinned to a Phase 2 model-catalog embedding model.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir ."
+  },
+  "dependencies": {
+    "@nextbot/contracts": "workspace:*",
+    "@nextbot/db": "workspace:*",
+    "@nextbot/graph-store": "workspace:*",
+    "@nextbot/model-gateway": "workspace:*",
+    "@nextbot/pii": "workspace:*",
+    "@nextbot/tenancy": "workspace:*",
+    "@sinclair/typebox": "^0.33.15",
+    "drizzle-orm": "^0.36.1"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

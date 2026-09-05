@@ -1,0 +1,67 @@
+@if (tenantNotFound()) {
+  <la-empty-state variant="error" icon="error" title="Tenant not found" body="Tenant not found." actionLabel="Back to deployments" (action)="backToDeployments()" />
+} @else if (!loading()) {
+  <la-page-header [title]="(tenantName() || 'Deployment') + ' · Data residency'">
+    <button type="button" (click)="backToDeployments()">Back to deployments</button>
+  </la-page-header>
+
+  <form class="la-residency__form">
+    <fieldset role="radiogroup" aria-label="Send to remote LLM">
+      <legend>Send to remote LLM</legend>
+
+      <label>
+        <input type="radio" name="send-to-remote-llm" value="prompt_text_only" [checked]="sendToRemoteLlm() === 'prompt_text_only'" [disabled]="saving()" (change)="onModeChange('prompt_text_only')" />
+        Prompt text only
+      </label>
+      <p class="la-residency__helper">The current turn's text is sent, not conversation history.</p>
+
+      <label>
+        <input type="radio" name="send-to-remote-llm" value="prompt_and_transcript" [checked]="sendToRemoteLlm() === 'prompt_and_transcript'" [disabled]="saving()" (change)="onModeChange('prompt_and_transcript')" />
+        Prompt and transcript
+      </label>
+      <p class="la-residency__helper">The current turn plus recent conversation history is sent.</p>
+
+      <label>
+        <input type="radio" name="send-to-remote-llm" value="none" [checked]="sendToRemoteLlm() === 'none'" [disabled]="saving()" (change)="onModeChange('none')" />
+        None
+      </label>
+      <p class="la-residency__helper">
+        No prompt content is sent to a remote LLM; only a self-hosted/on-prem LLM may be used (not available in v1).
+      </p>
+    </fieldset>
+
+    <div class="la-residency__field">
+      <label for="residency-retention">Retain transcripts (days)</label>
+      <input
+        id="residency-retention"
+        type="number"
+        min="1"
+        max="730"
+        [value]="retainTranscriptsDays()"
+        [disabled]="saving()"
+        (change)="onRetentionChange($any($event.target).valueAsNumber)"
+      />
+      <p class="la-residency__helper">Transcripts older than this are permanently deleted by a daily job (FR-PRIV-3).</p>
+    </div>
+
+    <div class="la-residency__field">
+      <label>
+        <input type="checkbox" [checked]="recordingsEnabled()" [disabled]="saving()" (change)="onRecordingsToggle($any($event.target).checked)" />
+        Recordings enabled
+      </label>
+      @if (recordingsEnabled()) {
+        <p role="status" class="la-residency__warning">
+          Recordings are enabled but capture is not implemented in v1; nothing will be stored.
+        </p>
+      }
+    </div>
+
+    @if (saveError()) {
+      <p role="alert" class="la-residency__error">{{ saveError() }}</p>
+    }
+
+    <button type="button" [disabled]="saving()" (click)="save()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+  </form>
+} @else {
+  <p>Loading…</p>
+}

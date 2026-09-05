@@ -1,0 +1,25 @@
+{
+  "name": "@nextbot/graph-store",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The Neo4j 5 Enterprise-backed GraphStorePort and withTenantGraph() primitive (ADR-0018, LLD §14.4.6) — engine-enforced multi-tenant isolation for Module B's graph store via database-per-tenant + service-user impersonation.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./provisioning": "./src/provisioning/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir .",
+    "test:isolation": "vitest run --project isolation --dir ."
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.33.15",
+    "neo4j-driver": "^5.28.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

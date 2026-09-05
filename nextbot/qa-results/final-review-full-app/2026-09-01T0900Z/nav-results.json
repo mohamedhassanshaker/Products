@@ -1,0 +1,117 @@
+[
+  {
+    "href": "/dashboard",
+    "status": 200,
+    "h1": "Dashboard"
+  },
+  {
+    "href": "/conversations",
+    "status": 200,
+    "h1": "Conversations"
+  },
+  {
+    "href": "/approvals",
+    "status": 200,
+    "h1": "Approval Queue"
+  },
+  {
+    "href": "/escalations",
+    "status": 200,
+    "h1": "Escalation Queue"
+  },
+  {
+    "href": "/channels",
+    "status": 200,
+    "h1": "Channels"
+  },
+  {
+    "href": "/connectors",
+    "status": 200,
+    "h1": "Connectors"
+  },
+  {
+    "href": "/mcp/servers",
+    "status": 200,
+    "h1": "MCP Servers"
+  },
+  {
+    "href": "/tools",
+    "status": 200,
+    "h1": "Tool Catalog"
+  },
+  {
+    "href": "/tools/capability-groups",
+    "status": 200,
+    "h1": "Capability Groups"
+  },
+  {
+    "href": "/mcp-health",
+    "status": 200,
+    "h1": "MCP Server Health"
+  },
+  {
+    "href": "/knowledge",
+    "status": 200,
+    "h1": "Knowledge Collections"
+  },
+  {
+    "href": "/agent-platform/definitions",
+    "status": 200,
+    "h1": "Agent Definitions"
+  },
+  {
+    "href": "/agent-platform/blueprints",
+    "status": 200,
+    "h1": "Blueprints Gallery"
+  },
+  {
+    "href": "/agent-platform/evals",
+    "status": 200,
+    "h1": "Eval Suites"
+  },
+  {
+    "href": "/agent-platform/model-gateway",
+    "status": 200,
+    "h1": "Model Gateway — Provider Registry & Catalog"
+  },
+  {
+    "href": "/model-gateway",
+    "status": 200,
+    "h1": "Model Gateway — Provider Registry & Catalog"
+  },
+  {
+    "href": "/agent-platform/traces",
+    "status": 200,
+    "h1": "Runtime Traces"
+  },
+  {
+    "href": "/skills",
+    "status": 200,
+    "h1": "Skills Library"
+  },
+  {
+    "href": "/teams",
+    "status": 200,
+    "h1": "Teams"
+  },
+  {
+    "href": "/workflows",
+    "status": 200,
+    "h1": "Workflows"
+  },
+  {
+    "href": "/roles",
+    "status": 200,
+    "h1": "Users & Roles"
+  },
+  {
+    "href": "/audit-log",
+    "status": 200,
+    "h1": "Audit Log"
+  },
+  {
+    "href": "/settings",
+    "status": 200,
+    "h1": "Settings"
+  }
+]

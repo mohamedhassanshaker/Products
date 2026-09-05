@@ -1,0 +1,62 @@
+// QA fix (phase7-admin-spa D-3): compact width for the phone-only mat-select
+// range control, so it doesn't crowd the header row's Tenant field.
+.la-dashboard__range-select {
+  width: 100px;
+}
+
+.la-dashboard__widgets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.la-dashboard__widget {
+  flex: 1 1 240px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.la-dashboard__widget-label {
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.la-dashboard__widget-value {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.la-dashboard__health {
+  margin-top: 24px;
+}
+
+.la-dashboard__health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.la-dashboard__health-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+}
+
+.la-dashboard__health-category {
+  // QA fix (phase7-admin-spa D-1): `categoryLabel()` now returns the exact
+  // display text (STT/LLM/TTS/LiveKit/Avatar) — a CSS text-transform must
+  // not be layered on top, since `capitalize` would otherwise re-mangle a
+  // real acronym into "Stt"/"Llm"/"Tts" (only the first letter capitalized).
+  font-weight: 500;
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@nextbot/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Drizzle schema, migrations, and the tenant-scoped client factory (withTenant/withPlatform) that make ADR-0001's RLS isolation provable (LLD §3.2).",
+  "exports": {
+    ".": "./src/index.ts",
+    "./platform-only": "./src/platform-context.ts",
+    "./schema": "./src/schema/index.ts",
+    "./testing": "./src/testing/index.ts",
+    "./clickhouse": "./src/clickhouse.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "generate": "drizzle-kit generate",
+    "migrate": "tsx src/bootstrap/migrate.ts",
+    "migrate:test": "cross-env NEXTBOT_DB_ENV=test tsx src/bootstrap/migrate.ts",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir .",
+    "test:isolation": "vitest run --project isolation --dir ."
+  },
+  "dependencies": {
+    "@clickhouse/client": "^1.23.1",
+    "@sinclair/typebox": "^0.33.15",
+    "drizzle-orm": "^0.36.1",
+    "pg": "^8.13.1",
+    "uuidv7": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.10",
+    "cross-env": "^7.0.3",
+    "drizzle-kit": "^0.28.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

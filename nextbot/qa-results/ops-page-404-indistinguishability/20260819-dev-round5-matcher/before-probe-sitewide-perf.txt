@@ -1,0 +1,9 @@
+port 3492, N=200 interleaved samples/case (first 20 dropped as warmup)
+page /login (real route)           status=200 {"n":180,"mean":1.795,"p50":1.675,"p90":2.374,"p99":4.3}
+page / (real route)                status=307 {"n":180,"mean":6.644,"p50":6.379,"p90":8.312,"p99":11.619}
+missing page path                  status=404 {"n":180,"mean":1.935,"p50":1.773,"p90":2.404,"p99":4.646}
+missing page path 2                status=404 {"n":180,"mean":1.716,"p50":1.611,"p90":2.229,"p99":4.105}
+api unmatched                      status=404 {"n":180,"mean":2.438,"p50":2.302,"p90":2.94,"p99":4.685}
+api ops (guarded)                  status=404 {"n":180,"mean":2.128,"p50":2.044,"p90":2.619,"p99":4.213}
+static chunk (matcher-excluded)    status=200 {"n":180,"mean":6.284,"p50":6.277,"p90":7.37,"p99":10.123}
+gated ops page                     status=404 {"n":180,"mean":2.932,"p50":2.834,"p90":3.607,"p99":5.769}

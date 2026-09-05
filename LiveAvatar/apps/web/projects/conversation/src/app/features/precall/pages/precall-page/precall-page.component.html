@@ -1,0 +1,58 @@
+@if (!store.browserSupported()) {
+  <main class="la-precall la-precall--dead-end">
+    <h1 tabindex="-1" #unsupportedHeading>This browser can't run a live call</h1>
+    <p>
+      This browser cannot run a live video call. Use the latest Chrome, Edge, Firefox, or Safari.
+    </p>
+  </main>
+} @else {
+  <main class="la-precall">
+    <div class="la-precall__preview" aria-hidden="true">
+      <span class="la-precall__preview-icon">🧑‍💻</span>
+    </div>
+
+    <form class="la-precall__form" (ngSubmit)="onJoin()">
+      @if (store.preflightError()) {
+        <div class="la-precall__alert" role="alert">{{ preflightErrorSentence() }}</div>
+      }
+      @if (store.micDenied()) {
+        <div class="la-precall__alert" role="alert">{{ micDeniedSentence() }}</div>
+      }
+      @if (store.joinError()) {
+        <div class="la-precall__alert" role="alert">{{ joinErrorSentence() }}</div>
+      }
+
+      @if (store.joinPhase() === 'idle' && store.preflightStatus() !== 'error') {
+        <p class="la-precall__hint">{{ preJoinHint() }}</p>
+      }
+
+      <label class="la-precall__field">
+        Your name (optional)
+        <input
+          type="text"
+          name="displayName"
+          maxlength="40"
+          [ngModel]="store.displayName()"
+          (ngModelChange)="onDisplayNameChange($event)"
+          [readonly]="store.joinPhase() !== 'idle'"
+          placeholder="Guest"
+        />
+      </label>
+
+      <label class="la-precall__toggle">
+        <input
+          type="checkbox"
+          name="camera"
+          [ngModel]="store.cameraEnabled()"
+          (ngModelChange)="onCameraToggle($event)"
+          [disabled]="store.joinPhase() !== 'idle'"
+        />
+        Turn on camera
+      </label>
+
+      <button type="submit" class="la-precall__join" [disabled]="joinDisabled()">
+        {{ joinButtonLabel() }}
+      </button>
+    </form>
+  </main>
+}

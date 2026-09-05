@@ -1,0 +1,864 @@
+// Conversational Avatar Platform — full LLD §4.1 schema (one migration).
+// Phase 1 APIs only touch auth + tenant tables; later modules reuse this shape.
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  moduleFormat    = "cjs"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [citext, pgcrypto, vector]
+}
+
+enum TenantStatus {
+  active
+  paused
+}
+
+enum ConfigStatus {
+  draft
+  published
+}
+
+/// Phase 9 (BL-035, ARCHITECTURE_NOTES.md §2) — ConfigVersion append-only history.
+enum ConfigVersionStatus {
+  published
+  superseded
+  rolled_back
+}
+
+enum ProviderCategory {
+  transport
+  stt
+  llm
+  tts
+  avatar
+}
+
+enum ProviderHosting {
+  self_hosted
+  remote
+}
+
+enum ProbeStatus {
+  healthy
+  degraded
+  unreachable
+  unknown
+}
+
+enum ResidencyMode {
+  prompt_text_only
+  prompt_and_transcript
+  none
+}
+
+enum AgentRuntime {
+  langgraph
+  pydantic_ai @map("pydantic-ai")
+}
+
+enum SessionStatus {
+  pending
+  active
+  ended
+  failed
+  abandoned
+  degraded
+}
+
+enum UtteranceRole {
+  user
+  assistant
+}
+
+enum HopKind {
+  stt
+  llm
+  tts
+  avatar
+  e2e
+  /// Phase 9 (BL-039) — one row per graph-node execution, node-level session trace.
+  node
+}
+
+enum GpuRole {
+  stt
+  tts
+  avatar
+}
+
+enum AlertType {
+  llm_failover
+  provider_unreachable
+  session_failed
+  gpu_unhealthy
+  /// Phase 15 (BL-059) — a `handoff`-type graph node fired (record handoff +
+  /// alert; real PSTN/SIP transfer is out of scope). Reuses this existing
+  /// ops-visible alert feed rather than building new notification
+  /// infrastructure for what BL-059 itself scopes as an "intent only" signal.
+  handoff_requested
+}
+
+enum SummaryStatus {
+  none
+  pending
+  ready
+  unavailable
+}
+
+model Tenant {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String       @db.VarChar(80)
+  slug          String       @unique @db.VarChar(48)
+  status        TenantStatus @default(active)
+  roomNamespace String       @map("room_namespace") @db.VarChar(48)
+  createdAt     DateTime     @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt     DateTime     @updatedAt @map("updated_at") @db.Timestamptz
+
+  config           DeploymentConfig?
+  residency        DataResidencyPolicy?
+  alertPolicy      AlertPolicy?
+  credentials      ProviderCredential[]
+  sessions         Session[]
+  memberships      AdminUserTenant[]
+  tools            ToolDefinition[]
+  alertEvents      AlertEvent[]
+  inviteTenants    AdminInviteTenant[]
+  knowledgeSources KnowledgeSource[]
+  skills           Skill[]
+  reviewerGroups   ReviewerGroup[]
+  hitlGates        HitlGate[]
+
+  @@index([status])
+  @@index([updatedAt])
+  @@map("tenant")
+}
+
+model AdminUser {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String   @unique @db.Citext
+  passwordHash String   @map("password_hash")
+  roles        String[]
+  disabled     Boolean  @default(false)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  memberships   AdminUserTenant[]
+  refreshTokens RefreshToken[]
+  invitesSent   AdminInvite[]     @relation("InviteCreator")
+
+  @@index([disabled])
+  @@map("admin_user")
+}
+
+model AdminUserTenant {
+  adminUserId String   @map("admin_user_id") @db.Uuid
+  tenantId    String   @map("tenant_id") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@id([adminUserId, tenantId])
+  @@index([tenantId])
+  @@map("admin_user_tenant")
+}
+
+model AdminInvite {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email      String    @db.Citext
+  roles      String[]
+  tokenHash  String    @unique @map("token_hash")
+  expiresAt  DateTime  @map("expires_at") @db.Timestamptz
+  acceptedAt DateTime? @map("accepted_at") @db.Timestamptz
+  createdBy  String    @map("created_by") @db.Uuid
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  creator AdminUser           @relation("InviteCreator", fields: [createdBy], references: [id])
+  tenants AdminInviteTenant[]
+
+  @@index([email])
+  @@index([expiresAt])
+  @@map("admin_invite")
+}
+
+model AdminInviteTenant {
+  inviteId String @map("invite_id") @db.Uuid
+  tenantId String @map("tenant_id") @db.Uuid
+
+  invite AdminInvite @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+  tenant Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@id([inviteId, tenantId])
+  @@index([tenantId])
+  @@map("admin_invite_tenant")
+}
+
+model RefreshToken {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adminUserId String    @map("admin_user_id") @db.Uuid
+  tokenHash   String    @unique @map("token_hash")
+  familyId    String    @map("family_id") @db.Uuid
+  expiresAt   DateTime  @map("expires_at") @db.Timestamptz
+  revokedAt   DateTime? @map("revoked_at") @db.Timestamptz
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminUserId])
+  @@index([familyId])
+  @@index([expiresAt])
+  @@map("refresh_token")
+}
+
+model ProviderDefinition {
+  key                String           @id @db.VarChar(64)
+  category           ProviderCategory
+  displayName        String           @map("display_name") @db.VarChar(80)
+  hosting            ProviderHosting
+  interfaceName      String           @map("interface_name") @db.VarChar(48)
+  requiresCredential Boolean          @default(true) @map("requires_credential")
+  enabled            Boolean          @default(true)
+  featureGaps        String?          @map("feature_gaps")
+
+  credentials ProviderCredential[]
+
+  @@index([category, enabled])
+  @@map("provider_definition")
+}
+
+model ProviderCredential {
+  id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId        String      @map("tenant_id") @db.Uuid
+  providerKey     String      @map("provider_key") @db.VarChar(64)
+  displayLabel    String      @default("default") @map("display_label") @db.VarChar(80)
+  endpointUrl     String      @map("endpoint_url") @db.VarChar(2048)
+  credentialRef   String?     @map("credential_ref") @db.VarChar(256)
+  extra           Json        @default("{}")
+  lastProbeStatus ProbeStatus @default(unknown) @map("last_probe_status")
+  lastProbeAt     DateTime?   @map("last_probe_at") @db.Timestamptz
+  lastProbeError  String?     @map("last_probe_error") @db.VarChar(500)
+  createdAt       DateTime    @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt       DateTime    @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenant     Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  definition ProviderDefinition @relation(fields: [providerKey], references: [key])
+
+  @@unique([tenantId, providerKey, displayLabel])
+  @@index([tenantId, providerKey])
+  @@index([lastProbeStatus, lastProbeAt])
+  @@map("provider_credential")
+}
+
+model DeploymentConfig {
+  id                           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId                     String        @unique @map("tenant_id") @db.Uuid
+  yamlText                     String        @map("yaml_text")
+  status                       ConfigStatus  @default(draft)
+  transportProvider            String?       @map("transport_provider") @db.VarChar(64)
+  sttProvider                  String?       @map("stt_provider") @db.VarChar(64)
+  llmProvider                  String?       @map("llm_provider") @db.VarChar(64)
+  llmFallbackProvider          String?       @map("llm_fallback_provider") @db.VarChar(64)
+  ttsProvider                  String?       @map("tts_provider") @db.VarChar(64)
+  avatarProvider               String?       @map("avatar_provider") @db.VarChar(64)
+  agentRuntime                 AgentRuntime? @map("agent_runtime")
+  publishedAt                  DateTime?     @map("published_at") @db.Timestamptz
+  updatedAt                    DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+  updatedBy                    String?       @map("updated_by") @db.Uuid
+  /// Phase 9 (BL-035) — set when this draft was created by rollback-config-version.use-case.ts;
+  /// consumed (read + cleared) the next time this row is saved as `published`,
+  /// becoming that new ConfigVersion's `rolledBackFrom`.
+  pendingRollbackFromVersionId String?       @map("pending_rollback_from_version_id") @db.Uuid
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@map("deployment_config")
+}
+
+/// Phase 9 (BL-035, ARCHITECTURE_NOTES.md §2) — append-only, written on publish only.
+/// DeploymentConfig stays the fast "current" pointer row; this is real version history.
+model ConfigVersion {
+  id             String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId       String              @map("tenant_id") @db.Uuid
+  versionNumber  Int                 @map("version_number")
+  yamlText       String              @map("yaml_text")
+  status         ConfigVersionStatus
+  publishedAt    DateTime            @map("published_at") @db.Timestamptz
+  createdBy      String?             @map("created_by") @db.Uuid
+  createdAt      DateTime            @default(now()) @map("created_at") @db.Timestamptz
+  rolledBackFrom String?             @map("rolled_back_from") @db.Uuid
+
+  @@unique([tenantId, versionNumber])
+  @@index([tenantId, status])
+  @@map("config_version")
+}
+
+model DataResidencyPolicy {
+  tenantId              String        @id @map("tenant_id") @db.Uuid
+  sendToRemoteLlm       ResidencyMode @default(prompt_text_only) @map("send_to_remote_llm")
+  retainTranscriptsDays Int           @default(90) @map("retain_transcripts_days")
+  recordingsEnabled     Boolean       @default(false) @map("recordings_enabled")
+  updatedAt             DateTime      @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("data_residency_policy")
+}
+
+model AlertPolicy {
+  tenantId            String   @id @map("tenant_id") @db.Uuid
+  retryMaxAttempts    Int      @default(3) @map("retry_max_attempts")
+  retryBackoffMs      Int[]    @default([200, 400, 800]) @map("retry_backoff_ms")
+  degradedModeMessage String   @default("I'm having trouble reaching the language service. Please wait a moment and try again.") @map("degraded_mode_message") @db.VarChar(500)
+  updatedAt           DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("alert_policy")
+}
+
+model ToolDefinition {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId           String   @map("tenant_id") @db.Uuid
+  apiRef             String   @map("api_ref") @db.VarChar(64)
+  name               String   @db.VarChar(80)
+  description        String?  @db.VarChar(500)
+  method             String   @db.VarChar(8)
+  url                String   @db.VarChar(2048)
+  credentialRef      String?  @map("credential_ref") @db.VarChar(256)
+  argsSchema         Json     @default("{}") @map("args_schema")
+  enabled            Boolean  @default(true)
+  // Phase 8 (BL-033, docs/v2/BACKLOG.md) additive columns. `lane` stays a
+  // plain validated string (not a Prisma enum) to match this same model's
+  // pre-existing `method` column convention rather than the platform's
+  // broader enum-heavy style elsewhere — see docs/plans/agent-builder-v2-plan.md
+  // Phase 8 "Decisions made this phase".
+  consequential      Boolean  @default(false)
+  lane               String   @default("foreground") @db.VarChar(16)
+  perSessionCap      Int?     @map("per_session_cap")
+  perTurnCap         Int?     @map("per_turn_cap")
+  // Mirrors ProviderDefinitionRecord.requiresCredential's naming/semantics —
+  // an admin-declared flag (not inferred) that the use-case layer enforces
+  // against `credentialRef` on create/update (TOOL_CREDENTIAL_MISSING).
+  requiresCredential Boolean  @default(false) @map("requires_credential")
+  // Matches ToolExecutor's `_TOOL_TIMEOUT_SECONDS = 10.0` default
+  // (apps/agent/src/avatar_agent/orchestration/tools.py).
+  timeoutMs          Int      @default(10000) @map("timeout_ms")
+  // Phase 14 (BL-057, V-6) — a deliberate, written opt-out of HITL gating for
+  // a `consequential: true` tool ("we've decided this one is safe to run
+  // autonomously"). Distinct from `HitlGate.autoApproveAckText` (V-8, which
+  // acknowledges a *gate* whose timeout falls back to auto-approve) — this
+  // field is for a consequential tool that has **no gate at all**. Required
+  // by the application layer, not the DB, only when `consequential: true`
+  // and no `HitlGate` is attached.
+  autonomousUseAckText String? @map("autonomous_use_ack_text") @db.VarChar(1000)
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, apiRef])
+  @@index([tenantId, enabled])
+  @@map("tool_definition")
+}
+
+enum KnowledgeSourceType {
+  upload
+}
+
+enum KnowledgeParser {
+  plain_text
+  markdown
+  pdf
+}
+
+enum ChunkingStrategy {
+  fixed
+  semantic
+  heading_aware
+}
+
+enum KnowledgeSourceStatus {
+  pending
+  processing
+  ready
+  failed
+}
+
+/// Phase 12a (BL-044/046) — RAG ingestion. Chunking/embedding config lives
+/// here per R-R1; `chunkingStrategy`/`parser` are enums with values this
+/// phase does not implement (semantic/heading_aware chunking, pdf parsing)
+/// so the admin UI can show them as visibly-present-but-disabled "coming
+/// soon" options without a later schema change (BL-071 stays additive).
+/// `configUpdatedAt` (bumped only by the config-editing use-case) vs.
+/// `lastIndexedAt` (set only on ingestion success) are deliberately two
+/// separate timestamps, not one `updatedAt` — staleness (V-9) is
+/// `lastIndexedAt == null ? false : configUpdatedAt > lastIndexedAt`,
+/// computed at the application layer, not stored as a redundant boolean
+/// that could drift out of sync.
+model KnowledgeSource {
+  id                     String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId               String                @map("tenant_id") @db.Uuid
+  name                   String                @db.VarChar(160)
+  sourceType             KnowledgeSourceType   @default(upload) @map("source_type")
+  originalFilename       String                @map("original_filename") @db.VarChar(255)
+  mimeType               String                @map("mime_type") @db.VarChar(128)
+  fileSizeBytes          Int                   @map("file_size_bytes")
+  rawContent             Bytes                 @map("raw_content")
+  parser                 KnowledgeParser       @default(plain_text)
+  parserConfig           Json                  @default("{}") @map("parser_config")
+  chunkingStrategy       ChunkingStrategy      @default(fixed) @map("chunking_strategy")
+  chunkSize              Int                   @default(800) @map("chunk_size")
+  chunkOverlap           Int                   @default(100) @map("chunk_overlap")
+  embeddingModel         String                @default("text-embedding-3-small") @map("embedding_model") @db.VarChar(80)
+  embeddingCredentialRef String?               @map("embedding_credential_ref") @db.VarChar(256)
+  status                 KnowledgeSourceStatus @default(pending)
+  chunkCount             Int                   @default(0) @map("chunk_count")
+  errorMessage           String?               @map("error_message") @db.VarChar(500)
+  configUpdatedAt        DateTime              @default(now()) @map("config_updated_at") @db.Timestamptz
+  lastIndexedAt          DateTime?             @map("last_indexed_at") @db.Timestamptz
+  createdBy              String?               @map("created_by") @db.Uuid
+  createdAt              DateTime              @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt              DateTime              @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenant Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  chunks KnowledgeChunk[]
+
+  @@index([tenantId, status])
+  @@map("knowledge_source")
+}
+
+/// Phase 12a — chunk text mirror + pgvector embedding + generated tsvector.
+/// `embedding`/`searchVector` are `Unsupported(...)` because Prisma has no
+/// first-class vector/tsvector type (ARCHITECTURE_NOTES.md §4.1) — the real
+/// columns are hand-added as raw SQL in this migration. Declaring them here
+/// (rather than omitting them) is deliberate: it makes Prisma track their
+/// existence so a future `prisma migrate dev` diff does not try to drop a
+/// column it doesn't otherwise know about.
+model KnowledgeChunk {
+  id           String                       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId     String                       @map("tenant_id") @db.Uuid
+  sourceId     String                       @map("source_id") @db.Uuid
+  chunkIndex   Int                          @map("chunk_index")
+  text         String
+  tokenCount   Int                          @map("token_count")
+  embedding    Unsupported("vector(1536)")?
+  searchVector Unsupported("tsvector")?     @map("search_vector")
+  /// Phase 12b (BL-045/047) — the metadata-filter stage's target column.
+  /// Today's fixed-size chunker (12a) never populates it (always `{}`); the
+  /// column exists ahead of a real producer so the filter mechanism itself
+  /// is real and tested now, the same "shaped for a future producer" posture
+  /// 12a's own `ChunkerPort` already established. A future heading-aware
+  /// chunker (BL-071) is expected to populate real per-chunk metadata here.
+  metadata     Json                         @default("{}")
+  createdAt    DateTime                     @default(now()) @map("created_at") @db.Timestamptz
+
+  source KnowledgeSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, chunkIndex])
+  @@index([tenantId])
+  @@map("knowledge_chunk")
+}
+
+/// Phase 12a table, Phase 12b writer — R-R7's below-threshold retrieval
+/// events (ARCHITECTURE_NOTES.md §4.2/§8 groups this model with 12a/12b
+/// together). Nothing in Phase 12a writes a row here; no threshold check
+/// exists yet (that is Phase 12b's retrieval-time logic).
+model KnowledgeGap {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String   @map("tenant_id") @db.Uuid
+  sourceId  String?  @map("source_id") @db.Uuid
+  query     String   @db.VarChar(1000)
+  bestScore Float?   @map("best_score")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([tenantId, createdAt(sort: Desc)])
+  @@map("knowledge_gap")
+}
+
+enum SkillTriggerMode {
+  model
+  router
+}
+
+enum SkillVersionStatus {
+  draft
+  published
+}
+
+/// Phase 13 (BL-049/050/051, ARCHITECTURE_NOTES.md §5.1) — the "current
+/// pointer" row, mirroring DeploymentConfig's own pointer-vs-history split:
+/// this row never carries content itself, only identity + which
+/// SkillVersion is currently live. `tenantId` is nullable per the
+/// architecture doc's explicit instruction to allow the deferred
+/// platform-library case (BL-074) without a second migration later — v1
+/// only ever creates rows with `tenantId` set and `platformPublished: false`.
+model Skill {
+  id                        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId                  String?  @map("tenant_id") @db.Uuid
+  platformPublished         Boolean  @default(false) @map("platform_published")
+  name                      String   @db.VarChar(80)
+  slug                      String   @db.VarChar(80)
+  currentPublishedVersionId String?  @map("current_published_version_id") @db.Uuid
+  createdAt                 DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt                 DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenant   Tenant?        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  versions SkillVersion[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@map("skill")
+}
+
+/// Immutable per version once published (R-S3) — same append-only
+/// discipline as ConfigVersion: publishing never mutates an existing row,
+/// it flips `status`/`publishedAt` on the current draft row and the next
+/// edit forks a brand-new row (`versionNumber = max+1`, `status: draft`).
+/// While a row's own `status` is still `draft`, it *is* mutated in place
+/// (the "current draft" being edited) — this is the one place this
+/// aggregate departs from ConfigVersion's pure insert-only shape, because
+/// unlike config publish/draft (two separate tables), Skill packs both
+/// roles into one table per the architecture doc's given schema.
+/// `tools` is a JSON array of `api_ref` strings (never inlined
+/// ToolDefinition rows — mirrors `agent.tools[]`'s own by-reference
+/// convention). `knowledgeFilters` is a small JSON shape
+/// (`{source_refs: string[], top_k?, min_score?}`) — see
+/// `domain/skill-version.ts` for the parsed shape.
+model SkillVersion {
+  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  skillId          String             @map("skill_id") @db.Uuid
+  versionNumber    Int                @map("version_number")
+  description      String             @db.VarChar(500)
+  instructions     String
+  triggerMode      SkillTriggerMode   @default(model) @map("trigger_mode")
+  tools            Json               @default("[]")
+  knowledgeFilters Json               @default("{}") @map("knowledge_filters")
+  budgetMs         Int                @default(1500) @map("budget_ms")
+  /// Phase 14 (BL-052 follow-up, R-S6) — an optional `HitlGate` a skill
+  /// declares for itself (`attachmentKind: skill`), so the gate "travels
+  /// with" the skill wherever it's invoked from the graph. Not a Prisma
+  /// relation (no FK) because `HitlGate` rows aren't guaranteed to exist
+  /// for every tenant/environment this `SkillVersion` might be enabled in —
+  /// resolved by id at read time, same as `tools[]`'s `api_ref` strings.
+  hitlGateId       String?            @map("hitl_gate_id") @db.Uuid
+  environments     String[]           @default(["dev", "staging", "production"])
+  status           SkillVersionStatus @default(draft)
+  publishedAt      DateTime?          @map("published_at") @db.Timestamptz
+  createdBy        String?            @map("created_by") @db.Uuid
+  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamptz
+
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([skillId, versionNumber])
+  @@index([skillId, status])
+  @@map("skill_version")
+}
+
+/// Phase 14 (BL-052, ARCHITECTURE_NOTES.md §6.1) — HITL gate types. All 5
+/// exist so the config-screen radio can list every option for
+/// forward-compatibility (`docs/v2/UX_SCOPE.md`); v1 only ever creates
+/// `blocking`/`deferred`/`pre_speech` rows — `whisper`/`post_hoc` render
+/// disabled ("Coming soon") and are rejected by the application layer.
+enum HitlGateType {
+  blocking
+  deferred
+  pre_speech
+  whisper
+  post_hoc
+}
+
+/// What a gate is attached to — mirrors `Skill.tools[]`'s by-reference
+/// convention: `attachmentRef` is a `ToolDefinition.apiRef`, a `Skill.id`,
+/// or a reasoning-graph node id, never an inlined copy.
+enum HitlAttachmentKind {
+  tool
+  skill
+  graph_node
+}
+
+/// R-H2 — what happens when a gate's SLA elapses with no reviewer decision.
+enum HitlTimeoutBehavior {
+  auto_approve
+  auto_deny
+  escalate
+  defer_to_async
+}
+
+enum HitlGateStatus {
+  active
+  disabled
+}
+
+/// R-H7 — every possible terminal (and the one non-terminal `pending`) state
+/// of a `HitlDecision`. `edited_approved` is R-H6's "edit-and-approve",
+/// recorded distinctly from a plain `approved` because `editedArguments` is
+/// only ever non-null on this one.
+enum HitlDecisionStatus {
+  pending
+  approved
+  denied
+  edited_approved
+  timed_out
+  escalated
+  deferred
+}
+
+/// Phase 14 (BL-052) — R-H1's reviewer group: who gets notified, and how.
+/// `members` is a list of `AdminUser.id`s (not inlined rows), matching this
+/// schema's existing by-reference convention throughout. `notificationChannels`
+/// is a small JSON array (`[{type: 'in_app'|'email', address?: string}]`) — a
+/// plain array column can't express the optional per-channel address, and
+/// this is genuinely new infra with no established channel shape to reuse.
+model ReviewerGroup {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId             String   @map("tenant_id") @db.Uuid
+  name                 String   @db.VarChar(80)
+  members              String[]
+  notificationChannels Json     @default("[]") @map("notification_channels")
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenant Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  gates  HitlGate[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@map("reviewer_group")
+}
+
+/// Phase 14 (BL-052/053/054, ARCHITECTURE_NOTES.md §6.1) — R-H1's six
+/// mandatory fields (triggerCondition, gateType, reviewerGroupId,
+/// slaSeconds, holdTreatmentText, timeoutBehavior) are all non-nullable:
+/// unlike `Skill`/`SkillVersion`'s draft/published split, a gate has no
+/// partially-specified saved state at all (R-H1: "a gate cannot be saved
+/// partially specified"). `status` here is enable/disable of an otherwise
+/// complete gate, not a draft lifecycle. `autoApproveAckText` is V-8's
+/// "written acknowledgement", required by the application layer (not the DB)
+/// only when `timeoutBehavior: auto_approve` on a consequential-tool
+/// attachment — kept nullable here because it is conditionally required.
+model HitlGate {
+  id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId           String             @map("tenant_id") @db.Uuid
+  attachmentKind     HitlAttachmentKind @map("attachment_kind")
+  attachmentRef      String             @map("attachment_ref") @db.VarChar(128)
+  triggerCondition   Json               @default("{}") @map("trigger_condition")
+  gateType           HitlGateType       @map("gate_type")
+  reviewerGroupId    String             @map("reviewer_group_id") @db.Uuid
+  slaSeconds         Int                @map("sla_seconds")
+  holdTreatmentText  String             @map("hold_treatment_text") @db.VarChar(500)
+  timeoutBehavior    HitlTimeoutBehavior @map("timeout_behavior")
+  escalateToGroupId  String?            @map("escalate_to_group_id") @db.Uuid
+  autoApproveAckText String?            @map("auto_approve_ack_text") @db.VarChar(1000)
+  notifyChannels     String[]           @map("notify_channels")
+  environments       String[]           @default(["dev", "staging", "production"])
+  status             HitlGateStatus     @default(active)
+  createdBy          String?            @map("created_by") @db.Uuid
+  createdAt          DateTime           @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt          DateTime           @updatedAt @map("updated_at") @db.Timestamptz
+
+  tenant        Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  reviewerGroup ReviewerGroup   @relation(fields: [reviewerGroupId], references: [id])
+  decisions     HitlDecision[]
+
+  @@index([tenantId, status])
+  @@index([tenantId, attachmentKind, attachmentRef])
+  @@map("hitl_gate")
+}
+
+/// Phase 14 (BL-052/053, ARCHITECTURE_NOTES.md §6.1/§6.3) — simultaneously
+/// the R-H7 audit trail, the live reviewer queue (`decision: pending`), and
+/// the R-H10 metrics source. One row per gate hit, created the moment the
+/// interpreter enters a HITL node (`decision: pending`), updated once
+/// (`decidedAt` set) whichever way it resolves — never re-opened.
+model HitlDecision {
+  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId          String             @map("tenant_id") @db.Uuid
+  sessionId         String             @map("session_id") @db.Uuid
+  gateId            String             @map("gate_id") @db.Uuid
+  utteranceSeq      Int                @map("utterance_seq")
+  proposedAction    Json               @map("proposed_action")
+  reviewerId        String?            @map("reviewer_id") @db.Uuid
+  decision          HitlDecisionStatus @default(pending)
+  editedArguments   Json?              @map("edited_arguments")
+  justificationNote String?            @map("justification_note") @db.VarChar(1000)
+  decidedAt         DateTime?          @map("decided_at") @db.Timestamptz
+  latencyMs         Int?               @map("latency_ms")
+  outcomeNotifiedAt DateTime?          @map("outcome_notified_at") @db.Timestamptz
+  createdAt         DateTime           @default(now()) @map("created_at") @db.Timestamptz
+
+  session Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  gate    HitlGate @relation(fields: [gateId], references: [id])
+
+  @@index([tenantId, decision])
+  @@index([gateId])
+  @@index([sessionId, utteranceSeq])
+  @@map("hitl_decision")
+}
+
+model Session {
+  id                    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId              String        @map("tenant_id") @db.Uuid
+  roomName              String        @unique @map("room_name") @db.VarChar(128)
+  status                SessionStatus @default(pending)
+  errorCode             String?       @map("error_code") @db.VarChar(64)
+  providerStack         Json          @map("provider_stack")
+  residencySnapshot     Json          @map("residency_snapshot")
+  displayName           String?       @map("display_name") @db.VarChar(40)
+  // Opaque browser-tab correlation key (FR-AUTH-4 idempotency): a re-request
+  // from the same tab before join abandons the previous `pending` session for
+  // the same tenant+tabKey rather than leaving it to the 15-minute sweep.
+  // Additive column — the LLD's Prisma schema (§4.1) did not carry one, and no
+  // migration has ever been applied against a real database in this project,
+  // so adding it here is not a destructive/altering change.
+  tabKey                String?       @map("tab_key") @db.VarChar(128)
+  maxDurationSeconds    Int           @default(7200) @map("max_duration_seconds")
+  startedAt             DateTime      @default(now()) @map("started_at") @db.Timestamptz
+  joinedAt              DateTime?     @map("joined_at") @db.Timestamptz
+  endedAt               DateTime?     @map("ended_at") @db.Timestamptz
+  summaryTokenHash      String?       @unique @map("summary_token_hash")
+  summaryTokenExpiresAt DateTime?     @map("summary_token_expires_at") @db.Timestamptz
+  summaryText           String?       @map("summary_text") @db.VarChar(500)
+  summaryStatus         SummaryStatus @default(none) @map("summary_status")
+  transcriptPurged      Boolean       @default(false) @map("transcript_purged")
+  recordingPresent      Boolean       @default(false) @map("recording_present")
+
+  tenant         Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  utterances     TranscriptUtterance[]
+  hops           LatencyHop[]
+  feedback       Feedback?
+  hitlDecisions  HitlDecision[]
+
+  @@index([tenantId, startedAt(sort: Desc)])
+  @@index([tenantId, status])
+  @@index([status, startedAt])
+  @@index([tenantId, tabKey])
+  @@map("session")
+}
+
+model TranscriptUtterance {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId String        @map("session_id") @db.Uuid
+  tenantId  String        @map("tenant_id") @db.Uuid
+  seq       Int
+  role      UtteranceRole
+  text      String?
+  startedAt DateTime      @map("started_at") @db.Timestamptz
+  endedAt   DateTime?     @map("ended_at") @db.Timestamptz
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, seq])
+  @@index([tenantId, sessionId, seq])
+  @@map("transcript_utterance")
+}
+
+model LatencyHop {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId      String   @map("session_id") @db.Uuid
+  tenantId       String   @map("tenant_id") @db.Uuid
+  utteranceSeq   Int      @map("utterance_seq")
+  hop            HopKind
+  firstPartialMs Int?     @map("first_partial_ms")
+  firstTokenMs   Int?     @map("first_token_ms")
+  firstAudioMs   Int?     @map("first_audio_ms")
+  firstFrameMs   Int?     @map("first_frame_ms")
+  totalMs        Int?     @map("total_ms")
+  providerKey    String?  @map("provider_key") @db.VarChar(64)
+  usedFallback   Boolean  @default(false) @map("used_fallback")
+  errorCode      String?  @map("error_code") @db.VarChar(64)
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
+  /// Phase 9 (BL-039) — always populated ('' for non-node hops) so the
+  /// (session,seq,hop,node_id) unique index still dedupes stt/llm/tts/avatar/e2e
+  /// retries exactly as before (Postgres treats NULL as distinct in a unique index,
+  /// which would silently break that dedup for those rows).
+  nodeId         String   @default("") @map("node_id")
+  nodeType       String?  @map("node_type") @db.VarChar(32)
+  lane           String?  @map("lane") @db.VarChar(16)
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, utteranceSeq, hop, nodeId])
+  @@index([sessionId, utteranceSeq])
+  @@index([tenantId, hop, createdAt])
+  @@map("latency_hop")
+}
+
+model Feedback {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId String   @unique @map("session_id") @db.Uuid
+  tenantId  String   @map("tenant_id") @db.Uuid
+  rating    Int
+  comment   String?  @db.VarChar(1000)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, createdAt])
+  @@map("feedback")
+}
+
+model GpuNodeHeartbeat {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId       String?  @map("tenant_id") @db.Uuid
+  hostname       String   @db.VarChar(128)
+  role           GpuRole
+  gpuUtilPct     Decimal  @map("gpu_util_pct") @db.Decimal(5, 2)
+  memUtilPct     Decimal  @map("mem_util_pct") @db.Decimal(5, 2)
+  healthy        Boolean
+  autoscalerNote String   @default("not_configured") @map("autoscaler_note") @db.VarChar(64)
+  reportedAt     DateTime @map("reported_at") @db.Timestamptz
+
+  @@index([hostname, reportedAt(sort: Desc)])
+  @@index([role, reportedAt(sort: Desc)])
+  @@index([tenantId])
+  @@map("gpu_node_heartbeat")
+}
+
+model AlertEvent {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String    @map("tenant_id") @db.Uuid
+  type      AlertType
+  message   String    @db.VarChar(500)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, createdAt(sort: Desc)])
+  @@index([type, createdAt(sort: Desc)])
+  @@map("alert_event")
+}
+
+model AuditLog {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  actorAdminUserId String?  @map("actor_admin_user_id") @db.Uuid
+  tenantId         String?  @map("tenant_id") @db.Uuid
+  action           String   @db.VarChar(64)
+  payload          Json     @default("{}")
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([tenantId, createdAt(sort: Desc)])
+  @@index([actorAdminUserId, createdAt(sort: Desc)])
+  @@index([action])
+  @@map("audit_log")
+}
+
+model IdempotencyRecord {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key            String   @db.VarChar(64)
+  scope          String   @db.VarChar(128)
+  actorId        String?  @map("actor_id") @db.Uuid
+  tenantId       String?  @map("tenant_id") @db.Uuid
+  requestHash    String   @map("request_hash") @db.VarChar(64)
+  responseStatus Int      @map("response_status")
+  responseBody   Json     @map("response_body")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@unique([scope, key, actorId])
+  @@index([createdAt])
+  @@map("idempotency_record")
+}

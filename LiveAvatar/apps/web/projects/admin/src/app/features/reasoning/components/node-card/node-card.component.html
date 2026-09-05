@@ -1,0 +1,125 @@
+<article class="la-node-card" [class.la-node-card--error]="errors.length > 0">
+  <button type="button" class="la-node-card__main" (click)="editNode.emit()" [attr.aria-describedby]="errors.length > 0 ? node.id + '-errors' : null">
+    <mat-icon aria-hidden="true">{{ icon() }}</mat-icon>
+    <span class="la-node-card__body">
+      <span class="la-node-card__title">
+        {{ node.name }}
+        @if (isEntry) {
+          <span class="la-node-card__entry-badge">Entry</span>
+        }
+      </span>
+      <span class="la-node-card__meta">
+        {{ typeLabel() }} · {{ node.lane === 'background' ? 'Background' : 'Foreground' }} · id: {{ node.id }}
+        @if (nextNodeId() !== undefined) {
+          · next: {{ nextNodeId() ? nameFor(nextNodeId()) : 'speak + end (implicit)' }}
+        }
+        @if (node.type === 'parallel') {
+          · join: {{ joinPolicyLabel(node.join_policy) }}
+        }
+        @if (node.type === 'skill') {
+          · skill: {{ node.skill_id || '(none selected)' }}&#64;{{ node.version }}
+        }
+        @if (node.type === 'hitl') {
+          · gate: {{ node.gate_id || '(none selected)' }}
+        }
+        @if (node.type === 'subagent') {
+          · target: {{ node.target_tenant_id || '(none selected)' }} · handback: {{ node.handback_policy === 'silent_return' ? 'silent return' : 'speak and return' }}
+        }
+        @if (node.type === 'handoff') {
+          · destination: {{ node.destination || '(none set)' }}
+        }
+        @if (node.type === 'state') {
+          · {{ node.variable || '(none set)' }} ({{ node.mode }})
+        }
+      </span>
+    </span>
+    <span class="la-node-card__latency" title="Estimated latency lands in Phase 10">—</span>
+    <span
+      class="la-node-card__test-status"
+      [class.la-node-card__test-status--pass]="testStatusLabel() === 'Passed'"
+      [class.la-node-card__test-status--fail]="testStatusLabel() === 'Failed'"
+    >
+      {{ testStatusLabel() }}
+      @if (testResult?.simulated) {
+        <span class="la-node-card__simulated-badge">(simulated)</span>
+      }
+    </span>
+  </button>
+
+  <button
+    mat-icon-button
+    type="button"
+    [matMenuTriggerFor]="cardMenu"
+    [attr.aria-label]="'Actions for ' + node.name"
+  >
+    <mat-icon aria-hidden="true">more_vert</mat-icon>
+  </button>
+  <mat-menu #cardMenu="matMenu">
+    <button mat-menu-item type="button" (click)="editNode.emit()">Edit</button>
+    <button mat-menu-item type="button" (click)="deleteNode.emit()">Delete</button>
+  </mat-menu>
+
+  @if (errors.length > 0) {
+    <ul class="la-node-card__errors" [id]="node.id + '-errors'">
+      @for (error of errors; track error.message) {
+        <li>{{ error.message }}</li>
+      }
+    </ul>
+  }
+
+  @if (node.type === 'router') {
+    <div class="la-node-card__branches-label">Branches</div>
+    <ul class="la-node-card__branches" role="list">
+      @for (branch of node.branches; track $index) {
+        <li role="listitem" class="la-node-card__branch">
+          <code>{{ branch.condition }}</code>
+          <span aria-hidden="true">→</span>
+          <button type="button" class="la-node-card__branch-target" (click)="jumpToNode.emit(branch.next_node_id)">
+            {{ nameFor(branch.next_node_id) }}
+          </button>
+        </li>
+      }
+      <li role="listitem" class="la-node-card__branch la-node-card__branch--default">
+        <span>default</span>
+        <span aria-hidden="true">→</span>
+        <button type="button" class="la-node-card__branch-target" (click)="jumpToNode.emit(node.default_next_node_id)">
+          {{ nameFor(node.default_next_node_id) }}
+        </button>
+      </li>
+    </ul>
+  }
+
+  @if (node.type === 'parallel') {
+    <div class="la-node-card__branches-label">Branches</div>
+    <ul class="la-node-card__branches" role="list">
+      @for (branch of node.branches; track branch.id) {
+        <li role="listitem" class="la-node-card__branch">
+          <code>{{ branch.id }}</code>
+          <span aria-hidden="true">→</span>
+          <button type="button" class="la-node-card__branch-target" (click)="jumpToNode.emit(branch.entry_node_id)">
+            {{ nameFor(branch.entry_node_id) }}
+          </button>
+        </li>
+      }
+    </ul>
+  }
+
+  @if (node.type === 'loop') {
+    <div class="la-node-card__branches-label">Loop body</div>
+    <ul class="la-node-card__branches" role="list">
+      @for (name of loopBodyPreview(node); track $index) {
+        <li role="listitem" class="la-node-card__branch">
+          @if ($first) {
+            <button type="button" class="la-node-card__branch-target" (click)="jumpToNode.emit(node.body_entry_node_id)">{{ name }}</button>
+          } @else {
+            <span aria-hidden="true">→</span>
+            <span>{{ name }}</span>
+          }
+        </li>
+      }
+    </ul>
+    <p class="la-node-card__loop-summary">
+      Stops when <code>{{ node.condition }}</code> · max {{ node.max_iterations }} iterations · {{ node.max_duration_ms }}ms · cost ≤ {{ node.max_cost }}
+    </p>
+  }
+</article>

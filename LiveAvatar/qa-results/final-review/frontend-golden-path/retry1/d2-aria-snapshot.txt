@@ -1,0 +1,105 @@
+- heading "Transport" [level=2]
+- table:
+  - rowgroup:
+    - row "Provider Hosting Interface Enabled":
+      - columnheader "Provider"
+      - columnheader "Hosting"
+      - columnheader "Interface"
+      - columnheader "Enabled"
+  - rowgroup:
+    - row "LiveKit Self-hosted ITransportProvider Enable LiveKit":
+      - cell "LiveKit"
+      - cell "Self-hosted"
+      - cell "ITransportProvider"
+      - cell "Enable LiveKit":
+        - switch "Enable LiveKit" [checked]
+- heading "Speech to text" [level=2]
+- table:
+  - rowgroup:
+    - row "Provider Hosting Interface Enabled":
+      - columnheader "Provider"
+      - columnheader "Hosting"
+      - columnheader "Interface"
+      - columnheader "Enabled"
+  - rowgroup:
+    - row "Deepgram Self-hosted ISTTProvider Enable Deepgram":
+      - cell "Deepgram"
+      - cell "Self-hosted"
+      - cell "ISTTProvider"
+      - cell "Enable Deepgram":
+        - switch "Enable Deepgram" [checked]
+    - row "faster-whisper Self-hosted ISTTProvider Enable faster-whisper":
+      - cell "faster-whisper"
+      - cell "Self-hosted"
+      - cell "ISTTProvider"
+      - cell "Enable faster-whisper":
+        - switch "Enable faster-whisper" [checked]
+- heading "LLM" [level=2]
+- table:
+  - rowgroup:
+    - row "Provider Hosting Interface Enabled":
+      - columnheader "Provider"
+      - columnheader "Hosting"
+      - columnheader "Interface"
+      - columnheader "Enabled"
+  - rowgroup:
+    - row "Anthropic Remote ILLMProvider Enable Anthropic":
+      - cell "Anthropic"
+      - cell "Remote"
+      - cell "ILLMProvider"
+      - cell "Enable Anthropic":
+        - switch "Enable Anthropic" [checked]
+    - row "Google Remote ILLMProvider Enable Google":
+      - cell "Google"
+      - cell "Remote"
+      - cell "ILLMProvider"
+      - cell "Enable Google":
+        - switch "Enable Google" [checked]
+    - row "OpenAI Remote ILLMProvider Enable OpenAI":
+      - cell "OpenAI"
+      - cell "Remote"
+      - cell "ILLMProvider"
+      - cell "Enable OpenAI":
+        - switch "Enable OpenAI" [checked]
+- heading "Text to speech" [level=2]
+- table:
+  - rowgroup:
+    - row "Provider Hosting Interface Enabled":
+      - columnheader "Provider"
+      - columnheader "Hosting"
+      - columnheader "Interface"
+      - columnheader "Enabled"
+  - rowgroup:
+    - row "ElevenLabs Remote ITTSProvider Enable ElevenLabs":
+      - cell "ElevenLabs"
+      - cell "Remote"
+      - cell "ITTSProvider"
+      - cell "Enable ElevenLabs":
+        - switch "Enable ElevenLabs" [checked]
+    - row "Fish Speech Self-hosted ITTSProvider Enable Fish Speech":
+      - cell "Fish Speech"
+      - cell "Self-hosted"
+      - cell "ITTSProvider"
+      - cell "Enable Fish Speech":
+        - switch "Enable Fish Speech" [checked]
+- heading "Avatar" [level=2]
+- table:
+  - rowgroup:
+    - row "Provider Hosting Interface Enabled":
+      - columnheader "Provider"
+      - columnheader "Hosting"
+      - columnheader "Interface"
+      - columnheader "Enabled"
+  - rowgroup:
+    - row "Alibaba LiveAvatar Remote IAvatarProvider Enable Alibaba LiveAvatar":
+      - cell "Alibaba LiveAvatar"
+      - cell "Remote"
+      - cell "IAvatarProvider"
+      - cell "Enable Alibaba LiveAvatar":
+        - switch "Enable Alibaba LiveAvatar" [checked]
+    - row "bitHuman Self-hosted IAvatarProvider Enable bitHuman":
+      - cell "bitHuman"
+      - cell "Self-hosted"
+      - cell "IAvatarProvider"
+      - cell "Enable bitHuman":
+        - switch "Enable bitHuman" [checked]

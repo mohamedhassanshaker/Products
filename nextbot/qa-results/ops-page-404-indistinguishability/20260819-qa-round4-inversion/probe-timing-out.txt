@@ -1,0 +1,11 @@
+denied-gated  (3491 unconfigured)           {"n":380,"mean":2.941,"p50":2.831,"p90":3.369,"p99":4.926,"min":1.7,"max":7.463}
+missing-path  (3491 unconfigured)           {"n":380,"mean":1.668,"p50":1.583,"p90":2.088,"p99":2.849,"min":0.836,"max":4.967}
+missing-path2 (3491 unconfigured)           {"n":380,"mean":1.591,"p50":1.499,"p90":2.002,"p99":2.979,"min":0.704,"max":3.58}
+denied-gated  (3492 bad IP, checks run)     {"n":380,"mean":2.859,"p50":2.8,"p90":3.342,"p99":5.364,"min":1.564,"max":6.904}
+missing-path  (3492 bad IP)                 {"n":380,"mean":1.671,"p50":1.568,"p90":2.001,"p99":3.3,"min":0.891,"max":3.537}
+denied-gated  (3493 spoof XFF, checks run)  {"n":380,"mean":2.766,"p50":2.691,"p90":3.191,"p99":4.324,"min":1.762,"max":4.954}
+missing-path  (3493 spoof XFF)              {"n":380,"mean":1.653,"p50":1.568,"p90":2.03,"p99":4.656,"min":0.977,"max":5.135}
+ALLOWED rewrite->console (3492)             {"n":380,"mean":7.97,"p50":7.7,"p90":9.723,"p99":12.622,"min":4.462,"max":14.958}
+
+unconfigured: gated-vs-missing mean delta = 1.273 ms, p50 delta = 1.248 ms
+configured/denied: gated-vs-missing mean delta = 1.188 ms, p50 delta = 1.232 ms

@@ -1,0 +1,97 @@
+name: nextbot-test
+
+# Ephemeral Postgres + Redis for integration/isolation test runs (Testcontainers-style,
+# but docker-compose-based since a corporate CI runner may not have a Docker socket
+# available to a Testcontainers client). Ports are distinct from compose.yaml so both
+# can run side by side during local development.
+services:
+  postgres-test:
+    image: pgvector/pgvector:pg16
+    restart: "no"
+    # Target Architecture Blueprint Phase 16 (BL-47b): raised from Postgres's default
+    # `max_connections=100`. Vitest runs the integration project's files across several
+    # forked workers, and EACH worker opens `@nextbot/db`'s four pools independently
+    # (app max 10 + gateway max 10 + platform max 4 + owner max 2 = up to 26 per worker).
+    # Past roughly four concurrent workers that exhausts the default, and the suite fails
+    # with "too many clients already" / "remaining connection slots are reserved for
+    # roles with the SUPERUSER attribute" — failures that name a resource limit, not a
+    # defect, and that move from file to file run to run.
+    #
+    # This is an ephemeral, tmpfs-backed throwaway container, so a larger connection slot
+    # table costs nothing that matters. It is deliberately fixed HERE rather than by
+    # shrinking the pools (which would change production behaviour to suit the test
+    # harness) or by serializing the suite (which would hide real concurrency bugs the
+    # lease/claim proofs exist to catch).
+    command: ["postgres", "-c", "max_connections=400"]
+    environment:
+      POSTGRES_USER: nextbot_test
+      POSTGRES_PASSWORD: nextbot_test_password
+      POSTGRES_DB: nextbot_test
+    ports:
+      - "55432:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nextbot_test -d nextbot_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  redis-test:
+    image: redis:7-alpine
+    restart: "no"
+    ports:
+      - "56379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  # Phase 13 (BL-06) — ClickHouse read path stood up for the first time (LLD §3.10 /
+  # ADR-0008: `agent_run_span` + `RP-*` rollups live here, never in Postgres). Single
+  # node, HTTP interface only (the `@clickhouse/client` package speaks HTTP), ephemeral
+  # tmpfs storage — same throwaway-container convention as postgres-test/redis-test.
+  clickhouse-test:
+    image: clickhouse/clickhouse-server:24.8-alpine
+    restart: "no"
+    environment:
+      CLICKHOUSE_USER: nextbot_test
+      CLICKHOUSE_PASSWORD: nextbot_test_password
+      CLICKHOUSE_DB: nextbot_test
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ports:
+      - "58123:8123"
+    tmpfs:
+      - /var/lib/clickhouse
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8123/ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  # Target Architecture Blueprint Phase 7a (ADR-0018) — ephemeral Neo4j 5 Enterprise
+  # for the graph-store isolation test suite. See compose.yaml's `neo4j` service for
+  # the full Enterprise-vs-Community rationale (identical here — Community cannot
+  # run this suite at all, since tests 1-3 of ADR-0018 §6 specifically require real
+  # multi-database + impersonation behavior). Ports follow this file's own +50000
+  # offset convention (postgres-test 55432, redis-test 56379, clickhouse-test
+  # 58123) — bolt 7687+50000=57687, browser 7474+50000=57474.
+  neo4j-test:
+    image: neo4j:5-enterprise
+    restart: "no"
+    environment:
+      NEO4J_AUTH: neo4j/nextbot_test_neo4j_password
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+    ports:
+      - "57687:7687"
+      - "57474:7474"
+    tmpfs:
+      - /data
+      - /logs
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p nextbot_test_neo4j_password 'RETURN 1' || exit 1"]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+      start_period: 45s

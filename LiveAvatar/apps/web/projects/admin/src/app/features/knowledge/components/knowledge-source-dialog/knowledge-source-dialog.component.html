@@ -1,0 +1,122 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit knowledge source' : 'New knowledge source' }}</h2>
+
+<mat-dialog-content>
+  @if (dialogAlert()) {
+    <div class="la-dialog-alert" role="alert">{{ dialogAlert() }}</div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" [attr.aria-busy]="submitting()">
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        formControlName="name"
+        maxlength="160"
+        [attr.aria-required]="true"
+        aria-describedby="la-knowledge-name-error"
+      />
+      @if (form.controls.name.hasError('server')) {
+        <mat-error id="la-knowledge-name-error">{{ form.controls.name.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    @if (!isEdit) {
+      <div class="la-dialog-field la-knowledge-file">
+        <label class="la-knowledge-file__label" for="la-knowledge-file-input">Source file</label>
+        <input
+          id="la-knowledge-file-input"
+          type="file"
+          accept=".txt,.md,text/plain,text/markdown"
+          [attr.aria-required]="true"
+          aria-describedby="la-knowledge-file-error la-knowledge-file-hint"
+          (change)="onFileSelected($event)"
+        />
+        @if (selectedFile(); as file) {
+          <p class="la-dialog-helper">{{ file.name }} ({{ formatBytes(file.size) }})</p>
+        }
+        @if (fileError()) {
+          <p class="la-knowledge-file__error" id="la-knowledge-file-error" role="alert">{{ fileError() }}</p>
+        }
+      </div>
+      <p class="la-dialog-helper" id="la-knowledge-file-hint">
+        Plain text (.txt) or markdown (.md) only, up to 10 MiB. This check only front-loads a clearer error — the
+        server independently enforces the real type and size limits.
+      </p>
+    } @else {
+      <p class="la-dialog-helper">
+        Editing changes ingestion configuration only. To replace the source document itself, delete this source and
+        upload a new one.
+      </p>
+    }
+
+    <fieldset class="la-dialog-field la-knowledge-fieldset">
+      <legend>Parser</legend>
+      <mat-radio-group formControlName="parser" class="la-knowledge-radio-group">
+        <mat-radio-button value="plain_text">Plain text</mat-radio-button>
+        <mat-radio-button value="markdown">Markdown</mat-radio-button>
+        <mat-radio-button value="pdf" [disabled]="true">
+          PDF <span class="la-knowledge-soon">Coming soon</span>
+        </mat-radio-button>
+      </mat-radio-group>
+    </fieldset>
+
+    <fieldset class="la-dialog-field la-knowledge-fieldset">
+      <legend>Chunking strategy</legend>
+      <mat-radio-group formControlName="chunking_strategy" class="la-knowledge-radio-group">
+        <mat-radio-button value="fixed">Fixed</mat-radio-button>
+        <mat-radio-button value="semantic" [disabled]="true">
+          Semantic <span class="la-knowledge-soon">Coming soon</span>
+        </mat-radio-button>
+        <mat-radio-button value="heading_aware" [disabled]="true">
+          Heading-aware <span class="la-knowledge-soon">Coming soon</span>
+        </mat-radio-button>
+      </mat-radio-group>
+    </fieldset>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Chunk size (characters)</mat-label>
+      <input matInput type="number" min="100" max="4000" formControlName="chunk_size" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Chunk overlap (characters)</mat-label>
+      <input
+        matInput
+        type="number"
+        min="0"
+        max="2000"
+        formControlName="chunk_overlap"
+        aria-describedby="la-knowledge-overlap-error"
+      />
+      @if (overlapError(); as message) {
+        <mat-error id="la-knowledge-overlap-error">{{ message }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Embedding model</mat-label>
+      <mat-select formControlName="embedding_model">
+        @for (m of embeddingModels; track m) {
+          <mat-option [value]="m">{{ m }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Embedding credential reference (optional)</mat-label>
+      <input matInput formControlName="embedding_credential_ref" maxlength="256" autocomplete="off" />
+    </mat-form-field>
+    <p class="la-dialog-helper">Leave blank to use the platform default embedding credential.</p>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" type="button" [disabled]="submitDisabled()" (click)="onSubmit()">
+    @if (submitting()) {
+      <mat-spinner diameter="20" />
+    } @else {
+      {{ isEdit ? 'Save' : 'Create' }}
+    }
+  </button>
+</mat-dialog-actions>

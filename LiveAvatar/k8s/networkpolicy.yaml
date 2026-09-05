@@ -1,0 +1,205 @@
+# Default-deny then explicit allows. The real security boundary this
+# enforces is NFR-3 / HLD §7.2: the internal (:8081) surface must never be
+# reachable except from the agent and from GPU-heartbeat senders — never
+# from the public ingress path, and never directly from another tenant's
+# traffic (multi-tenant isolation itself is row-level/app-layer per HLD
+# §4.1, so there is deliberately no per-tenant network segmentation here —
+# this NetworkPolicy is about the public/internal split, not tenant
+# boundaries).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: liveavatar
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+  ingress: []
+  egress:
+    # DNS is required by every pod; nothing else is allowed by default.
+    - to:
+        - namespaceSelector: {}
+          podSelector: { matchLabels: { k8s-app: kube-dns } }
+      ports:
+        - { protocol: UDP, port: 53 }
+        - { protocol: TCP, port: 53 }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: web-ingress
+  namespace: liveavatar
+spec:
+  podSelector: { matchLabels: { app: web } }
+  policyTypes: [Ingress]
+  ingress:
+    # Public :8080 — reachable from the ingress controller only.
+    - from:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: ingress-nginx } }
+      ports:
+        - { protocol: TCP, port: 8080 }
+    # Cluster-only :8081 — reachable from the agent's own pods, from
+    # GPU-heartbeat senders, and from LiveKit (its session-lifecycle
+    # webhooks — room_finished is the LLD §8.3/Phase 3-4 *authoritative*
+    # `ended` transition, participant_joined drives pending->active) — never
+    # from the ingress path (NFR-3).
+    # `gpu-workers` namespace selector: this repo does not build or place
+    # the operator-provisioned GPU workers (ADR-001 §4), but the network
+    # topology is confirmed (docs/deployment/DEPLOYMENT.md §6.3) — GPU
+    # workers run in this same cluster, on a separate GPU node pool, not
+    # over an external network/VPN path — so this selector names the real
+    # in-cluster namespace the operator provisions, not a placeholder for a
+    # different topology.
+    - from:
+        - podSelector: { matchLabels: { app: agent } }
+        - podSelector: { matchLabels: { app: livekit } }
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: gpu-workers } }
+      ports:
+        - { protocol: TCP, port: 8081 }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: web-egress
+  namespace: liveavatar
+spec:
+  podSelector: { matchLabels: { app: web } }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ namespaceSelector: {}, podSelector: { matchLabels: { k8s-app: kube-dns } } }]
+      ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+    - to: [{ podSelector: { matchLabels: { app: postgres } } }]
+      ports: [{ protocol: TCP, port: 5432 }]
+    - to: [{ podSelector: { matchLabels: { app: redis } } }]
+      ports: [{ protocol: TCP, port: 6379 }]
+    # D-10 fix: DEPLOYMENT.md §3/HLD §8.2 assume MANAGED (out-of-cluster)
+    # Postgres/Redis as the default topology — this repo ships no
+    # StatefulSets for them. The `app: postgres`/`app: redis` pod-selector
+    # rules above only ever match an in-cluster deployment, so a managed-DB
+    # operator following the docs would otherwise have every DB connection
+    # silently dropped by `default-deny-all`. Managed endpoints are
+    # operator-configured (host/IP not knowable at manifest-authoring time),
+    # so — mirroring the same "can't narrow to a real CIDR generically"
+    # permissive pattern already used below for provider egress — this
+    # allows egress to any external IP on the standard Postgres/Redis ports.
+    # Narrow to your managed instances' real CIDRs if your environment can
+    # enumerate them.
+    - to: [{ ipBlock: { cidr: 0.0.0.0/0 } }]
+      ports: [{ protocol: TCP, port: 5432 }, { protocol: TCP, port: 6379 }]
+    - to: [{ podSelector: { matchLabels: { app: livekit } } }]
+      ports: [{ protocol: TCP, port: 7880 }, { protocol: TCP, port: 7881 }]
+    # Health-probing remote/self-hosted providers (FR-PROVIDER-3) needs
+    # general egress; narrow this to your real provider endpoints' CIDRs if
+    # your environment can enumerate them.
+    - to: [{ ipBlock: { cidr: 0.0.0.0/0 } }]
+      ports: [{ protocol: TCP, port: 443 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: agent-egress
+  namespace: liveavatar
+spec:
+  podSelector: { matchLabels: { app: agent } }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ namespaceSelector: {}, podSelector: { matchLabels: { k8s-app: kube-dns } } }]
+      ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+    - to: [{ podSelector: { matchLabels: { app: web } } }]
+      ports: [{ protocol: TCP, port: 8081 }] # web-internal only — the agent never talks to :8080
+    - to: [{ podSelector: { matchLabels: { app: livekit } } }]
+      ports: [{ protocol: TCP, port: 7880 }, { protocol: TCP, port: 7881 }]
+    # Remote LLM/TTS/avatar vendors (OpenAI/Anthropic/Google/ElevenLabs/
+    # Alibaba LiveAvatar) and operator-provisioned GPU workers, both reached
+    # over HTTPS/WSS by `endpoint_url` — cannot be narrowed to specific
+    # CIDRs generically; narrow this in your environment if you can enumerate
+    # the actual endpoints in use.
+    - to: [{ ipBlock: { cidr: 0.0.0.0/0 } }]
+      ports: [{ protocol: TCP, port: 443 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-ingress
+  namespace: liveavatar
+spec:
+  podSelector: { matchLabels: { app: postgres } }
+  policyTypes: [Ingress]
+  ingress:
+    # `web` for normal app traffic, `migrate` for the pre-deploy migrate/seed
+    # Job (k8s/migrate-job.yaml, now labelled `app: migrate` — see D-7). The
+    # agent never opens a Postgres connection (HLD §3.3).
+    - from:
+        - podSelector: { matchLabels: { app: web } }
+        - podSelector: { matchLabels: { app: migrate } }
+      ports: [{ protocol: TCP, port: 5432 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: migrate-egress
+  namespace: liveavatar
+spec:
+  # D-7 fix: pairs with migrate-job.yaml's new `app: migrate` pod label —
+  # without this, `default-deny-all` leaves the migrate Job's egress at
+  # DNS-only and `prisma migrate deploy` can never reach Postgres.
+  podSelector: { matchLabels: { app: migrate } }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ namespaceSelector: {}, podSelector: { matchLabels: { k8s-app: kube-dns } } }]
+      ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+    - to: [{ podSelector: { matchLabels: { app: postgres } } }]
+      ports: [{ protocol: TCP, port: 5432 }]
+    # D-10 fix: same managed-Postgres rationale as `web-egress` above —
+    # `prisma migrate deploy` must reach the DB whether it's the in-cluster
+    # `app: postgres` pod or an operator-configured managed instance.
+    - to: [{ ipBlock: { cidr: 0.0.0.0/0 } }]
+      ports: [{ protocol: TCP, port: 5432 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-ingress
+  namespace: liveavatar
+spec:
+  podSelector: { matchLabels: { app: redis } }
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ podSelector: { matchLabels: { app: web } } }]
+      ports: [{ protocol: TCP, port: 6379 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: livekit-ingress
+  namespace: liveavatar
+spec:
+  podSelector: { matchLabels: { app: livekit } }
+  policyTypes: [Ingress]
+  ingress:
+    # Browsers connect to LiveKit directly (WebRTC), not through the web
+    # Ingress, so this must stay reachable outside the cluster on the RTC
+    # ports — typically via a LoadBalancer Service or a dedicated ingress
+    # path your cluster's WebRTC/UDP story supports; not modelled as a
+    # NetworkPolicy `from` restriction since it is intentionally public.
+    - {}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: livekit-egress
+  namespace: liveavatar
+spec:
+  # D-6 fix: `default-deny-all`'s blanket egress default (DNS-only) also
+  # applies to LiveKit pods, and with no egress allow-rule of its own,
+  # LiveKit's session-lifecycle webhook POSTs to `web-internal:8081` were
+  # silently dropped in both directions (paired with web-ingress's missing
+  # `app: livekit` allow above). Without this, sessions never receive their
+  # authoritative `room_finished` -> `ended` transition (LLD §8.3/Phase 3-4).
+  podSelector: { matchLabels: { app: livekit } }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ namespaceSelector: {}, podSelector: { matchLabels: { k8s-app: kube-dns } } }]
+      ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+    - to: [{ podSelector: { matchLabels: { app: web } } }]
+      ports: [{ protocol: TCP, port: 8081 }] # web-internal — session-lifecycle webhooks

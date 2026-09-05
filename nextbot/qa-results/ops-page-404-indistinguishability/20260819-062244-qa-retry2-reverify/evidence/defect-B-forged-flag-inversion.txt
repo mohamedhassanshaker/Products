@@ -1,0 +1,117 @@
+# Defect B evidence: caller-forged x-nb-ops-denied inverts the oracle
+# Server: port 3418, configured (allowlist 203.0.113.0/24, trusted proxy 127.0.0.1); caller IP unresolvable -> denied.
+# Every request: GET with headers 'RSC: 1' and 'x-nb-ops-denied: 1'. All bodies 3982 bytes, identical.
+
+### curl -s -D - -o /dev/null -H 'RSC: 1' -H 'x-nb-ops-denied: 1' 'http://127.0.0.1:3418/internal/ops'
+HTTP/1.1 404 Not Found
+x-nextjs-rewritten-path: /__nb_route_absent__/internal/ops
+x-nextjs-rewritten-query: 
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+Content-Type: text/x-component
+Date: Wed, 19 Aug 2026 02:22:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+
+### curl -s -D - -o /dev/null -H 'RSC: 1' -H 'x-nb-ops-denied: 1' 'http://127.0.0.1:3418/internal/ops.rsc'
+HTTP/1.1 404 Not Found
+x-nextjs-rewritten-path: /__nb_route_absent__/internal/ops.rsc
+x-nextjs-rewritten-query: 
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+Content-Type: text/x-component
+Date: Wed, 19 Aug 2026 02:22:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+
+### curl -s -D - -o /dev/null -H 'RSC: 1' -H 'x-nb-ops-denied: 1' 'http://127.0.0.1:3418/internal/ops/tenants'
+HTTP/1.1 404 Not Found
+x-nextjs-rewritten-path: /__nb_route_absent__/internal/ops/tenants
+x-nextjs-rewritten-query: 
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+Content-Type: text/x-component
+Date: Wed, 19 Aug 2026 02:22:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+
+### curl -s -D - -o /dev/null -H 'RSC: 1' -H 'x-nb-ops-denied: 1' 'http://127.0.0.1:3418/internal/opsx'
+HTTP/1.1 404 Not Found
+x-nextjs-rewritten-path: /__nb_route_absent__/internal/opsx
+x-nextjs-rewritten-query: 
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+Content-Type: text/x-component
+Date: Wed, 19 Aug 2026 02:22:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+
+### curl -s -D - -o /dev/null -H 'RSC: 1' -H 'x-nb-ops-denied: 1' 'http://127.0.0.1:3418/internal/zzz'
+HTTP/1.1 404 Not Found
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+Content-Type: text/x-component
+Date: Wed, 19 Aug 2026 02:22:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+
+### curl -s -D - -o /dev/null -H 'RSC: 1' -H 'x-nb-ops-denied: 1' 'http://127.0.0.1:3418/internal/zzz.rsc'
+HTTP/1.1 404 Not Found
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+Content-Type: text/x-component
+Date: Wed, 19 Aug 2026 02:22:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+
+### curl -s -D - -o /dev/null -H 'RSC: 1' -H 'x-nb-ops-denied: 1' 'http://127.0.0.1:3418/nope.rsc'
+HTTP/1.1 404 Not Found
+Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+x-nextjs-cache: HIT
+x-nextjs-prerender: 1
+x-nextjs-prerender: 1
+x-nextjs-stale-time: 300
+Content-Type: text/x-component
+Date: Wed, 19 Aug 2026 02:22:46 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+

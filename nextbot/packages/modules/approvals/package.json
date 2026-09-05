@@ -1,0 +1,23 @@
+{
+  "name": "@nextbot/approvals",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Reserved module scaffold for BL item(s) owning approvals (see docs/architecture/LLD.md §2.1). Implemented in its own dev phase.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir ."
+  },
+  "dependencies": {
+    "@nextbot/db": "workspace:*",
+    "drizzle-orm": "^0.36.1"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

@@ -1,0 +1,16 @@
+# Non-secret config only (LLD env schema, apps/api/src/modules/platform/domain/env-schema.ts).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: liveavatar-web-config
+  namespace: liveavatar
+data:
+  NODE_ENV: 'production'
+  PORT: '8080'
+  INTERNAL_PORT: '8081'
+  LOG_DIR: '/app/apps/api/logs'
+  SECRETS_DIR: '/app/apps/api/secrets'
+  REDIS_URL: 'redis://redis:6379'
+  LIVEKIT_URL: 'ws://livekit:7880'
+  AGENT_NAME: 'avatar-agent'
+  ADMIN_ORIGIN: 'https://admin.example.com' # replace with the real admin hostname per environment

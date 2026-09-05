@@ -1,0 +1,26 @@
+-- Grants the `examland` app user (docker/docker-compose.dev.yml's own MYSQL_USER/MYSQL_PASSWORD,
+-- reused as-is by docker-compose.yml's api/worker services) the ability to create and fully manage
+-- any tenant schema, on top of the MySQL image's own automatic grant of MYSQL_DATABASE
+-- (examland_platform) only.
+--
+-- Tenant provisioning's create_schema step (TenantProvisioningService, HLD Sec 4.1) issues
+-- `CREATE DATABASE IF NOT EXISTS <name>` for a not-yet-existing schema named `t_<slug>_<hash>`
+-- (see apps/api/src/common/util/tenant-slug.util.ts's generateTenantSchemaName) and then runs full
+-- tenant migrations (CREATE TABLE/INDEX/etc.) against it. Without this grant, that step fails
+-- outright with "Access denied for user 'examland'@'%' to database 't_<slug>_<hash>'" against a
+-- real docker-compose stack -- confirmed live during the seed-demo-tenant devex pass (2026-08-14).
+--
+-- The `\_` escapes the literal underscore (otherwise a SQL LIKE-style wildcard in a GRANT ... ON
+-- db_name.* pattern) so this only ever matches genuine tenant schemas, never an unrelated
+-- database that happens to start with "t". MySQL supports granting on a not-yet-existing
+-- database-name pattern like this -- the standard technique for letting a non-root app user
+-- create its own same-prefixed schemas without broader/global CREATE.
+--
+-- NOTE: MySQL only executes anything under /docker-entrypoint-initdb.d on a container's *first*
+-- boot against a completely empty data directory/volume. If you already brought up
+-- docker-compose.dev.yml (or docker-compose.yml) before this file existed, this script will NOT
+-- retroactively run against your existing `examland_mysql_data` volume -- see
+-- docs/deployment/DEPLOYMENT.md's troubleshooting section for the equivalent one-time manual
+-- command to run against an already-initialized instance instead of wiping the volume.
+GRANT ALL PRIVILEGES ON `t\_%`.* TO 'examland'@'%';
+FLUSH PRIVILEGES;

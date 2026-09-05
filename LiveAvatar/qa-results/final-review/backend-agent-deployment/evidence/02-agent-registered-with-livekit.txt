@@ -1,0 +1,1 @@
+{"message": "registered worker", "level": "INFO", "name": "livekit.agents", "agent_name": "avatar-agent", "deployment": "", "id": "AW_tQ4uffGr4Wzt", "url": "ws://livekit:7880", "region": "", "protocol": 15, "timestamp": "2026-08-20T01:59:02.441024+00:00"}

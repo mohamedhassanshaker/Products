@@ -1,0 +1,132 @@
+<la-page-header [title]="(tenant()?.name ?? 'Deployment') + ' · Knowledge · Playground'">
+  <a mat-button [routerLink]="['/tenants', tenantId, 'builder', 'overview']">Back to Agent Builder</a>
+</la-page-header>
+
+<div class="la-playground">
+  <mat-form-field appearance="outline" class="la-playground__query">
+    <mat-label>Query</mat-label>
+    <input matInput [ngModel]="query()" (ngModelChange)="query.set($event)" placeholder="refund after 30 days" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="la-playground__context">
+    <mat-label>Conversation context (optional)</mat-label>
+    <textarea
+      matInput
+      rows="2"
+      [ngModel]="conversationContext()"
+      (ngModelChange)="conversationContext.set($event)"
+      placeholder="caller: my order arrived broken / agent: I'm sorry to hear that"
+    ></textarea>
+  </mat-form-field>
+
+  <button mat-flat-button color="primary" type="button" [disabled]="runDisabled()" (click)="run()">
+    @if (running()) {
+      <mat-spinner diameter="20" />
+    } @else {
+      Run
+    }
+  </button>
+
+  @if (error(); as err) {
+    @if (err.code === 'KNOWLEDGE_SOURCE_NOT_FOUND') {
+      <p class="la-playground__error" role="alert">
+        No knowledge source is configured to search yet. Add one in the
+        <a [routerLink]="['/tenants', tenantId, 'builder', 'knowledge']">Sources tab</a>.
+      </p>
+    } @else {
+      <p class="la-playground__error" role="alert">Could not run the playground query. {{ err.message }}</p>
+    }
+  }
+
+  <p class="la-playground__summary" aria-live="polite">{{ runSummary() }}</p>
+
+  @if (result(); as r) {
+    <section class="la-playground-stage">
+      <h3>① Rewrite <span class="la-playground-ms">{{ r.rewrite.ms }} ms</span></h3>
+      @if (!r.rewrite.enabled) {
+        <p>Rewrite disabled.</p>
+      } @else if (r.rewrite.rewritten_query) {
+        <p>→ "{{ r.rewrite.rewritten_query }}"</p>
+      } @else {
+        <p>—</p>
+      }
+      @if (r.rewrite.timed_out) {
+        <p class="la-playground-hint">Timed out — the original query was used instead.</p>
+      }
+    </section>
+
+    <section class="la-playground-stage">
+      <h3>② Hybrid search — {{ r.hybrid_search.candidates.length }} candidates <span class="la-playground-ms">{{ r.hybrid_search.ms }} ms</span></h3>
+      @if (r.hybrid_search.candidates.length > 0) {
+        <table mat-table [dataSource]="r.hybrid_search.candidates" class="la-playground-table">
+          <ng-container matColumnDef="source">
+            <th mat-header-cell *matHeaderCellDef>Source</th>
+            <td mat-cell *matCellDef="let row" data-label="Source">{{ row.source_name }}</td>
+          </ng-container>
+          <ng-container matColumnDef="excerpt">
+            <th mat-header-cell *matHeaderCellDef>Excerpt</th>
+            <td mat-cell *matCellDef="let row" data-label="Excerpt">{{ row.text_excerpt }}</td>
+          </ng-container>
+          <ng-container matColumnDef="vector">
+            <th mat-header-cell *matHeaderCellDef>Vector</th>
+            <td mat-cell *matCellDef="let row" data-label="Vector">{{ formatScore(row.vector_score) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="keyword">
+            <th mat-header-cell *matHeaderCellDef>BM25</th>
+            <td mat-cell *matCellDef="let row" data-label="BM25">{{ formatScore(row.keyword_score) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="blend">
+            <th mat-header-cell *matHeaderCellDef>Blend</th>
+            <td mat-cell *matCellDef="let row" data-label="Blend">{{ formatScore(row.blend_score) }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="candidateColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: candidateColumns"></tr>
+        </table>
+      } @else {
+        <p>No candidates found.</p>
+      }
+    </section>
+
+    <section class="la-playground-stage">
+      <h3>③ Filter <span class="la-playground-ms">{{ r.filter.ms }} ms</span></h3>
+      @if (r.filter.enabled) {
+        <p>{{ r.filter.before_count }} reduced to {{ r.filter.after_count }}</p>
+      } @else {
+        <p>Filter disabled.</p>
+      }
+    </section>
+
+    <section class="la-playground-stage">
+      <h3>④ Rerank</h3>
+      <p>{{ r.rerank.note }}</p>
+    </section>
+
+    <section class="la-playground-stage">
+      <h3>⑤ Threshold — min score {{ r.threshold.min_score }} <span class="la-playground-ms">{{ r.threshold.ms }} ms</span></h3>
+      <p>{{ r.threshold.pass_count }} pass, {{ r.threshold.dropped_count }} dropped</p>
+    </section>
+
+    <section class="la-playground-stage">
+      <h3>⑥ Inject — {{ r.inject.chunks.length }} chunks, {{ r.inject.token_total }} of {{ r.inject.token_cap }} tokens <span class="la-playground-ms">{{ r.inject.ms }} ms</span></h3>
+      @if (r.inject.chunks.length > 0) {
+        <ol class="la-playground-chunks" role="list">
+          @for (chunk of r.inject.chunks; track chunk.citation_label) {
+            <li role="listitem">
+              <strong>[{{ chunk.citation_label }}]</strong> {{ chunk.source_name }} — {{ chunk.text_excerpt }}
+              <span class="la-playground-ms">({{ chunk.token_count }} tok)</span>
+            </li>
+          }
+        </ol>
+      } @else {
+        <p>No chunks injected.</p>
+      }
+    </section>
+
+    <section class="la-playground-total">
+      <la-budget-bar [usedMs]="r.total_ms" [totalMs]="r.budget_ms" label="Total" />
+      @if (r.over_budget) {
+        <p class="la-playground-error" role="alert">Over budget.</p>
+      }
+    </section>
+  }
+</div>

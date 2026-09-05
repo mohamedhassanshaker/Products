@@ -1,0 +1,100 @@
+version: 1
+deployment:
+  tenant_id: "88888888-8888-8888-8888-888888888888"
+  name: "Loop Missing Guards"
+transport:
+  provider: livekit
+  room_namespace: loop-missing-guards
+stt:
+  provider: deepgram
+  language: en-US
+reasoning:
+  entry_node_id: loop-1
+  background_entry_node_ids: []
+  turn_budget_ms: 3000
+  graph:
+    - id: loop-1
+      type: loop
+      name: Refine answer
+      lane: foreground
+      on_error: { action: degrade }
+      on_deadline: { action: degrade }
+      body_entry_node_id: llm-draft
+      condition: 'utterance == "done"'
+      # R-G4/V-2: a loop without guards cannot be saved — max_iterations
+      # must be >= 1. This fixture is invalid *only* because of this one
+      # field; everything else is schema-valid.
+      max_iterations: 0
+      max_duration_ms: 5000
+      max_cost: 10
+      next_node_id: speak-1
+    - id: llm-draft
+      type: llm
+      name: Draft answer
+      lane: foreground
+      on_error: { action: degrade }
+      on_deadline: { action: degrade }
+      provider: openai
+      model: gpt-4o-mini
+      retry:
+        max_attempts: 2
+        backoff_ms: [200, 400]
+      next_node_id: null
+    - id: speak-1
+      type: speak
+      name: Speak answer
+      lane: foreground
+      on_error: { action: end_turn }
+      on_deadline: { action: end_turn }
+      mode: llm_output
+      interruptible: true
+      next_node_id: end-1
+    - id: end-1
+      type: end
+      name: End turn
+      lane: foreground
+      on_error: { action: end_turn }
+      on_deadline: { action: end_turn }
+tts:
+  provider: fish-speech
+  voice_id: v1
+avatar:
+  provider: bithuman
+  avatar_id: a1
+agent:
+  runtime: langgraph
+  system_prompt: "hi"
+  tools: []
+  memory:
+    enabled: true
+    window_turns: 16
+knowledge:
+  pipeline:
+    rewrite:
+      enabled: true
+      context_turns: 3
+      budget_ms: 150
+    hybrid_search:
+      vector_weight: 0.6
+      keyword_weight: 0.4
+      candidates: 20
+      budget_ms: 100
+    metadata_filter:
+      enabled: false
+      budget_ms: 20
+    rerank:
+      enabled: false
+    threshold:
+      min_score: 0.5
+      budget_ms: 10
+    inject:
+      token_cap: 1200
+      citation_format: numbered
+      budget_ms: 30
+skills: []
+privacy:
+  send_to_remote_llm: prompt_text_only
+  retain_transcripts_days: 90
+  recordings_enabled: false
+alerts:
+  degraded_mode_message: "hold on"

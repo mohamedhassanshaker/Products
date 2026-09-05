@@ -1,0 +1,41 @@
+{
+  // Extends the repo-wide base for shared strictness flags, but overrides every field Next.js's
+  // App Router/bundler actually requires (module/moduleResolution/jsx/lib/target) — see
+  // docs/plans/nextjs-rewrite-phase0-plan.md decision 4-ish note: `tsconfig.base.json` targets
+  // NestJS's CommonJS/decorator-metadata needs, which don't apply to a Next.js app.
+  //
+  // Phase 1 sub-slice 1a re-enables `experimentalDecorators` (Phase 0 had it off — no TypeORM
+  // entities existed yet): TypeORM's `@Entity`/`@Column`/etc. decorators require it to even parse.
+  // `emitDecoratorMetadata` stays `false` — every `@Column` in this app's entities passes an explicit
+  // `type` option (never relies on reflected property type), so the `reflect-metadata` polyfill
+  // `emitDecoratorMetadata: true` would require at runtime is unnecessary; this is a deliberately
+  // narrower TypeORM usage than legacy's NestJS app, which needs `emitDecoratorMetadata` for its own
+  // constructor-parameter DI (unrelated to entities), not something this app's plain-class
+  // composition roots need.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "declaration": false,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "plugins": [{ "name": "next" }]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

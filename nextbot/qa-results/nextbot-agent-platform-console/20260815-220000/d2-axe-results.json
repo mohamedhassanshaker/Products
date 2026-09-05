@@ -1,0 +1,2803 @@
+{
+  "testEngine": {
+    "name": "axe-core",
+    "version": "4.13.0"
+  },
+  "testRunner": {
+    "name": "axe"
+  },
+  "testEnvironment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+    "windowWidth": 1280,
+    "windowHeight": 720,
+    "orientationAngle": 0,
+    "orientationType": "landscape-primary"
+  },
+  "timestamp": "2026-08-15T18:00:05.687Z",
+  "url": "http://localhost:3001/agent-platform/model-gateway",
+  "toolOptions": {
+    "runOnly": {
+      "type": "rule",
+      "values": [
+        "color-contrast"
+      ]
+    },
+    "reporter": "v1"
+  },
+  "inapplicable": [],
+  "passes": [
+    {
+      "id": "color-contrast",
+      "impact": null,
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT",
+        "RGAAv4",
+        "RGAA-3.2.1"
+      ],
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=axeAPI",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "13.5pt (18px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<p class=\"chakra-text css-1wfvl1c\">NextBot</p>",
+          "target": [
+            ".css-1wfvl1c"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-link css-1vzv53m\" href=\"/dashboard\">Dashboard</a>",
+          "target": [
+            "a[href$=\"dashboard\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-link css-1vzv53m\" href=\"/channels\">Channels</a>",
+          "target": [
+            "a[href$=\"channels\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-link css-1vzv53m\" href=\"/connectors\">Connectors</a>",
+          "target": [
+            "a[href$=\"connectors\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-link css-1vzv53m\" href=\"/tools\">Tool Catalog</a>",
+          "target": [
+            "a[href$=\"tools\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#86878d",
+                "bgColor": "#171923",
+                "contrastRatio": 4.88,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 4.88"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<p class=\"chakra-text css-1ng3oi5\">Agent Platform</p>",
+          "target": [
+            ".css-1ng3oi5"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-link css-1vzv53m\" href=\"/agent-platform/definitions\">Definitions</a>",
+          "target": [
+            "a[href$=\"definitions\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-link css-1vzv53m\" href=\"/agent-platform/evals\">Evals</a>",
+          "target": [
+            "a[href$=\"evals\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-link css-1vzv53m\" href=\"/agent-platform/model-gateway\">Model Gateway</a>",
+          "target": [
+            "a[href$=\"model-gateway\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-link css-1vzv53m\" href=\"/agent-platform/traces\">Runtime Traces</a>",
+          "target": [
+            "a[href$=\"traces\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-link css-1vzv53m\" href=\"/roles\">Users &amp; Roles</a>",
+          "target": [
+            "a[href$=\"roles\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-link css-1vzv53m\" href=\"/settings/branding\">Branding</a>",
+          "target": [
+            "a[href$=\"branding\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#171923",
+                "contrastRatio": 17.5,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 17.5"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-link css-1vzv53m\" href=\"/settings/integrations\">Integrations</a>",
+          "target": [
+            "a[href$=\"integrations\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#44337a",
+                "bgColor": "#e9d8fd",
+                "contrastRatio": 7.85,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.85"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1j1ty0z\">Sandbox</span>",
+          "target": [
+            ".css-1j1ty0z"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#4338ca",
+                "contrastRatio": 7.9,
+                "fontSize": "9.6pt (12.8px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.9"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<div role=\"img\" aria-label=\"Signed-in user\" class=\"chakra-avatar__initials css-1ebyn6\">Su</div>",
+          "target": [
+            ".chakra-avatar__initials"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button type=\"submit\" class=\"chakra-button css-1l7nkff\">Sign out</button>",
+          "target": [
+            ".css-1l7nkff"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#f7fafc",
+                "contrastRatio": 15.56,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 15.56"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<a class=\"chakra-breadcrumb__link css-1u2cnya\" href=\"/agent-platform\">Agent platform</a>",
+          "target": [
+            ".chakra-breadcrumb__link"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#f7fafc",
+                "contrastRatio": 15.56,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 15.56"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-text css-1bsgmhw\">Model gateway</span>",
+          "target": [
+            "li:nth-child(2) > .css-1bsgmhw.chakra-text"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "22.5pt (30px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "3:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h1 class=\"chakra-heading css-1dqx0r\">Model Gateway</h1>",
+          "target": [
+            "h1"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "15.0pt (20px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "3:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"chakra-heading css-131zawk\">Tenant Model Routes</h2>",
+          "target": [
+            "h2:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#bee3f8",
+                "contrastRatio": 12.06,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 12.06"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<div data-status=\"info\" role=\"alert\" class=\"chakra-alert css-15n4w7z\">",
+          "target": [
+            ".chakra-alert"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<th class=\"css-1zts0j\">Route key</th>",
+          "target": [
+            ".css-1ijrwz3 > thead > tr > th:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<th class=\"css-1zts0j\">Chain</th>",
+          "target": [
+            ".css-1ijrwz3 > thead > tr > th:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<th class=\"css-1zts0j\">Strategy</th>",
+          "target": [
+            ".css-1ijrwz3 > thead > tr > th:nth-child(3)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<th class=\"css-1zts0j\">Cache</th>",
+          "target": [
+            ".css-1ijrwz3 > thead > tr > th:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<th class=\"css-1zts0j\">Timeout</th>",
+          "target": [
+            ".css-1ijrwz3 > thead > tr > th:nth-child(5)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h3 class=\"chakra-heading css-1p6q0l9\">Route editor</h3>",
+          "target": [
+            "h3"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<label id=\"field-_R_cl55esnebnel9equlb_-label\" for=\"field-_R_cl55esnebnel9equlb_\" class=\"chakra-form__label css-18cmu1i\">Route Key</label>",
+          "target": [
+            "#field-_R_cl55esnebnel9equlb_-label"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<select id=\"field-_R_cl55esnebnel9equlb_\" class=\"chakra-select css-161pkch\">",
+          "target": [
+            "#field-_R_cl55esnebnel9equlb_"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<label id=\"field-_R_kl55esnebnel9equlb_-label\" for=\"field-_R_kl55esnebnel9equlb_\" class=\"chakra-form__label css-18cmu1i\">Cache mode</label>",
+          "target": [
+            "#field-_R_kl55esnebnel9equlb_-label"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<select id=\"field-_R_kl55esnebnel9equlb_\" class=\"chakra-select css-161pkch\"><option value=\"Off\" selected=\"\">Off</option><option value=\"ExactMatch\">Exact Match</option><option value=\"Semantic\">Semantic</option></select>",
+          "target": [
+            "#field-_R_kl55esnebnel9equlb_"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<label id=\"field-_R_sl55esnebnel9equlb_-label\" for=\"field-_R_sl55esnebnel9equlb_\" class=\"chakra-form__label css-18cmu1i\">Total timeout (ms)</label>",
+          "target": [
+            "#field-_R_sl55esnebnel9equlb_-label"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<input inputmode=\"decimal\" type=\"text\" pattern=\"[0-9]*(.[0-9]+)?\" id=\"field-_R_sl55esnebne...\" role=\"spinbutton\" aria-readonly=\"false\" aria-required=\"false\" aria-valuemin=\"1000\" aria-valuemax=\"120000\" aria-valuenow=\"30000\" aria-valuetext=\"30000\" autocomplete=\"off\" autocorrect=\"off\" style=\"\" ...>",
+          "target": [
+            "#field-_R_sl55esnebnel9equlb_"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<p class=\"chakra-text css-1lpc4yh\">Provider chain</p>",
+          "target": [
+            ".css-1lpc4yh"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<p class=\"chakra-text css-1bsgmhw\">Entry 1</p>",
+          "target": [
+            ".css-iho375 > .css-1bsgmhw"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#edf2f7",
+                "contrastRatio": 14.48,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 14.48"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-text css-0\" aria-hidden=\"true\" focusable=\"false\">×</span>",
+          "target": [
+            "button[aria-label=\"Remove entry 1\"] > .chakra-text[focusable=\"false\"][aria-hidden=\"true\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-radio__label css-14iyyou\">Use a platform-registered provider</span>",
+          "target": [
+            "label[for=\"radio-_r_1_\"] > .chakra-radio__label.css-14iyyou"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-radio__label css-14iyyou\" data-checked=\"\">Use my own endpoint</span>",
+          "target": [
+            ".chakra-radio__label.css-14iyyou[data-checked=\"\"]"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<p class=\"chakra-text css-1fs7ixl\">Base URL</p>",
+          "target": [
+            ".css-0:nth-child(1) > .css-1fs7ixl"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<input placeholder=\"https://my-endpoint.example.com/v1\" class=\"chakra-input css-9t7fq5\" value=\"\" style=\"\">",
+          "target": [
+            ".css-9t7fq5"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<p class=\"chakra-text css-1fs7ixl\">Model</p>",
+          "target": [
+            ".css-0:nth-child(2) > .css-1fs7ixl"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<input placeholder=\"gpt-4o\" class=\"chakra-input css-1mkry0h\" value=\"\" style=\"\">",
+          "target": [
+            ".css-1mkry0h"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<label id=\"field-_r_3_-label\" for=\"field-_r_3_\" class=\"chakra-form__label css-1muaap5\">API key</label>",
+          "target": [
+            "#field-_r_3_-label"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<input placeholder=\"API key\" id=\"field-_r_3_\" class=\"chakra-input css-1cjy4zv\" type=\"password\" value=\"\" style=\"\">",
+          "target": [
+            "#field-_r_3_"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<p class=\"chakra-text css-1nyfskl\">Requests to your own endpoint aren't subject to the platform's regional provider filtering.</p>",
+          "target": [
+            ".css-1nyfskl"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#edf2f7",
+                "contrastRatio": 14.48,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 14.48"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button type=\"button\" class=\"chakra-button css-1lfapcp\">+ Add provider</button>",
+          "target": [
+            ".css-1lfapcp"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#4f46e5",
+                "contrastRatio": 6.28,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 6.28"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<button type=\"button\" class=\"chakra-button css-146jvpe\">Save Route</button>",
+          "target": [
+            ".css-146jvpe"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "15.0pt (20px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "3:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h2 class=\"chakra-heading css-131zawk\">Model Provider Registry</h2>",
+          "target": [
+            "h2:nth-child(6)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<p class=\"chakra-text css-3cx0wg\">Platform-level reference data — read-only from the tenant Admin Console.</p>",
+          "target": [
+            ".css-3cx0wg"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<th class=\"css-1zts0j\">Key</th>",
+          "target": [
+            ".css-5605sr > thead > tr > th:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<th class=\"css-1zts0j\">Label</th>",
+          "target": [
+            ".css-5605sr > thead > tr > th:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<th class=\"css-1zts0j\">Base URL</th>",
+          "target": [
+            ".css-5605sr > thead > tr > th:nth-child(3)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<th class=\"css-1zts0j\">Regions</th>",
+          "target": [
+            ".css-5605sr > thead > tr > th:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#4a5568",
+                "bgColor": "#ffffff",
+                "contrastRatio": 7.52,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.52"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<th class=\"css-1zts0j\">Enabled</th>",
+          "target": [
+            ".css-5605sr > thead > tr > th:nth-child(5)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(1) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(1) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(1) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(1) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(2) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(2) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(2) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(2) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(3) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(3) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(3) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(3) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(4) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(4) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(4) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(4) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(5) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(5) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(5) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(5) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(6) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(6) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(6) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(6) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(7) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(7) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(7) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(7) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(8) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(8) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(8) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(8) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(9) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(9) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(9) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(9) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(10) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(10) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(10) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(10) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(11) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(11) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(11) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(11) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(12) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(12) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(12) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(12) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(13) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(13) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(13) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(13) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">openai-compatible</td>",
+          "target": [
+            "tr:nth-child(14) > td:nth-child(1)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">EU-only test provider</td>",
+          "target": [
+            "tr:nth-child(14) > td:nth-child(2)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#1a202c",
+                "bgColor": "#ffffff",
+                "contrastRatio": 16.31,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 16.31"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<td class=\"css-xumdn4\">US</td>",
+          "target": [
+            "tr:nth-child(14) > td:nth-child(4)"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#22543d",
+                "bgColor": "#c6f6d5",
+                "contrastRatio": 7.29,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 7.29"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"chakra-badge css-1g1qw76\">Enabled</span>",
+          "target": [
+            "tr:nth-child(14) > td:nth-child(5) > .css-1g1qw76.chakra-badge"
+          ]
+        }
+      ]
+    }
+  ],
+  "incomplete": [],
+  "violations": []
+}

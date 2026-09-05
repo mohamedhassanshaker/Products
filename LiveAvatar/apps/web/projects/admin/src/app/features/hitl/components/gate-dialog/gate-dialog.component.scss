@@ -1,0 +1,33 @@
+.la-gate-dialog {
+  &__row-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 4px;
+
+    mat-form-field {
+      flex: 1;
+    }
+  }
+
+  &__gate-types {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+
+  &__coming-soon {
+    margin-left: 8px;
+    font-size: 11px;
+    color: var(--la-on-surface-variant, #44474f);
+    font-style: italic;
+  }
+}

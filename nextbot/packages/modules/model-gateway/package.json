@@ -1,0 +1,29 @@
+{
+  "name": "@nextbot/model-gateway",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Target Architecture Blueprint Phase 1 (BL-32, ADR-0011, LLD §14.8 — Module F, provider registry + model catalog only; Route v2/usage/governance is Phase 2, BL-33).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir ."
+  },
+  "dependencies": {
+    "@nextbot/ai-registry": "workspace:*",
+    "@nextbot/contracts": "workspace:*",
+    "@nextbot/db": "workspace:*",
+    "@nextbot/secrets": "workspace:*",
+    "@nextbot/tenancy": "workspace:*",
+    "@sinclair/typebox": "^0.33.15",
+    "drizzle-orm": "^0.36.1"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

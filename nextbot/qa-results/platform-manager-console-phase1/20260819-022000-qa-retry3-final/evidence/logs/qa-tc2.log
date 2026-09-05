@@ -1,0 +1,167 @@
+• turbo 2.10.10
+
+   • Packages in scope: @nextbot/a2a, @nextbot/agent-platform, @nextbot/ai-registry, @nextbot/approvals, @nextbot/audit, @nextbot/campaigns, @nextbot/channel-adapters, @nextbot/channels, @nextbot/connectors, @nextbot/contracts, @nextbot/conversations, @nextbot/db, @nextbot/escalations, @nextbot/iam, @nextbot/knowledge, @nextbot/mcp-client, @nextbot/observability, @nextbot/orchestration, @nextbot/pii, @nextbot/reporting, @nextbot/secrets, @nextbot/tenancy, @nextbot/testing, @nextbot/tool-registry, @nextbot/ui, nextbot-gateway, nextbot-gateway-agent, nextbot-runtime, nextbot-web, nextbot-widget-embed, nextbot-worker
+   • Running typecheck in 31 packages
+   • Remote caching disabled
+
+nextbot-gateway-agent:typecheck: cache bypass, force executing 775df70e00eae1a7
+@nextbot/testing:typecheck: cache bypass, force executing bdd709b974efa726
+@nextbot/a2a:typecheck: cache bypass, force executing 902d14ef768117eb
+@nextbot/reporting:typecheck: cache bypass, force executing 9903c65e3da819bd
+@nextbot/knowledge:typecheck: cache bypass, force executing 8d97563ed2b81680
+@nextbot/campaigns:typecheck: cache bypass, force executing 8996927fdc3a18cc
+@nextbot/contracts:typecheck: cache bypass, force executing f7dc2497d82111f1
+@nextbot/db:typecheck: cache bypass, force executing 6952d6531ff976a6
+nextbot-runtime:typecheck: cache bypass, force executing dd37f6c357e36886
+@nextbot/observability:typecheck: cache bypass, force executing e3586b1cf6052beb
+nextbot-gateway-agent:typecheck: 
+nextbot-gateway-agent:typecheck: > nextbot-gateway-agent@0.0.0 typecheck D:\work\products\nextbot\apps\gateway-agent
+nextbot-gateway-agent:typecheck: > tsc --noEmit
+nextbot-gateway-agent:typecheck: 
+@nextbot/testing:typecheck: 
+@nextbot/testing:typecheck: > @nextbot/testing@0.0.0 typecheck D:\work\products\nextbot\packages\testing
+@nextbot/testing:typecheck: > tsc --noEmit
+@nextbot/testing:typecheck: 
+@nextbot/a2a:typecheck: 
+@nextbot/a2a:typecheck: > @nextbot/a2a@0.0.0 typecheck D:\work\products\nextbot\packages\modules\a2a
+@nextbot/a2a:typecheck: > tsc --noEmit
+@nextbot/a2a:typecheck: 
+@nextbot/reporting:typecheck: 
+@nextbot/reporting:typecheck: > @nextbot/reporting@0.0.0 typecheck D:\work\products\nextbot\packages\modules\reporting
+@nextbot/reporting:typecheck: > tsc --noEmit
+@nextbot/reporting:typecheck: 
+@nextbot/knowledge:typecheck: 
+@nextbot/knowledge:typecheck: > @nextbot/knowledge@0.0.0 typecheck D:\work\products\nextbot\packages\modules\knowledge
+@nextbot/knowledge:typecheck: > tsc --noEmit
+@nextbot/knowledge:typecheck: 
+@nextbot/campaigns:typecheck: 
+@nextbot/campaigns:typecheck: > @nextbot/campaigns@0.0.0 typecheck D:\work\products\nextbot\packages\modules\campaigns
+@nextbot/campaigns:typecheck: > tsc --noEmit
+@nextbot/campaigns:typecheck: 
+@nextbot/contracts:typecheck: 
+@nextbot/contracts:typecheck: > @nextbot/contracts@0.0.0 typecheck D:\work\products\nextbot\packages\contracts
+@nextbot/contracts:typecheck: > tsc --noEmit
+@nextbot/contracts:typecheck: 
+@nextbot/db:typecheck: 
+@nextbot/db:typecheck: > @nextbot/db@0.0.0 typecheck D:\work\products\nextbot\packages\db
+@nextbot/db:typecheck: > tsc --noEmit
+@nextbot/db:typecheck: 
+@nextbot/ui:typecheck: cache bypass, force executing ba60fc46a48c37df
+nextbot-runtime:typecheck: 
+nextbot-runtime:typecheck: > nextbot-runtime@0.0.0 typecheck D:\work\products\nextbot\apps\runtime
+nextbot-runtime:typecheck: > tsc --noEmit
+nextbot-runtime:typecheck: 
+@nextbot/secrets:typecheck: cache bypass, force executing 1799d553a40362ba
+@nextbot/observability:typecheck: 
+@nextbot/observability:typecheck: > @nextbot/observability@0.0.0 typecheck D:\work\products\nextbot\packages\observability
+@nextbot/observability:typecheck: > tsc --noEmit
+@nextbot/observability:typecheck: 
+@nextbot/ai-registry:typecheck: cache bypass, force executing 7d1bc3e82a6d9b47
+@nextbot/pii:typecheck: cache bypass, force executing 0c8d1b24ee3aa799
+@nextbot/tenancy:typecheck: cache bypass, force executing e15bbcd1b4d25b7d
+@nextbot/mcp-client:typecheck: cache bypass, force executing 21a128c7e4e584da
+@nextbot/ui:typecheck: 
+@nextbot/ui:typecheck: > @nextbot/ui@0.0.0 typecheck D:\work\products\nextbot\packages\ui
+@nextbot/ui:typecheck: > tsc --noEmit
+@nextbot/ui:typecheck: 
+@nextbot/secrets:typecheck: 
+@nextbot/secrets:typecheck: > @nextbot/secrets@0.0.0 typecheck D:\work\products\nextbot\packages\secrets
+@nextbot/secrets:typecheck: > tsc --noEmit
+@nextbot/secrets:typecheck: 
+@nextbot/approvals:typecheck: cache bypass, force executing ff68872761b1aa08
+@nextbot/ai-registry:typecheck: 
+@nextbot/ai-registry:typecheck: > @nextbot/ai-registry@0.0.0 typecheck D:\work\products\nextbot\packages\ai-registry
+@nextbot/ai-registry:typecheck: > tsc --noEmit
+@nextbot/ai-registry:typecheck: 
+@nextbot/pii:typecheck: 
+@nextbot/pii:typecheck: > @nextbot/pii@0.0.0 typecheck D:\work\products\nextbot\packages\modules\pii
+@nextbot/pii:typecheck: > tsc --noEmit
+@nextbot/pii:typecheck: 
+@nextbot/channel-adapters:typecheck: cache bypass, force executing 57c03da695358af3
+@nextbot/tenancy:typecheck: 
+@nextbot/tenancy:typecheck: > @nextbot/tenancy@0.0.0 typecheck D:\work\products\nextbot\packages\modules\tenancy
+@nextbot/tenancy:typecheck: > tsc --noEmit
+@nextbot/tenancy:typecheck: 
+@nextbot/mcp-client:typecheck: 
+@nextbot/mcp-client:typecheck: > @nextbot/mcp-client@0.0.0 typecheck D:\work\products\nextbot\packages\mcp-client
+@nextbot/mcp-client:typecheck: > tsc --noEmit
+@nextbot/mcp-client:typecheck: 
+@nextbot/approvals:typecheck: 
+@nextbot/approvals:typecheck: > @nextbot/approvals@0.0.0 typecheck D:\work\products\nextbot\packages\modules\approvals
+@nextbot/approvals:typecheck: > tsc --noEmit
+@nextbot/approvals:typecheck: 
+@nextbot/iam:typecheck: cache bypass, force executing c3d265005de4af8f
+@nextbot/connectors:typecheck: cache bypass, force executing 1c8f1c5be8970c7c
+@nextbot/channel-adapters:typecheck: 
+@nextbot/channel-adapters:typecheck: > @nextbot/channel-adapters@0.0.0 typecheck D:\work\products\nextbot\packages\channel-adapters
+@nextbot/channel-adapters:typecheck: > tsc --noEmit
+@nextbot/channel-adapters:typecheck: 
+@nextbot/iam:typecheck: 
+@nextbot/iam:typecheck: > @nextbot/iam@0.0.0 typecheck D:\work\products\nextbot\packages\modules\iam
+@nextbot/iam:typecheck: > tsc --noEmit
+@nextbot/iam:typecheck: 
+@nextbot/connectors:typecheck: 
+@nextbot/connectors:typecheck: > @nextbot/connectors@0.0.0 typecheck D:\work\products\nextbot\packages\modules\connectors
+@nextbot/connectors:typecheck: > tsc --noEmit
+@nextbot/connectors:typecheck: 
+@nextbot/audit:typecheck: cache bypass, force executing e713e28edebdf4be
+@nextbot/agent-platform:typecheck: cache bypass, force executing c2d59a2ddecc8af9
+@nextbot/channels:typecheck: cache bypass, force executing 769f988329b14ec9
+@nextbot/tool-registry:typecheck: cache bypass, force executing fe5e7852a18c9f24
+@nextbot/audit:typecheck: 
+@nextbot/audit:typecheck: > @nextbot/audit@0.0.0 typecheck D:\work\products\nextbot\packages\modules\audit
+@nextbot/audit:typecheck: > tsc --noEmit
+@nextbot/audit:typecheck: 
+@nextbot/conversations:typecheck: cache bypass, force executing d823287526630aef
+@nextbot/orchestration:typecheck: cache bypass, force executing 6296e9063803f67e
+@nextbot/agent-platform:typecheck: 
+@nextbot/agent-platform:typecheck: > @nextbot/agent-platform@0.0.0 typecheck D:\work\products\nextbot\packages\modules\agent-platform
+@nextbot/agent-platform:typecheck: > tsc --noEmit
+@nextbot/agent-platform:typecheck: 
+@nextbot/escalations:typecheck: cache bypass, force executing da59c398ecaab936
+@nextbot/channels:typecheck: 
+@nextbot/channels:typecheck: > @nextbot/channels@0.0.0 typecheck D:\work\products\nextbot\packages\modules\channels
+@nextbot/channels:typecheck: > tsc --noEmit
+@nextbot/channels:typecheck: 
+@nextbot/tool-registry:typecheck: 
+@nextbot/tool-registry:typecheck: > @nextbot/tool-registry@0.0.0 typecheck D:\work\products\nextbot\packages\modules\tool-registry
+@nextbot/tool-registry:typecheck: > tsc --noEmit
+@nextbot/tool-registry:typecheck: 
+nextbot-widget-embed:typecheck: cache bypass, force executing e07ee27e6f97bfea
+@nextbot/conversations:typecheck: 
+@nextbot/conversations:typecheck: > @nextbot/conversations@0.0.0 typecheck D:\work\products\nextbot\packages\modules\conversations
+@nextbot/conversations:typecheck: > tsc --noEmit
+@nextbot/conversations:typecheck: 
+@nextbot/orchestration:typecheck: 
+@nextbot/orchestration:typecheck: > @nextbot/orchestration@0.0.0 typecheck D:\work\products\nextbot\packages\modules\orchestration
+@nextbot/orchestration:typecheck: > tsc --noEmit
+@nextbot/orchestration:typecheck: 
+nextbot-worker:typecheck: cache bypass, force executing 7f820cbb6309022c
+@nextbot/escalations:typecheck: 
+@nextbot/escalations:typecheck: > @nextbot/escalations@0.0.0 typecheck D:\work\products\nextbot\packages\modules\escalations
+@nextbot/escalations:typecheck: > tsc --noEmit
+@nextbot/escalations:typecheck: 
+nextbot-web:typecheck: cache bypass, force executing 182be5baf86936f1
+nextbot-widget-embed:typecheck: 
+nextbot-widget-embed:typecheck: > nextbot-widget-embed@0.0.0 typecheck D:\work\products\nextbot\apps\widget-embed
+nextbot-widget-embed:typecheck: > tsc --noEmit
+nextbot-widget-embed:typecheck: 
+nextbot-worker:typecheck: 
+nextbot-worker:typecheck: > nextbot-worker@0.0.0 typecheck D:\work\products\nextbot\apps\worker
+nextbot-worker:typecheck: > tsc --noEmit
+nextbot-worker:typecheck: 
+nextbot-gateway:typecheck: cache bypass, force executing a8c67273bc483191
+nextbot-web:typecheck: 
+nextbot-web:typecheck: > nextbot-web@0.0.0 typecheck D:\work\products\nextbot\apps\web
+nextbot-web:typecheck: > tsc --noEmit
+nextbot-web:typecheck: 
+nextbot-gateway:typecheck: 
+nextbot-gateway:typecheck: > nextbot-gateway@0.0.0 typecheck D:\work\products\nextbot\apps\gateway
+nextbot-gateway:typecheck: > tsc --noEmit
+nextbot-gateway:typecheck: 
+
+ Tasks:    31 successful, 31 total
+Cached:    0 cached, 31 total
+  Time:    11.099s 
+
+EXIT=0

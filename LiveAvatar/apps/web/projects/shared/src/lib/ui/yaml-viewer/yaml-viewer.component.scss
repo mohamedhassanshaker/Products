@@ -1,0 +1,13 @@
+.la-yaml-viewer {
+  margin: 0;
+  padding: 12px;
+  background: var(--la-surface-variant, #f2f2f6);
+  border-radius: 8px;
+  font-family: 'Roboto Mono', ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 480px;
+}

@@ -1,0 +1,11 @@
+port 3491 N=400 interleaved, sorted by p50
+p50=2.728  /api/v1/zzz                   api real folder
+p50=2.024  /internal/ops/tenants         gated (folder internal/ops exists)
+p50=1.985  /dashboard/zzz                real route (admin group) exists
+p50=1.981  /internal/ops/zzz             gated, no such child
+p50=1.980  /internal/zzz                 no folder, depth 2
+p50=1.980  /forgot-password/zzz          real route folder exists
+p50=1.968  /internal/zzz/tenants         no folder at all
+p50=1.967  /login/zzz                    real route folder 'login' exists
+p50=1.966  /conversations/zzz/abc        real route (admin group) exists, depth 3
+p50=1.955  /zzz                          no folder, depth 1

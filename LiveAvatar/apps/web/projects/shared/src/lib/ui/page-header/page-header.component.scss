@@ -1,0 +1,63 @@
+.la-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+
+  &__text h1 {
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  &__subtitle {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: var(--la-on-surface-variant, #44474f);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    // QA fix (Final Review, frontend D-1 — 6th recurrence of the phone-layout
+    // bug class): with no wrap, any screen putting 2+ controls in this slot
+    // (Sessions: tenant select + search + status filter) overflows a narrow
+    // viewport instead of reflowing, and the controls become reachable only
+    // by horizontally panning the whole page. This is the SHARED page-header
+    // component, so fixing it here (not a per-screen override) protects
+    // every future screen that reuses this slot, not just Sessions.
+    flex-wrap: wrap;
+    // row-gap can differ from the inline `gap` once items wrap onto their
+    // own line — a bit more breathing room so wrapped rows read as a
+    // deliberate stacked layout, not controls crammed together.
+    row-gap: 12px;
+
+    // Each direct child (search fields, selects, buttons) gets a sane
+    // minimum so it can shrink instead of forcing the whole row wider than
+    // the viewport before wrapping ever kicks in.
+    > * {
+      min-width: 0;
+    }
+  }
+
+  // Narrow viewports (phone widths this bug class has repeatedly hit —
+  // 375px/414px): let actions take the full row width so wrapped controls
+  // stack at a comfortable, consistent width instead of wrapping into
+  // whatever oddly-sized fragment of space was left over from the header's
+  // own `justify-content: space-between` against the title.
+  @media (max-width: 599px) {
+    flex-direction: column;
+    align-items: stretch;
+
+    &__actions {
+      width: 100%;
+
+      > * {
+        flex: 1 1 auto;
+      }
+    }
+  }
+}

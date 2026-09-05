@@ -1,0 +1,1547 @@
+{
+  "results": [
+    {
+      "check": "D1",
+      "width": 375,
+      "screen": "dashboard",
+      "viewport": 375,
+      "docScrollWidth": 375,
+      "bodyScrollWidth": 375,
+      "header": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actions": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 100,
+          "right": 116
+        },
+        {
+          "x": 124,
+          "width": 212,
+          "right": 336
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Dashboard · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 375,
+      "screen": "deployments",
+      "viewport": 375,
+      "docScrollWidth": 375,
+      "bodyScrollWidth": 375,
+      "header": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actions": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 168,
+          "right": 184
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Deployments · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 375,
+      "screen": "providers-catalog",
+      "viewport": 375,
+      "docScrollWidth": 375,
+      "bodyScrollWidth": 375,
+      "header": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actions": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Providers · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 375,
+      "screen": "provider-credentials",
+      "viewport": 375,
+      "docScrollWidth": 375,
+      "bodyScrollWidth": 375,
+      "header": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actions": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 157,
+          "right": 173
+        },
+        {
+          "x": 181,
+          "width": 140,
+          "right": 321
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Provider credentials · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 375,
+      "screen": "sessions-list",
+      "viewport": 375,
+      "docScrollWidth": 375,
+      "bodyScrollWidth": 375,
+      "header": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actions": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 212,
+          "right": 228
+        },
+        {
+          "x": 16,
+          "width": 240,
+          "right": 256
+        },
+        {
+          "x": 16,
+          "width": 212,
+          "right": 228
+        }
+      ],
+      "actionsChildCount": 3,
+      "pane": {
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Sessions · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 375,
+      "screen": "gpu",
+      "viewport": 375,
+      "docScrollWidth": 375,
+      "bodyScrollWidth": 375,
+      "header": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actions": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 343,
+          "right": 359
+        },
+        {
+          "x": 16,
+          "width": 212,
+          "right": 228
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "GPU health · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 375,
+      "screen": "alerts-picker",
+      "viewport": 375,
+      "docScrollWidth": 375,
+      "bodyScrollWidth": 375,
+      "header": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actions": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Alerts · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 375,
+      "screen": "alerts-tenant",
+      "viewport": 375,
+      "docScrollWidth": 375,
+      "bodyScrollWidth": 375,
+      "header": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actions": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 140,
+          "right": 156
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Alerts & failover · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 375,
+      "screen": "residency-picker",
+      "viewport": 375,
+      "docScrollWidth": 375,
+      "bodyScrollWidth": 375,
+      "header": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actions": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Residency · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 375,
+      "screen": "residency-tenant",
+      "viewport": 375,
+      "docScrollWidth": 375,
+      "bodyScrollWidth": 375,
+      "header": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actions": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 140,
+          "right": 156
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Data residency · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 375,
+      "screen": "agent-builder",
+      "viewport": 375,
+      "docScrollWidth": 375,
+      "bodyScrollWidth": 375,
+      "header": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actions": {
+        "x": 16,
+        "width": 343,
+        "right": 359
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 205,
+          "right": 221
+        },
+        {
+          "x": 16,
+          "width": 157,
+          "right": 173
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 375,
+        "scrollWidth": 375
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Agent Builder · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 414,
+      "screen": "dashboard",
+      "viewport": 414,
+      "docScrollWidth": 414,
+      "bodyScrollWidth": 414,
+      "header": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actions": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 100,
+          "right": 116
+        },
+        {
+          "x": 124,
+          "width": 212,
+          "right": 336
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 414,
+        "scrollWidth": 414
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Dashboard · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 414,
+      "screen": "deployments",
+      "viewport": 414,
+      "docScrollWidth": 414,
+      "bodyScrollWidth": 414,
+      "header": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actions": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 168,
+          "right": 184
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 414,
+        "scrollWidth": 414
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Deployments · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 414,
+      "screen": "providers-catalog",
+      "viewport": 414,
+      "docScrollWidth": 414,
+      "bodyScrollWidth": 414,
+      "header": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actions": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 414,
+        "scrollWidth": 414
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Providers · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 414,
+      "screen": "provider-credentials",
+      "viewport": 414,
+      "docScrollWidth": 414,
+      "bodyScrollWidth": 414,
+      "header": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actions": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 157,
+          "right": 173
+        },
+        {
+          "x": 181,
+          "width": 140,
+          "right": 321
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 414,
+        "scrollWidth": 414
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Provider credentials · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 414,
+      "screen": "sessions-list",
+      "viewport": 414,
+      "docScrollWidth": 414,
+      "bodyScrollWidth": 414,
+      "header": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actions": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 212,
+          "right": 228
+        },
+        {
+          "x": 16,
+          "width": 240,
+          "right": 256
+        },
+        {
+          "x": 16,
+          "width": 212,
+          "right": 228
+        }
+      ],
+      "actionsChildCount": 3,
+      "pane": {
+        "clientWidth": 414,
+        "scrollWidth": 414
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Sessions · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 414,
+      "screen": "gpu",
+      "viewport": 414,
+      "docScrollWidth": 414,
+      "bodyScrollWidth": 414,
+      "header": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actions": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 382,
+          "right": 398
+        },
+        {
+          "x": 16,
+          "width": 212,
+          "right": 228
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 414,
+        "scrollWidth": 414
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "GPU health · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 414,
+      "screen": "alerts-picker",
+      "viewport": 414,
+      "docScrollWidth": 414,
+      "bodyScrollWidth": 414,
+      "header": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actions": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 414,
+        "scrollWidth": 414
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Alerts · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 414,
+      "screen": "alerts-tenant",
+      "viewport": 414,
+      "docScrollWidth": 414,
+      "bodyScrollWidth": 414,
+      "header": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actions": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 140,
+          "right": 156
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 414,
+        "scrollWidth": 414
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Alerts & failover · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 414,
+      "screen": "residency-picker",
+      "viewport": 414,
+      "docScrollWidth": 414,
+      "bodyScrollWidth": 414,
+      "header": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actions": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 414,
+        "scrollWidth": 414
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Residency · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 414,
+      "screen": "residency-tenant",
+      "viewport": 414,
+      "docScrollWidth": 414,
+      "bodyScrollWidth": 414,
+      "header": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actions": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 140,
+          "right": 156
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 414,
+        "scrollWidth": 414
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Data residency · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 414,
+      "screen": "agent-builder",
+      "viewport": 414,
+      "docScrollWidth": 414,
+      "bodyScrollWidth": 414,
+      "header": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actions": {
+        "x": 16,
+        "width": 382,
+        "right": 398
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 205,
+          "right": 221
+        },
+        {
+          "x": 229,
+          "width": 157,
+          "right": 386
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 414,
+        "scrollWidth": 414
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Agent Builder · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 768,
+      "screen": "dashboard",
+      "viewport": 768,
+      "docScrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "header": {
+        "x": 16,
+        "width": 736,
+        "right": 752
+      },
+      "actions": {
+        "x": 371,
+        "width": 381,
+        "right": 752
+      },
+      "actionsChildren": [
+        {
+          "x": 371,
+          "width": 161,
+          "right": 532
+        },
+        {
+          "x": 540,
+          "width": 212,
+          "right": 752
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Dashboard · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 768,
+      "screen": "deployments",
+      "viewport": 768,
+      "docScrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "header": {
+        "x": 16,
+        "width": 736,
+        "right": 752
+      },
+      "actions": {
+        "x": 584,
+        "width": 168,
+        "right": 752
+      },
+      "actionsChildren": [
+        {
+          "x": 584,
+          "width": 168,
+          "right": 752
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Deployments · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 768,
+      "screen": "providers-catalog",
+      "viewport": 768,
+      "docScrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "header": {
+        "x": 16,
+        "width": 736,
+        "right": 752
+      },
+      "actions": {
+        "x": 752,
+        "width": 0,
+        "right": 752
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Providers · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 768,
+      "screen": "provider-credentials",
+      "viewport": 768,
+      "docScrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "header": {
+        "x": 16,
+        "width": 736,
+        "right": 752
+      },
+      "actions": {
+        "x": 447,
+        "width": 305,
+        "right": 752
+      },
+      "actionsChildren": [
+        {
+          "x": 447,
+          "width": 157,
+          "right": 604
+        },
+        {
+          "x": 612,
+          "width": 140,
+          "right": 752
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Provider credentials · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 768,
+      "screen": "sessions-list",
+      "viewport": 768,
+      "docScrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "header": {
+        "x": 16,
+        "width": 736,
+        "right": 752
+      },
+      "actions": {
+        "x": 16,
+        "width": 680,
+        "right": 696
+      },
+      "actionsChildren": [
+        {
+          "x": 16,
+          "width": 212,
+          "right": 228
+        },
+        {
+          "x": 236,
+          "width": 240,
+          "right": 476
+        },
+        {
+          "x": 484,
+          "width": 212,
+          "right": 696
+        }
+      ],
+      "actionsChildCount": 3,
+      "pane": {
+        "clientWidth": 768,
+        "scrollWidth": 803
+      },
+      "overflowing": [
+        {
+          "sel": "table.mat-mdc-table.mdc-data-table__table",
+          "right": 803,
+          "width": 787
+        },
+        {
+          "sel": "thead",
+          "right": 803,
+          "width": 787
+        },
+        {
+          "sel": "tr.mat-mdc-header-row.mdc-data-table__header-row",
+          "right": 803,
+          "width": 787
+        },
+        {
+          "sel": "th.mat-mdc-header-cell.mdc-data-table__header-cell",
+          "right": 803,
+          "width": 206
+        },
+        {
+          "sel": "tbody.mdc-data-table__content",
+          "right": 803,
+          "width": 787
+        },
+        {
+          "sel": "tr.mat-mdc-row.mdc-data-table__row",
+          "right": 803,
+          "width": 787
+        },
+        {
+          "sel": "td.mat-mdc-cell.mdc-data-table__cell",
+          "right": 803,
+          "width": 206
+        },
+        {
+          "sel": "tr.mat-mdc-row.mdc-data-table__row",
+          "right": 803,
+          "width": 787
+        }
+      ],
+      "h1": 1,
+      "title": "Sessions · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 768,
+      "screen": "gpu",
+      "viewport": 768,
+      "docScrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "header": {
+        "x": 16,
+        "width": 736,
+        "right": 752
+      },
+      "actions": {
+        "x": 460,
+        "width": 292,
+        "right": 752
+      },
+      "actionsChildren": [
+        {
+          "x": 460,
+          "width": 292,
+          "right": 752
+        },
+        {
+          "x": 460,
+          "width": 212,
+          "right": 672
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "GPU health · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 768,
+      "screen": "alerts-picker",
+      "viewport": 768,
+      "docScrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "header": {
+        "x": 16,
+        "width": 736,
+        "right": 752
+      },
+      "actions": {
+        "x": 752,
+        "width": 0,
+        "right": 752
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Alerts · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 768,
+      "screen": "alerts-tenant",
+      "viewport": 768,
+      "docScrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "header": {
+        "x": 16,
+        "width": 736,
+        "right": 752
+      },
+      "actions": {
+        "x": 612,
+        "width": 140,
+        "right": 752
+      },
+      "actionsChildren": [
+        {
+          "x": 612,
+          "width": 140,
+          "right": 752
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Alerts & failover · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 768,
+      "screen": "residency-picker",
+      "viewport": 768,
+      "docScrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "header": {
+        "x": 16,
+        "width": 736,
+        "right": 752
+      },
+      "actions": {
+        "x": 752,
+        "width": 0,
+        "right": 752
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Residency · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 768,
+      "screen": "residency-tenant",
+      "viewport": 768,
+      "docScrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "header": {
+        "x": 16,
+        "width": 736,
+        "right": 752
+      },
+      "actions": {
+        "x": 612,
+        "width": 140,
+        "right": 752
+      },
+      "actionsChildren": [
+        {
+          "x": 612,
+          "width": 140,
+          "right": 752
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Data residency · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 768,
+      "screen": "agent-builder",
+      "viewport": 768,
+      "docScrollWidth": 768,
+      "bodyScrollWidth": 768,
+      "header": {
+        "x": 16,
+        "width": 736,
+        "right": 752
+      },
+      "actions": {
+        "x": 382,
+        "width": 370,
+        "right": 752
+      },
+      "actionsChildren": [
+        {
+          "x": 382,
+          "width": 205,
+          "right": 587
+        },
+        {
+          "x": 595,
+          "width": 157,
+          "right": 752
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 768,
+        "scrollWidth": 768
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Agent Builder · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 1280,
+      "screen": "dashboard",
+      "viewport": 1280,
+      "docScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "header": {
+        "x": 280,
+        "width": 976,
+        "right": 1256
+      },
+      "actions": {
+        "x": 875,
+        "width": 381,
+        "right": 1256
+      },
+      "actionsChildren": [
+        {
+          "x": 875,
+          "width": 161,
+          "right": 1036
+        },
+        {
+          "x": 1044,
+          "width": 212,
+          "right": 1256
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Dashboard · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 1280,
+      "screen": "deployments",
+      "viewport": 1280,
+      "docScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "header": {
+        "x": 280,
+        "width": 976,
+        "right": 1256
+      },
+      "actions": {
+        "x": 1088,
+        "width": 168,
+        "right": 1256
+      },
+      "actionsChildren": [
+        {
+          "x": 1088,
+          "width": 168,
+          "right": 1256
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Deployments · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 1280,
+      "screen": "providers-catalog",
+      "viewport": 1280,
+      "docScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "header": {
+        "x": 280,
+        "width": 976,
+        "right": 1256
+      },
+      "actions": {
+        "x": 1256,
+        "width": 0,
+        "right": 1256
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Providers · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 1280,
+      "screen": "provider-credentials",
+      "viewport": 1280,
+      "docScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "header": {
+        "x": 280,
+        "width": 976,
+        "right": 1256
+      },
+      "actions": {
+        "x": 951,
+        "width": 305,
+        "right": 1256
+      },
+      "actionsChildren": [
+        {
+          "x": 951,
+          "width": 157,
+          "right": 1108
+        },
+        {
+          "x": 1116,
+          "width": 140,
+          "right": 1256
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Provider credentials · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 1280,
+      "screen": "sessions-list",
+      "viewport": 1280,
+      "docScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "header": {
+        "x": 280,
+        "width": 976,
+        "right": 1256
+      },
+      "actions": {
+        "x": 576,
+        "width": 680,
+        "right": 1256
+      },
+      "actionsChildren": [
+        {
+          "x": 576,
+          "width": 212,
+          "right": 788
+        },
+        {
+          "x": 796,
+          "width": 240,
+          "right": 1036
+        },
+        {
+          "x": 1044,
+          "width": 212,
+          "right": 1256
+        }
+      ],
+      "actionsChildCount": 3,
+      "pane": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Sessions · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 1280,
+      "screen": "gpu",
+      "viewport": 1280,
+      "docScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "header": {
+        "x": 280,
+        "width": 976,
+        "right": 1256
+      },
+      "actions": {
+        "x": 964,
+        "width": 292,
+        "right": 1256
+      },
+      "actionsChildren": [
+        {
+          "x": 964,
+          "width": 292,
+          "right": 1256
+        },
+        {
+          "x": 964,
+          "width": 212,
+          "right": 1176
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "GPU health · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 1280,
+      "screen": "alerts-picker",
+      "viewport": 1280,
+      "docScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "header": {
+        "x": 280,
+        "width": 976,
+        "right": 1256
+      },
+      "actions": {
+        "x": 1256,
+        "width": 0,
+        "right": 1256
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Alerts · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 1280,
+      "screen": "alerts-tenant",
+      "viewport": 1280,
+      "docScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "header": {
+        "x": 280,
+        "width": 976,
+        "right": 1256
+      },
+      "actions": {
+        "x": 1116,
+        "width": 140,
+        "right": 1256
+      },
+      "actionsChildren": [
+        {
+          "x": 1116,
+          "width": 140,
+          "right": 1256
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Alerts & failover · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 1280,
+      "screen": "residency-picker",
+      "viewport": 1280,
+      "docScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "header": {
+        "x": 280,
+        "width": 976,
+        "right": 1256
+      },
+      "actions": {
+        "x": 1256,
+        "width": 0,
+        "right": 1256
+      },
+      "actionsChildren": [],
+      "actionsChildCount": 0,
+      "pane": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Residency · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 1280,
+      "screen": "residency-tenant",
+      "viewport": 1280,
+      "docScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "header": {
+        "x": 280,
+        "width": 976,
+        "right": 1256
+      },
+      "actions": {
+        "x": 1116,
+        "width": 140,
+        "right": 1256
+      },
+      "actionsChildren": [
+        {
+          "x": 1116,
+          "width": 140,
+          "right": 1256
+        }
+      ],
+      "actionsChildCount": 1,
+      "pane": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Data residency · Avatar Platform"
+    },
+    {
+      "check": "D1",
+      "width": 1280,
+      "screen": "agent-builder",
+      "viewport": 1280,
+      "docScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "header": {
+        "x": 280,
+        "width": 976,
+        "right": 1256
+      },
+      "actions": {
+        "x": 886,
+        "width": 370,
+        "right": 1256
+      },
+      "actionsChildren": [
+        {
+          "x": 886,
+          "width": 205,
+          "right": 1091
+        },
+        {
+          "x": 1099,
+          "width": 157,
+          "right": 1256
+        }
+      ],
+      "actionsChildCount": 2,
+      "pane": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024
+      },
+      "overflowing": [],
+      "h1": 1,
+      "title": "Agent Builder · Avatar Platform"
+    }
+  ],
+  "consoleErrors": [],
+  "netErrors": []
+}

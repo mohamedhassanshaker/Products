@@ -1,0 +1,145 @@
+@if (reconnectFailed()) {
+  <main class="la-call la-call--takeover">
+    <h1>Connection lost. Return to the start screen to rejoin.</h1>
+  </main>
+} @else {
+  <main class="la-call">
+    <div class="la-call__status" aria-live="polite">{{ statusText() }}</div>
+
+    <div class="la-call__stage">
+      <video #avatarVideo aria-label="Avatar video" autoplay playsinline></video>
+
+      @if (liveKit.connectionState() === 'connecting') {
+        <div class="la-call__overlay">
+          <span class="la-call__spinner" aria-hidden="true"></span>
+          <span>Connecting…</span>
+        </div>
+      }
+
+      @if (waitingForAvatar()) {
+        <div class="la-call__banner la-call__banner--info">Still connecting you to your avatar…</div>
+      }
+
+      @if (liveKit.connectionState() === 'reconnecting') {
+        <div class="la-call__banner la-call__banner--info">Reconnecting…</div>
+      }
+
+      <!--
+        A8.7 "Getting approval" state (R-H5) — additive to the agent's own
+        hold-treatment speech, never a replacement for it: silence during a
+        gate is never acceptable, and the spoken line already covers that on
+        its own. This is a visual reinforcement of the same information,
+        following the exact same transient-banner pattern as the
+        reconnecting/avatar-wait banners above rather than inventing a new
+        one.
+      -->
+      @if (hitlHold(); as hold) {
+        <div class="la-call__banner la-call__banner--hitl" role="status">
+          <p class="la-call__hitl-title">
+            <span aria-hidden="true">⏸</span>
+            Getting approval
+          </p>
+          <p class="la-call__hitl-subtitle">Usually takes under a minute</p>
+          @if (hitlHoldProgressPercent(); as percent) {
+            <div class="la-call__hitl-progress" role="img" [attr.aria-label]="hitlHoldElapsedSeconds() + ' seconds elapsed'">
+              <span class="la-call__hitl-progress-fill" [style.width.%]="percent"></span>
+            </div>
+          }
+          <p class="la-call__hitl-message">💬 "{{ hold.message }}"</p>
+        </div>
+      }
+
+      <!--
+        FR-CALL-3 live captions — an `aria-live="polite"` overlay above the
+        control bar (UX_GUIDELINES §12.1 step 4's reserved slot), sourced
+        from `LiveKitRoomService.captionText()`. "Captions unavailable." is
+        shown instead of the (possibly stale) last line whenever the source
+        is known to be down, per the spec sentence verbatim.
+
+        QA fix (phase4-conversation-captions D-3): the container used to
+        render (an empty, content-less dark box) the instant the call
+        connected, before any caption text had arrived — now it stays
+        collapsed until there's either real text to show or a definite
+        "unavailable" state to report, never an empty shell.
+      -->
+      @if (captionsOn() && liveKit.connectionState() === 'connected' && (liveKit.captionText() || !liveKit.captionsAvailable())) {
+        <div class="la-call__captions" aria-live="polite">
+          {{ liveKit.captionsAvailable() ? liveKit.captionText() : 'Captions unavailable.' }}
+        </div>
+      }
+    </div>
+
+    <!--
+      A8.7 "Deferred outcome" state — shown once a previously-deferred
+      approval's result comes back (UC-H2). A simple banner, per this
+      phase's own v1 scope decision, rendered outside the video stage since
+      it's informational rather than tied to the live media surface.
+    -->
+    @if (hitlDeferredOutcome(); as outcome) {
+      <div class="la-call__banner la-call__banner--info la-call__banner--deferred" role="status">💬 "{{ outcome }}"</div>
+    }
+
+    <div class="la-call__controls">
+      <div class="la-call__mute-group">
+        <button
+          type="button"
+          class="la-call__control la-call__control--mute"
+          [disabled]="liveKit.connectionState() !== 'connected'"
+          (click)="onToggleMute()"
+        >
+          <span aria-hidden="true">{{ liveKit.muted() ? '🔇' : '🎙️' }}</span>
+          {{ liveKit.muted() ? 'Unmute' : 'Mute' }}
+        </button>
+
+        <!--
+          Mic-level meter (UX_GUIDELINES §12.4/§12.5): a deaf/hard-of-hearing
+          accessibility signal that the mic is actually live, placed adjacent
+          to the mute button — never the sole indicator (the mute icon/label
+          above already carries that), and never purely decorative: its width
+          reflects `LiveKitRoomService.micLevel()` in real time (QA Phase 3
+          D-3, previously computed but never rendered anywhere).
+        -->
+        <div
+          class="la-call__mic-meter"
+          role="img"
+          [attr.aria-label]="liveKit.muted() ? 'Microphone muted' : 'Microphone input level'"
+        >
+          <span class="la-call__mic-meter-fill" [style.width.%]="liveKit.muted() ? 0 : liveKit.micLevel() * 100"></span>
+        </div>
+
+        <!-- FR-CALL-3: captions toggle, default on, in the slot UX_GUIDELINES §12.1 step 4 reserved next to mute. -->
+        <button
+          type="button"
+          class="la-call__control la-call__control--captions"
+          [attr.aria-pressed]="captionsOn()"
+          (click)="onToggleCaptions()"
+        >
+          <span aria-hidden="true">{{ captionsOn() ? '💬' : '🚫' }}</span>
+          {{ captionsOn() ? 'Captions on' : 'Captions off' }}
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="la-call__control la-call__control--end"
+        [disabled]="ending()"
+        (click)="onEndCall()"
+      >
+        {{ ending() ? 'Ending call…' : 'End call' }}
+      </button>
+
+      <!--
+        Only rendered when the user opted into the camera on Screen 9
+        (UX_GUIDELINES §12.2 "only rendered if the user opted in on Screen
+        9") — QA Phase 3 D-4: this previously rendered unconditionally,
+        ignoring the Screen-9 choice carried in router state.
+      -->
+      @if (cameraOptedIn) {
+        <button type="button" class="la-call__control la-call__control--camera" (click)="onToggleCamera()">
+          <span aria-hidden="true">{{ cameraOn() ? '📷' : '🚫' }}</span>
+          {{ cameraOn() ? 'Camera on' : 'Camera off' }}
+        </button>
+      }
+    </div>
+  </main>
+}

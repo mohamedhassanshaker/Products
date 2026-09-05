@@ -1,0 +1,671 @@
+<h2 mat-dialog-title>{{ data.node.name || 'Node' }} — {{ data.node.id }}</h2>
+
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="la-dialog-field">
+    <mat-label>Name</mat-label>
+    <input matInput [ngModel]="name()" (ngModelChange)="name.set($event)" maxlength="120" [attr.aria-required]="true" aria-describedby="la-node-name-error" />
+    @if (name().trim().length === 0) {
+      <mat-error id="la-node-name-error">Name is required.</mat-error>
+    }
+  </mat-form-field>
+
+  <fieldset class="la-node-inspector__lane">
+    <legend>Lane</legend>
+    <mat-radio-group [ngModel]="lane()" (ngModelChange)="lane.set($event)" aria-label="Lane">
+      <mat-radio-button value="foreground">Foreground — caller waits</mat-radio-button>
+      <mat-radio-button value="background">Background — never blocks speech</mat-radio-button>
+    </mat-radio-group>
+  </fieldset>
+
+  <h3>Type-specific fields</h3>
+
+  @switch (nodeType) {
+    @case ('llm') {
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Provider</mat-label>
+        <mat-select [ngModel]="llmProvider()" (ngModelChange)="llmProvider.set($event)">
+          @for (def of llmDefinitions(); track def.key) {
+            <mat-option [value]="def.key" [disabled]="optionDisabled(def.key)">{{ def.display_name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      @if (hasMultipleCredentials(llmProvider())) {
+        <mat-form-field appearance="outline" class="la-dialog-field">
+          <mat-label>Credential</mat-label>
+          <mat-select [ngModel]="llmCredentialRef()" (ngModelChange)="llmCredentialRef.set($event)">
+            @for (cred of credentialsFor(llmProvider()); track cred.id) {
+              <mat-option [value]="cred.credential_ref" [disabled]="!cred.credential_ref">{{ cred.display_label || cred.endpoint_url }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Model</mat-label>
+        <input matInput [ngModel]="llmModel()" (ngModelChange)="llmModel.set($event)" [attr.aria-required]="true" aria-describedby="la-node-model-error" />
+        @if (llmModel().trim().length === 0) {
+          <mat-error id="la-node-model-error">Model is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <label class="la-node-inspector__checkbox">
+        <input type="checkbox" [ngModel]="llmFallbackEnabled()" (ngModelChange)="llmFallbackEnabled.set($event)" />
+        Fallback provider
+      </label>
+      @if (llmFallbackEnabled()) {
+        <mat-form-field appearance="outline" class="la-dialog-field">
+          <mat-label>Fallback provider</mat-label>
+          <mat-select [ngModel]="llmFallbackProvider()" (ngModelChange)="llmFallbackProvider.set($event)">
+            @for (def of llmDefinitions(); track def.key) {
+              <mat-option [value]="def.key" [disabled]="optionDisabled(def.key)">{{ def.display_name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="la-dialog-field">
+          <mat-label>Fallback model</mat-label>
+          <input matInput [ngModel]="llmFallbackModel()" (ngModelChange)="llmFallbackModel.set($event)" />
+        </mat-form-field>
+      }
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Retry max attempts</mat-label>
+        <input matInput type="number" min="1" max="5" [ngModel]="llmRetryMaxAttempts()" (ngModelChange)="llmRetryMaxAttempts.set($event)" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Retry backoff (ms, comma-separated)</mat-label>
+        <input matInput [ngModel]="llmRetryBackoffMs()" (ngModelChange)="llmRetryBackoffMs.set($event)" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Next node</mat-label>
+        <mat-select [ngModel]="llmNextNodeId()" (ngModelChange)="llmNextNodeId.set($event)">
+          <mat-option value="">None — speak this node's output, then end (implicit)</mat-option>
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @case ('tool') {
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Tool</mat-label>
+        <mat-select [ngModel]="toolApiRef()" (ngModelChange)="toolApiRef.set($event)" aria-describedby="la-node-tool-error">
+          @for (tool of data.tools; track tool.id) {
+            <mat-option [value]="tool.api_ref">{{ tool.name }}</mat-option>
+          }
+        </mat-select>
+        @if (toolApiRef().trim().length === 0) {
+          <mat-error id="la-node-tool-error">Select a tool.</mat-error>
+        }
+      </mat-form-field>
+      <p class="la-dialog-helper">Not in the list yet? Create it in the Tools tab first, then come back here.</p>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Argument mapping (JSON — literal, or "$utterance" / "$state.&lt;key&gt;")</mat-label>
+        <textarea matInput rows="3" [ngModel]="toolArgumentMappingJson()" (ngModelChange)="onToolArgumentMappingChange($event)"></textarea>
+        @if (toolArgumentMappingError()) {
+          <mat-error>{{ toolArgumentMappingError() }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Timeout (ms, optional)</mat-label>
+        <input matInput type="number" min="100" max="60000" [ngModel]="toolTimeoutMs()" (ngModelChange)="toolTimeoutMs.set($event)" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Next node</mat-label>
+        <mat-select [ngModel]="toolNextNodeId()" (ngModelChange)="toolNextNodeId.set($event)">
+          <mat-option value="">None — speak this node's output, then end (implicit)</mat-option>
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @case ('retrieve') {
+      <p class="la-dialog-helper">
+        <mat-icon aria-hidden="true" inline="true">info</mat-icon>
+        Runs the six-stage retrieval pipeline configured in the Knowledge tab's Pipeline sub-tab against the sources below.
+      </p>
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Source refs (comma-separated)</mat-label>
+        <input matInput [ngModel]="retrieveSourceRefs()" (ngModelChange)="retrieveSourceRefs.set($event)" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Top K</mat-label>
+        <input matInput type="number" min="1" max="20" [ngModel]="retrieveTopK()" (ngModelChange)="retrieveTopK.set($event)" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Budget (ms)</mat-label>
+        <input matInput type="number" min="1" max="60000" [ngModel]="retrieveBudgetMs()" (ngModelChange)="retrieveBudgetMs.set($event)" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Next node</mat-label>
+        <mat-select [ngModel]="retrieveNextNodeId()" (ngModelChange)="retrieveNextNodeId.set($event)">
+          <mat-option value="">None — speak this node's output, then end (implicit)</mat-option>
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @case ('router') {
+      <div class="la-node-inspector__branches-header">
+        <span>Branches</span>
+        <button mat-button type="button" (click)="addBranch()">+ Branch</button>
+      </div>
+      @for (branch of branches(); track $index) {
+        <div class="la-node-inspector__branch-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Condition</mat-label>
+            <input
+              matInput
+              [ngModel]="branch.condition"
+              [name]="'branchCondition' + $index"
+              (ngModelChange)="updateBranchCondition($index, $event)"
+              placeholder="utterance == 'refund'"
+            />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Target node</mat-label>
+            <mat-select [ngModel]="branch.next_node_id" [name]="'branchTarget' + $index" (ngModelChange)="updateBranchTarget($index, $event)">
+              @for (n of otherNodes; track n.id) {
+                <mat-option [value]="n.id">{{ n.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <button mat-icon-button type="button" [attr.aria-label]="'Remove branch ' + ($index + 1)" (click)="removeBranch($index)">
+            <mat-icon aria-hidden="true">close</mat-icon>
+          </button>
+        </div>
+      }
+      @if (branches().length === 0) {
+        <p class="la-dialog-helper">No branches yet — add at least one.</p>
+      }
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Default (no branch matched)</mat-label>
+        <mat-select [ngModel]="routerDefaultNextNodeId()" (ngModelChange)="routerDefaultNextNodeId.set($event)">
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+          <mat-option [value]="data.node.id">{{ data.node.name }} (self)</mat-option>
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @case ('speak') {
+      <fieldset class="la-node-inspector__lane">
+        <legend>Text source</legend>
+        <mat-radio-group [ngModel]="speakMode()" (ngModelChange)="speakMode.set($event)" aria-label="Text source">
+          <mat-radio-button value="llm_output">Speak the previous node's output</mat-radio-button>
+          <mat-radio-button value="literal">Speak fixed text</mat-radio-button>
+        </mat-radio-group>
+      </fieldset>
+      @if (speakMode() === 'literal') {
+        <mat-form-field appearance="outline" class="la-dialog-field">
+          <mat-label>Text</mat-label>
+          <textarea matInput rows="3" maxlength="2000" [ngModel]="speakText()" (ngModelChange)="speakText.set($event)" aria-describedby="la-node-speak-text-error"></textarea>
+          @if (speakText().trim().length === 0) {
+            <mat-error id="la-node-speak-text-error">Text is required in literal mode.</mat-error>
+          }
+        </mat-form-field>
+      }
+      <label class="la-node-inspector__checkbox">
+        <input type="checkbox" [ngModel]="speakInterruptible()" (ngModelChange)="speakInterruptible.set($event)" />
+        Interruptible
+      </label>
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Next node</mat-label>
+        <mat-select [ngModel]="speakNextNodeId()" (ngModelChange)="speakNextNodeId.set($event)">
+          <mat-option value="">None — end the turn</mat-option>
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @case ('end') {
+      <p class="la-dialog-helper">Terminates the turn. No further fields.</p>
+    }
+
+    @case ('parallel') {
+      <div class="la-node-inspector__branches-header">
+        <span>Branches</span>
+        <button mat-button type="button" (click)="addParallelBranch()">+ Branch</button>
+      </div>
+      @if (parallelBranches().length === 0) {
+        <p class="la-dialog-helper">No branches yet — add at least one.</p>
+      } @else {
+        <div class="la-node-inspector__branch-table-wrap">
+          <table class="la-node-inspector__branch-table">
+            <thead>
+              <tr>
+                <th scope="col">Branch</th>
+                <th scope="col">Entry node</th>
+                <th scope="col">Budget (ms, optional)</th>
+                <th scope="col">Est. cost</th>
+                <th scope="col"><span class="la-visually-hidden">Remove</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (branch of parallelBranches(); track branch.id) {
+                <tr>
+                  <td>{{ branch.id }}</td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-select
+                        [ngModel]="branch.entry_node_id"
+                        [name]="'branchEntry' + $index"
+                        (ngModelChange)="updateParallelBranchEntry($index, $event)"
+                        aria-label="Entry node"
+                      >
+                        @for (n of otherNodes; track n.id) {
+                          <mat-option [value]="n.id">{{ n.name }}</mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <input
+                        matInput
+                        type="number"
+                        min="1"
+                        max="60000"
+                        [ngModel]="branch.budget_ms"
+                        [name]="'branchBudget' + $index"
+                        (ngModelChange)="updateParallelBranchBudget($index, $event)"
+                        aria-label="Budget in milliseconds"
+                      />
+                    </mat-form-field>
+                  </td>
+                  <td>{{ estimateBranchCostLabel(branch.entry_node_id) }}</td>
+                  <td>
+                    <button mat-icon-button type="button" [attr.aria-label]="'Remove branch ' + branch.id" (click)="removeParallelBranch($index)">
+                      <mat-icon aria-hidden="true">close</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+      <p class="la-dialog-helper">
+        Est. cost is a rough, client-side-only guess based on the branch's entry node type — not the real backend-computed critical-path number.
+      </p>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Join policy</mat-label>
+        <mat-select [ngModel]="joinPolicy()" (ngModelChange)="joinPolicy.set($event)">
+          <mat-option value="all">All branches must return</mat-option>
+          <mat-option value="first_success">First success (cancel the rest)</mat-option>
+          <mat-option value="quorum">Quorum (n branches returned)</mat-option>
+          <mat-option value="all_settled">All, proceed with partial results</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      @if (joinPolicy() === 'quorum') {
+        <mat-form-field appearance="outline" class="la-dialog-field">
+          <mat-label>Quorum (n branches)</mat-label>
+          <input
+            matInput
+            type="number"
+            min="1"
+            [max]="parallelBranches().length"
+            [ngModel]="quorumN()"
+            (ngModelChange)="quorumN.set($event)"
+            aria-describedby="la-node-quorum-error"
+          />
+          @if (!isQuorumValid()) {
+            <mat-error id="la-node-quorum-error">Enter a number between 1 and {{ parallelBranches().length }}.</mat-error>
+          }
+        </mat-form-field>
+      }
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>On branch error</mat-label>
+        <mat-select [ngModel]="onBranchError()" (ngModelChange)="onBranchError.set($event)">
+          <mat-option value="continue_partial">Continue with partial results</mat-option>
+          <mat-option value="fail">Fail the node</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <p class="la-dialog-helper">
+        "On branch error" is about one <em>branch</em> failing. This node's own "On deadline" edge below is a separate thing — it only fires if the whole Parallel node's own turn-budget slice runs out.
+      </p>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Next node</mat-label>
+        <mat-select [ngModel]="parallelNextNodeId()" (ngModelChange)="parallelNextNodeId.set($event)">
+          <mat-option value="">None — end the turn</mat-option>
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @case ('loop') {
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Body starts at</mat-label>
+        <mat-select [ngModel]="loopBodyEntryNodeId()" (ngModelChange)="loopBodyEntryNodeId.set($event)">
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+          <mat-option [value]="data.node.id">{{ data.node.name }} (self — not a valid target yet)</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Stop condition (loop repeats until this holds)</mat-label>
+        <input
+          matInput
+          [ngModel]="loopCondition()"
+          (ngModelChange)="loopCondition.set($event)"
+          placeholder="utterance == 'done'"
+          aria-describedby="la-node-loop-condition-error"
+        />
+        @if (loopCondition().trim().length === 0) {
+          <mat-error id="la-node-loop-condition-error">A stop condition is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Max iterations</mat-label>
+        <input
+          matInput
+          type="number"
+          min="1"
+          [ngModel]="loopMaxIterations()"
+          (ngModelChange)="loopMaxIterations.set($event)"
+          aria-describedby="la-node-loop-iterations-error"
+        />
+        @if (loopMaxIterations() <= 0) {
+          <mat-error id="la-node-loop-iterations-error">Must be at least 1.</mat-error>
+        }
+      </mat-form-field>
+      <p class="la-dialog-helper">The loop stops after this many passes even if the stop condition never holds.</p>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Max duration (ms)</mat-label>
+        <input
+          matInput
+          type="number"
+          min="1"
+          [ngModel]="loopMaxDurationMs()"
+          (ngModelChange)="loopMaxDurationMs.set($event)"
+          aria-describedby="la-node-loop-duration-error"
+        />
+        @if (loopMaxDurationMs() <= 0) {
+          <mat-error id="la-node-loop-duration-error">Must be greater than 0.</mat-error>
+        }
+      </mat-form-field>
+      <p class="la-dialog-helper">The loop stops once it has run this long, however many iterations that took.</p>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Max cost</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          [ngModel]="loopMaxCost()"
+          (ngModelChange)="loopMaxCost.set($event)"
+          aria-describedby="la-node-loop-cost-error"
+        />
+        @if (loopMaxCost() < 0) {
+          <mat-error id="la-node-loop-cost-error">Must be 0 or greater.</mat-error>
+        }
+      </mat-form-field>
+      <p class="la-dialog-helper">Abstract cost units — 1 unit = 1 node executed per loop-body pass.</p>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Next node</mat-label>
+        <mat-select [ngModel]="loopNextNodeId()" (ngModelChange)="loopNextNodeId.set($event)">
+          <mat-option value="">None — end the turn</mat-option>
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @case ('skill') {
+      <p class="la-dialog-helper">
+        <mat-icon aria-hidden="true" inline="true">info</mat-icon>
+        Injects the skill's full instructions/tools/knowledge filters only when this node runs — never into the base prompt (progressive disclosure).
+      </p>
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Skill</mat-label>
+        <mat-select [ngModel]="skillId()" (ngModelChange)="skillId.set($event)" aria-describedby="la-node-skill-error">
+          @for (s of data.skills; track s.id) {
+            <mat-option [value]="s.id">{{ s.name }}{{ s.published_version ? '' : ' (unpublished draft)' }}</mat-option>
+          }
+        </mat-select>
+        @if (skillId().trim().length === 0) {
+          <mat-error id="la-node-skill-error">Select a skill.</mat-error>
+        }
+      </mat-form-field>
+      <p class="la-dialog-helper">Not in the list yet? Create it in the Skills tab first, then come back here.</p>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Version</mat-label>
+        <mat-select [ngModel]="skillVersion()" (ngModelChange)="skillVersion.set($event)">
+          <mat-option value="latest">Latest published (auto-updates on publish)</mat-option>
+          @if (publishedVersionNumberFor(skillId()); as v) {
+            <mat-option [value]="'' + v">Pin to v{{ v }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Budget (ms)</mat-label>
+        <input matInput type="number" min="1" max="60000" [ngModel]="skillBudgetMs()" (ngModelChange)="skillBudgetMs.set($event)" />
+      </mat-form-field>
+      <p class="la-dialog-helper">Counted on the critical path of any branch reaching this node (R-S5).</p>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Next node</mat-label>
+        <mat-select [ngModel]="skillNextNodeId()" (ngModelChange)="skillNextNodeId.set($event)">
+          <mat-option value="">None — speak this node's output, then end (implicit)</mat-option>
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @case ('hitl') {
+      <p class="la-dialog-helper">
+        <mat-icon aria-hidden="true" inline="true">info</mat-icon>
+        Pauses the graph at a HITL gate (R-H4 — a blocking gate is unbounded on the turn budget, never estimated). Configure the gate itself in the HITL tab.
+      </p>
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Gate</mat-label>
+        <mat-select [ngModel]="hitlGateId()" (ngModelChange)="hitlGateId.set($event)" aria-describedby="la-node-hitl-error">
+          @for (g of data.gates; track g.id) {
+            <mat-option [value]="g.id">{{ g.attachment_ref }} · {{ g.gate_type }}</mat-option>
+          }
+        </mat-select>
+        @if (hitlGateId().trim().length === 0) {
+          <mat-error id="la-node-hitl-error">Select a gate.</mat-error>
+        }
+      </mat-form-field>
+      <p class="la-dialog-helper">Not in the list yet? Create it in the HITL tab first, then come back here.</p>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Next node</mat-label>
+        <mat-select [ngModel]="hitlNextNodeId()" (ngModelChange)="hitlNextNodeId.set($event)">
+          <mat-option value="">None — speak this node's output, then end (implicit)</mat-option>
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @case ('subagent') {
+      <p class="la-dialog-helper">
+        <mat-icon aria-hidden="true" inline="true">info</mat-icon>
+        Delegates to another tenant's published agent for one bounded LLM turn — not a nested graph. Nesting/self-reference/unknown-target problems are reported below after Apply.
+      </p>
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Target tenant</mat-label>
+        <mat-select [ngModel]="subagentTargetTenantId()" (ngModelChange)="subagentTargetTenantId.set($event)" aria-describedby="la-node-subagent-tenant-error">
+          @for (t of data.tenants; track t.id) {
+            <mat-option [value]="t.id">{{ t.name }}</mat-option>
+          }
+        </mat-select>
+        @if (subagentTargetTenantId().trim().length === 0) {
+          <mat-error id="la-node-subagent-tenant-error">Select a target tenant.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Handback policy</mat-label>
+        <mat-select [ngModel]="subagentHandbackPolicy()" (ngModelChange)="subagentHandbackPolicy.set($event)">
+          <mat-option value="speak_and_return">Speak and return</mat-option>
+          <mat-option value="silent_return">Silent return</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <p class="la-dialog-helper">
+        "Speak and return" speaks the delegated result to the caller directly. "Silent return" hands it back into this graph's state instead, for a later node to use, without speaking it.
+      </p>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Budget (ms)</mat-label>
+        <input matInput type="number" min="1" max="60000" [ngModel]="subagentBudgetMs()" (ngModelChange)="subagentBudgetMs.set($event)" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Next node</mat-label>
+        <mat-select [ngModel]="subagentNextNodeId()" (ngModelChange)="subagentNextNodeId.set($event)">
+          <mat-option value="">None — speak this node's output, then end (implicit)</mat-option>
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    @case ('handoff') {
+      <p class="la-dialog-helper">
+        <mat-icon aria-hidden="true" inline="true">info</mat-icon>
+        Records a "transfer to a human" intent and fires an alert — real telephony transfer is not yet implemented. Terminal — no further node runs after this one.
+      </p>
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Destination</mat-label>
+        <input matInput [ngModel]="handoffDestination()" (ngModelChange)="handoffDestination.set($event)" maxlength="200" aria-describedby="la-node-handoff-destination-error" />
+        @if (handoffDestination().trim().length === 0) {
+          <mat-error id="la-node-handoff-destination-error">Destination is required.</mat-error>
+        }
+      </mat-form-field>
+      <p class="la-dialog-helper">E.g. a queue name, department, or transfer number — real transfer routing is not yet implemented.</p>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Context summary (optional)</mat-label>
+        <textarea matInput rows="3" maxlength="2000" [ngModel]="handoffContextSummary()" (ngModelChange)="handoffContextSummary.set($event)"></textarea>
+      </mat-form-field>
+    }
+
+    @case ('state') {
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Mode</mat-label>
+        <mat-select [ngModel]="stateMode()" (ngModelChange)="stateMode.set($event)">
+          <mat-option value="read">Read</mat-option>
+          <mat-option value="write">Write</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Variable</mat-label>
+        <input matInput [ngModel]="stateVariable()" (ngModelChange)="stateVariable.set($event)" maxlength="80" aria-describedby="la-node-state-variable-error" />
+        @if (stateVariable().trim().length === 0) {
+          <mat-error id="la-node-state-variable-error">Variable is required.</mat-error>
+        }
+      </mat-form-field>
+      <p class="la-dialog-helper">Session-scoped, in-memory only — alphanumeric and underscore characters only.</p>
+
+      @if (stateMode() === 'write') {
+        <mat-form-field appearance="outline" class="la-dialog-field">
+          <mat-label>Value</mat-label>
+          <input matInput [ngModel]="stateValue()" (ngModelChange)="stateValue.set($event)" maxlength="2000" aria-describedby="la-node-state-value-error" />
+          @if (stateValue().trim().length === 0) {
+            <mat-error id="la-node-state-value-error">Value is required in write mode.</mat-error>
+          }
+        </mat-form-field>
+        <p class="la-dialog-helper">Literal text, or a reference like "$&lt;node_id&gt;" to capture another node's output — the same syntax Tool's argument mapping uses.</p>
+      }
+
+      <mat-form-field appearance="outline" class="la-dialog-field">
+        <mat-label>Next node</mat-label>
+        <mat-select [ngModel]="stateNextNodeId()" (ngModelChange)="stateNextNodeId.set($event)">
+          <mat-option value="">None — speak this node's output, then end (implicit)</mat-option>
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+  }
+
+  <h3>Edges</h3>
+  <div class="la-node-inspector__edge">
+    <mat-form-field appearance="outline">
+      <mat-label>On error</mat-label>
+      <mat-select [ngModel]="onErrorAction()" (ngModelChange)="onErrorAction.set($event)">
+        @for (action of edgeActions; track action) {
+          <mat-option [value]="action">{{ action }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    @if (onErrorAction() === 'goto') {
+      <mat-form-field appearance="outline">
+        <mat-label>Target node</mat-label>
+        <mat-select [ngModel]="onErrorTarget()" (ngModelChange)="onErrorTarget.set($event)" aria-describedby="la-node-on-error-target-error">
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+        @if (!onErrorTarget()) {
+          <mat-error id="la-node-on-error-target-error">Choose a target node.</mat-error>
+        }
+      </mat-form-field>
+    }
+  </div>
+  <div class="la-node-inspector__edge">
+    <mat-form-field appearance="outline">
+      <mat-label>On deadline</mat-label>
+      <mat-select [ngModel]="onDeadlineAction()" (ngModelChange)="onDeadlineAction.set($event)">
+        @for (action of edgeActions; track action) {
+          <mat-option [value]="action">{{ action }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    @if (onDeadlineAction() === 'goto') {
+      <mat-form-field appearance="outline">
+        <mat-label>Target node</mat-label>
+        <mat-select [ngModel]="onDeadlineTarget()" (ngModelChange)="onDeadlineTarget.set($event)" aria-describedby="la-node-on-deadline-target-error">
+          @for (n of otherNodes; track n.id) {
+            <mat-option [value]="n.id">{{ n.name }}</mat-option>
+          }
+        </mat-select>
+        @if (!onDeadlineTarget()) {
+          <mat-error id="la-node-on-deadline-target-error">Choose a target node.</mat-error>
+        }
+      </mat-form-field>
+    }
+  </div>
+  <p class="la-dialog-helper">
+    Deadline enforcement doesn't run yet (Phase 10) — this edge is carried through unread until then.
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" type="button" [disabled]="!canSave()" (click)="onSave()">Apply</button>
+</mat-dialog-actions>

@@ -1,0 +1,70 @@
+name: nextbot-dev
+
+# Local development infrastructure. Deployment packaging/orchestration for
+# staging/production is nexus-deploy scope (docs/plans/nextbot-plan.md, Phase 0 note).
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nextbot
+      POSTGRES_PASSWORD: nextbot_dev_password
+      POSTGRES_DB: nextbot
+    ports:
+      - "5432:5432"
+    volumes:
+      - nextbot-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nextbot -d nextbot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Target Architecture Blueprint Phase 7a (ADR-0018) — the graph store's
+  # tenant-isolation primitive. **Neo4j 5 ENTERPRISE Edition, not Community**: this
+  # is a deliberate, ADR-recorded choice, not an oversight — Community supports
+  # exactly one database and no role-based access control/user impersonation, which
+  # are the two capabilities ADR-0018's whole isolation model (one database per
+  # tenant, reached only by an impersonated per-tenant role) is built on. Community
+  # would leave only the client-side `WHERE tenantId = ...` predicate approach
+  # ADR-0001 §3 already rejected for Postgres, wearing a different query language.
+  #
+  # `NEO4J_ACCEPT_LICENSE_AGREEMENT=yes` is Neo4j's own standard, documented
+  # mechanism for running the Enterprise container image under its evaluation/
+  # development licence terms for local dev/CI (ADR-0018 §2.1: "Development and CI
+  # use the Neo4j Enterprise container image under its evaluation/development
+  # licence terms"). This is NOT a production license — a real deployment needs a
+  # purchased Enterprise licence per ADR-0018 §4's disclosed commercial-license
+  # cost, which is nexus-deploy/procurement scope, not this file's.
+  neo4j:
+    image: neo4j:5-enterprise
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: neo4j/nextbot_neo4j_dev_password
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+    ports:
+      - "7687:7687" # Bolt — what `@nextbot/graph-store`'s driver actually connects to.
+      - "7474:7474" # Neo4j Browser — local-dev convenience only, not used by the app.
+    volumes:
+      - nextbot-neo4j-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p nextbot_neo4j_dev_password 'RETURN 1' || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 60s
+
+volumes:
+  nextbot-postgres-data:
+  nextbot-neo4j-data:

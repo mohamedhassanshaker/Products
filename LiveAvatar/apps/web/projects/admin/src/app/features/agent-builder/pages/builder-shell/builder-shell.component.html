@@ -1,0 +1,97 @@
+<la-page-header [title]="(store.tenantName() || 'Deployment') + ' · Agent Builder'">
+  <a mat-button [routerLink]="['/tenants', tenantId, 'provider-credentials']">Manage provider credentials</a>
+  <a mat-button routerLink="/deployments">Back to deployments</a>
+</la-page-header>
+
+@if (store.status() === 'loading') {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading Agent Builder" />
+}
+
+@if (store.status() === 'ready') {
+  @if (store.conflict()) {
+    <div class="la-builder-banner" role="alert">
+      <span>Config was modified by another user. Reload and retry.</span>
+      <button mat-flat-button color="primary" type="button" (click)="reload()">Reload</button>
+    </div>
+  }
+
+  <div class="la-builder-status-row">
+    @if (store.configStatus() === 'published' && !store.hasUnpublishedChanges()) {
+      <span class="la-builder-chip la-builder-chip--published"><mat-icon aria-hidden="true">check_circle</mat-icon> Published</span>
+    }
+    @if (store.hasUnpublishedChanges()) {
+      <span class="la-builder-chip la-builder-chip--changed"><mat-icon aria-hidden="true">edit_note</mat-icon> Unpublished changes</span>
+    }
+    @if (store.validating()) {
+      <span class="la-builder-chip" aria-live="polite">Validating…</span>
+    }
+  </div>
+
+  @if (store.saveAlert()) {
+    <div class="la-builder-banner" role="alert">{{ store.saveAlert() }}</div>
+  }
+}
+
+<mat-tab-group [selectedIndex]="activeTabIndex()" (selectedIndexChange)="onTabIndexChange($event)" animationDuration="0ms">
+  @for (tab of tabs; track tab.path) {
+    <mat-tab [label]="tab.label" />
+  }
+</mat-tab-group>
+
+<div class="la-builder-layout">
+  <div class="la-builder-outlet">
+    <router-outlet />
+  </div>
+
+  <aside class="la-builder-rail">
+    <div class="la-builder-rail__section">
+      <h3>Turn budget</h3>
+      <la-budget-bar [usedMs]="criticalPathMs()" [totalMs]="turnBudgetMs()" label="critical path" />
+    </div>
+
+    <div class="la-builder-rail__section">
+      <h3>Base prompt (estimate)</h3>
+      <p>{{ basePromptTokenEstimate() }} tok — core {{ coreTokenEstimate() }} · tools {{ toolsTokenEstimate() }} · skills {{ skillsTokenEstimate() }}</p>
+    </div>
+
+    <div class="la-builder-rail__section">
+      <h3>Validation</h3>
+      @if (validationErrorCount() === 0) {
+        <p><mat-icon aria-hidden="true" inline="true">check_circle</mat-icon> 0 errors @if (validationWarningCount() > 0) { · {{ validationWarningCount() }} warning{{ validationWarningCount() === 1 ? '' : 's' }} }</p>
+      } @else {
+        <p><mat-icon aria-hidden="true" inline="true">error</mat-icon> {{ validationErrorCount() }} error{{ validationErrorCount() === 1 ? '' : 's' }}</p>
+      }
+    </div>
+
+    <div class="la-builder-rail__section">
+      <a mat-stroked-button [routerLink]="['/tenants', tenantId, 'builder', 'reasoning']">⚡ Test call</a>
+    </div>
+
+    <div class="la-builder-rail__section">
+      <h3>Live YAML</h3>
+      <la-yaml-viewer [yaml]="store.validateResult()?.redacted_yaml ?? ''" />
+    </div>
+
+    <div class="la-builder-actions">
+      <button mat-button type="button" [disabled]="!store.dirty() || store.saving() !== null" (click)="saveDraft()">
+        @if (store.saving() === 'draft') { <mat-spinner diameter="20" /> } @else { Save Draft }
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        [disabled]="(store.configStatus() === 'published' && !store.hasUnpublishedChanges()) || !store.canPublish() || store.saving() !== null"
+        [matTooltip]="!store.canPublish() ? 'Fix validation errors to publish' : ''"
+        (click)="publish()"
+      >
+        @if (store.saving() === 'published') {
+          <mat-spinner diameter="20" />
+        } @else if (store.configStatus() === 'published' && !store.hasUnpublishedChanges()) {
+          <ng-container><mat-icon aria-hidden="true">check_circle</mat-icon> Published</ng-container>
+        } @else {
+          Publish
+        }
+      </button>
+    </div>
+  </aside>
+</div>

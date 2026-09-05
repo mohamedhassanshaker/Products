@@ -1,0 +1,93 @@
+<la-page-header title="Dashboard">
+  @if (isPhone()) {
+    <!-- QA fix (phase7-admin-spa D-3): UX_GUIDELINES §13.6 — phone range control is a mat-select, not three segmented buttons. -->
+    <mat-form-field appearance="outline" class="la-dashboard__range-select">
+      <mat-label>Time range</mat-label>
+      <mat-select [value]="range()" (selectionChange)="onRangeChange($any($event.value))">
+        <mat-option value="1h">1h</mat-option>
+        <mat-option value="24h">24h</mat-option>
+        <mat-option value="7d">7d</mat-option>
+      </mat-select>
+    </mat-form-field>
+  } @else {
+    <mat-button-toggle-group aria-label="Time range" [value]="range()" (change)="onRangeChange($any($event.value))">
+      <mat-button-toggle value="1h">1h</mat-button-toggle>
+      <mat-button-toggle value="24h">24h</mat-button-toggle>
+      <mat-button-toggle value="7d">7d</mat-button-toggle>
+    </mat-button-toggle-group>
+  }
+  <la-tenant-select label="Tenant" (tenantChange)="onTenantChange($event)" />
+</la-page-header>
+
+@if (summaryLoading() || healthLoading()) {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading" />
+}
+
+@if (summaryError() && !summaryLoading()) {
+  <la-empty-state
+    variant="error"
+    icon="error"
+    title="Could not load the dashboard"
+    body="Could not load the dashboard. Try again."
+    actionLabel="Retry"
+    (action)="retrySummary()"
+  />
+} @else if (!summaryLoading() && summary() && summary()!.active_deployments === 0) {
+  <la-empty-state
+    icon="inbox"
+    title="No deployments yet"
+    body="No deployments yet. Create a tenant to see traffic."
+    actionLabel="Go to Deployments"
+    (action)="goToDeployments()"
+  />
+} @else if (summary()) {
+  <div class="la-dashboard__widgets">
+    <div class="la-dashboard__widget">
+      <span class="la-dashboard__widget-label">Active deployments</span>
+      <span class="la-dashboard__widget-value">{{ summary()!.active_deployments }}</span>
+    </div>
+    <div class="la-dashboard__widget">
+      <span class="la-dashboard__widget-label">Session volume</span>
+      <span class="la-dashboard__widget-value"
+        >{{ summary()!.sessions.started }} started · {{ summary()!.sessions.ended }} ended ·
+        {{ summary()!.sessions.failed }} failed · {{ summary()!.sessions.abandoned }} abandoned</span
+      >
+    </div>
+    <div class="la-dashboard__widget">
+      <span class="la-dashboard__widget-label">Error rate</span>
+      <span class="la-dashboard__widget-value" [attr.aria-label]="summary()!.sessions.started === 0 ? 'No sessions started in this range' : null">{{
+        errorRateDisplay()
+      }}</span>
+    </div>
+  </div>
+}
+
+<section class="la-dashboard__health">
+  <h2>Provider health</h2>
+  @if (healthError() && !healthLoading()) {
+    <la-empty-state
+      variant="error"
+      icon="error"
+      title="Could not load provider health"
+      body="Could not load provider health. Try again."
+      actionLabel="Retry"
+      (action)="retryProviderHealth()"
+    />
+  } @else if (providerHealth()) {
+    <div class="la-dashboard__health-grid">
+      @for (category of providerHealth()!.categories; track category.category) {
+        <button
+          type="button"
+          class="la-dashboard__health-card"
+          [attr.aria-label]="categoryLabel(category.category) + ', ' + stateLabel(category.state) + '. View in Provider Registry.'"
+          [matTooltip]="category.state === 'gray' ? 'No recent health check.' : null"
+          (click)="goToProviderCategory(category.category)"
+        >
+          <mat-icon aria-hidden="true">{{ stateIcon(category.state) }}</mat-icon>
+          <span class="la-dashboard__health-category">{{ categoryLabel(category.category) }}</span>
+          <span class="la-dashboard__health-label">{{ stateLabel(category.state) }}</span>
+        </button>
+      }
+    </div>
+  }
+</section>

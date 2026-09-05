@@ -1,0 +1,115 @@
+# Self-hosted LiveKit SFU (HLD §8.2: "livekit StatefulSet or operator-
+# managed"). Shipped here as a plain Deployment for a single-node/small
+# deployment to keep this repo's own compose/k8s topologies consistent — at
+# real production scale (multiple SFU nodes, TURN, proper UDP mediation) use
+# the upstream `livekit/livekit-server` Helm chart instead
+# (https://github.com/livekit/livekit-helm), which this repo deliberately
+# does not vendor a copy of (ADR-001 §4: "no ... a third-party binary. It is
+# not something the application image can absorb").
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: livekit-config
+  namespace: liveavatar
+data:
+  # TEMPLATE, not a ready-to-mount config — `__LIVEKIT_API_KEY__` below is
+  # deliberately unsubstituted (see deploy/livekit/livekit.yaml's header).
+  # The Deployment below runs a real `initContainer` that substitutes it
+  # from the real Secret value before `livekit-server` ever starts (D-1) —
+  # applying this ConfigMap directly with no substitution step was the
+  # original defect: LiveKit refused to boot ("api_key is required to use
+  # webhooks"), which cascaded into `agent` never starting.
+  livekit.yaml.template: |
+    port: 7880
+    rtc:
+      tcp_port: 7881
+      # Kept below 49152 (D-5) so this stays consistent with
+      # docker-compose.yml/deploy/livekit/livekit.yaml — see their comments.
+      port_range_start: 20000
+      port_range_end: 20100
+      use_external_ip: true
+    room:
+      empty_timeout: 900
+      auto_create: false
+    webhook:
+      api_key: __LIVEKIT_API_KEY__ # substituted by the initContainer below, not at apply time
+      urls:
+        - http://web-internal:8081/internal/livekit/webhooks
+    logging:
+      level: info
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: livekit
+  namespace: liveavatar
+  labels: { app: livekit }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: livekit }
+  template:
+    metadata:
+      labels: { app: livekit }
+    spec:
+      # Renders the ConfigMap's template into a shared `emptyDir` before the
+      # main container starts, substituting the real API key id read from
+      # the Secret at Pod-start time (D-1 fix) — the alternative of
+      # requiring a separate `envsubst < ... | kubectl apply -f -` step
+      # documented only in DEPLOYMENT.md is easy to forget and was exactly
+      # how this went unnoticed; doing it as an initContainer makes a plain
+      # `kubectl apply -f k8s/livekit.yaml` correct on its own.
+      initContainers:
+        - name: render-config
+          image: livekit/livekit-server:v1.8.0 # reuses the same alpine-based image; has sh+sed, no extra image to maintain
+          command: ['sh', '-c']
+          args:
+            - |
+              set -e
+              sed "s/__LIVEKIT_API_KEY__/$LIVEKIT_API_KEY/" /etc/livekit-template/livekit.yaml.template > /etc/livekit/livekit.yaml
+          env:
+            - name: LIVEKIT_API_KEY
+              valueFrom:
+                secretKeyRef: { name: liveavatar-web-secrets, key: LIVEKIT_API_KEY }
+          volumeMounts:
+            - { name: config-template, mountPath: /etc/livekit-template }
+            - { name: config-rendered, mountPath: /etc/livekit }
+      containers:
+        - name: livekit
+          image: livekit/livekit-server:v1.8.0
+          args: ['--config', '/etc/livekit/livekit.yaml']
+          env:
+            - name: LIVEKIT_KEYS
+              valueFrom:
+                secretKeyRef: { name: liveavatar-web-secrets, key: LIVEKIT_API_KEY_PAIR } # see note below
+          ports:
+            - { name: signal, containerPort: 7880 }
+            - { name: rtc-tcp, containerPort: 7881 }
+          volumeMounts:
+            - { name: config-rendered, mountPath: /etc/livekit }
+          resources:
+            requests: { cpu: '500m', memory: '512Mi' }
+            limits: { cpu: '2', memory: '1Gi' }
+      volumes:
+        - name: config-template
+          configMap: { name: livekit-config }
+        - name: config-rendered
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: livekit
+  namespace: liveavatar
+  labels: { app: livekit }
+spec:
+  # Real production LiveKit needs a LoadBalancer (or hostNetwork + NodePort
+  # for the UDP media range) reachable directly by browsers — this is
+  # environment-specific (cloud LB support for the UDP port range varies) and
+  # is why the HLD leaves "operator-managed" as an explicit alternative to a
+  # StatefulSet shipped from this repo.
+  type: LoadBalancer
+  selector: { app: livekit }
+  ports:
+    - { name: signal, port: 7880, targetPort: signal }
+    - { name: rtc-tcp, port: 7881, targetPort: rtc-tcp }

@@ -1,0 +1,63 @@
+<div class="la-test-call">
+  <mat-form-field appearance="outline" class="la-test-call__input">
+    <mat-label>Sample utterance</mat-label>
+    <input matInput [ngModel]="utterance()" (ngModelChange)="utterance.set($event)" placeholder="What's the status of my order?" />
+  </mat-form-field>
+  <button mat-flat-button color="primary" type="button" [disabled]="runDisabled()" (click)="run()">
+    @if (running()) {
+      <mat-spinner diameter="20" />
+    } @else {
+      Run test call
+    }
+  </button>
+
+  <p class="la-test-call__scope-note">
+    Structural simulation, not a live run — LLM nodes are simulated (no real model call); Tool nodes make a real call;
+    Router/Speak/End run for real; Retrieve is a stub.
+  </p>
+
+  @if (error()) {
+    <p class="la-test-call__error" role="alert">Could not run the test call. {{ error()?.message }}</p>
+  }
+
+  <p class="la-test-call__summary" aria-live="polite">{{ resultSummary() }}</p>
+
+  @if (result(); as r) {
+    @if (!r.ok) {
+      <p class="la-test-call__error" role="alert">Config is not runnable yet — fix the validation errors below.</p>
+      <ul class="la-test-call__errors">
+        @for (e of r.errors; track e.message) {
+          <li>{{ e.message }}</li>
+        }
+      </ul>
+    } @else {
+      <ol class="la-test-call__nodes" role="list">
+        @for (node of r.nodes; track node.node_id) {
+          <li role="listitem" class="la-test-call__node" [class.la-test-call__node--failed]="node.status === 'failed'">
+            <mat-icon aria-hidden="true">{{ nodeIcon(node.node_type) }}</mat-icon>
+            <span class="la-test-call__node-body">
+              <span class="la-test-call__node-title">
+                {{ node.node_id }} <span class="la-test-call__node-type">({{ node.node_type }} · {{ node.lane }})</span>
+                @if (node.simulated) {
+                  <span class="la-test-call__simulated-badge">(simulated)</span>
+                }
+              </span>
+              <span class="la-test-call__node-status">{{ node.status }}</span>
+              <span class="la-test-call__node-summary">{{ node.summary }}</span>
+              @if (node.detail) {
+                <span class="la-test-call__node-detail">{{ node.detail }}</span>
+              }
+            </span>
+          </li>
+        }
+      </ol>
+
+      @if (r.final_text) {
+        <div class="la-test-call__final">
+          <h4>Final text</h4>
+          <p>{{ r.final_text }}</p>
+        </div>
+      }
+    }
+  }
+</div>

@@ -1,0 +1,31 @@
+{
+  "name": "@nextbot/skills",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Target Architecture Blueprint Phase 5 (BL-35, ADR-0015, LLD §14.5) — Module C: Skills library. Versioned, immutable skill artifacts composed into agent versions (and, later, workflow nodes).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir ."
+  },
+  "dependencies": {
+    "@nextbot/connectors": "workspace:*",
+    "@nextbot/contracts": "workspace:*",
+    "@nextbot/db": "workspace:*",
+    "@nextbot/tool-registry": "workspace:*",
+    "@nextbot/yaml-diff": "workspace:*",
+    "@sinclair/typebox": "^0.33.15",
+    "drizzle-orm": "^0.36.1",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "@types/js-yaml": "^4.0.9",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

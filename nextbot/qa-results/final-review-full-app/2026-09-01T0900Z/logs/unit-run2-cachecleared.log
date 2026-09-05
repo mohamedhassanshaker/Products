@@ -1,0 +1,720 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mD:/work/products/nextbot[39m
+
+ [32m✓[39m [35m|unit|[39m packages/modules/model-gateway/src/http/route-admin-routes.test.ts [2m([22m[2m10 tests[22m[2m)[22m[90m 93[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/domain/promotion-policy.test.ts [2m([22m[2m20 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/http/run-routes.test.ts [2m([22m[2m12 tests[22m[2m)[22m[90m 93[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/ops-console-route.test.ts [2m([22m[2m11 tests[22m[2m)[22m[90m 77[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/mcp-registry/src/http/admin-routes.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 161[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/http/admin-routes.test.ts [2m([22m[2m25 tests[22m[2m)[22m[90m 222[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/worker/src/retention-purge.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 11[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/platform-ops-auth.test.ts [2m([22m[2m29 tests[22m[2m)[22m[90m 10[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/retention-service.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 341[2mms[22m[39m
+   [33m[2m✓[22m[39m purgeSourceContent (Target Architecture Blueprint Phase 11, BL-42, FR-KB-08/FR-ADM-06)[2m > [22mremoves chunks and reports zero graph impact when the source's chunks have no edges at all [33m331[2mms[22m[39m
+[90mstderr[2m | packages/modules/knowledge/src/application/retention-service.test.ts[2m > [22m[2msweepKnowledgeRetention (scheduled worker sweep)[2m > [22m[2mskips a source that is already purged, and isolates one tenant's failure from the rest of the sweep
+[22m[39mNextBot worker: knowledge-retention sweep failed for tenant "t1" Error: transient DB error
+    at [90mD:\work\products\nextbot\[39mpackages\modules\knowledge\src\application\retention-service.test.ts:198:38
+    at mockCall [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+spy@2.1.9/node_modules/[4m@vitest[24m/spy/dist/index.js:61:17[90m)[39m
+    at spy [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/tinyspy@3.0.2/node_modules/[4mtinyspy[24m/dist/index.js:45:80[90m)[39m
+    at Proxy.listCollections [90m(D:\work\products\nextbot\[39mpackages\modules\knowledge\src\application\retention-service.test.ts:8:30[90m)[39m
+    at sweepKnowledgeRetention [90m(D:\work\products\nextbot\[39mpackages\modules\knowledge\src\application\retention-service.ts:198:33[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+    at [90mD:\work\products\nextbot\[39mpackages\modules\knowledge\src\application\retention-service.test.ts:205:20
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:5
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:11[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+
+ [32m✓[39m [35m|unit|[39m packages/modules/tool-registry/src/domain/permission-resolver.test.ts [2m([22m[2m25 tests[22m[2m)[22m[90m 13[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/agent-platform/src/infrastructure/git-provider/gitlab-client.test.ts [2m([22m[2m15 tests[22m[2m)[22m[90m 106[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/yaml-diff/src/structural-diff.test.ts [2m([22m[2m15 tests[22m[2m)[22m[90m 24[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/agent-platform/src/domain/promotion-policy.test.ts [2m([22m[2m21 tests[22m[2m)[22m[90m 9[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/domain/expression.test.ts [2m([22m[2m44 tests[22m[2m)[22m[90m 9[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/middleware.test.ts [2m([22m[2m19 tests[22m[2m)[22m[90m 20[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/contracts/src/formats.test.ts [2m([22m[2m14 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/retrieval/graph-local-strategy.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 71[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/domain/idempotency.test.ts [2m([22m[2m17 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/model-gateway/src/http/admin-routes.test.ts [2m([22m[2m11 tests[22m[2m)[22m[90m 298[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/http/admin-routes.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 1180[2mms[22m[39m
+   [33m[2m✓[22m[39m workflows http/admin-routes (unit, mocked application layer)[2m > [22mhandleListWorkflows delegates to listWorkflowsForAdmin() [33m1172[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/model-gateway/src/domain/capability-validator.test.ts [2m([22m[2m18 tests[22m[2m)[22m[90m 9[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/domain/checkpoint.test.ts [2m([22m[2m30 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/model-gateway/src/domain/adapter-registry.test.ts [2m([22m[2m14 tests[22m[2m)[22m[90m 9[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/retrieval/playground-service.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 737[2mms[22m[39m
+   [33m[2m✓[22m[39m runRetrievalPlayground (unit, mocked infra + strategy runners)[2m > [22mrejects an empty/whitespace-only query before touching any repository [33m731[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/retrieval/retrieval-executor.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 1556[2mms[22m[39m
+   [33m[2m✓[22m[39m runBoundedRetrieval (unit, mocked infra/strategies/model-gateway)[2m > [22mTHE safety-critical case: refuseWhenUngrounded=true discards a REAL, already-produced model answer when citations fall short of minCitations — the customer never sees it [33m1546[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/login/actions.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 302[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/authz/src/domain/intersect.test.ts [2m([22m[2m43 tests[22m[2m)[22m[90m 17[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/source-service.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 512[2mms[22m[39m
+   [33m[2m✓[22m[39m createSource (locator validation, FR-KB-02/§14.4.5)[2m > [22maccepts a well-formed Upload locator [33m503[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/retrieval/hybrid-strategy.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 349[2mms[22m[39m
+   [33m[2m✓[22m[39m runHybridRetrieval (unit, mocked infra/graph-store)[2m > [22mreturns an empty result with a note when vector recall itself returns nothing to expand [33m342[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/mcp-egress.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 228[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tool-registry/src/http/admin-routes.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 132[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/agent-platform/src/domain/traffic-bucket.test.ts [2m([22m[2m9 tests[22m[2m)[22m[90m 100[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/conversations/src/http/widget-routes.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 194[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/conversations/src/infrastructure/message-bus.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 266[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/collection-service.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1123[2mms[22m[39m
+   [33m[2m✓[22m[39m collection-service residency checks (FR-KB-08)[2m > [22mallows creation when the collection's region matches the tenant's residency region and the embedding route's provider region set includes it [33m1119[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/skills/src/http/admin-routes.test.ts [2m([22m[2m9 tests[22m[2m)[22m[90m 98[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/teams/src/domain/team-promotion-policy.test.ts [2m([22m[2m14 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/channel-adapters/src/whatsapp/adapter.test.ts [2m([22m[2m18 tests[22m[2m)[22m[90m 73[2mms[22m[39m
+[90mstderr[2m | packages/modules/telemetry-export/src/application/otel-metrics-export-service.test.ts[2m > [22m[2motel-metrics-export-service (unit, mocked infra/SDK)[2m > [22m[2mfails safe (never throws) when the real export call rejects
+[22m[39mNextBot: OTel metrics export for tenant tenant-1 failed (non-fatal) Error: collector unreachable
+    at [90mD:\work\products\nextbot\[39mpackages\modules\telemetry-export\src\application\otel-metrics-export-service.test.ts:70:55
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:146:14
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:11
+    at runWithTimeout [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:39:7[90m)[39m
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:17[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runFiles [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1262:5[90m)[39m
+    at startTests [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1271:3[90m)[39m
+
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/application/manage-users.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 873[2mms[22m[39m
+   [33m[2m✓[22m[39m manage-users (unit, mocked repositories)[2m > [22mlistUsers[2m > [22mdelegates to the repository [33m867[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/telemetry-export/src/application/otel-metrics-export-service.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 182[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/application/manage-roles.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 925[2mms[22m[39m
+   [33m[2m✓[22m[39m manage-roles (unit, mocked repository)[2m > [22mlistRoles delegates to the repository [33m917[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/teams/src/domain/team-artifact.test.ts [2m([22m[2m17 tests[22m[2m)[22m[90m 21[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/contracts/src/errors-coverage.test.ts [2m([22m[2m13 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/pii/src/domain/masker.test.ts [2m([22m[2m17 tests[22m[2m)[22m[90m 9[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/domain/run-fsm.test.ts [2m([22m[2m79 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/domain/entity-resolution.test.ts [2m([22m[2m9 tests[22m[2m)[22m[90m 10[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/retrieval/graph-global-strategy.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 178[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/v1/admin/channels/[channelId]/route.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 2480[2mms[22m[39m
+   [33m[2m✓[22m[39m GET /api/v1/admin/channels/[channelId] (Phase 6: single-channel lookup for the 'test this channel' screen)[2m > [22mreturns the channel + tenantSlug + widgetBaseUrl for a real channel [33m2470[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/domain/run-budget.test.ts [2m([22m[2m12 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/v1/admin/agent-platform/definitions/[id]/deployments/route.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2585[2mms[22m[39m
+   [33m[2m✓[22m[39m GET|PUT /api/v1/admin/agent-platform/definitions/[id]/deployments[2m > [22mGET requires agent_platform Read and defaults to the Production environment [33m2574[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tenancy/src/application/reconcile-graph-provisioning.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 257[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/authz/src/domain/guardrail-tightening.test.ts [2m([22m[2m11 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/skills/src/application/skill-reference-resolver.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 250[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ai-registry/src/providers/anthropic.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1442[2mms[22m[39m
+   [33m[2m✓[22m[39m Anthropic provider client[2m > [22mmaps a 429 response to a retryable RateLimited ProviderCallError [33m1377[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/db/src/clickhouse.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 238[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/pipeline/source-sync.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 94[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/login/actions.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 10[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/teams/src/domain/thrash-detector.test.ts [2m([22m[2m15 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/graph-store/src/provisioning/tenant-database-provisioner.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 9[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tenancy/src/application/provision-tenant-graph.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 298[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/orchestration/src/infrastructure/agent-run-tracing.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1241[2mms[22m[39m
+   [33m[2m✓[22m[39m agent-run-tracing.ts — tenant OTel export wiring (unit, boundaries faked)[2m > [22mresolves the tenant's OTel export endpoint ONCE, at startTurnRun, and caches it on the handle [33m1236[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/http/sso-admin-routes.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1755[2mms[22m[39m
+   [33m[2m✓[22m[39m iam http/sso-admin-routes (unit, mocked application layer)[2m > [22mhandleGetSsoConnection masks the OIDC client secret, never returning the ciphertext [33m1747[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/http/admin-routes.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 4685[2mms[22m[39m
+   [33m[2m✓[22m[39m iam http/admin-routes (unit, mocked application layer)[2m > [22mhandleLogin forwards tenantSlug/email/password + meta to login() [33m4672[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/v1/admin/agent-platform/versions/[id]/sandbox-preview-token/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1185[2mms[22m[39m
+   [33m[2m✓[22m[39m POST /api/v1/admin/agent-platform/versions/[id]/sandbox-preview-token[2m > [22mACCEPTED: a real agent_platform:Write session mints a token scoped to the caller's own tenant/user/version [33m1179[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/graph-explorer-service.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 3769[2mms[22m[39m
+   [33m[2m✓[22m[39m graph-explorer-service (Phase 8, FR-KB-04) — unit, mocked repositories[2m > [22mlistGraphEntities[2m > [22m404s via getGenerationOrThrow before touching the entity table when the generation doesn't exist for this tenant [33m3744[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/retrieval/retrieval-types.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 28[2mms[22m[39m
+[90mstderr[2m | packages/modules/model-gateway/src/application/scheduled-sweeps.test.ts[2m > [22m[2mscheduled-sweeps — model-gateway.provider-probe / model-gateway.catalog-sync (Target Architecture Blueprint Phase 1)[2m > [22m[2mrunProviderProbeSweep counts a failed probe without stopping the sweep for the rest
+[22m[39mmodel-gateway.provider-probe: probe failed for provider p1 Error: boom
+    at [90mD:\work\products\nextbot\[39mpackages\modules\model-gateway\src\application\scheduled-sweeps.test.ts:57:30
+    at mockCall [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+spy@2.1.9/node_modules/[4m@vitest[24m/spy/dist/index.js:61:17[90m)[39m
+    at spy [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/tinyspy@3.0.2/node_modules/[4mtinyspy[24m/dist/index.js:45:80[90m)[39m
+    at Proxy.probeProvider [90m(D:\work\products\nextbot\[39mpackages\modules\model-gateway\src\application\scheduled-sweeps.test.ts:7:28[90m)[39m
+    at runProviderProbeSweep [90m(D:\work\products\nextbot\[39mpackages\modules\model-gateway\src\application\scheduled-sweeps.ts:22:15[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+    at [90mD:\work\products\nextbot\[39mpackages\modules\model-gateway\src\application\scheduled-sweeps.test.ts:61:20
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:5
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:11[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+
+[90mstderr[2m | packages/modules/model-gateway/src/application/scheduled-sweeps.test.ts[2m > [22m[2mscheduled-sweeps — model-gateway.provider-probe / model-gateway.catalog-sync (Target Architecture Blueprint Phase 1)[2m > [22m[2mrunCatalogSyncSweep counts a failed sync without stopping the sweep for the rest
+[22m[39mmodel-gateway.catalog-sync: sync failed for provider p2 Error: boom
+    at [90mD:\work\products\nextbot\[39mpackages\modules\model-gateway\src\application\scheduled-sweeps.test.ts:82:30
+    at mockCall [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+spy@2.1.9/node_modules/[4m@vitest[24m/spy/dist/index.js:61:17[90m)[39m
+    at spy [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/tinyspy@3.0.2/node_modules/[4mtinyspy[24m/dist/index.js:45:80[90m)[39m
+    at Proxy.syncProviderCatalog [90m(D:\work\products\nextbot\[39mpackages\modules\model-gateway\src\application\scheduled-sweeps.test.ts:11:34[90m)[39m
+    at runCatalogSyncSweep [90m(D:\work\products\nextbot\[39mpackages\modules\model-gateway\src\application\scheduled-sweeps.ts:46:15[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+    at [90mD:\work\products\nextbot\[39mpackages\modules\model-gateway\src\application\scheduled-sweeps.test.ts:86:20
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:5
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:11[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+
+ [32m✓[39m [35m|unit|[39m packages/modules/model-gateway/src/application/scheduled-sweeps.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 133[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ai-registry/src/config.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/pii-reeval-service.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 22[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/domain/workflow-artifact.test.ts [2m([22m[2m9 tests[22m[2m)[22m[90m 16[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/webhooks/src/http/admin-routes.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 400[2mms[22m[39m
+   [33m[2m✓[22m[39m webhooks http/admin-routes (unit, mocked application layer)[2m > [22mhandleListWebhookSubscriptions delegates to the application service [33m395[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/telemetry-export/src/application/export-config-service.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 141[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/definitions/[id]/versions/new/DesignModeForm.round-trip.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/v1/admin/agent-platform/versions/[id]/bind-eval-suite/route.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1437[2mms[22m[39m
+   [33m[2m✓[22m[39m POST /api/v1/admin/agent-platform/versions/[id]/bind-eval-suite (QA regression: TypeBox 'uuid' format)[2m > [22maccepts a request with a real UUIDv7 evalSuiteId (this system's own generateId() output) and delegates to the service (regression: previously 422'd on every request, including real ids) [33m1416[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/escalations/src/domain/escalation-routing.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/application/sandbox-preview-token.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 77[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/http/service-account-routes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 884[2mms[22m[39m
+   [33m[2m✓[22m[39m iam http/service-account-routes (unit, mocked application layer)[2m > [22mhandleListServiceAccounts requires Read, handleCreateServiceAccount requires Write [33m881[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/teams/src/http/admin-routes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1260[2mms[22m[39m
+   [33m[2m✓[22m[39m teams http/admin-routes (unit, mocked application layer)[2m > [22mhandleGetDelegationTree delegates to getDelegationTree() [33m1253[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ai-registry/src/registry.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 1152[2mms[22m[39m
+   [33m[2m✓[22m[39m executeChain (ADR-0006 §2.3 fallback/retry engine)[2m > [22mthrows AllProvidersUnavailableError once the whole chain (and its retries) is exhausted [33m524[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/orchestration/src/domain/injection-guardrail.test.ts [2m([22m[2m10 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/gateway/src/lib/widget-auth.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 79[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/retrieval/vector-strategy.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 57[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/mcp-registry/src/domain/drift-classification.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/v1/admin/authz/simulate/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 870[2mms[22m[39m
+   [33m[2m✓[22m[39m POST /api/v1/admin/authz/simulate[2m > [22mdelegates to handleSimulate with the caller's own tenant context [33m865[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/v1/admin/tools/capability-groups/route.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1040[2mms[22m[39m
+   [33m[2m✓[22m[39m GET /api/v1/admin/tools/capability-groups[2m > [22mreturns the caller's own tenant's capability groups on a tool_permissions=Read caller [33m1037[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/http/session-routes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 824[2mms[22m[39m
+   [33m[2m✓[22m[39m iam http/session-routes (unit, mocked application layer)[2m > [22mhandleListMySessions/handleRevokeMySession/handleRevokeAllMySessions need NO RBAC grant — self-service [33m820[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/connectors/src/application/discover-tools.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 340[2mms[22m[39m
+   [33m[2m✓[22m[39m discoverTools (unit, mocked boundaries)[2m > [22mcalls listTools with no auth header when the connector has no credential [33m336[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tenancy/src/application/update-branding.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 19[2mms[22m[39m
+[90mstderr[2m | apps/web/app/api/internal/ops/tenants/[id]/route.test.ts[2m > [22m[2mGET /api/internal/ops/tenants/[id] (NFR-11 Platform Manager console)[2m > [22m[2mmaps a thrown application-layer error through problemResponse rather than leaking it
+[22m[39mError: relation "tenant" does not exist
+    at [90mD:\work\products\nextbot\[39mapps\web\app\api\internal\ops\tenants\[id]\route.test.ts:57:52
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:146:14
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:11
+    at runWithTimeout [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:39:7[90m)[39m
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:17[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runFiles [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1262:5[90m)[39m
+    at startTests [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1271:3[90m)[39m
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/vitest@2.1.9_@types+node@22.20.1_jsdom@25.0.1_lightningcss@1.32.0/node_modules/[4mvitest[24m/dist/chunks/runBaseTests.3qpJUEJM.js:126:11
+
+[90mstderr[2m | apps/web/app/api/internal/ops/tenants/route.test.ts[2m > [22m[2m/api/internal/ops/tenants (NFR-11 Platform Manager console)[2m > [22m[2mGET[2m > [22m[2mmaps a thrown application-layer error through problemResponse rather than leaking it
+[22m[39mError: database is on fire
+    at [90mD:\work\products\nextbot\[39mapps\web\app\api\internal\ops\tenants\route.test.ts:64:44
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:146:14
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:11
+    at runWithTimeout [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:39:7[90m)[39m
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:17[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runFiles [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1262:5[90m)[39m
+    at startTests [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1271:3[90m)[39m
+
+[90mstderr[2m | apps/web/app/api/internal/ops/tenants/[id]/status/route.test.ts[2m > [22m[2mPATCH /api/internal/ops/tenants/[id]/status (NFR-11 Platform Manager console)[2m > [22m[2mmaps a thrown application-layer error through problemResponse rather than leaking it
+[22m[39mError: connection terminated
+    at [90mD:\work\products\nextbot\[39mapps\web\app\api\internal\ops\tenants\[id]\status\route.test.ts:71:46
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:146:14
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:11
+    at runWithTimeout [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:39:7[90m)[39m
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:17[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runFiles [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1262:5[90m)[39m
+    at startTests [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1271:3[90m)[39m
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/vitest@2.1.9_@types+node@22.20.1_jsdom@25.0.1_lightningcss@1.32.0/node_modules/[4mvitest[24m/dist/chunks/runBaseTests.3qpJUEJM.js:126:11
+
+[90mstderr[2m | apps/web/app/api/internal/ops/health-rollup/route.test.ts[2m > [22m[2m/api/internal/ops/health-rollup (NFR-11 Platform Manager console, Phase 3)[2m > [22m[2mGET[2m > [22m[2mmaps a thrown application-layer error through problemResponse rather than leaking it
+[22m[39mError: database is on fire
+    at [90mD:\work\products\nextbot\[39mapps\web\app\api\internal\ops\health-rollup\route.test.ts:153:44
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:146:14
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:11
+    at runWithTimeout [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:39:7[90m)[39m
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:17[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runFiles [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1262:5[90m)[39m
+    at startTests [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1271:3[90m)[39m
+
+[90mstderr[2m | apps/web/app/api/internal/ops/tenants/[id]/breakglass/activate/route.test.ts[2m > [22m[2mPOST /api/internal/ops/tenants/[id]/breakglass/activate (Phase 20, FR-ADM-09)[2m > [22m[2mnever leaks an unexpected error's message
+[22m[39mError: connection terminated
+    at [90mD:\work\products\nextbot\[39mapps\web\app\api\internal\ops\tenants\[id]\breakglass\activate\route.test.ts:77:52
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:146:14
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:11
+    at runWithTimeout [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:39:7[90m)[39m
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:17[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runFiles [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1262:5[90m)[39m
+    at startTests [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1271:3[90m)[39m
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/vitest@2.1.9_@types+node@22.20.1_jsdom@25.0.1_lightningcss@1.32.0/node_modules/[4mvitest[24m/dist/chunks/runBaseTests.3qpJUEJM.js:126:11
+
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/tenants/[id]/route.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 3381[2mms[22m[39m
+   [33m[2m✓[22m[39m GET /api/internal/ops/tenants/[id] (NFR-11 Platform Manager console)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m3351[2mms[22m[39m
+[90mstderr[2m | apps/web/app/api/internal/ops/tenants/route.test.ts[2m > [22m[2m/api/internal/ops/tenants (NFR-11 Platform Manager console)[2m > [22m[2mPOST[2m > [22m[2mmaps a thrown provisioning error through problemResponse rather than leaking it
+[22m[39mError: duplicate key value violates unique constraint
+    at [90mD:\work\products\nextbot\[39mapps\web\app\api\internal\ops\tenants\route.test.ts:116:45
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:146:14
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:11
+    at runWithTimeout [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:39:7[90m)[39m
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:17[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runFiles [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1262:5[90m)[39m
+    at startTests [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1271:3[90m)[39m
+
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/tenants/[id]/status/route.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 3776[2mms[22m[39m
+   [33m[2m✓[22m[39m PATCH /api/internal/ops/tenants/[id]/status (NFR-11 Platform Manager console)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m3746[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/health-rollup/route.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 7692[2mms[22m[39m
+   [33m[2m✓[22m[39m /api/internal/ops/health-rollup (NFR-11 Platform Manager console, Phase 3)[2m > [22mGET[2m > [22mreturns the guard's Response verbatim when unauthorized, without touching tenancy/connectors [33m7657[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/tenants/[id]/breakglass/activate/route.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 3975[2mms[22m[39m
+   [33m[2m✓[22m[39m POST /api/internal/ops/tenants/[id]/breakglass/activate (Phase 20, FR-ADM-09)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m3943[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/tenants/route.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 7042[2mms[22m[39m
+   [33m[2m✓[22m[39m /api/internal/ops/tenants (NFR-11 Platform Manager console)[2m > [22mGET[2m > [22mreturns the guard's Response verbatim when unauthorized, without touching the tenancy module [33m7003[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/retrieval/query-classifier.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 257[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/teams/src/domain/team-scope.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/tenants/[id]/breakglass/conversations/route.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 3545[2mms[22m[39m
+   [33m[2m✓[22m[39m GET /api/internal/ops/tenants/[id]/breakglass/conversations (Phase 20, FR-ADM-09)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m3531[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/tenants/[id]/breakglass/conversations/[conversationId]/route.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 3538[2mms[22m[39m
+   [33m[2m✓[22m[39m GET /api/internal/ops/tenants/[id]/breakglass/conversations/[conversationId] (Phase 20, FR-ADM-09)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m3521[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/plan-tiers/[tier]/route.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 3710[2mms[22m[39m
+   [33m[2m✓[22m[39m PATCH /api/internal/ops/plan-tiers/[tier] (NFR-11 Platform Manager console)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m3694[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/graph-store/src/naming.test.ts [2m([22m[2m22 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/v1/public/tenant-branding/[slug]/route.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 5568[2mms[22m[39m
+   [33m[2m✓[22m[39m GET /api/v1/public/tenant-branding/[slug] (FR-ADM-07 Part 2 — login-screen branding)[2m > [22mreturns the real branding for an existing, white-labeled tenant [33m5560[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/teams/src/domain/fallback-cycle.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/gateway/src/lib/rate-limit.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 147[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/agent-platform/src/domain/traffic-split-policy.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/graph-store/src/config.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/ops-page-gate.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/coverage-service.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 178[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/domain/chunking.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/teams/src/domain/tree-builder.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/domain/retrieval-bounds.test.ts [2m([22m[2m16 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/http/scim-routes.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 79[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/orchestration/src/domain/render-selection.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/api-not-found-response.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/domain/lockout-policy.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/application/mfa-backup-codes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 539[2mms[22m[39m
+   [33m[2m✓[22m[39m mfa-backup-codes (unit — QA Defect B2)[2m > [22mconsumeBackupCode accepts a valid unused code, marks it consumed, and rejects reuse [33m436[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/domain/permission-matrix.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/tenants/[id]/plan-tier/route.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 3221[2mms[22m[39m
+   [33m[2m✓[22m[39m PATCH /api/internal/ops/tenants/[id]/plan-tier (NFR-11 Platform Manager console)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m3201[2mms[22m[39m
+[90mstderr[2m | apps/web/src/lib/api-guard.test.ts[2m > [22m[2mproblemResponse (RFC 9457 error mapping)[2m > [22m[2mmaps an unknown error to a generic 500 without leaking its message
+[22m[39mError: some internal secret detail
+    at [90mD:\work\products\nextbot\[39mapps\web\src\lib\api-guard.test.ts:78:33
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:146:14
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:11
+    at runWithTimeout [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:39:7[90m)[39m
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:17[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runFiles [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1262:5[90m)[39m
+    at startTests [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1271:3[90m)[39m
+
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/api-guard.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 26[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/application/register-user.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/mcp-client/src/infrastructure/streamable-http-transport.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tenancy/src/domain/breakglass-grant-policy.test.ts [2m([22m[2m11 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/tenants/[id]/breakglass/status/route.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 3380[2mms[22m[39m
+   [33m[2m✓[22m[39m GET /api/internal/ops/tenants/[id]/breakglass/status (Phase 20, FR-ADM-09)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m3361[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/humanize-field-error.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/freshness-service.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 53[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/tenants/[id]/breakglass/escalations/[escalationId]/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 3206[2mms[22m[39m
+   [33m[2m✓[22m[39m GET /api/internal/ops/tenants/[id]/breakglass/escalations/[escalationId] (Phase 20, FR-ADM-09)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m3192[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/conversations/src/application/widget-session-token.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 303[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/retrieval/sufficiency-check.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 540[2mms[22m[39m
+   [33m[2m✓[22m[39m checkSufficiency (unit, mocked model-gateway)[2m > [22mreports sufficient with no missing concepts when the model says the evidence is enough [33m537[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/orchestration/src/domain/tool-call-fsm.test.ts [2m([22m[2m17 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/domain/permission-scope.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/platform-api-guard.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 10365[2mms[22m[39m
+   [33m[2m✓[22m[39m ops route method coverage (QA retry 3, Defect 1)[2m > [22mboth ops route modules export every verb that Next would otherwise answer itself [33m10338[2mms[22m[39m
+[90mstderr[2m | packages/modules/authz/src/application/evaluate-or-deny.test.ts[2m > [22m[2mevaluateOrDeny() — E11 fail-closed wrapper[2m > [22m[2mreturns Deny(EVALUATOR_ERROR) with an empty trace and a valid scopeHash when evaluate() throws
+[22m[39m[authz] evaluate() threw — failing closed {
+  tenantId: [32m'11111111-1111-4111-8111-111111111111'[39m,
+  message: [32m'simulated evaluator bug'[39m
+}
+
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/v1/admin/agent-runs/[runId]/delegation-tree/route.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1791[2mms[22m[39m
+   [33m[2m✓[22m[39m GET /api/v1/admin/agent-runs/[runId]/delegation-tree[2m > [22mdelegates to handleGetDelegationTree with the caller's own tenant context and the path's runId [33m1788[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ui/src/components/RbacNav.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+[90mstderr[2m | packages/modules/authz/src/application/evaluate-or-deny.test.ts[2m > [22m[2mevaluateOrDeny() — E11 fail-closed wrapper[2m > [22m[2mnever throws into the caller even if writing the audit-trail domain event itself fails (a disk-full/DB-unavailable error must not mask the fail-closed Deny)
+[22m[39m[authz] evaluate() threw — failing closed {
+  tenantId: [32m'11111111-1111-4111-8111-111111111111'[39m,
+  message: [32m'simulated evaluator bug'[39m
+}
+
+ [32m✓[39m [35m|unit|[39m packages/modules/authz/src/application/evaluate-or-deny.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 579[2mms[22m[39m
+   [33m[2m✓[22m[39m evaluateOrDeny() — E11 fail-closed wrapper[2m > [22mreturns Deny(EVALUATOR_ERROR) with an empty trace and a valid scopeHash when evaluate() throws [33m512[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/domain/community-detect.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 16[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/connectors/src/http/admin-routes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 59[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/domain/workflow-scope.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/db/src/config.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 9[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/rate-limit.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 231[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/contracts/src/agent-platform.test.ts [2m([22m[2m16 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/telemetry-export/src/http/admin-routes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 245[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/secrets/src/domain/envelope-crypto.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/application/mfa-challenge-token.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 116[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/fetch-json.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/build-brand-style-tag.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/mcp-registry/src/domain/manifest-hash.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 17[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tenancy/src/http/admin-routes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tool-registry/src/domain/backend-type-defaults.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/http/sso-login-routes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/agent-platform/src/domain/emergency-rollback-policy.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/teams/src/delegation-internal-only-structural.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 8295[2mms[22m[39m
+   [33m[2m✓[22m[39m LLD §14.7.4 — `conversations` must not be able to import `teams` (structural, not merely untested)[2m > [22mdependency-cruiser is CLEAN for `conversations` as the codebase actually stands [33m3493[2mms[22m[39m
+   [33m[2m✓[22m[39m LLD §14.7.4 — `conversations` must not be able to import `teams` (structural, not merely untested)[2m > [22m…and produces a real `no-teams-inside-conversations` violation the moment the forbidden import is introduced [33m4801[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tenancy/src/domain/contrast-checker.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+[90mstdout[2m | apps/worker/src/scheduler.test.ts[2m > [22m[2mstartScheduler (Phase 18, apps/worker's first real job scheduler)[2m > [22m[2mruns each job once immediately at startup
+[22m[39mNextBot worker: job "test-job" completed { ok: [33mtrue[39m }
+
+[90mstdout[2m | apps/worker/src/scheduler.test.ts[2m > [22m[2mstartScheduler (Phase 18, apps/worker's first real job scheduler)[2m > [22m[2mre-runs a job on its own interval
+[22m[39mNextBot worker: job "test-job" completed [90mundefined[39m
+NextBot worker: job "test-job" completed [90mundefined[39m
+
+ [32m✓[39m [35m|unit|[39m packages/graph-store/src/health.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 897[2mms[22m[39m
+   [33m[2m✓[22m[39m checkGraphStoreHealth / assertGraphStoreHealthy[2m > [22mreturns ok:false with a detail message when the session throws (Neo4j unreachable) [33m893[2mms[22m[39m
+[90mstdout[2m | apps/worker/src/scheduler.test.ts[2m > [22m[2mstartScheduler (Phase 18, apps/worker's first real job scheduler)[2m > [22m[2mre-runs a job on its own interval
+[22m[39mNextBot worker: job "test-job" completed [90mundefined[39m
+NextBot worker: job "test-job" completed [90mundefined[39m
+
+[90mstdout[2m | apps/worker/src/scheduler.test.ts[2m > [22m[2mstartScheduler (Phase 18, apps/worker's first real job scheduler)[2m > [22m[2mone job's rejection never stops another job's schedule
+[22m[39mNextBot worker: job "healthy" completed [90mundefined[39m
+NextBot worker: job "healthy" completed [90mundefined[39m
+
+[90mstderr[2m | apps/worker/src/scheduler.test.ts[2m > [22m[2mstartScheduler (Phase 18, apps/worker's first real job scheduler)[2m > [22m[2mone job's rejection never stops another job's schedule
+[22m[39mNextBot worker: job "failing" failed Error: boom
+    at [90mD:\work\products\nextbot\[39mapps\worker\src\scheduler.test.ts:25:47
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:146:14
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:11
+    at runWithTimeout [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:39:7[90m)[39m
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:17[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runFiles [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1262:5[90m)[39m
+    at startTests [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1271:3[90m)[39m
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/vitest@2.1.9_@types+node@22.20.1_jsdom@25.0.1_lightningcss@1.32.0/node_modules/[4mvitest[24m/dist/chunks/runBaseTests.3qpJUEJM.js:126:11
+NextBot worker: job "failing" failed Error: boom
+    at [90mD:\work\products\nextbot\[39mapps\worker\src\scheduler.test.ts:25:47
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:146:14
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:11
+    at runWithTimeout [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:39:7[90m)[39m
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:17[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runFiles [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1262:5[90m)[39m
+    at startTests [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1271:3[90m)[39m
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/vitest@2.1.9_@types+node@22.20.1_jsdom@25.0.1_lightningcss@1.32.0/node_modules/[4mvitest[24m/dist/chunks/runBaseTests.3qpJUEJM.js:126:11
+
+[90mstdout[2m | apps/worker/src/scheduler.test.ts[2m > [22m[2mstartScheduler (Phase 18, apps/worker's first real job scheduler)[2m > [22m[2mstop() halts every job's schedule
+[22m[39mNextBot worker: job "test-job" completed [90mundefined[39m
+
+ [32m✓[39m [35m|unit|[39m apps/worker/src/scheduler.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 20[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/db/src/tenant-context.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/tenants/[id]/plan-tier/reseed-quota/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 4085[2mms[22m[39m
+   [33m[2m✓[22m[39m POST /api/internal/ops/tenants/[id]/plan-tier/reseed-quota (NFR-11 Platform Manager console)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m4054[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tenancy/src/domain/retention-policy.test.ts [2m([22m[2m10 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/escalations/src/domain/escalation-fsm.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/agent-platform/src/domain/definition-hash.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/application/collection-pin-resolver.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 468[2mms[22m[39m
+   [33m[2m✓[22m[39m resolveKnowledgeCollectionPin (unit, mocked repository)[2m > [22msplits a '<name>@<N>' pin on the LAST '@' and resolves the name half to a real id [33m464[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/orchestration/src/domain/guardrail-eval.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/webhooks/src/domain/event-category.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/contracts/src/whatsapp.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/graph-store/src/tenant-session.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/tenants/[id]/breakglass/escalations/route.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 4647[2mms[22m[39m
+   [33m[2m✓[22m[39m GET /api/internal/ops/tenants/[id]/breakglass/escalations (Phase 20, FR-ADM-09)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m4634[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/model-gateway/src/application/provider-probe-service.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1994[2mms[22m[39m
+   [33m[2m✓[22m[39m listProvidersDueForProbe — cadence filtering (LLD §14.8.3)[2m > [22mexcludes a disabled provider [33m1991[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/conversation-filters.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/direction.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tool-registry/src/domain/expression-evaluator.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/domain/acl.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/http/scim-admin-routes.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1295[2mms[22m[39m
+   [33m[2m✓[22m[39m iam http/scim-admin-routes (unit, mocked application layer)[2m > [22mhandleGetScimTokenStatus requires Read and reports active status [33m1291[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/domain/totp.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/theme.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/conversations/src/domain/customer-identifier-hash.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/domain/system-roles.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/conversations/src/application/stub-turn-responder.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/client-ip.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/audit/src/domain/export-format.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/domain/api-key-format.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/conversations/src/application/merge-widget-config.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/application/seed-system-roles.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 494[2mms[22m[39m
+   [33m[2m✓[22m[39m seedSystemRoles (idempotency)[2m > [22minserts all six roles when none exist yet [33m492[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/domain/token-hash.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 90[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/branding/contrast-checker.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/secrets/src/infrastructure/kms-envelope-provider.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/humanize-yaml-error.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/application/session-token.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 105[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/orchestration/src/domain/fallback-messages.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/mcp-client/src/schema/ajv-validator.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 47[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tenancy/src/domain/plan-tier-defaults.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/model-gateway/src/application/catalog-sync-service.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 2167[2mms[22m[39m
+   [33m[2m✓[22m[39m listProvidersDueForCatalogSync — adapter-capability filtering (ADR-0011 §2.1)[2m > [22mexcludes a disabled provider even if its type supports sync [33m2165[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/orchestration/src/domain/mask-args.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/authz/src/http/admin-routes.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 46[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/domain/password.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 103[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/db/src/errors.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 2[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/gateway/src/lib/client-ip.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/require-module-access.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/secrets/src/domain/vault-ref.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/webhooks/src/domain/backoff.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/api/internal/ops/plan-tiers/route.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 3930[2mms[22m[39m
+   [33m[2m✓[22m[39m GET /api/internal/ops/plan-tiers (NFR-11 Platform Manager console)[2m > [22mreturns the guard's Response verbatim when unauthorized [33m3919[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/webhooks/src/domain/url-validation.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/authz/src/domain/scope-hash.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/gateway/src/lib/cors.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/iam/src/application/reset-mfa.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/conversations/src/domain/idle-sweep-decision.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/telemetry-export/src/domain/url-validation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/is-uuid.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/gateway/src/lib/rate-limit-response.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/model-gateway/page.test.tsx [2m([22m[2m1 test[22m[2m)[22m[90m 150[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/channels/src/domain/public-key.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+[90mstderr[2m | apps/gateway/src/lib/problem-response.test.ts[2m > [22m[2mproblemResponse (apps/gateway)[2m > [22m[2mmaps an unknown error to a generic 500 without leaking detail
+[22m[39mError: some internal secret detail
+    at [90mD:\work\products\nextbot\[39mapps\gateway\src\lib\problem-response.test.ts:14:33
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:146:14
+    at [90mfile:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:533:11
+    at runWithTimeout [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:39:7[90m)[39m
+    at runTest [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1056:17[90m)[39m
+[90m    at processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runSuite [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1205:15[90m)[39m
+    at runFiles [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1262:5[90m)[39m
+    at startTests [90m(file:///D:/work/products/nextbot/[39mnode_modules/[4m.pnpm[24m/@vitest+runner@2.1.9/node_modules/[4m@vitest[24m/runner/dist/index.js:1271:3[90m)[39m
+
+ [32m✓[39m [35m|unit|[39m apps/gateway/src/lib/problem-response.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/channel-adapters/src/registry.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/db/src/pool.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 335[2mms[22m[39m
+   [33m[2m✓[22m[39m closeAllPools[2m > [22mresolves cleanly even when no pool has been opened yet [33m334[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/channels/src/http/admin-routes.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2871[2mms[22m[39m
+   [33m[2m✓[22m[39m channels http/admin-routes (unit, mocked application layer)[2m > [22mhandleListChannels delegates to the repository [33m2869[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m eslint.boundaries.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 12073[2mms[22m[39m
+   [33m[2m✓[22m[39m eslint-plugin-boundaries catches disallowed module edges via re-exports (QA Defect 2 regression)[2m > [22mflags `export * from` a disallowed module [33m4108[2mms[22m[39m
+   [33m[2m✓[22m[39m eslint-plugin-boundaries catches disallowed module edges via re-exports (QA Defect 2 regression)[2m > [22mflags `export { x } from` a disallowed module [33m3920[2mms[22m[39m
+   [33m[2m✓[22m[39m eslint-plugin-boundaries catches disallowed module edges via re-exports (QA Defect 2 regression)[2m > [22m(control) still flags a plain `import` from a disallowed module [33m4044[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/knowledge/src/domain/graph-label.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/observability/src/tracing.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 525[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/tenancy/src/index.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/skills/src/application/skill-service.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 16[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/store.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 674[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/agent-platform/src/http/admin-routes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 21021[2mms[22m[39m
+   [33m[2m✓[22m[39m http/admin-routes.ts — Agent Design Studio + Blueprints + harvesting handlers (Phase 12)[2m > [22mStudio handlers forward to the correct studio-service function with the same arguments [33m21017[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/application/webhook-trigger-signature.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 11[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/loader/nextbot-loader.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 372[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/messages/FormBubble.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 673[2mms[22m[39m
+   [33m[2m✓[22m[39m FormBubble (A.2.8)[2m > [22mdisables Submit until the required field is filled [33m324[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/application/node-executors.test.ts [2m([22m[2m56 tests[22m[2m)[22m[90m 81[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/settings/page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 606[2mms[22m[39m
+   [33m[2m✓[22m[39m app/(admin)/settings/page.tsx (Plan Phase 3 — settings hub)[2m > [22mrenders every settings card (Branding, Users & Roles, Escalation Routing, Integrations, Audit Log, PII & Guardrails, Retention & Residency, Data Subject Requests) for a full-Write caller [33m504[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/connectors/ConnectorsList.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 895[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/mcp-health/McpHealthDashboard.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1110[2mms[22m[39m
+   [33m[2m✓[22m[39m McpHealthDashboard (B.3A.4 — server status grid, tool-level health, circuit-breaker Reset)[2m > [22mrenders the server status grid with a click-through link to the connector detail page [33m350[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/knowledge/[id]/generations/[generationId]/GraphExplorer.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 973[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ui/src/components/ui/sidebar.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 414[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/AdminShell.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[33m 2463[2mms[22m[39m
+   [33m[2m✓[22m[39m AdminShell (QA Defects U5/U6/U7)[2m > [22mrenders every nav item when permissions are full Write, and a visible avatar with forced contrast-safe colors [33m480[2mms[22m[39m
+   [33m[2m✓[22m[39m AdminShell (QA Defects U5/U6/U7)[2m > [22mPlan Phase 3 (settings hub): collapses the 7 individual settings entries and Connector Alerts into one 'Settings' nav link, not 8 separate ones [33m323[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/messages/TextBubble.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[90m 75[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/knowledge/[id]/generations/[generationId]/entities/[entityId]/EntityDetail.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1376[2mms[22m[39m
+   [33m[2m✓[22m[39m EntityDetail (Target Architecture Blueprint Phase 8, BL-39, FR-KB-04)[2m > [22mrenders the entity's canonical name, type, aliases, summary, and community [33m388[2mms[22m[39m
+   [33m[2m✓[22m[39m EntityDetail (Target Architecture Blueprint Phase 8, BL-39, FR-KB-04)[2m > [22mFR-KB-04 CRITICAL PATH: 'View source' opens a dialog showing the ACTUAL chunk text, not merely a chunk id [33m343[2mms[22m[39m
+   [33m[2m✓[22m[39m EntityDetail (Target Architecture Blueprint Phase 8, BL-39, FR-KB-04)[2m > [22mrenders an incoming relation's arrow direction, an untitled community, and a chunk's full page/section metadata [33m323[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ui/src/components/ui/field-hint.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 897[2mms[22m[39m
+   [33m[2m✓[22m[39m FieldHint[2m > [22mrenders a trigger with an independent accessible name, distinct from the field's own Label [33m332[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/versions/[versionId]/VersionDetail.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 2388[2mms[22m[39m
+   [33m[2m✓[22m[39m VersionDetail (UX_GUIDELINES.md §6.4/§6.5)[2m > [22mPhase 7: ?tab=sandbox deep-links directly to the Sandbox tab instead of Overview [33m463[2mms[22m[39m
+   [33m[2m✓[22m[39m VersionDetail (UX_GUIDELINES.md §6.4/§6.5)[2m > [22mshows the no-eval-suite-bound prompt on the Eval tab and binds one [33m740[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/knowledge/[id]/playground/RetrievalPlayground.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1424[2mms[22m[39m
+   [33m[2m✓[22m[39m RetrievalPlayground (Target Architecture Blueprint Phase 9, BL-40, FR-KB-05)[2m > [22mruns all four strategies by default and renders each one's own groundedness/latency/cost plus evidence [33m774[2mms[22m[39m
+   [33m[2m✓[22m[39m RetrievalPlayground (Target Architecture Blueprint Phase 9, BL-40, FR-KB-05)[2m > [22mlets a human deselect strategies to run only a subset [33m340[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/tenants/[id]/TenantDetailScreen.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1831[2mms[22m[39m
+   [33m[2m✓[22m[39m TenantDetailScreen (NFR-11 Platform Manager console)[2m > [22mrenders the tenant's overview, quota, and retention sections [33m421[2mms[22m[39m
+   [33m[2m✓[22m[39m TenantDetailScreen (NFR-11 Platform Manager console)[2m > [22mblocks the status mutation until the confirm dialog is confirmed [33m616[2mms[22m[39m
+   [33m[2m✓[22m[39m TenantDetailScreen (NFR-11 Platform Manager console)[2m > [22mcancelling the status confirm dialog performs no mutation [33m319[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/channels/[channelId]/whatsapp/WhatsAppChannelConfig.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 3168[2mms[22m[39m
+   [33m[2m✓[22m[39m WhatsAppChannelConfig (screen inventory B.2.3, FR-META-01 through META-13)[2m > [22mrenders the honest not-connected state with the Connect form when no account is linked [33m450[2mms[22m[39m
+   [33m[2m✓[22m[39m WhatsAppChannelConfig (screen inventory B.2.3, FR-META-01 through META-13)[2m > [22msubmits the Connect Meta Business Manager form and reloads on success [33m343[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/settings/escalation-routing/RoutingConfig.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 2108[2mms[22m[39m
+   [33m[2m✓[22m[39m RoutingConfig (B.5.3 — Phase 16/BL-09)[2m > [22mrenders the fallback queue and existing rules [33m542[2mms[22m[39m
+   [33m[2m✓[22m[39m RoutingConfig (B.5.3 — Phase 16/BL-09)[2m > [22mexposes a Channel condition select alongside Goal/Reason (D4) [33m865[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/login/LoginForm.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 2233[2mms[22m[39m
+   [33m[2m✓[22m[39m LoginForm (QA Defects U1/U8/U9)[2m > [22mrenders the MFA challenge screen once the server action returns a real challenge token (QA Defect U1 regression) [33m667[2mms[22m[39m
+   [33m[2m✓[22m[39m LoginForm branding (FR-ADM-07 Part 2 — login-screen white-labeling, post-QA scope-bug fix)[2m > [22mapplies the tenant's brand accent + logo after the branding lookup resolves on tenant-slug blur (debounced) [33m433[2mms[22m[39m
+[90mstderr[2m | apps/web/app/(admin)/escalations/[id]/TakeoverPanel.test.tsx[2m > [22m[2mTakeoverPanel (B.5.2 — Phase 16/BL-09)[2m > [22m[2mTarget Architecture Blueprint Phase 13 (BL-45): choosing a CSAT score includes it in the Resolve & Close request body, but never blocks the button
+[22m[39mBase UI: A component is changing the uncontrolled value state of Select to be controlled.
+Elements should not switch from uncontrolled to controlled (or vice versa).
+Decide between using a controlled or uncontrolled Select element for the lifetime of the component.
+The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.
+More info: https://fb.me/react-controlled-components
+
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/conversations/[id]/ConversationDetail.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 1348[2mms[22m[39m
+   [33m[2m✓[22m[39m ConversationDetail (Phase 13, BL-06, screen inventory B.4.2)[2m > [22mrenders the transcript and reveals the reasoning trace (ModelCall + ToolCall spans) on toggle [33m491[2mms[22m[39m
+[90mstderr[2m | apps/web/app/(admin)/settings/branding/BrandingSettings.test.tsx[2m > [22m[2mBrandingSettings (FR-ADM-07)[2m > [22m[2muploads a valid PNG logo and updates the preview, falling back gracefully to no favicon when canvas rendering is unavailable (this test environment's real, documented fallback path — no `canvas` native module installed)
+[22m[39mError: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
+    at module.exports (D:\work\products\nextbot\node_modules\.pnpm\jsdom@25.0.1\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at HTMLCanvasElementImpl.getContext (D:\work\products\nextbot\node_modules\.pnpm\jsdom@25.0.1\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:42:5)
+    at HTMLCanvasElement.getContext (D:\work\products\nextbot\node_modules\.pnpm\jsdom@25.0.1\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:131:58)
+    at FakeImage.img.onload (D:\work\products\nextbot\apps\web\app\(admin)\settings\branding\BrandingSettings.tsx:48:26)
+    at D:\work\products\nextbot\apps\web\app\(admin)\settings\branding\BrandingSettings.test.tsx:185:35
+    at node:internal/process/task_queues:151:7
+    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+    at AsyncResource.runMicrotask (node:internal/process/task_queues:148:8) [90mundefined[39m
+
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/channels/ChannelsList.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 796[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/roles/UsersTable.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1790[2mms[22m[39m
+   [33m[2m✓[22m[39m UsersTable[2m > [22mrenders the user table with name, email, roles, last login, and MFA status [33m333[2mms[22m[39m
+   [33m[2m✓[22m[39m UsersTable[2m > [22mcreates a user via the invite modal, requiring at least one role [33m904[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/tools/ToolCatalog.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 3267[2mms[22m[39m
+   [33m[2m✓[22m[39m ToolCatalog (QA Defects U3/U4/U11)[2m > [22mlinks each tool to its own permission-rule editor [33m386[2mms[22m[39m
+   [33m[2m✓[22m[39m ToolCatalog (QA Defects U3/U4/U11)[2m > [22mfilters by type (rwClass) via the filter bar (QA Defect U11) [33m787[2mms[22m[39m
+   [33m[2m✓[22m[39m ToolCatalog (QA Defects U3/U4/U11)[2m > [22mfilters by status via the filter bar (QA Defect U11) [33m579[2mms[22m[39m
+   [33m[2m✓[22m[39m ToolCatalog (QA Defects U3/U4/U11)[2m > [22mshows a 'no tools match filters' message distinct from the genuinely-empty state [33m639[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/settings/branding/BrandingSettings.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1856[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/definitions/[id]/DefinitionDetail.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 2811[2mms[22m[39m
+   [33m[2m✓[22m[39m DefinitionDetail (UX_GUIDELINES.md §6.1/§6.4)[2m > [22mrenders the definition name and its versions table [33m547[2mms[22m[39m
+   [33m[2m✓[22m[39m DefinitionDetail (UX_GUIDELINES.md §6.1/§6.4)[2m > [22monly shows _allowedTransitions in the Promote menu, and calls the promote endpoint on click [33m577[2mms[22m[39m
+   [33m[2m✓[22m[39m DefinitionDetail (UX_GUIDELINES.md §6.1/§6.4)[2m > [22mshows the Production-promotion confirm dialog stating the concrete consequence before confirming [33m301[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/definitions/[id]/DeploymentsPanel.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 3659[2mms[22m[39m
+   [33m[2m✓[22m[39m DeploymentsPanel (Phase 17, BL-48)[2m > [22mshows the live total and disables Save until the allocations sum to exactly 100% [33m615[2mms[22m[39m
+   [33m[2m✓[22m[39m DeploymentsPanel (Phase 17, BL-48)[2m > [22mrequires a non-blank reason before a split change can be confirmed, and states the next-turn consequence [33m767[2mms[22m[39m
+   [33m[2m✓[22m[39m DeploymentsPanel (Phase 17, BL-48)[2m > [22mPUTs the edited allocations with the typed reason and reports success [33m552[2mms[22m[39m
+   [33m[2m✓[22m[39m DeploymentsPanel (Phase 17, BL-48)[2m > [22msurfaces the server's own 409 copy verbatim rather than a paraphrase, and refetches [33m584[2mms[22m[39m
+   [33m[2m✓[22m[39m DeploymentsPanel (Phase 17, BL-48)[2m > [22mpromotes a canary arm to 100% through its own required-reason dialog [33m351[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/approvals/ApprovalQueue.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 607[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/mcp-health/ConnectorAlertConfig.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1860[2mms[22m[39m
+   [33m[2m✓[22m[39m ConnectorAlertConfig (B.3A.4, relocated into MCP Health's Alert Configuration tab)[2m > [22mlets a Write caller author and submit a new alert rule [33m332[2mms[22m[39m
+   [33m[2m✓[22m[39m ConnectorAlertConfig (B.3A.4, relocated into MCP Health's Alert Configuration tab)[2m > [22mreveals the email-address field only when Email is chosen as the destination, and includes it in the submitted payload [33m592[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/definitions/[id]/ShadowEvaluationCard.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 3262[2mms[22m[39m
+   [33m[2m✓[22m[39m ShadowEvaluationCard (Phase 17, BL-48)[2m > [22malways shows the 'evidence only' caption and never a promote-shaped control [33m534[2mms[22m[39m
+   [33m[2m✓[22m[39m ShadowEvaluationCard (Phase 17, BL-48)[2m > [22moffers EVERY non-deprecated version as a candidate, including a Draft — the opposite of the canary rule [33m584[2mms[22m[39m
+   [33m[2m✓[22m[39m ShadowEvaluationCard (Phase 17, BL-48)[2m > [22mblocks Start until a candidate and all three ceilings are valid [33m858[2mms[22m[39m
+   [33m[2m✓[22m[39m ShadowEvaluationCard (Phase 17, BL-48)[2m > [22mmakes the real spend and the real-customer-data implication legible in the confirm step [33m533[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/escalations/[id]/TakeoverPanel.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 3071[2mms[22m[39m
+   [33m[2m✓[22m[39m TakeoverPanel (B.5.2 — Phase 16/BL-09)[2m > [22mrenders the conversation/context/tool panels once loaded [33m345[2mms[22m[39m
+   [33m[2m✓[22m[39m TakeoverPanel (B.5.2 — Phase 16/BL-09)[2m > [22msending a message posts to the messages endpoint and reloads [33m345[2mms[22m[39m
+   [33m[2m✓[22m[39m TakeoverPanel (B.5.2 — Phase 16/BL-09)[2m > [22mTarget Architecture Blueprint Phase 13 (BL-45): choosing a CSAT score includes it in the Resolve & Close request body, but never blocks the button [33m996[2mms[22m[39m
+   [33m[2m✓[22m[39m TakeoverPanel (B.5.2 — Phase 16/BL-09)[2m > [22mTransfer to queue posts to the reassign endpoint and navigates back to the queue (D2) [33m321[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/agent-platform/src/application/studio-roundtrip.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 21[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/components/ChatPreviewPanel.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 389[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/definitions/[id]/versions/new/VersionEditor.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 2937[2mms[22m[39m
+   [33m[2m✓[22m[39m VersionEditor (BL-07, UX_GUIDELINES.md §6.4 — plain YAML authoring, immutable versions)[2m > [22mpre-fills a scaffold YAML template once the definition name loads [33m481[2mms[22m[39m
+   [33m[2m✓[22m[39m VersionEditor (BL-07, UX_GUIDELINES.md §6.4 — plain YAML authoring, immutable versions)[2m > [22mshows structured TypeBox validation errors for invalid YAML instead of submitting [33m312[2mms[22m[39m
+   [33m[2m✓[22m[39m VersionEditor (BL-07, UX_GUIDELINES.md §6.4 — plain YAML authoring, immutable versions)[2m > [22mDesign/Text mode toggle (Phase 9, client-feedback-batch item 7)[2m > [22mdefaults to the Text tab, with Design reachable by clicking its tab [33m388[2mms[22m[39m
+   [33m[2m✓[22m[39m VersionEditor (BL-07, UX_GUIDELINES.md §6.4 — plain YAML authoring, immutable versions)[2m > [22mDesign/Text mode toggle (Phase 9, client-feedback-batch item 7)[2m > [22man edit made in Design mode is reflected back in Text mode's YAML after switching tabs [33m365[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/tenants/[id]/breakglass/BreakglassOpsScreen.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[90m 207[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/modules/workflows/src/application/workflow-service.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 22352[2mms[22m[39m
+   [33m[2m✓[22m[39m validateWorkflowVersionYaml — defensive re-throw path[2m > [22mpropagates an unexpected (non-WorkflowGraphValidationError) throw from parseWorkflowArtifact rather than swallowing it [33m22349[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/tools/[id]/permissions/ToolPermissionRules.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 947[2mms[22m[39m
+   [33m[2m✓[22m[39m ToolPermissionRules (QA Final Review S2 — the tool-scoped permission rule editor)[2m > [22mchanges a rule's effect via the Select [33m355[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/definitions/[id]/versions/new/DesignModeForm.test.tsx [2m([22m[2m20 tests[22m[2m)[22m[33m 6227[2mms[22m[39m
+   [33m[2m✓[22m[39m DesignModeForm (Phase 9, client-feedback-batch item 7; Phase 10, item 8)[2m > [22mseeds every field from the current Text-mode YAML [33m900[2mms[22m[39m
+   [33m[2m✓[22m[39m DesignModeForm (Phase 9, client-feedback-batch item 7; Phase 10, item 8)[2m > [22mshows a field-level hint (FieldHint) next to every section's fields [33m330[2mms[22m[39m
+   [33m[2m✓[22m[39m DesignModeForm (Phase 9, client-feedback-batch item 7; Phase 10, item 8)[2m > [22mdoes not call onYamlChange on initial mount — only on an actual field edit [33m454[2mms[22m[39m
+   [33m[2m✓[22m[39m DesignModeForm (Phase 9, client-feedback-batch item 7; Phase 10, item 8)[2m > [22mpropagates an edited field back to YAML via onYamlChange, preserving the rest of the artifact [33m359[2mms[22m[39m
+   [33m[2m✓[22m[39m DesignModeForm (Phase 9, client-feedback-batch item 7; Phase 10, item 8)[2m > [22mchanges the graph type via the Select and reflects it in the generated YAML [33m609[2mms[22m[39m
+   [33m[2m✓[22m[39m DesignModeForm (Phase 9, client-feedback-batch item 7; Phase 10, item 8)[2m > [22mchanges the model route via the Select and reflects it in the generated YAML [33m387[2mms[22m[39m
+   [33m[2m✓[22m[39m DesignModeForm (Phase 9, client-feedback-batch item 7; Phase 10, item 8)[2m > [22mpicks capability groups via the checkbox picker, plus tool-call/turn/latency numbers and budgets, and reflects all of them in the generated YAML [33m341[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/model-gateway/ProviderRegistryAndCatalog.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 1112[2mms[22m[39m
+   [33m[2m✓[22m[39m ProviderRegistryAndCatalog (Target Architecture Blueprint Phase 1, BL-32, ADR-0011)[2m > [22mdeclares a manual catalog entry via the Catalog tab [33m349[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/WidgetWindow.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 685[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/api.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/settings/breakglass-access/BreakglassAccessSettings.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 685[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/layout.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[90m 31[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/conversations/ConversationsList.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1643[2mms[22m[39m
+   [33m[2m✓[22m[39m ConversationsList (Phase 13, BL-06, screen inventory B.4.1)[2m > [22mrenders conversation rows with a working trace link [33m305[2mms[22m[39m
+   [33m[2m✓[22m[39m ConversationsList (Phase 13, BL-06, screen inventory B.4.1)[2m > [22msupports row selection and a bulk archive action (U6 fix) [33m520[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/model-gateway/RoutesTab.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1201[2mms[22m[39m
+   [33m[2m✓[22m[39m RoutesTab (Target Architecture Blueprint Phase 2, BL-33, FR-AGT-20-26)[2m > [22mcreating a route posts to /api/v1/admin/model-gateway/routes [33m351[2mms[22m[39m
+   [33m[2m✓[22m[39m RoutesTab (Target Architecture Blueprint Phase 2, BL-33, FR-AGT-20-26)[2m > [22msurfaces a save-time validation rejection's field-scoped errors inline (FR-AGT-22 — never a silent accept) [33m495[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/messages/MessageList.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 397[2mms[22m[39m
+   [33m[2m✓[22m[39m MessageList (conversation area dispatch + aria-live region)[2m > [22mdispatches each contentType to its own bubble component [33m335[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/health/HealthRollupScreen.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 894[2mms[22m[39m
+   [33m[2m✓[22m[39m HealthRollupScreen (Platform Manager console Phase 3, NFR-11)[2m > [22mdefaults to showing only degraded/offline connectors, worst status first [33m530[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/tenants/TenantListScreen.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 602[2mms[22m[39m
+   [33m[2m✓[22m[39m TenantListScreen (NFR-11 Platform Manager console)[2m > [22mrenders every tenant sorted by name by default [33m433[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ui/src/components/ui/form.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 286[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/plan-tiers/PlanTiersScreen.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1258[2mms[22m[39m
+   [33m[2m✓[22m[39m PlanTiersScreen (Platform Manager console Phase 2, NFR-11)[2m > [22mlists all three tiers with their quota fields and descriptive-only features copy [33m323[2mms[22m[39m
+   [33m[2m✓[22m[39m PlanTiersScreen (Platform Manager console Phase 2, NFR-11)[2m > [22mblocks a tier save until the confirm dialog is confirmed [33m574[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/messages/ListBubble.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[90m 111[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ui/src/components/ui/tabs.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 676[2mms[22m[39m
+   [33m[2m✓[22m[39m Tabs[2m > [22mrenders each trigger's aria-controls pointing at its own panel's actually-rendered DOM id [33m348[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/knowledge/[id]/generations/[generationId]/communities/[communityId]/CommunityDetail.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 507[2mms[22m[39m
+   [33m[2m✓[22m[39m CommunityDetail (Target Architecture Blueprint Phase 8, BL-39, FR-KB-04)[2m > [22mshows the community's own generated summary and every member entity [33m337[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/messages/ConfirmationBubble.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 574[2mms[22m[39m
+   [33m[2m✓[22m[39m ConfirmationBubble (A.2.10, Tier-2 — Phase 14/BL-08)[2m > [22mrenders the dynamically-populated summary, disclaimer, and both actions while pending [33m373[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/layout.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[90m 5[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/channels/[channelId]/test/ChannelTest.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[90m 280[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ui/src/components/DelegationTree.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[90m 107[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/mcp-health/page.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 415[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ui/src/components/ui/select.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[90m 276[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/evals/[id]/EvalSuiteDetail.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1128[2mms[22m[39m
+   [33m[2m✓[22m[39m EvalSuiteDetail (BL-07 case list + add-case form, UX_GUIDELINES.md §6.5)[2m > [22madds a new case via the modal form with an appendable transcript row [33m857[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/escalations/PresenceToggle.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 969[2mms[22m[39m
+   [33m[2m✓[22m[39m PresenceToggle (Phase 13, BL-45)[2m > [22mchanging state PATCHes agent-presence/me and updates the displayed load [33m707[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/OpsShell.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 309[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/roles/PermissionMatrixEditor.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1877[2mms[22m[39m
+   [33m[2m✓[22m[39m PermissionMatrixEditor[2m > [22mrenders one row per RBAC module, defaulting every level to None on an empty matrix [33m758[2mms[22m[39m
+   [33m[2m✓[22m[39m PermissionMatrixEditor[2m > [22mcalls onChange with the module and new level when a select changes [33m630[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/escalations/EscalationQueue.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 530[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/[...unmatched]/page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/WidgetApp.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 494[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/settings/integrations/git-callback/page.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 555[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/definitions/DefinitionsList.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 913[2mms[22m[39m
+   [33m[2m✓[22m[39m DefinitionsList (BL-07 Agent Definition Registry, UX_GUIDELINES.md §6.1)[2m > [22mopens the create-definition modal, submits a new definition, and navigates directly to its Definition Detail (QA Defect U4) [33m447[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/tenants/new/ProvisionTenantForm.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 666[2mms[22m[39m
+   [33m[2m✓[22m[39m ProvisionTenantForm (NFR-11 Platform Manager console)[2m > [22mhas an accessible label on every input (audited defect class per dispatch scope) [33m306[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/settings/integrations/GitConnectionCard.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 455[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/evals/EvalSuitesList.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1178[2mms[22m[39m
+   [33m[2m✓[22m[39m EvalSuitesList (BL-07 Eval Suite Runner, UX_GUIDELINES.md §6.5)[2m > [22mcreates a new eval suite via the modal form [33m528[2mms[22m[39m
+   [33m[2m✓[22m[39m EvalSuitesList (BL-07 Eval Suite Runner, UX_GUIDELINES.md §6.5)[2m > [22mincludes cost/latency budget fields in the create form and submits them (QA Defect U6) [33m305[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/traces/RuntimeTraces.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1574[2mms[22m[39m
+   [33m[2m✓[22m[39m RuntimeTraces (BL-07 basic run list, UX_GUIDELINES.md §6.7 — not a trace viewer)[2m > [22mshows the honest empty state (explaining why) once a version is selected with zero runs [33m783[2mms[22m[39m
+   [33m[2m✓[22m[39m RuntimeTraces (BL-07 basic run list, UX_GUIDELINES.md §6.7 — not a trace viewer)[2m > [22mrenders a real run row with status/trigger/cost/trace id [33m546[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/model-gateway/UsageTab.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 232[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/WelcomeScreen.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[90m 206[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/audit-log/AuditLogViewer.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1243[2mms[22m[39m
+   [33m[2m✓[22m[39m AuditLogViewer (B.8.2 — filterable/searchable columns, masked detail drawer, CSV/JSON export)[2m > [22mapplies filters (outcome + free-text search) and re-fetches with them [33m525[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/resume-token.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/roles/RolesList.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 444[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/connectors/new/ConnectorWizard.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1920[2mms[22m[39m
+   [33m[2m✓[22m[39m ConnectorWizard (QA Defect U10 — human-readable field errors)[2m > [22mshows human-readable copy instead of raw TypeBox validator strings on an invalid submit [33m554[2mms[22m[39m
+   [33m[2m✓[22m[39m ConnectorWizard (QA Defect U10 — human-readable field errors)[2m > [22msubmits successfully and navigates to the connectors list [33m551[2mms[22m[39m
+   [33m[2m✓[22m[39m ConnectorWizard (QA Defect U10 — human-readable field errors)[2m > [22msurfaces a server-side error verbatim on a failed submit [33m411[2mms[22m[39m
+   [33m[2m✓[22m[39m ConnectorWizard (QA Defect U10 — human-readable field errors)[2m > [22mreveals the Credential value field once a non-None authentication method is chosen [33m403[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/agent-platform/diff/DiffView.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[90m 212[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/roles/RolesTable.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 2343[2mms[22m[39m
+   [33m[2m✓[22m[39m RolesTable[2m > [22mcreates a new custom role via the modal form and refreshes [33m798[2mms[22m[39m
+   [33m[2m✓[22m[39m RolesTable[2m > [22medits a custom role via the modal form, sending the update to the correct id [33m594[2mms[22m[39m
+   [33m[2m✓[22m[39m RolesTable[2m > [22msurfaces a server error message instead of closing the modal [33m612[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/tenants/[id]/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 116[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/src/lib/not-found-page.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[90m 187[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/settings/connector-alerts/page.test.tsx [2m([22m[2m1 test[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ui/src/components/AccessDeniedState.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 306[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/not-found.test.tsx [2m([22m[2m1 test[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/messages/QuickReplyBubble.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 474[2mms[22m[39m
+   [33m[2m✓[22m[39m QuickReplyBubble (A.2.2 — single-use)[2m > [22mrenders every chip as a grouped, labeled button row [33m315[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/messages/ExternalLinkBubble.test.tsx [2m([22m[2m1 test[22m[2m)[22m[90m 51[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/messages/DocumentBubble.test.tsx [2m([22m[2m1 test[22m[2m)[22m[90m 48[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/Launcher.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[90m 294[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/channels/new/CreateChannelForm.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 683[2mms[22m[39m
+   [33m[2m✓[22m[39m CreateChannelForm[2m > [22msubmits the form and navigates to /channels on success [33m484[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/channels/new/CreateWhatsAppChannelForm.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 628[2mms[22m[39m
+   [33m[2m✓[22m[39m CreateWhatsAppChannelForm[2m > [22msubmits with type=WhatsApp and routes to the WhatsApp config screen for the new channel [33m469[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/OfflineBanner.test.tsx [2m([22m[2m1 test[22m[2m)[22m[90m 46[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/main.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 2283[2mms[22m[39m
+   [33m[2m✓[22m[39m main.tsx (widget SPA entrypoint)[2m > [22mmounts WidgetApp into #root without throwing [33m2276[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/login/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 166[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/roles/SsoGroupMappingSection.test.tsx [2m([22m[2m1 test[22m[2m)[22m[90m 227[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/messages/DataSummaryBubble.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 100[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/messages/DataTableBubble.test.tsx [2m([22m[2m1 test[22m[2m)[22m[90m 246[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/EscalationWaitBanner.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[90m 163[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m packages/ui/src/components/StatusBadge.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[90m 213[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/forgot-password/page.test.tsx [2m([22m[2m1 test[22m[2m)[22m[90m 167[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/tenants/[id]/breakglass/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 116[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/login/OpsLoginForm.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[90m 182[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/LanguageModal.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 300[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/InputArea.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 177[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/tenants/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 77[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/health/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 75[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/plan-tiers/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 59[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/channels/new/ChannelTypePicker.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[90m 284[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/tenants/new/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 105[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/web/app/(admin)/settings/breakglass-access/page.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 62[2mms[22m[39m
+ [32m✓[39m [35m|unit|[39m apps/widget-embed/src/widget/components/messages/ErrorBubble.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[90m 112[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m328 passed[39m[22m[90m (328)[39m
+[2m      Tests [22m [1m[32m2298 passed[39m[22m[90m (2298)[39m
+[2m   Start at [22m 07:38:05
+[2m   Duration [22m 65.41s[2m (transform 54.09s, setup 12.23s, collect 632.59s, tests 291.71s, environment 370.83s, prepare 68.09s)[22m
+

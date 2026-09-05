@@ -1,0 +1,97 @@
+@if (loading()) {
+  <main class="la-summary la-summary--centered">
+    <span class="la-summary__spinner" aria-hidden="true"></span>
+    <p>Loading your summary…</p>
+  </main>
+} @else if (expired()) {
+  <main class="la-summary la-summary--centered">
+    <h1 #terminalHeading tabindex="-1">This link has expired</h1>
+    <p>This summary link has expired.</p>
+    <a class="la-summary__button" [routerLink]="['/', slug]">Start a new call</a>
+  </main>
+} @else if (purged()) {
+  <main class="la-summary la-summary--centered">
+    <h1 #terminalHeading tabindex="-1">Transcript no longer available</h1>
+    <p>Your transcript is no longer available.</p>
+    <a class="la-summary__button" [routerLink]="['/', slug]">Start a new call</a>
+  </main>
+} @else {
+  <main class="la-summary">
+    <h1>Call summary</h1>
+
+    @if (hasSummaryText()) {
+      <section class="la-summary__section">
+        <h2>Summary</h2>
+        <p class="la-summary__summary-text">{{ summary()?.summary_text }}</p>
+      </section>
+    }
+
+    <section class="la-summary__section">
+      <h2>Transcript</h2>
+      @if (transcript() && transcript()!.length > 0) {
+        <ul class="la-summary__transcript" role="log">
+          @for (line of transcript(); track $index) {
+            <li class="la-summary__line la-summary__line--{{ line.role }}">
+              <span class="la-summary__line-role">{{ line.role === 'user' ? 'You said' : 'Assistant said' }}</span>
+              <span class="la-summary__line-text">{{ line.text }}</span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="la-summary__muted">No transcript is available for this call.</p>
+      }
+    </section>
+
+    <section class="la-summary__section">
+      <h2>Feedback</h2>
+      @if (feedbackSubmitted()) {
+        <p class="la-summary__confirmation" aria-live="polite">Thanks for your feedback.</p>
+      } @else {
+        <div class="la-summary__feedback-form">
+          <div class="la-summary__stars" role="radiogroup" aria-label="Rate this call" (keydown)="onStarsKeydown($event)">
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+              <button
+                type="button"
+                class="la-summary__star"
+                [class.la-summary__star--selected]="rating() >= star"
+                role="radio"
+                [attr.aria-checked]="rating() === star"
+                [attr.aria-label]="star + ' star' + (star > 1 ? 's' : '')"
+                [attr.tabindex]="(rating() || 1) === star ? 0 : -1"
+                [disabled]="submitting()"
+                (click)="onRate(star)"
+              >
+                ★
+              </button>
+            }
+          </div>
+
+          <label for="summary-comment">Comments (optional)</label>
+          <textarea
+            id="summary-comment"
+            maxlength="1000"
+            [value]="comment()"
+            [readonly]="submitting()"
+            (input)="onCommentChange($any($event.target).value)"
+          ></textarea>
+          <div class="la-summary__counter">{{ comment().length }} / 1000</div>
+
+          @if (feedbackError()) {
+            <p class="la-summary__error" role="alert">{{ feedbackError() }}</p>
+          }
+
+          <button
+            type="button"
+            class="la-summary__button"
+            [disabled]="rating() < 1 || submitting()"
+            (click)="onSubmitFeedback()"
+          >
+            {{ submitting() ? 'Sending…' : 'Submit feedback' }}
+          </button>
+        </div>
+      }
+    </section>
+
+    <a class="la-summary__link" [routerLink]="['/', slug]">Start a new call</a>
+  </main>
+}

@@ -1,0 +1,135 @@
+   ▲ Next.js 15.5.23
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings in 25.2s
+
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+Critical dependency: the request of a dependency is an expression
+
+Import trace for requested module:
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+../../packages/ai-registry/src/index.ts
+../../packages/modules/agent-platform/src/application/model-gateway-service.ts
+../../packages/modules/agent-platform/src/index.ts
+./app/api/v1/admin/agent-platform/definitions/route.ts
+
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+require.extensions is not supported by webpack. Use a loader instead.
+
+Import trace for requested module:
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+../../packages/ai-registry/src/index.ts
+../../packages/modules/agent-platform/src/application/model-gateway-service.ts
+../../packages/modules/agent-platform/src/index.ts
+./app/api/v1/admin/agent-platform/definitions/route.ts
+
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+require.extensions is not supported by webpack. Use a loader instead.
+
+Import trace for requested module:
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+../../packages/ai-registry/src/index.ts
+../../packages/modules/agent-platform/src/application/model-gateway-service.ts
+../../packages/modules/agent-platform/src/index.ts
+./app/api/v1/admin/agent-platform/definitions/route.ts
+
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+Module not found: Can't resolve '../../package.json' in 'D:\work\products\nextbot\node_modules\.pnpm\@mikro-orm+core@6.6.16\node_modules\@mikro-orm\core\utils'
+
+Import trace for requested module:
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+../../packages/ai-registry/src/index.ts
+../../packages/modules/agent-platform/src/application/model-gateway-service.ts
+../../packages/modules/agent-platform/src/index.ts
+./app/api/v1/admin/agent-platform/definitions/route.ts
+
+../../node_modules/.pnpm/require-in-the-middle@8.0.1/node_modules/require-in-the-middle/index.js
+Critical dependency: require function is used in a way in which dependencies cannot be statically extracted
+
+Import trace for requested module:
+../../node_modules/.pnpm/require-in-the-middle@8.0.1/node_modules/require-in-the-middle/index.js
+../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+../../node_modules/.pnpm/@opentelemetry+sdk-node@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/sdk-node/build/src/sdk.js
+../../node_modules/.pnpm/@opentelemetry+sdk-node@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/sdk-node/build/src/index.js
+../../packages/observability/src/tracing.ts
+../../packages/observability/src/index.ts
+../../packages/modules/agent-platform/src/application/agent-run-service.ts
+../../packages/modules/agent-platform/src/index.ts
+./app/api/v1/admin/agent-platform/definitions/route.ts
+
+   Linting and checking validity of types ...
+
+ ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+   Collecting page data ...
+   Generating static pages (0/62) ...
+   Generating static pages (15/62) 
+   Generating static pages (30/62) 
+   Generating static pages (46/62) 
+ ✓ Generating static pages (62/62)
+   Finalizing page optimization ...
+   Collecting build traces ...
+ ⚠ Failed to copy traced files for D:\work\products\nextbot\apps\web\.next\server\pages\_app.js [Error: EPERM: operation not permitted, symlink 'D:\work\products\nextbot\node_modules\.pnpm\react@19.2.8\node_modules\react' -> 'D:\work\products\nextbot\apps\web\.next\standalone\apps\web\node_modules\react'] {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\work\\products\\nextbot\\node_modules\\.pnpm\\react@19.2.8\\node_modules\\react',
+  dest: 'D:\\work\\products\\nextbot\\apps\\web\\.next\\standalone\\apps\\web\\node_modules\\react'
+}
+ ⚠ Failed to copy traced files for D:\work\products\nextbot\apps\web\.next\server\pages\_error.js [Error: EPERM: operation not permitted, symlink 'D:\work\products\nextbot\node_modules\.pnpm\@opentelemetry+api@1.9.1\node_modules\@opentelemetry\api' -> 'D:\work\products\nextbot\apps\web\.next\standalone\node_modules\.pnpm\next@15.5.23_@babel+core@7.29.7_@opentelemetry+api@1.9.1_babel-plugin-macros@3.1.0_react-dom@_qcb4hbvn2axrpnvvuguwqiwgyu\node_modules\@opentelemetry\api'] {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\work\\products\\nextbot\\node_modules\\.pnpm\\@opentelemetry+api@1.9.1\\node_modules\\@opentelemetry\\api',
+  dest: 'D:\\work\\products\\nextbot\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\next@15.5.23_@babel+core@7.29.7_@opentelemetry+api@1.9.1_babel-plugin-macros@3.1.0_react-dom@_qcb4hbvn2axrpnvvuguwqiwgyu\\node_modules\\@opentelemetry\\api'
+}
+ ⚠ Failed to copy traced files for D:\work\products\nextbot\apps\web\.next\server\pages\_document.js [Error: EPERM: operation not permitted, symlink 'D:\work\products\nextbot\node_modules\.pnpm\styled-jsx@5.1.6_@babel+core@7.29.7_babel-plugin-macros@3.1.0_react@19.2.8\node_modules\styled-jsx' -> 'D:\work\products\nextbot\apps\web\.next\standalone\node_modules\.pnpm\next@15.5.23_@babel+core@7.29.7_@opentelemetry+api@1.9.1_babel-plugin-macros@3.1.0_react-dom@_qcb4hbvn2axrpnvvuguwqiwgyu\node_modules\styled-jsx'] {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\work\\products\\nextbot\\node_modules\\.pnpm\\styled-jsx@5.1.6_@babel+core@7.29.7_babel-plugin-macros@3.1.0_react@19.2.8\\node_modules\\styled-jsx',
+  dest: 'D:\\work\\products\\nextbot\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\next@15.5.23_@babel+core@7.29.7_@opentelemetry+api@1.9.1_babel-plugin-macros@3.1.0_react-dom@_qcb4hbvn2axrpnvvuguwqiwgyu\\node_modules\\styled-jsx'
+}
+ ⚠ Failed to copy traced files for D:\work\products\nextbot\apps\web\.next\server\app\(admin)\agent-platform\definitions\[id]\page.js [Error: EPERM: operation not permitted, symlink 'D:\work\products\nextbot\node_modules\.pnpm\@node-rs+argon2-win32-x64-msvc@2.1.0\node_modules\@node-rs\argon2-win32-x64-msvc' -> 'D:\work\products\nextbot\apps\web\.next\standalone\node_modules\.pnpm\@node-rs+argon2@2.1.0\node_modules\@node-rs\argon2-win32-x64-msvc'] {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\work\\products\\nextbot\\node_modules\\.pnpm\\@node-rs+argon2-win32-x64-msvc@2.1.0\\node_modules\\@node-rs\\argon2-win32-x64-msvc',
+  dest: 'D:\\work\\products\\nextbot\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\@node-rs+argon2@2.1.0\\node_modules\\@node-rs\\argon2-win32-x64-msvc'
+}
+
+> Build error occurred
+[Error: EPERM: operation not permitted, symlink 'D:\work\products\nextbot\node_modules\.pnpm\@next+env@15.5.23\node_modules\@next\env' -> 'D:\work\products\nextbot\apps\web\.next\standalone\node_modules\.pnpm\next@15.5.23_@babel+core@7.29.7_@opentelemetry+api@1.9.1_babel-plugin-macros@3.1.0_react-dom@_qcb4hbvn2axrpnvvuguwqiwgyu\node_modules\@next\env'] {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'symlink',
+  path: 'D:\\work\\products\\nextbot\\node_modules\\.pnpm\\@next+env@15.5.23\\node_modules\\@next\\env',
+  dest: 'D:\\work\\products\\nextbot\\apps\\web\\.next\\standalone\\node_modules\\.pnpm\\next@15.5.23_@babel+core@7.29.7_@opentelemetry+api@1.9.1_babel-plugin-macros@3.1.0_react-dom@_qcb4hbvn2axrpnvvuguwqiwgyu\\node_modules\\@next\\env'
+}
+EXIT=1

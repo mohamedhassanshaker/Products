@@ -1,0 +1,310 @@
+<la-page-header [title]="(tenant()?.name ?? 'Deployment') + ' · Knowledge · Pipeline'">
+  <a mat-button [routerLink]="['/tenants', tenantId, 'builder', 'overview']">Back to Agent Builder</a>
+</la-page-header>
+
+@if (store.status() === 'loading') {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading retrieval pipeline" />
+}
+
+@if (store.status() === 'error') {
+  <la-empty-state
+    variant="error"
+    icon="error_outline"
+    title="Could not load the retrieval pipeline"
+    body="Try again."
+    actionLabel="Retry"
+    (action)="retry()"
+  />
+}
+
+@if (store.status() === 'ready') {
+  @if (store.conflict()) {
+    <div class="la-pipeline-banner" role="alert">
+      <span>Config was modified by another user. Reload and retry.</span>
+      <button mat-flat-button color="primary" type="button" (click)="reload()">Reload</button>
+    </div>
+  }
+
+  @if (store.saveAlert()) {
+    <div class="la-pipeline-banner" role="alert">{{ store.saveAlert() }}</div>
+  }
+
+  @if (store.validating()) {
+    <span class="la-pipeline-chip" aria-live="polite">Validating…</span>
+  }
+
+  @if (!store.pipeline()) {
+    <la-empty-state icon="menu_book" title="No retrieval pipeline yet" body="Reload this tab once a config has been created for this tenant." />
+  } @else {
+    <section class="la-pipeline-stage">
+      <header>
+        <h3>① Query rewrite</h3>
+        <mat-slide-toggle
+          [ngModel]="store.pipeline()!.rewrite.enabled"
+          (ngModelChange)="patchStage('rewrite', { enabled: $event })"
+        >
+          On
+        </mat-slide-toggle>
+      </header>
+      @if (store.pipeline()!.rewrite.enabled) {
+        <mat-form-field appearance="outline">
+          <mat-label>Rewrite using the last N turns of conversation</mat-label>
+          <input
+            matInput
+            type="number"
+            min="1"
+            max="10"
+            [ngModel]="store.pipeline()!.rewrite.context_turns"
+            (ngModelChange)="patchStage('rewrite', { context_turns: $event })"
+          />
+        </mat-form-field>
+        <p class="la-pipeline-hint">Without this, "what about the other one" retrieves nothing.</p>
+      }
+      <mat-form-field appearance="outline">
+        <mat-label>Budget (ms)</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          max="10000"
+          [ngModel]="store.pipeline()!.rewrite.budget_ms"
+          (ngModelChange)="patchStage('rewrite', { budget_ms: $event })"
+        />
+      </mat-form-field>
+      <la-budget-bar [usedMs]="store.pipeline()!.rewrite.budget_ms" [totalMs]="effectiveBudgetMs()" label="Rewrite" />
+    </section>
+
+    <section class="la-pipeline-stage">
+      <header>
+        <h3>② Hybrid search</h3>
+        <span class="la-pipeline-always-on">Always on</span>
+      </header>
+      <p class="la-pipeline-hint">
+        Raise keyword weight when callers say exact identifiers aloud — order numbers, SKUs, policy codes. Pure vector
+        search misses them.
+      </p>
+      <mat-form-field appearance="outline">
+        <mat-label>Vector weight</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          max="1"
+          step="0.05"
+          [ngModel]="store.pipeline()!.hybrid_search.vector_weight"
+          (ngModelChange)="patchStage('hybrid_search', { vector_weight: $event })"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Keyword weight (BM25)</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          max="1"
+          step="0.05"
+          [ngModel]="store.pipeline()!.hybrid_search.keyword_weight"
+          (ngModelChange)="patchStage('hybrid_search', { keyword_weight: $event })"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Candidates</mat-label>
+        <input
+          matInput
+          type="number"
+          min="1"
+          max="100"
+          [ngModel]="store.pipeline()!.hybrid_search.candidates"
+          (ngModelChange)="patchStage('hybrid_search', { candidates: $event })"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Budget (ms)</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          max="10000"
+          [ngModel]="store.pipeline()!.hybrid_search.budget_ms"
+          (ngModelChange)="patchStage('hybrid_search', { budget_ms: $event })"
+        />
+      </mat-form-field>
+      <la-budget-bar [usedMs]="store.pipeline()!.hybrid_search.budget_ms" [totalMs]="effectiveBudgetMs()" label="Hybrid search" />
+    </section>
+
+    <section class="la-pipeline-stage">
+      <header>
+        <h3>③ Metadata filter</h3>
+        <mat-slide-toggle
+          [ngModel]="store.pipeline()!.metadata_filter.enabled"
+          (ngModelChange)="patchStage('metadata_filter', { enabled: $event })"
+        >
+          On
+        </mat-slide-toggle>
+      </header>
+      @if (store.pipeline()!.metadata_filter.enabled) {
+        <div class="la-pipeline-condition">
+          <mat-form-field appearance="outline">
+            <mat-label>Field</mat-label>
+            <input
+              matInput
+              [ngModel]="store.pipeline()!.metadata_filter.condition?.field ?? ''"
+              (ngModelChange)="patchMetadataCondition({ field: $event })"
+              aria-describedby="la-metadata-field-error"
+            />
+            @if (metadataFieldInvalid()) {
+              <mat-error id="la-metadata-field-error">Letters, numbers, and underscores only.</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Operator</mat-label>
+            <mat-select
+              [ngModel]="store.pipeline()!.metadata_filter.condition?.op ?? 'eq'"
+              (ngModelChange)="patchMetadataCondition({ op: $event })"
+            >
+              @for (op of metadataOps; track op.value) {
+                <mat-option [value]="op.value">{{ op.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Value</mat-label>
+            <input
+              matInput
+              [ngModel]="store.pipeline()!.metadata_filter.condition?.value ?? ''"
+              (ngModelChange)="patchMetadataCondition({ value: $event })"
+            />
+          </mat-form-field>
+        </div>
+      }
+      <mat-form-field appearance="outline">
+        <mat-label>Budget (ms)</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          max="10000"
+          [ngModel]="store.pipeline()!.metadata_filter.budget_ms"
+          (ngModelChange)="patchStage('metadata_filter', { budget_ms: $event })"
+        />
+      </mat-form-field>
+      <la-budget-bar [usedMs]="store.pipeline()!.metadata_filter.budget_ms" [totalMs]="effectiveBudgetMs()" label="Metadata filter" />
+    </section>
+
+    <section class="la-pipeline-stage">
+      <header>
+        <h3>④ Rerank</h3>
+        <mat-checkbox [checked]="false" [disabled]="true">
+          On <span class="la-knowledge-soon">Coming soon</span>
+        </mat-checkbox>
+      </header>
+      <p class="la-pipeline-hint">True cross-encoder reranking is not available yet — see BL-070.</p>
+    </section>
+
+    <section class="la-pipeline-stage">
+      <header>
+        <h3>⑤ Threshold</h3>
+      </header>
+      <mat-form-field appearance="outline">
+        <mat-label>Minimum score</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          max="1"
+          step="0.01"
+          [ngModel]="store.pipeline()!.threshold.min_score"
+          (ngModelChange)="patchStage('threshold', { min_score: $event })"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Budget (ms)</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          max="10000"
+          [ngModel]="store.pipeline()!.threshold.budget_ms"
+          (ngModelChange)="patchStage('threshold', { budget_ms: $event })"
+        />
+      </mat-form-field>
+      <la-budget-bar [usedMs]="store.pipeline()!.threshold.budget_ms" [totalMs]="effectiveBudgetMs()" label="Threshold" />
+    </section>
+
+    <section class="la-pipeline-stage">
+      <header>
+        <h3>⑥ Inject</h3>
+      </header>
+      <mat-form-field appearance="outline">
+        <mat-label>Token cap</mat-label>
+        <input
+          matInput
+          type="number"
+          min="1"
+          max="8000"
+          [ngModel]="store.pipeline()!.inject.token_cap"
+          (ngModelChange)="patchStage('inject', { token_cap: $event })"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Citation format</mat-label>
+        <mat-select
+          [ngModel]="store.pipeline()!.inject.citation_format"
+          (ngModelChange)="patchStage('inject', { citation_format: $event })"
+        >
+          @for (format of citationFormats; track format.value) {
+            <mat-option [value]="format.value">{{ format.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Budget (ms)</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          max="10000"
+          [ngModel]="store.pipeline()!.inject.budget_ms"
+          (ngModelChange)="patchStage('inject', { budget_ms: $event })"
+        />
+      </mat-form-field>
+      <la-budget-bar [usedMs]="store.pipeline()!.inject.budget_ms" [totalMs]="effectiveBudgetMs()" label="Inject" />
+    </section>
+
+    <section class="la-pipeline-total">
+      <h3>Total</h3>
+      <la-budget-bar [usedMs]="stageTotalMs()" [totalMs]="effectiveBudgetMs()" label="Retrieval pipeline" />
+      @if (store.retrieveNodeBudgetMs() === null) {
+        <p class="la-pipeline-hint">Add a Retrieve node in the Reasoning tab to compare this total against a real budget.</p>
+      }
+      @for (error of store.budgetExceededErrors(); track error.message) {
+        <p class="la-pipeline-error" role="alert">{{ error.message }}</p>
+      }
+      @for (error of store.staleSourceErrors(); track error.message) {
+        <p class="la-pipeline-warning" role="status">{{ error.message }}</p>
+      }
+    </section>
+
+    <div class="la-pipeline-actions">
+      <button mat-button type="button" [disabled]="!store.dirty() || store.saving() !== null" (click)="saveDraft()">
+        @if (store.saving() === 'draft') { <mat-spinner diameter="20" /> } @else { Save Draft }
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        [disabled]="(store.configStatus() === 'published' && !store.hasUnpublishedChanges()) || !store.canPublish() || store.saving() !== null"
+        [matTooltip]="!store.canPublish() ? 'Fix validation errors to publish' : ''"
+        (click)="publish()"
+      >
+        @if (store.saving() === 'published') {
+          <mat-spinner diameter="20" />
+        } @else if (store.configStatus() === 'published' && !store.hasUnpublishedChanges()) {
+          <ng-container><mat-icon aria-hidden="true">check_circle</mat-icon> Published</ng-container>
+        } @else {
+          Publish
+        }
+      </button>
+    </div>
+  }
+}

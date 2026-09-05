@@ -1,0 +1,17 @@
+=== SHIPPED-TREE REBUILD (BUILD_ID TXV6qD91WvDYdG0EabDwo) confirmation pass ===
+--- Defect 2: escaped spellings, DENIED vs ALLOWED (was 3 signatures before the fix) ---
+  PATH: /internal/ops/nb%2Dc%2D4f21c8a7e3d9b605/tenants
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | ETag: "15sfehg3t8r5av" | x-middleware-rewrite: /internal/ops/tenants
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | ETag: "15sfehg3t8r5av" | x-middleware-rewrite: /internal/ops/tenants
+  PATH: /internal/ops/nb%2Dc%2D4f21c8a7e3d9b605/login
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | ETag: "15sfehg3t8r5av" | x-middleware-rewrite: /internal/ops/login
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | ETag: "15sfehg3t8r5av" | x-middleware-rewrite: /internal/ops/login
+  PATH: /internal/ops/nb%2Dc%2D4f21c8a7e3d9b605/definitely-not-a-page
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | ETag: "15sfehg3t8r5av" | x-middleware-rewrite: /internal/ops/definitely-not-a-page
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | ETag: "15sfehg3t8r5av" | x-middleware-rewrite: /internal/ops/definitely-not-a-page
+  PATH: /internal/o%70s/nb-c-4f21c8a7e3d9b605/tenants
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | ETag: "15sfehg3t8r5av" | x-middleware-rewrite: /internal/ops/tenants
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | ETag: "15sfehg3t8r5av" | x-middleware-rewrite: /internal/ops/tenants
+  PATH: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | ETag: "15sfehg3t8r5av" | x-middleware-rewrite: /internal/ops/tenants
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | ETag: "15sfehg3t8r5av" | x-middleware-rewrite: /internal/ops/tenants

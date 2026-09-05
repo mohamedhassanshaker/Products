@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Avatar Platform</title>
+    <base href="/admin/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!--
+      Roboto (body copy) stays on the Google Fonts CDN — a missing webfont
+      there degrades gracefully to the sans-serif fallback in styles.scss.
+      Material Symbols Outlined is self-hosted instead (D-4): UX_GUIDELINES
+      §1.2 requires status to never be color alone ("icon + text" always),
+      so every status chip/action button depends on this font rendering —
+      an egress-restricted on-prem deployment must not silently lose icons
+      to a CDN it cannot reach. The @font-face + .material-icons mapping
+      lives in styles.scss.
+    -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500" rel="stylesheet" />
+  </head>
+  <body>
+    <la-admin-root></la-admin-root>
+  </body>
+</html>

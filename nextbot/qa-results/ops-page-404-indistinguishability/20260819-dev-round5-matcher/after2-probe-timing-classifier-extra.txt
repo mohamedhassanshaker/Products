@@ -1,0 +1,48 @@
+
+--- n=5 samples/path, 40 trials, port 3491 ---
+  /internal/ops/tenants                              slower than control in 20/40   GATED
+  /internal/ops                                      slower than control in 21/40   GATED root
+  /internal/ops/login                                slower than control in 14/40   GATED login
+  /internal/ops/nb-c-4f21c8a7e3d9b605/tenants        slower than control in 24/40   internal secret prefix
+  /internal/ops/nb%2Dc%2D4f21c8a7e3d9b605/tenants    slower than control in 31/40   escaped secret prefix (Defect 2 path)
+  /internal/zzz/nb%2Dc%2D4f21c8a7e3d9b605/tenants    slower than control in 24/40   escaped, non-ops control
+  /internal/ops/nb-c-4f21c8a7e3d9b605x/tenants       slower than control in 30/40   near-miss of secret prefix
+  /internal/opsx/tenants                             slower than control in 18/40   near-miss of public prefix
+  /api/internal/ops/tenants                          slower than control in 40/40   API gated
+  /api/definitely-not-a-route                        slower than control in 39/40   API control
+  /login                                             slower than control in 32/40   real route (200)
+  /internal/qqq/tenants                              slower than control in 23/40   control missing A
+  /internal/rrr/tenants                              slower than control in 17/40   control missing B
+  /admin/nothing                                     slower than control in 21/40   control missing C
+
+--- n=20 samples/path, 40 trials, port 3491 ---
+  /internal/ops/tenants                              slower than control in 18/40   GATED
+  /internal/ops                                      slower than control in 10/40   GATED root
+  /internal/ops/login                                slower than control in 20/40   GATED login
+  /internal/ops/nb-c-4f21c8a7e3d9b605/tenants        slower than control in 28/40   internal secret prefix
+  /internal/ops/nb%2Dc%2D4f21c8a7e3d9b605/tenants    slower than control in 30/40   escaped secret prefix (Defect 2 path)
+  /internal/zzz/nb%2Dc%2D4f21c8a7e3d9b605/tenants    slower than control in 26/40   escaped, non-ops control
+  /internal/ops/nb-c-4f21c8a7e3d9b605x/tenants       slower than control in 27/40   near-miss of secret prefix
+  /internal/opsx/tenants                             slower than control in 24/40   near-miss of public prefix
+  /api/internal/ops/tenants                          slower than control in 40/40   API gated
+  /api/definitely-not-a-route                        slower than control in 40/40   API control
+  /login                                             slower than control in 35/40   real route (200)
+  /internal/qqq/tenants                              slower than control in 21/40   control missing A
+  /internal/rrr/tenants                              slower than control in 30/40   control missing B
+  /admin/nothing                                     slower than control in 19/40   control missing C
+
+--- n=50 samples/path, 40 trials, port 3491 ---
+  /internal/ops/tenants                              slower than control in 15/40   GATED
+  /internal/ops                                      slower than control in 20/40   GATED root
+  /internal/ops/login                                slower than control in 18/40   GATED login
+  /internal/ops/nb-c-4f21c8a7e3d9b605/tenants        slower than control in 37/40   internal secret prefix
+  /internal/ops/nb%2Dc%2D4f21c8a7e3d9b605/tenants    slower than control in 37/40   escaped secret prefix (Defect 2 path)
+  /internal/zzz/nb%2Dc%2D4f21c8a7e3d9b605/tenants    slower than control in 29/40   escaped, non-ops control
+  /internal/ops/nb-c-4f21c8a7e3d9b605x/tenants       slower than control in 22/40   near-miss of secret prefix
+  /internal/opsx/tenants                             slower than control in 17/40   near-miss of public prefix
+  /api/internal/ops/tenants                          slower than control in 40/40   API gated
+  /api/definitely-not-a-route                        slower than control in 40/40   API control
+  /login                                             slower than control in 28/40   real route (200)
+  /internal/qqq/tenants                              slower than control in 18/40   control missing A
+  /internal/rrr/tenants                              slower than control in 20/40   control missing B
+  /admin/nothing                                     slower than control in 19/40   control missing C

@@ -1,0 +1,164 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #fff;
+  color: #111;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.la-summary {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+
+.la-summary--centered {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+.la-summary__spinner {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.12);
+  border-top-color: #1a73e8;
+  animation: la-summary-spin 0.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .la-summary__spinner {
+    animation: none;
+  }
+}
+
+@keyframes la-summary-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.la-summary__section {
+  margin: 24px 0;
+}
+
+.la-summary__summary-text {
+  white-space: pre-wrap;
+}
+
+.la-summary__muted {
+  color: #555;
+}
+
+.la-summary__transcript {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.la-summary__line {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 85%;
+}
+
+.la-summary__line--user {
+  align-self: flex-end;
+  text-align: right;
+}
+
+.la-summary__line--assistant {
+  align-self: flex-start;
+}
+
+.la-summary__line-role {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.la-summary__line-text {
+  background: #f1f3f4;
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+.la-summary__stars {
+  display: flex;
+  gap: 4px;
+}
+
+.la-summary__star {
+  min-width: 48px;
+  min-height: 48px;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.la-summary__star--selected {
+  color: #f2a900;
+}
+
+.la-summary__feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.la-summary__feedback-form textarea {
+  min-height: 80px;
+  padding: 8px;
+  font-family: inherit;
+}
+
+.la-summary__counter {
+  font-size: 0.75rem;
+  color: #666;
+  text-align: right;
+}
+
+.la-summary__error {
+  color: #b3261e;
+}
+
+.la-summary__confirmation {
+  color: #1e8e3e;
+}
+
+.la-summary__button {
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: 8px;
+  border: none;
+  background: #1a73e8;
+  color: #fff;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.la-summary__button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.la-summary__link {
+  display: inline-block;
+  margin-top: 16px;
+  color: #1a73e8;
+}

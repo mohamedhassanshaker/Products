@@ -1,0 +1,62 @@
+<la-page-header title="Providers" subtitle="Manage per-tenant endpoints and credentials from a deployment's row menu.">
+</la-page-header>
+
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading providers" />
+}
+
+@if (loadError()) {
+  <la-empty-state
+    variant="error"
+    icon="error_outline"
+    title="Could not load providers"
+    body="Try again."
+    actionLabel="Retry"
+    (action)="retry()"
+  />
+} @else if (!loading()) {
+  <div class="la-provider-catalog" [attr.aria-busy]="loading()">
+    @for (group of groups(); track group.category) {
+      <section class="la-provider-catalog__group">
+        <h2>{{ group.label }}</h2>
+        <table mat-table [dataSource]="group.items" class="la-provider-catalog__table">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Provider</th>
+            <td mat-cell *matCellDef="let row" data-label="Provider">{{ row.display_name }}</td>
+          </ng-container>
+          <ng-container matColumnDef="hosting">
+            <th mat-header-cell *matHeaderCellDef>Hosting</th>
+            <td mat-cell *matCellDef="let row" data-label="Hosting"><la-hosting-badge [hosting]="row.hosting" /></td>
+          </ng-container>
+          <ng-container matColumnDef="interface">
+            <th mat-header-cell *matHeaderCellDef>Interface</th>
+            <td mat-cell *matCellDef="let row" class="la-provider-catalog__interface" data-label="Interface">{{ row.interface_name }}</td>
+          </ng-container>
+          <ng-container matColumnDef="enabled">
+            <th mat-header-cell *matHeaderCellDef>Enabled</th>
+            <td mat-cell *matCellDef="let row" data-label="Enabled">
+              @if (authStore.isOperator()) {
+                <mat-slide-toggle
+                  [checked]="row.enabled"
+                  [disabled]="pendingKey() === row.key"
+                  [aria-label]="'Enable ' + row.display_name"
+                  (change)="onToggle(row, $event)"
+                />
+              } @else {
+                <span>{{ row.enabled ? 'Enabled' : 'Disabled' }}</span>
+              }
+              @if (rowErrors()[row.key]) {
+                <p class="la-provider-catalog__row-error" role="alert">
+                  <mat-icon aria-hidden="true">warning</mat-icon>
+                  {{ rowErrors()[row.key] }}
+                </p>
+              }
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['name', 'hosting', 'interface', 'enabled']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['name', 'hosting', 'interface', 'enabled']"></tr>
+        </table>
+      </section>
+    }
+  </div>
+}

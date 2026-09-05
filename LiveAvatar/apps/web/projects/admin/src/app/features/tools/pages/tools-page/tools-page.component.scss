@@ -1,0 +1,185 @@
+.la-tools-attached {
+  margin: 16px 0;
+
+  &__hint {
+    font-size: 12px;
+    color: var(--la-on-surface-variant, #44474f);
+    margin: 0 0 8px;
+  }
+
+  &__empty {
+    font-size: 14px;
+    color: var(--la-on-surface-variant, #44474f);
+  }
+
+  &__summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  &__warn,
+  &__ok {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+  }
+
+  &__warn {
+    color: var(--la-error, #b3261e);
+  }
+
+  &__ok {
+    color: var(--la-on-surface-variant, #44474f);
+  }
+
+  mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+  }
+}
+
+.la-tools-consequential {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #fdecea;
+  color: var(--la-error, #b3261e);
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    margin: 0 0 4px;
+  }
+
+  p {
+    font-size: 13px;
+    margin: 0 0 8px;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 13px;
+  }
+}
+
+.la-tools-table {
+  width: 100%;
+
+  &__api-ref {
+    margin: 2px 0 0;
+    font-size: 11px;
+    color: var(--la-on-surface-variant, #44474f);
+  }
+
+  &__method {
+    font-weight: 500;
+  }
+
+  &__endpoint {
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__consequential {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--la-error, #b3261e);
+
+    mat-icon {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+    }
+  }
+
+  &__test-result {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: var(--la-error, #b3261e);
+
+    &--ok {
+      color: var(--la-on-surface-variant, #44474f);
+    }
+  }
+}
+
+// Phone: same stacked-card pattern as Provider credentials / Sessions
+// (UX_GUIDELINES §9.14) — reused verbatim per the Tools tab's own
+// responsive spec ("do not reintroduce that bug class in a new table").
+@media (max-width: 767px) {
+  .la-tools-table.mat-mdc-table,
+  .la-tools-table {
+    display: block;
+    height: auto;
+  }
+
+  .la-tools-table tbody,
+  .la-tools-table .mdc-data-table__content {
+    display: block;
+    height: auto;
+  }
+
+  .la-tools-table tr[mat-header-row],
+  .la-tools-table tr.mat-mdc-header-row {
+    display: none;
+  }
+
+  .la-tools-table tr[mat-row],
+  .la-tools-table tr.mat-mdc-row,
+  .la-tools-table tr.mdc-data-table__row {
+    display: block;
+    height: auto !important;
+    min-height: 0;
+    padding: 12px 0;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    overflow: visible;
+    border-bottom: 1px solid var(--la-outline, #74777f);
+  }
+
+  .la-tools-table td[mat-cell],
+  .la-tools-table td.mat-mdc-cell,
+  .la-tools-table td.mdc-data-table__cell {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    height: auto !important;
+    min-height: 0;
+    padding: 4px 0;
+    border: none;
+    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .la-tools-table__endpoint {
+    max-width: none;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  .la-tools-table tr[mat-row]:last-of-type,
+  .la-tools-table tr.mat-mdc-row:last-of-type {
+    margin-bottom: 16px;
+    border-bottom: none;
+  }
+
+  .la-tools-table td[mat-cell]::before {
+    content: attr(data-label);
+    font-weight: 500;
+    margin-right: 12px;
+    white-space: nowrap;
+  }
+}

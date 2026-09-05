@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+# dev/staging only: also runs the demo-tenant seed Job. Do not reuse this overlay
+# for a production cell (see k8s/base/jobs-init.yaml's nextbot-seed comment) — a
+# production overlay should list only base/jobs-init.yaml's nextbot-migrate Job,
+# e.g. via a `patchesStrategicMerge`/`$patch: delete` on the seed Job, or a second
+# base resource split (flagged as a follow-up; not built out further here since
+# the compose stack, not k8s, is this phase's priority deliverable).
+images:
+  - name: nextbot-web
+    newName: nextbot-web
+    newTag: local
+  - name: nextbot-gateway
+    newName: nextbot-gateway
+    newTag: local
+  - name: nextbot-worker
+    newName: nextbot-worker
+    newTag: local
+  - name: nextbot-widget-embed
+    newName: nextbot-widget-embed
+    newTag: local
+  - name: nextbot-tools
+    newName: nextbot-tools
+    newTag: local

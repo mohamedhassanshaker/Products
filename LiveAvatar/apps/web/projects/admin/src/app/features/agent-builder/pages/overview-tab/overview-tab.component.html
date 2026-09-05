@@ -1,0 +1,88 @@
+<div class="la-builder-cards">
+  <div class="la-builder-card">
+    <h3>Media pipeline</h3>
+    @for (row of pipelineRows(); track row.layer) {
+      <p class="la-builder-card__row">
+        <span>{{ row.layer }}</span>
+        @if (row.provider) {
+          <span><mat-icon aria-hidden="true" inline="true">check_circle</mat-icon> {{ row.provider }}</span>
+        } @else {
+          <span>Not configured</span>
+        }
+      </p>
+    }
+    <a class="la-builder-card__edit" [routerLink]="['/tenants', tenantId, 'builder', 'pipeline']">edit ▸</a>
+  </div>
+
+  <div class="la-builder-card">
+    <h3>Reasoning</h3>
+    <p class="la-builder-card__row">
+      <span>{{ reasoningNodeCount() }} node{{ reasoningNodeCount() === 1 ? '' : 's' }} in the graph</span>
+    </p>
+    @if (reasoningEntryNode(); as entry) {
+      <p class="la-builder-card__row"><span>Entry point</span><span>{{ entry }}</span></p>
+    }
+    <a class="la-builder-card__edit" [routerLink]="['/tenants', tenantId, 'builder', 'reasoning']">edit ▸</a>
+  </div>
+
+  <div class="la-builder-card">
+    <h3>Capabilities</h3>
+    <p class="la-builder-card__row">
+      <span>Skills</span>
+      <span>
+        {{ skillsCount() }} attached · ~{{ skillsTokenEstimate() }} tok base cost
+        <a [routerLink]="['/tenants', tenantId, 'builder', 'skills']">edit ▸</a>
+      </span>
+    </p>
+    <p class="la-builder-card__row">
+      <span>Tools</span>
+      <span>
+        {{ attachedToolsCount() }} always-on
+        <a [routerLink]="['/tenants', tenantId, 'builder', 'tools']">edit ▸</a>
+      </span>
+    </p>
+    @if (consequentialUngatedCount() > 0) {
+      <p class="la-builder-card__warn">
+        <mat-icon aria-hidden="true" inline="true">warning</mat-icon>
+        {{ consequentialUngatedCount() }} consequential tool{{ consequentialUngatedCount() === 1 ? '' : 's' }} ungated (of {{ consequentialToolsCount() }})
+      </p>
+    }
+    <p class="la-builder-card__row">
+      <span>Knowledge</span>
+      <span>
+        {{ knowledgeSourceCount() }} source{{ knowledgeSourceCount() === 1 ? '' : 's' }} · {{ knowledgeChunkCount() }} chunks
+        <a [routerLink]="['/tenants', tenantId, 'builder', 'knowledge']">edit ▸</a>
+      </span>
+    </p>
+    @if (staleKnowledgeCount() > 0) {
+      <p class="la-builder-card__warn">
+        <mat-icon aria-hidden="true" inline="true">warning</mat-icon>
+        {{ staleKnowledgeCount() }} stale source{{ staleKnowledgeCount() === 1 ? '' : 's' }}
+      </p>
+    }
+    <p class="la-builder-card__row">
+      <span>HITL</span>
+      <span>
+        {{ hitlGateCount() }} gate{{ hitlGateCount() === 1 ? '' : 's' }}
+        <a [routerLink]="['/tenants', tenantId, 'builder', 'hitl']">edit ▸</a>
+      </span>
+    </p>
+    @if (hitlUncoveredCount() > 0) {
+      <p class="la-builder-card__warn">
+        <mat-icon aria-hidden="true" inline="true">warning</mat-icon>
+        {{ hitlUncoveredCount() }} blocking gate{{ hitlUncoveredCount() === 1 ? '' : 's' }} outside reviewer coverage
+      </p>
+    }
+  </div>
+
+  <div class="la-builder-card">
+    <h3>Behaviour</h3>
+    <p class="la-builder-card__row"><span>Barge-in</span><span>{{ dynamics().barge_in.enabled ? ('enabled, ' + dynamics().barge_in.sensitivity) : 'disabled' }}</span></p>
+    <p class="la-builder-card__row"><span>Endpointing</span><span>{{ dynamics().endpointing_silence_ms }} ms</span></p>
+    <p class="la-builder-card__row"><span>Max turn</span><span>{{ dynamics().call_limits.max_turn_tokens }} tok / {{ dynamics().call_limits.max_turn_seconds }} s</span></p>
+    @if (sttLanguage(); as language) {
+      <p class="la-builder-card__row"><span>Language</span><span>{{ language }}</span></p>
+    }
+    <a class="la-builder-card__edit" [routerLink]="['/tenants', tenantId, 'builder', 'dynamics']">edit ▸</a>
+  </div>
+</div>

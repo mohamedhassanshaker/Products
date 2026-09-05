@@ -1,0 +1,255 @@
+{
+  "results": [
+    {
+      "check": "D1-interaction-375",
+      "statusSelectBox": {
+        "x": 32,
+        "y": 309,
+        "width": 180,
+        "height": 24
+      },
+      "statusOptions": [
+        "All",
+        "Active",
+        "Ended",
+        "Failed",
+        "Abandoned"
+      ],
+      "rowsAfterSearch": 4,
+      "searchVisible": true,
+      "statusVisible": true
+    },
+    {
+      "check": "D2-roles",
+      "switchCount": 10,
+      "names": [
+        {
+          "i": 0,
+          "accessibleName": "Enable LiveKit",
+          "byRoleName": "Enable LiveKit",
+          "ariaSnapshot": "- switch \"Enable LiveKit\" [checked]"
+        },
+        {
+          "i": 1,
+          "accessibleName": "Enable Deepgram",
+          "byRoleName": "Enable Deepgram",
+          "ariaSnapshot": "- switch \"Enable Deepgram\" [checked]"
+        },
+        {
+          "i": 2,
+          "accessibleName": "Enable faster-whisper",
+          "byRoleName": "Enable faster-whisper",
+          "ariaSnapshot": "- switch \"Enable faster-whisper\" [checked]"
+        },
+        {
+          "i": 3,
+          "accessibleName": "Enable Anthropic",
+          "byRoleName": "Enable Anthropic",
+          "ariaSnapshot": "- switch \"Enable Anthropic\" [checked]"
+        },
+        {
+          "i": 4,
+          "accessibleName": "Enable Google",
+          "byRoleName": "Enable Google",
+          "ariaSnapshot": "- switch \"Enable Google\" [checked]"
+        },
+        {
+          "i": 5,
+          "accessibleName": "Enable OpenAI",
+          "byRoleName": "Enable OpenAI",
+          "ariaSnapshot": "- switch \"Enable OpenAI\" [checked]"
+        },
+        {
+          "i": 6,
+          "accessibleName": "Enable ElevenLabs",
+          "byRoleName": "Enable ElevenLabs",
+          "ariaSnapshot": "- switch \"Enable ElevenLabs\" [checked]"
+        },
+        {
+          "i": 7,
+          "accessibleName": "Enable Fish Speech",
+          "byRoleName": "Enable Fish Speech",
+          "ariaSnapshot": "- switch \"Enable Fish Speech\" [checked]"
+        },
+        {
+          "i": 8,
+          "accessibleName": "Enable Alibaba LiveAvatar",
+          "byRoleName": "Enable Alibaba LiveAvatar",
+          "ariaSnapshot": "- switch \"Enable Alibaba LiveAvatar\" [checked]"
+        },
+        {
+          "i": 9,
+          "accessibleName": "Enable bitHuman",
+          "byRoleName": "Enable bitHuman",
+          "ariaSnapshot": "- switch \"Enable bitHuman\" [checked]"
+        }
+      ]
+    },
+    {
+      "check": "D2-distinct",
+      "distinctCount": 10,
+      "anyNullOrEmpty": false
+    },
+    {
+      "check": "D2-axe",
+      "violations": []
+    },
+    {
+      "check": "GP-dashboard",
+      "text": "Skip to main content smart_toy Avatar Platform Dashboard Deployments Providers Sessions GPU health Alerts Residency qa-retry1-operator@example.test Operator arrow_drop_down Dashboard 1h 24h 7d Tenant Active deployments 3 Session volume 12 started · 9 ended · 3 failed · 0 abandoned Error rate 25% Provider health error LiveKit Unreachable error STT Unreachable error LLM Unreachable error TTS Unreachable error Avatar Unreachable"
+    },
+    {
+      "check": "GP-deployments",
+      "text": "Skip to main content smart_toy Avatar Platform Dashboard Deployments Providers Sessions GPU health Alerts Residency qa-retry1-operator@example.test Operator arrow_drop_down Deployments Create deployment Search deployments Status All Name Slug Providers Status Last modified Actions Initech Legal initech-legal Not configured pause_circle Paused 17 minutes ago more_vert Globex Retail International globex-retail Published — openai, elevenlabs, bithuman check_circle Active 17 minutes ago more_vert Acme Health Systems acme-health Published — anthropic, fish-speech, alibaba-liveavatar check_circle Active 17 minutes ago more_vert Northwind Bank northwind-bank Published — openai, elevenlabs, bithuman check_circle Active 17 minutes ago more_vert Items per page: 25 1 – 4 of 4"
+    },
+    {
+      "check": "GP-session-detail",
+      "url": "http://127.0.0.1:4500/admin/sessions/c1390ed1-24d3-43a5-a62c-eaec9ecea822",
+      "firstRow": "c1390ed1… globex-retail 17 minutes ago 0:00 error failed livekit · deepgram · openai · elevenlabs · bithuman PROVIDER_UNREACHABLE",
+      "body": "Skip to main content smart_toy Avatar Platform Dashboard Deployments Providers Sessions GPU health Alerts Residency qa-retry1-operator@example.test Operator arrow_drop_down Session c1390ed1… Back to sessions Tenant globex-retail Room name globex-retail_c1390ed1-24d3-43a5-a62c-eaec9ecea822 Participants user_c1390ed1-24d3-43a5-a62c-eaec9ecea822, agent_c1390ed1-24d3-43a5-a62c-eaec9ecea822 Recording block No recording Status error failed Transcript You said Hi, I think there is a duplicate charge on my checking account from yesterday. Assistant said I can help with that. I see two identical pending charges of $42.10 from Riverside Cafe. I have flagged the second one for review. You said How long does the review usually take? Assistant said Most duplicate-charge reviews close within three business days, and the hold is released automatically if the merchant does not respond. You said Great, c"
+    },
+    {
+      "check": "D6-D7-agent-builder-axe",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 1,
+          "targets": [
+            ".la-builder-chip"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.48 (foreground color: #1b7f4e, background color: #f2f2f6, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "nodes": 1,
+          "targets": [
+            "pre"
+          ],
+          "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+        }
+      ]
+    },
+    {
+      "check": "D7-yaml-viewer",
+      "yaml": {
+        "tabindex": null,
+        "role": null,
+        "ariaLabel": "Redacted configuration YAML",
+        "scrollable": true
+      }
+    },
+    {
+      "check": "D9-agent-builder-404",
+      "body": "Skip to main content smart_toy Avatar Platform Dashboard Deployments Providers Sessions GPU health Alerts Residency qa-retry1-operator@example.test Operator arrow_drop_down Deployment · Agent Builder Manage provider credentials Back to deployments error_outline Could not load this deployment Try again. Retry",
+      "retryButton": 1
+    },
+    {
+      "check": "GP-alerts",
+      "body": "Skip to main content smart_toy Avatar Platform Dashboard Deployments Providers Sessions GPU health Alerts Residency qa-retry1-operator@example.test Operator arrow_drop_down Northwind Bank · Alerts & failover Back to deployments Fallback & retry Alerts Fallback LLM anthropic / claude-3-5-sonnet-latest Edit in Agent Builder Retry max attempts Attempt 1 delay (ms) Attempt 2 delay (ms) Attempt 3 delay (ms) Degraded-mode message 85 / 500 Save Failover stats (last 24h) Primary failures: 1 Fallback successes: 1 Degraded-mode invocations: 0",
+      "editLink": 1
+    },
+    {
+      "check": "GP-residency",
+      "body": "Skip to main content smart_toy Avatar Platform Dashboard Deployments Providers Sessions GPU health Alerts Residency qa-retry1-operator@example.test Operator arrow_drop_down Globex Retail International · Data residency Back to deployments Send to remote LLM Prompt text only The current turn's text is sent, not conversation history. Prompt and transcript The current turn plus recent conversation history is sent. None No prompt content is sent to a remote LLM; only a self-hosted/on-prem LLM may be used (not available in v1). Retain transcripts (days) Transcripts older than this are permanently deleted by a daily job (FR-PRIV-3). Recordings enabled Save"
+    },
+    {
+      "check": "GP-gpu",
+      "body": "Skip to main content smart_toy Avatar Platform Dashboard Deployments Providers Sessions GPU health Alerts Residency qa-retry1-operator@example.test Operator arrow_drop_down GPU health Read-only. Scaling and provisioning happen outside this view. All roles Tenant gpu-avatar-01 face Avatar GPU utilization 71.5% Memory utilization 62% error Unhealthy Last heartbeat: 17 minutes ago Autoscaler: Not configured gpu-avatar-02 face Avatar GPU utilization 12% Memory utilization 30.5% error Unhealthy Last heartbeat: 17 minutes ago Autoscaler: Not configured gpu-stt-01 mic STT GPU utilization 44% Memory utilization 51.2% error Unhealthy Last heartbeat: 17 minutes ago Autoscaler: Not configured gpu-tts-0"
+    },
+    {
+      "check": "SEC-credentials",
+      "containsDevSecret": false,
+      "body": "Skip to main content smart_toy Avatar Platform Dashboard Deployments Providers Sessions GPU health Alerts Residency qa-retry1-operator@example.test Operator arrow_drop_down Northwind Bank · Provider credentials Back to deployments Add credential Provider Display label Endpoint Secret Connection Actions Anthropic cloud Remote anthropic (primary) https://api.x.test/v1 key Configured error Unreachable Checked 57 seconds ago more_vert bitHuman dns Self-hosted bithuman (primary) https://api.x.test/v1 key Configured error Unreachable Checked 57 seconds ago more_vert Deepgram dns Self-hosted deepgram (primary) https://api.x.test/v1 key Configured error Unreachable Checked 57 seconds ago more_vert E"
+    },
+    {
+      "check": "D3-D5-D8-precall",
+      "h1": 0,
+      "title": "Conversation · Avatar Platform",
+      "btns": [
+        "Join call"
+      ],
+      "contrast": {
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(76, 141, 255)",
+        "fontSize": "16px",
+        "fontWeight": "600",
+        "disabled": false
+      },
+      "doc": 375,
+      "viewport": 375
+    },
+    {
+      "check": "precall-axe",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 1,
+          "targets": [
+            "button"
+          ],
+          "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.2 (foreground color: #ffffff, background color: #4c8dff, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "check": "GP-precall-unknown",
+      "body": "🧑‍💻 This assistant is not available right now. Your name (optional) Turn on camera Join call",
+      "joinDisabled": true
+    },
+    {
+      "check": "GP-precall-paused",
+      "body": "🧑‍💻 This assistant is not available right now. Your name (optional) Turn on camera Join call"
+    }
+  ],
+  "consoleErrors": [
+    {
+      "url": "http://127.0.0.1:4500/admin/tenants/00000000-0000-4000-8000-000000000000/builder",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "url": "http://127.0.0.1:4500/admin/tenants/00000000-0000-4000-8000-000000000000/builder",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "url": "http://127.0.0.1:4500/admin/tenants/00000000-0000-4000-8000-000000000000/builder",
+      "text": "ERROR {status: 404, code: TENANT_NOT_FOUND, message: Tenant not found., details: Object}"
+    },
+    {
+      "url": "http://127.0.0.1:4500/admin/tenants/00000000-0000-4000-8000-000000000000/builder",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "url": "http://127.0.0.1:4500/c/no-such-tenant",
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "url": "http://127.0.0.1:4500/c/initech-legal",
+      "text": "Failed to load resource: the server responded with a status of 403 (Forbidden)"
+    }
+  ],
+  "netErrors": [
+    {
+      "url": "http://127.0.0.1:4500/api/tenants/00000000-0000-4000-8000-000000000000",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:4500/api/tenants/00000000-0000-4000-8000-000000000000/provider-credentials",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:4500/api/tenants/00000000-0000-4000-8000-000000000000/config",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:4500/api/public/deployments/no-such-tenant/preflight",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:4500/api/public/deployments/initech-legal/preflight",
+      "status": 403
+    }
+  ]
+}

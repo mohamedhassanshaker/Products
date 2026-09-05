@@ -1,0 +1,51 @@
+# One-shot migration + seed Jobs — same nextbot-tools image used by the compose
+# stack's `migrate`/`seed` services (docker/tools.Dockerfile). Re-apply (`kubectl
+# apply -f` after `kubectl delete job/...`, or a Helm pre-install/pre-upgrade hook
+# in a templated chart) as part of every rollout, before rolling gateway/web/worker.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nextbot-migrate
+  namespace: nextbot
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      serviceAccountName: nextbot-tools
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+      containers:
+        - name: migrate
+          image: nextbot-tools:REPLACE_ME_TAG
+          command: ["pnpm", "--filter", "@nextbot/db", "run", "migrate"]
+          envFrom:
+            - configMapRef: { name: nextbot-config }
+            - secretRef: { name: nextbot-secrets }
+---
+# DEV/STAGING ONLY. This creates a demo tenant with a published, well-known
+# password (SEED_CREDENTIALS.md) — do not apply this Job against a production
+# cell/namespace. Excluded from the production overlay (see
+# k8s/overlays/dev/kustomization.yaml vs. a production overlay that omits it).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nextbot-seed
+  namespace: nextbot
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      serviceAccountName: nextbot-tools
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+      containers:
+        - name: seed
+          image: nextbot-tools:REPLACE_ME_TAG
+          command: ["pnpm", "run", "db:seed"]
+          envFrom:
+            - configMapRef: { name: nextbot-config }
+            - secretRef: { name: nextbot-secrets }

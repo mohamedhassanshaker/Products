@@ -1,0 +1,160 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mD:/work/products/nextbot[39m
+
+ [32m✓[39m [32m|integration|[39m packages/db/src/bootstrap/bootstrap.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 241[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/connectors/src/infrastructure/credential-db-grant.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 206[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/tenancy/src/application/provision-tenant.int.test.ts [2m([22m[2m5 tests[22m[2m)[22m[90m 112[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/agent-platform/src/application/git-connection-service.int.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 984[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/iam/src/application/rbac-effective-permissions.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 633[2mms[22m[39m
+   [33m[2m✓[22m[39m Users & Roles screen — a custom role's permission matrix takes effect end-to-end (real Postgres)[2m > [22ma user assigned a custom role with approval_queue: None cannot pass requirePermission for it, while their granted modules still work [33m329[2mms[22m[39m
+   [33m[2m✓[22m[39m Users & Roles screen — a custom role's permission matrix takes effect end-to-end (real Postgres)[2m > [22mreassigning a user's roles via updateUserRoles changes their effective permissions on next login [33m303[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/conversations/src/application/idle-sweeper.int.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 929[2mms[22m[39m
+   [33m[2m✓[22m[39m sweepIdleConversationsForTenant (LLD §3.7 idle-sweep job, real Postgres)[2m > [22mmarks an idle conversation with zero customer messages as Abandoned [33m328[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/channels/src/application/whatsapp.int.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 2071[2mms[22m[39m
+   [33m[2m✓[22m[39m WhatsApp channel connect + WABA config (BL-15)[2m > [22mconnects a real Meta Business Manager account and vaults every credential [33m332[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/conversations/src/application/send-widget-message.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1167[2mms[22m[39m
+   [33m[2m✓[22m[39m sendWidgetMessage (BL-04 backend slice, real Postgres)[2m > [22mpersists the customer message with sequence 1 and a placeholder AI reply with sequence 2 [33m325[2mms[22m[39m
+   [33m[2m✓[22m[39m sendWidgetMessage (BL-04 backend slice, real Postgres)[2m > [22mBE1: 20 truly-concurrent sends with the identical clientMessageId all succeed (no spurious 500) and agree on the same messageId/sequence [33m450[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/tool-registry/src/infrastructure/tool-repository.int.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 773[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/tool-registry/src/application/catalog-and-permission.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 902[2mms[22m[39m
+   [33m[2m✓[22m[39m discoverAndSyncTools + resolveToolPermission (BL-03, real Postgres)[2m > [22msyncs discovered tools into the catalog with heuristic-classified rw_class/approval_tier [33m416[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/ai-registry/src/providers/openai-compatible.int.test.ts [2m([22m[2m7 tests[22m[2m)[22m[90m 109[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/conversations/src/application/admin-conversation-query.int.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 724[2mms[22m[39m
+   [33m[2m✓[22m[39m admin-conversation-query (Phase 13, BL-06, real Postgres)[2m > [22mlists a tenant's conversations, filters by channelId/language, and paginates [33m363[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/ai-registry/src/structured.int.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 315[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/escalations/src/application/escalation-lifecycle.int.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 1706[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation lifecycle (Phase 16, BL-09, real Postgres)[2m > [22mFR-ESC-01/03: triggering an escalation with no configured routing rules falls back to an auto-provisioned default queue, never leaving it unassigned [33m391[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation lifecycle (Phase 16, BL-09, real Postgres)[2m > [22mreal concurrency: two simultaneous 'Take Over' claims on the same escalation resolve to exactly one winner [33m333[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation lifecycle (Phase 16, BL-09, real Postgres)[2m > [22mB.5.1 'Reassign' moves a still-active escalation to a different queue without changing its status [33m334[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/connectors/src/application/health-check.int.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 664[2mms[22m[39m
+   [33m[2m✓[22m[39m probeConnectorHealth transitions connector.status (BL-11/B1 regression, real Postgres)[2m > [22mtransitions Offline -> Connected after a successful probe, unblocking tool calls previously denied for connector_offline [33m327[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/conversations/src/application/create-widget-session.int.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 674[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/tool-registry/src/infrastructure/repositories.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 534[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/iam/src/application/authenticate-user.int.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 4687[2mms[22m[39m
+   [33m[2m✓[22m[39m login (BL-01 slice B integration — real Postgres)[2m > [22msucceeds for a correctly-credentialed, role-assigned user with no MFA enrolled [33m418[2mms[22m[39m
+   [33m[2m✓[22m[39m login (BL-01 slice B integration — real Postgres)[2m > [22mlocks the account after the configured number of failed attempts (FR-SEC-03) [33m460[2mms[22m[39m
+   [33m[2m✓[22m[39m login (BL-01 slice B integration — real Postgres)[2m > [22missues an MFA challenge instead of a session when the user is TOTP-enrolled, then completes login with a valid code [33m492[2mms[22m[39m
+   [33m[2m✓[22m[39m login (BL-01 slice B integration — real Postgres)[2m > [22mrejects a wrong MFA code without completing login [33m786[2mms[22m[39m
+   [33m[2m✓[22m[39m login (BL-01 slice B integration — real Postgres)[2m > [22mcompletes MFA login with a valid unused backup code, then rejects reusing it [33m1000[2mms[22m[39m
+   [33m[2m✓[22m[39m login (BL-01 slice B integration — real Postgres)[2m > [22mforces MFA enrollment on first login when the user's role requires it, then completes login after confirmation [33m508[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/iam/src/infrastructure/role-repository.int.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 733[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/approvals/src/infrastructure/tool-call-health.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 171[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/tenancy/src/application/platform-audit-log-append-only.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 75[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/tool-registry/src/application/permission-service.int.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 467[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/web/app/api/v1/admin/users/users-roles-admin.int.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 6200[2mms[22m[39m
+   [33m[2m✓[22m[39m Users & Roles admin API (real Postgres)[2m > [22mPOST /roles creates a custom role and records a Success audit entry attributed to the real admin [33m1984[2mms[22m[39m
+   [33m[2m✓[22m[39m Users & Roles admin API (real Postgres)[2m > [22mPUT /roles/{id} rejects editing a system role with 409 and never mutates it [33m1045[2mms[22m[39m
+   [33m[2m✓[22m[39m Users & Roles admin API (real Postgres)[2m > [22mPOST /users creates a user with an initial role assignment and audits it, then GET /users lists it with roles attached [33m1287[2mms[22m[39m
+   [33m[2m✓[22m[39m Users & Roles admin API (real Postgres)[2m > [22mPOST /users rejects a roleId that doesn't belong to this tenant with 422 [33m960[2mms[22m[39m
+   [33m[2m✓[22m[39m Users & Roles admin API (real Postgres)[2m > [22mGET/POST /users return 401 with no session at all [33m333[2mms[22m[39m
+   [33m[2m✓[22m[39m Users & Roles admin API (real Postgres)[2m > [22mPUT /users/{id}/roles reassigns roles and audits the change [33m575[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/audit/src/infrastructure/audit-log-append-only.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 321[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/tenancy/src/application/provision-tenant-audit.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 77[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/gateway/src/lib/mcp-egress.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 556[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/web/app/api/v1/admin/channels/[channelId]/whatsapp/whatsapp-admin.int.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 7946[2mms[22m[39m
+   [33m[2m✓[22m[39m WhatsApp channel admin API — real HTTP routes, real DB, real Meta mock server (BL-15)[2m > [22mfull config lifecycle: connect -> waba config -> sync numbers -> sync templates -> activate, with audit entries attributed to the real admin [33m3122[2mms[22m[39m
+   [33m[2m✓[22m[39m WhatsApp channel admin API — real HTTP routes, real DB, real Meta mock server (BL-15)[2m > [22m403s every route without channels=Write, 200s GET with channels=Read [33m1032[2mms[22m[39m
+   [33m[2m✓[22m[39m WhatsApp channel admin API — real HTTP routes, real DB, real Meta mock server (BL-15)[2m > [22mconsent: record, list (masked), and bulk import with dry-run vs. commit [33m915[2mms[22m[39m
+   [33m[2m✓[22m[39m WhatsApp channel admin API — real HTTP routes, real DB, real Meta mock server (BL-15)[2m > [22mQA D1: Webhook tab GET returns the real, deployment-derived webhook URL and an honest (never fabricated) Pending status [33m1149[2mms[22m[39m
+   [33m[2m✓[22m[39m WhatsApp channel admin API — real HTTP routes, real DB, real Meta mock server (BL-15)[2m > [22mQA D1: 'Re-verify Challenge' honestly reports Failed when the gateway route is unreachable, never a false 'Verified' [33m772[2mms[22m[39m
+   [33m[2m✓[22m[39m WhatsApp channel admin API — real HTTP routes, real DB, real Meta mock server (BL-15)[2m > [22mcredential rotation never echoes the old or new plaintext back [33m955[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/db/src/clickhouse.int.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 202[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/connectors/src/application/create-connector.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 321[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/audit/src/application/sync-audit-from-events.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 339[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/channels/src/application/create-web-widget-channel.int.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 494[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/tenancy/src/application/runtime-quota.int.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 444[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/iam/src/infrastructure/user-repository.int.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 323[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/web/app/api/v1/admin/audit-log/audit-log-masking.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1875[2mms[22m[39m
+   [33m[2m✓[22m[39m Audit Log masking (QA fix UI-D2, real Postgres)[2m > [22mmasks a PII-containing details field in GET /audit-log's response [33m1172[2mms[22m[39m
+   [33m[2m✓[22m[39m Audit Log masking (QA fix UI-D2, real Postgres)[2m > [22mmasks a PII-containing details field in the CSV export's response [33m702[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/conversations/src/infrastructure/message-bus.int.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 433[2mms[22m[39m
+   [33m[2m✓[22m[39m message-bus (Redis pub/sub, QA fix D3, real Redis)[2m > [22man event published from one client instance is delivered to a subscriber on a completely separate client instance [33m432[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/mcp-client/src/application/list-tools.int.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 50[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/mcp-client/src/application/call-tool.int.test.ts [2m([22m[2m3 tests[22m[2m)[22m[90m 76[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/mcp-client/src/application/circuit-breaker-cross-process.int.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1087[2mms[22m[39m
+   [33m[2m✓[22m[39m circuit breaker cross-process state (Phase 18, real Redis, real separate OS process)[2m > [22ma breaker tripped by a separate child process is observed as open by this process [33m1086[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/connectors/src/application/discover-tools.int.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 160[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/connectors/src/infrastructure/connector-repository.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 267[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/gateway/app/api/v1/widget/rate-limit.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 881[2mms[22m[39m
+   [33m[2m✓[22m[39m apps/gateway widget session-create rate limiting (BE2, real Redis)[2m > [22mreturns 429 with Retry-After once a single IP exceeds the per-minute session-create ceiling [33m685[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/ai-registry/src/embed.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 62[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/ai-registry/src/graph-runtime/fsm-graph-runtime.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 38[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/tenancy/src/application/tenant-branding.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 147[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/web/app/api/v1/admin/connectors/connectors-admin.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2502[2mms[22m[39m
+   [33m[2m✓[22m[39m connectors admin API — audit wiring (QA Final Review B4)[2m > [22mPOST /connectors records a Success audit entry attributed to the real admin [33m2070[2mms[22m[39m
+   [33m[2m✓[22m[39m connectors admin API — audit wiring (QA Final Review B4)[2m > [22mPOST /connectors records a Failure audit entry when the connector name is a duplicate [33m430[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/db/src/testing/fixture-tenant.int.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 209[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/tenancy/src/application/list-all-tenants.int.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 172[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/tenancy/src/application/tenant-operator-summary.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 155[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/agent-platform/src/application/eval-service.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 774[2mms[22m[39m
+   [33m[2m✓[22m[39m eval-service (FR-AGT-06 promotion gate — real GraphRuntime execution, single-turn)[2m > [22mruns every case through the CustomFSM GraphRuntime and records a pass/fail verdict per expectedResponsePattern [33m429[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/agent-platform/src/application/model-gateway-service.int.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 663[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/orchestration/src/application/goal-selection.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 8280[2mms[22m[39m
+   [33m[2m✓[22m[39m selectGoalAndTool (Phase 12 — real HTTP round trip via ai-registry, no hand-parsed JSON)[2m > [22mselects the permitted tool the model chose, with args threaded through unchanged [33m8251[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/ai-registry/src/adk/adk-graph-runtime.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 61[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/agent-platform/src/application/agent-run-service.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1113[2mms[22m[39m
+   [33m[2m✓[22m[39m agent-run-service (FR-AGT-09 basic runtime observability — agent_run write path + OTel span)[2m > [22mstartAgentRun persists a Running agent_run row stamped with a genuine OTel trace id [33m623[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/web/app/api/v1/admin/dsr/dsr-admin.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 18891[2mms[22m[39m
+   [33m[2m✓[22m[39m DSR admin API (Phase 17, BL-10, real Postgres)[2m > [22mGET /dsr 403s without security_settings=Read [33m17008[2mms[22m[39m
+   [33m[2m✓[22m[39m DSR admin API (Phase 17, BL-10, real Postgres)[2m > [22mSearch finds a real conversation matching the customer identifier; Delete actually removes it [33m1040[2mms[22m[39m
+   [33m[2m✓[22m[39m DSR admin API (Phase 17, BL-10, real Postgres)[2m > [22mregression (BE-3): Export/Search/Delete cover messages, escalations, and tool calls too, not just conversation metadata [33m556[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m packages/modules/agent-platform/src/application/promote-version-service.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1174[2mms[22m[39m
+   [33m[2m✓[22m[39m promote-version-service — full LLD §3.10 promotion lifecycle against a real database[2m > [22mwalks Draft -> EvalGated -> HumanReview -> Approved -> Production, creating a real active Deployment row atomically at Production [33m459[2mms[22m[39m
+   [33m[2m✓[22m[39m promote-version-service — full LLD §3.10 promotion lifecycle against a real database[2m > [22mBE2 regression: concurrent Approved -> Production promotions of the exact same version only let one succeed, never two active 100%-traffic Deployment rows (closes the check-then-act race) [33m323[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/gateway/src/lib/orchestration-tier-engine.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 647[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/gateway/app/api/v1/widget/escalation-e2e.int.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 476[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation trigger -> queue -> takeover -> message -> return-to-bot (real Postgres, apps/gateway HTTP surface)[2m > [22ma real 'talk to a human' widget message creates a real, queue-visible escalation and the full agent workflow completes [33m475[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/gateway/src/lib/orchestration-turn-pipeline.int.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 1318[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/gateway/src/lib/orchestration-turn-pipeline-tracing.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1254[2mms[22m[39m
+   [33m[2m✓[22m[39m runTurnPipeline tracing (Phase 13 / BL-06, NFR-9 — real Postgres + ClickHouse)[2m > [22ma Tier-1 tool-call turn produces a Succeeded agent_run with a complete ModelCall+ToolCall span trace [33m561[2mms[22m[39m
+   [33m[2m✓[22m[39m runTurnPipeline tracing (Phase 13 / BL-06, NFR-9 — real Postgres + ClickHouse)[2m > [22ma failed tool dispatch still produces a complete (Failed) trace, not a silent gap — NFR-9 [33m315[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/gateway/app/api/v1/widget/widget-flow.int.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 632[2mms[22m[39m
+   [33m[2m✓[22m[39m apps/gateway widget routes (real Postgres, first Gateway Plane surface)[2m > [22mfull round trip: create session -> send message -> receives 202 with a sequence [33m406[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/gateway/src/lib/orchestration-param-extract.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 302[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/gateway/src/lib/whatsapp-inbound.int.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1130[2mms[22m[39m
+   [33m[2m✓[22m[39m WhatsApp inbound webhook -> real turn pipeline -> real outbound send (e2e)[2m > [22mprocesses a signed inbound message through the real turn pipeline and sends a real reply (within the 24h window) [33m567[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/gateway/app/api/v1/widget/messages/tool-call-e2e.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1083[2mms[22m[39m
+   [33m[2m✓[22m[39m Phase 12 e2e: widget message -> real turn pipeline -> real MCP tool call -> rendered card[2m > [22mask a question -> tool call -> structured DataTable card is persisted [33m656[2mms[22m[39m
+   [33m[2m✓[22m[39m Phase 12 e2e: widget message -> real turn pipeline -> real MCP tool call -> rendered card[2m > [22ma real conversation turn creates a real agent_run once the tenant has a Production agent definition version [33m418[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/web/app/api/v1/admin/agent-platform/versions/[id]/bind-eval-suite/route.int.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1091[2mms[22m[39m
+   [33m[2m✓[22m[39m POST /api/v1/admin/agent-platform/versions/[id]/bind-eval-suite (integration: real DB, real UUIDv7 eval suite id)[2m > [22mbinds a real, freshly-generated UUIDv7 eval suite id via the real POST handler and persists it (visible on re-fetch) [33m762[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/gateway/src/lib/orchestration-approval-service.int.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1431[2mms[22m[39m
+   [33m[2m✓[22m[39m Tier-2/3 approval-service — LLD §6.3/6.4/6.5 (real Postgres + real MCP server)[2m > [22mTier-2 Cancel performs zero backend mutation (the MCP server is never called) [33m303[2mms[22m[39m
+   [33m[2m✓[22m[39m Tier-2/3 approval-service — LLD §6.3/6.4/6.5 (real Postgres + real MCP server)[2m > [22mTier-2 Confirm executes the call exactly once even under 10 truly concurrent duplicate Confirm attempts [33m471[2mms[22m[39m
+   [33m[2m✓[22m[39m Tier-2/3 approval-service — LLD §6.3/6.4/6.5 (real Postgres + real MCP server)[2m > [22mTier-3 Approved executes for real (once) and a second decision attempt is rejected, not re-executed [33m352[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/web/app/api/v1/admin/conversations/conversations-admin.int.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 3318[2mms[22m[39m
+   [33m[2m✓[22m[39m conversation admin API (Phase 13, BL-06)[2m > [22mGET /conversations returns only this tenant's conversations, 403s a caller without conversations=Read [33m1240[2mms[22m[39m
+   [33m[2m✓[22m[39m conversation admin API (Phase 13, BL-06)[2m > [22mGET /conversations filters by status [33m304[2mms[22m[39m
+   [33m[2m✓[22m[39m conversation admin API (Phase 13, BL-06)[2m > [22mGET /conversations/:id returns the transcript, 404s an unknown/cross-tenant id [33m305[2mms[22m[39m
+   [33m[2m✓[22m[39m conversation admin API (Phase 13, BL-06)[2m > [22mGET /conversations/:id/trace returns an empty (not erroring) trace for a conversation with no agent_run yet [33m367[2mms[22m[39m
+   [33m[2m✓[22m[39m conversation admin API (Phase 13, BL-06)[2m > [22mGET /conversations/:id/trace returns the real agent_run + spans once a message references one [33m539[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/web/app/api/v1/admin/approvals/approvals-admin.int.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 5653[2mms[22m[39m
+   [33m[2m✓[22m[39m approvals admin API (Phase 14/16, QA fix D1 + BE2)[2m > [22mGET /approvals (D1): backendName/channelType are the real connector/channel, not hardcoded null [33m539[2mms[22m[39m
+   [33m[2m✓[22m[39m approvals admin API (Phase 14/16, QA fix D1 + BE2)[2m > [22mGET /approvals 403s without approval_queue=Read [33m677[2mms[22m[39m
+   [33m[2m✓[22m[39m approvals admin API (Phase 14/16, QA fix D1 + BE2)[2m > [22mGET /approvals/{id} 403s without approval_queue=Read, 404s an unknown id [33m1357[2mms[22m[39m
+   [33m[2m✓[22m[39m approvals admin API (Phase 14/16, QA fix D1 + BE2)[2m > [22mGET /approvals/{id} (D1): backendName is the real connector name [33m700[2mms[22m[39m
+   [33m[2m✓[22m[39m approvals admin API (Phase 14/16, QA fix D1 + BE2)[2m > [22mPOST /approvals/{id}/decision (BE2): Approve is rejected 409 when the circuit breaker has since tripped, without executing [33m455[2mms[22m[39m
+   [33m[2m✓[22m[39m approvals admin API (Phase 14/16, QA fix D1 + BE2)[2m > [22mPOST /approvals/{id}/decision (BE2): Approve is rejected 409 when an admin has since added a Deny rule, without executing [33m401[2mms[22m[39m
+   [33m[2m✓[22m[39m approvals admin API (Phase 14/16, QA fix D1 + BE2)[2m > [22mPOST /approvals/{id}/decision 422s a missing Idempotency-Key and an invalid body, 403s without approval_queue=Write [33m652[2mms[22m[39m
+   [33m[2m✓[22m[39m approvals admin API (Phase 14/16, QA fix D1 + BE2)[2m > [22mPOST /approvals/{id}/decision (BE2): Approve still succeeds end-to-end when nothing has changed since the request [33m441[2mms[22m[39m
+   [33m[2m✓[22m[39m approvals admin API (Phase 14/16, QA fix D1 + BE2)[2m > [22mPOST /approvals/{id}/decision records an audit entry attributed to the approving admin [33m430[2mms[22m[39m
+ [32m✓[39m [32m|integration|[39m apps/web/app/api/v1/admin/escalations/escalations-admin.int.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 6171[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mGET /escalations 403s without escalations=Read, 200s with it and includes the real row [33m893[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mGET /escalations/{id} returns the takeover context detail, 404s an unknown id [33m611[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mfull takeover flow through the real HTTP routes: claim -> message -> resolve [33m352[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mreturn-to-bot posts the exact system message and reopens the conversation to Active [33m318[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mGET/PUT /escalation-routing-rules round trips a real rule [33m450[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mGET/POST /escalation-queues auto-provisions the default queue and creates a new one [33m442[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mPOST /escalations/{id}/tool-calls 409s when the escalation hasn't been claimed yet [33m376[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mPOST /escalations/{id}/tool-calls 422s an invalid body and 404s an unknown tool id once claimed [33m389[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mPOST /escalations/{id}/tool-calls invokes a real permitted tool end-to-end once claimed [33m448[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mPOST /escalations/{id}/tool-calls (BE1): a Tier-3 tool manually triggered suspends into the real Approval Queue instead of executing [33m388[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mPOST /escalations/{id}/tool-calls (BE1): a Tier-2 tool manually triggered suspends for customer confirmation instead of executing [33m383[2mms[22m[39m
+   [33m[2m✓[22m[39m escalation admin API (Phase 16, BL-09)[2m > [22mPOST /escalations/{id}/tool-calls (BE1): a Tier-3 tool is rejected 403 without approval_queue=Write, even with escalations=Write [33m375[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m68 passed[39m[22m[90m (68)[39m
+[2m      Tests [22m [1m[32m290 passed[39m[22m[90m (290)[39m
+[2m   Start at [22m 02:08:26
+[2m   Duration [22m 30.97s[2m (transform 16.42s, setup 3.36s, collect 443.15s, tests 99.68s, environment 11ms, prepare 14.55s)[22m
+
+EXIT=0

@@ -1,0 +1,93 @@
+@if (tokenInvalid()) {
+  <div class="la-auth-card">
+    <la-empty-state
+      variant="error"
+      icon="link_off"
+      title="Invite unavailable"
+      body="This invite link is invalid or has expired."
+      actionLabel="Sign in"
+      (action)="goToLogin()"
+    />
+  </div>
+} @else {
+  <div class="la-auth-card">
+    <h1 class="la-auth-card__title">Set your password</h1>
+    <p class="la-auth-card__subtitle">
+      You were invited to administer Avatar Platform. Choose a password to activate your account.
+    </p>
+
+    @if (formError()) {
+      <div class="la-auth-card__alert" role="alert">
+        {{ formError() }}
+        @if (emailExists()) {
+          <div>
+            <button mat-button type="button" (click)="goToLogin()">Sign in</button>
+          </div>
+        }
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" [attr.aria-busy]="submitting()">
+      <mat-form-field appearance="outline" class="la-auth-card__field">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="showPassword() ? 'text' : 'password'"
+          formControlName="password"
+          autocomplete="new-password"
+          aria-describedby="invite-password-rule"
+          [attr.aria-required]="true"
+          [readonly]="submitting()"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+          (click)="togglePasswordVisibility()"
+        >
+          <mat-icon aria-hidden="true">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (passwordRuleFailed()) {
+          <mat-error>At least 8 characters, including a letter and a digit.</mat-error>
+        }
+      </mat-form-field>
+      <p id="invite-password-rule" class="la-auth-card__helper">
+        At least 8 characters, including a letter and a digit.
+      </p>
+
+      <mat-form-field appearance="outline" class="la-auth-card__field">
+        <mat-label>Confirm password</mat-label>
+        <input
+          matInput
+          [type]="showConfirmPassword() ? 'text' : 'password'"
+          formControlName="confirmPassword"
+          autocomplete="new-password"
+          [attr.aria-required]="true"
+          [readonly]="submitting()"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          [attr.aria-label]="showConfirmPassword() ? 'Hide password' : 'Show password'"
+          (click)="toggleConfirmPasswordVisibility()"
+        >
+          <mat-icon aria-hidden="true">{{ showConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (passwordsMismatch()) {
+          <mat-error>Passwords do not match.</mat-error>
+        }
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" type="submit" class="la-auth-card__submit" [disabled]="submitDisabled()">
+        @if (submitting()) {
+          <mat-spinner diameter="20" />
+          <span class="la-visually-hidden">Activating account</span>
+        } @else {
+          Activate account
+        }
+      </button>
+    </form>
+  </div>
+}

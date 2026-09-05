@@ -1,0 +1,154 @@
+@if (sessionError()?.code === 'SESSION_NOT_FOUND') {
+  <la-empty-state
+    variant="error"
+    icon="error"
+    title="Session not found"
+    body="Session not found."
+    actionLabel="Back to sessions"
+    (action)="backToSessions()"
+  />
+} @else {
+  <la-page-header [title]="'Session ' + (session()?.id?.slice(0, 8) ?? '') + '…'">
+    <button type="button" (click)="backToSessions()">Back to sessions</button>
+  </la-page-header>
+
+  <section class="la-session-detail__header">
+    @if (sessionLoading()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Loading session" />
+    } @else if (sessionError()) {
+      <la-empty-state variant="error" icon="error" title="Could not load session" body="Could not load session details." />
+    } @else if (session()) {
+      <dl class="la-session-detail__meta">
+        <dt>Tenant</dt>
+        <dd>{{ session()!.tenant_slug }}</dd>
+        <dt>Room name</dt>
+        <dd>{{ session()!.room_name }}</dd>
+        <dt>Participants</dt>
+        <dd>{{ session()!.participant_identities.join(', ') }}</dd>
+        <dt>Recording</dt>
+        <dd>
+          <la-status-chip
+            [tone]="session()!.recording_present ? 'success' : 'neutral'"
+            [icon]="session()!.recording_present ? 'fiber_manual_record' : 'block'"
+            [label]="session()!.recording_present ? 'Recording available' : 'No recording'"
+          />
+        </dd>
+        <dt>Status</dt>
+        <dd>
+          <la-status-chip
+            [tone]="session()!.status === 'ended' ? 'success' : session()!.status === 'failed' ? 'error' : 'neutral'"
+            [icon]="session()!.status === 'ended' ? 'check_circle' : session()!.status === 'failed' ? 'error' : 'autorenew'"
+            [label]="session()!.status"
+          />
+        </dd>
+      </dl>
+    }
+  </section>
+
+  <section class="la-session-detail__transcript">
+    <h2>Transcript</h2>
+    @if (transcriptLoading()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Loading transcript" />
+    } @else if (transcriptPurged()) {
+      <la-empty-state icon="delete" title="Transcript purged" body="Transcript was deleted per the retention policy." />
+    } @else if (transcriptError()) {
+      <la-empty-state variant="error" icon="error" title="Could not load transcript" body="Could not load transcript. Try again." />
+    } @else if (transcript() && transcript()!.items.length > 0) {
+      <ul class="la-session-detail__log" role="log">
+        @for (line of transcript()!.items; track line.seq) {
+          <li class="la-session-detail__line la-session-detail__line--{{ line.role }}">
+            <span class="la-session-detail__line-role">{{ line.role === 'user' ? 'You said' : 'Assistant said' }}</span>
+            <span>{{ line.text }}</span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p>No transcript was recorded for this session.</p>
+    }
+  </section>
+
+  <section class="la-session-detail__latency">
+    <h2>Latency breakdown</h2>
+    @if (hopsLoading()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Loading latency" />
+    } @else if (hopsError()) {
+      <la-empty-state variant="error" icon="error" title="Could not load latency" body="Could not load latency data." />
+    } @else if (hopCycles().length === 0) {
+      <p>No utterance cycles recorded for this session.</p>
+    } @else {
+      <table mat-table [dataSource]="hopCycles()" class="la-session-detail__hops-table">
+        <ng-container matColumnDef="utterance_seq">
+          <th mat-header-cell *matHeaderCellDef>Cycle</th>
+          <td mat-cell *matCellDef="let cycle" data-label="Cycle">{{ cycle.utterance_seq }}</td>
+        </ng-container>
+        <ng-container matColumnDef="stt">
+          <th mat-header-cell *matHeaderCellDef>STT</th>
+          <td mat-cell *matCellDef="let cycle" data-label="STT" [attr.aria-label]="!cycle.stt ? 'Not recorded for this cycle' : null">{{ hopCell(cycle, 'stt') }}</td>
+        </ng-container>
+        <ng-container matColumnDef="llm">
+          <th mat-header-cell *matHeaderCellDef>LLM</th>
+          <td mat-cell *matCellDef="let cycle" data-label="LLM" [attr.aria-label]="!cycle.llm ? 'Not recorded for this cycle' : null">{{ hopCell(cycle, 'llm') }}</td>
+        </ng-container>
+        <ng-container matColumnDef="tts">
+          <th mat-header-cell *matHeaderCellDef>TTS</th>
+          <td mat-cell *matCellDef="let cycle" data-label="TTS" [attr.aria-label]="!cycle.tts ? 'Not recorded for this cycle' : null">{{ hopCell(cycle, 'tts') }}</td>
+        </ng-container>
+        <ng-container matColumnDef="avatar">
+          <th mat-header-cell *matHeaderCellDef>Avatar</th>
+          <td mat-cell *matCellDef="let cycle" data-label="Avatar" [attr.aria-label]="!cycle.avatar ? 'Not recorded for this cycle' : null">{{ hopCell(cycle, 'avatar') }}</td>
+        </ng-container>
+        <ng-container matColumnDef="e2e">
+          <th mat-header-cell *matHeaderCellDef>e2e</th>
+          <td mat-cell *matCellDef="let cycle" data-label="e2e" [attr.aria-label]="!cycle.e2e ? 'Not recorded for this cycle' : null">{{ hopCell(cycle, 'e2e') }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="hopColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: hopColumns"></tr>
+      </table>
+    }
+  </section>
+
+  @if (!hopsLoading() && !hopsError() && cyclesWithNodes().length > 0) {
+    <section class="la-session-detail__nodes">
+      <h2>Node trace</h2>
+      <p class="la-session-detail__nodes-summary" aria-live="polite">{{ nodeTraceSummary() }}</p>
+      @for (cycle of cyclesWithNodes(); track cycle.utterance_seq) {
+        <div class="la-session-detail__node-cycle">
+          <h3>Cycle {{ cycle.utterance_seq }}</h3>
+          <table class="la-session-detail__node-table">
+            <caption class="la-visually-hidden">Node trace for utterance cycle {{ cycle.utterance_seq }}</caption>
+            <thead>
+              <tr>
+                <th scope="col">Node</th>
+                <th scope="col">Type</th>
+                <th scope="col">Lane</th>
+                <th scope="col">Latency</th>
+                <th scope="col">Provider</th>
+                <th scope="col">Error</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (node of cycle.nodes; track node.node_id) {
+                <tr [class.la-session-detail__node-row--error]="node.error_code">
+                  <td data-label="Node">
+                    <mat-icon aria-hidden="true" inline="true">{{ nodeIcon(node.node_type) }}</mat-icon>
+                    {{ node.node_id }}
+                  </td>
+                  <td data-label="Type">{{ nodeLabel(node.node_type) }}</td>
+                  <td data-label="Lane">{{ node.lane ?? '—' }}</td>
+                  <td data-label="Latency">{{ node.total_ms !== undefined ? node.total_ms + 'ms' : '—' }}</td>
+                  <td data-label="Provider">
+                    {{ node.provider_key ?? '—' }}
+                    @if (node.used_fallback) {
+                      (fallback)
+                    }
+                  </td>
+                  <td data-label="Error">{{ node.error_code ?? '—' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  }
+}

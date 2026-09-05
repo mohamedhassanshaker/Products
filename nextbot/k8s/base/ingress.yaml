@@ -1,0 +1,46 @@
+# HLD §10 API strategy / §7.2 topology: Control Plane (all 5 Admin Console portals)
+# and Gateway Plane (widget/channel ingress) are both externally reachable; Data
+# Plane (nextbot-runtime, not yet populated — see docs/deployment/DEPLOYMENT.md) and
+# nextbot-worker have no external surface and therefore no Ingress rule.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nextbot
+  namespace: nextbot
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: REPLACE_ME_INGRESS_CLASS
+  tls:
+    - hosts: ["REPLACE_ME_HOSTNAME"]
+      secretName: nextbot-tls
+  rules:
+    - host: REPLACE_ME_HOSTNAME
+      http:
+        paths:
+          # Embeddable widget's own static build (loader script + iframe SPA) —
+          # production would typically front this with a CDN instead (HLD §7.2
+          # topology diagram); routed here too so a cluster without a separate CDN
+          # still serves it.
+          - path: /widget
+            pathType: Prefix
+            backend:
+              service: { name: nextbot-widget-embed, port: { number: 8080 } }
+          - path: /loader
+            pathType: Prefix
+            backend:
+              service: { name: nextbot-widget-embed, port: { number: 8080 } }
+          # Gateway Plane: widget/channel message ingress + Git webhook receivers.
+          - path: /api/v1/widget
+            pathType: Prefix
+            backend:
+              service: { name: nextbot-gateway, port: { number: 4001 } }
+          - path: /api/agent-platform/git/webhooks
+            pathType: Prefix
+            backend:
+              service: { name: nextbot-gateway, port: { number: 4001 } }
+          # Control Plane: everything else (5 Admin Console portals + /api/v1/admin).
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: nextbot-web, port: { number: 3000 } }

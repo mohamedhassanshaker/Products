@@ -1,0 +1,29 @@
+# Two Services from one Deployment's pods (k8s/web-deployment.yaml) — this
+# is the structural enforcement of NFR-3 ("internal heartbeat/tool URLs not
+# exposed on the public conversation origin"): `web-internal` has no
+# Ingress/LoadBalancer path to it at all, only ClusterIP, and
+# k8s/networkpolicy.yaml further restricts who inside the cluster may reach
+# it.
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-public
+  namespace: liveavatar
+  labels: { app: web }
+spec:
+  type: ClusterIP
+  selector: { app: web }
+  ports:
+    - { name: public, port: 8080, targetPort: public }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-internal
+  namespace: liveavatar
+  labels: { app: web }
+spec:
+  type: ClusterIP
+  selector: { app: web }
+  ports:
+    - { name: internal, port: 8081, targetPort: internal }

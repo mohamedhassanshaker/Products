@@ -1,0 +1,209 @@
+REF genuinely-missing : 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerend
+REF plain-internal    : 404|x-middleware-rewrite: /internal/ops/tenants ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Enc
+
+=== per-spelling: is the response GATE-DEPENDENT across 8 caller states? ===
+  *** STATUS 200 CONSOLE REACHED *** BASELINE plain-public [ALLOW-ip-session] /internal/ops/tenants
+
+  !! GATE-DEPENDENT: BASELINE plain-public  path=/internal/ops/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession] => 307|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ location: /internal/ops/login ~ X-Powered-By: Next.js ~ Cache-Control: private, no-
+       [ALLOW-ip-session] => 200|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache, no-store, max-age=0, must
+  ~~ NON-no-store cache header: pubprefix-lc@0(/) +secret         cache-control: <absent>   %2finternal/ops/nb-c-4f21c8a7e3d9b605/tenants
+  ~~ NON-no-store cache header: pubprefix-lc@0(/) +tenants        cache-control: <absent>   %2finternal/ops/tenants
+  ~~ NON-no-store cache header: pubprefix-UC@0(/) +secret         cache-control: <absent>   %2Finternal/ops/nb-c-4f21c8a7e3d9b605/tenants
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@0(n)  path=/internal/ops/%256eb-c-4f21c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/%256eb-c-4f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@1(b)  path=/internal/ops/n%2562-c-4f21c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/n%2562-c-4f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@2(-)  path=/internal/ops/nb%252dc-4f21c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb%252dc-4f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@3(c)  path=/internal/ops/nb-%2563-4f21c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-%2563-4f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@4(-)  path=/internal/ops/nb-c%252d4f21c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c%252d4f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@5(4)  path=/internal/ops/nb-c-%2534f21c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-%2534f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@6(f)  path=/internal/ops/nb-c-4%256621c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4%256621c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@7(2)  path=/internal/ops/nb-c-4f%25321c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f%25321c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@8(1)  path=/internal/ops/nb-c-4f2%2531c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f2%2531c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@9(c)  path=/internal/ops/nb-c-4f21%25638a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21%25638a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@10(8)  path=/internal/ops/nb-c-4f21c%2538a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c%2538a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@11(a)  path=/internal/ops/nb-c-4f21c8%25617e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8%25617e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@12(7)  path=/internal/ops/nb-c-4f21c8a%2537e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a%2537e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@13(e)  path=/internal/ops/nb-c-4f21c8a7%25653d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7%25653d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@14(3)  path=/internal/ops/nb-c-4f21c8a7e%2533d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e%2533d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@15(d)  path=/internal/ops/nb-c-4f21c8a7e3%25649b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3%25649b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@16(9)  path=/internal/ops/nb-c-4f21c8a7e3d%2539b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d%2539b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@17(b)  path=/internal/ops/nb-c-4f21c8a7e3d9%2562605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9%2562605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@18(6)  path=/internal/ops/nb-c-4f21c8a7e3d9b%253605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b%253605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@19(0)  path=/internal/ops/nb-c-4f21c8a7e3d9b6%25305/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b6%25305/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: secretseg-DOUBLE@20(5)  path=/internal/ops/nb-c-4f21c8a7e3d9b60%2535/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b60%2535/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache,
+
+  !! GATE-DEPENDENT: double-escape-orig  path=/internal/ops/nb%252Dc%252D4f21c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb%252Dc%252D4f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-ca
+
+  !! GATE-DEPENDENT: triple-escape-orig  path=/internal/ops/nb%25252Dc%25252D4f21c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb%25252Dc%25252D4f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, n
+
+  !! GATE-DEPENDENT: malformed-in-secret  path=/internal/ops/nb%2c%4-4f21c8a7e3d9b605/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 400|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ X-Powered-By: Next.js ~ ETag: "14029lfikl41k6" ~ Content-Type: text/html; charset=utf-8 ~ Content-Length: 2022 ~ Vary: Accept-Encoding|3048aa674d4d0224
+
+  !! GATE-DEPENDENT: malformed-plus-valid-escape  path=/internal/ops/nb%2Dc%2D4f21c8a7e3d9b605/tenants%
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 400|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ X-Powered-By: Next.js ~ ETag: "14029lfikl41k6" ~ Content-Type: text/html; charset=utf-8 ~ Content-Length: 2022 ~ Vary: Accept-Encoding|3048aa674d4d0224
+
+  !! GATE-DEPENDENT: malformed-bad-utf8-in-secret  path=/internal/ops/nb%2Dc%2D4f21c8a7e3d9b605%c3/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 400|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ X-Powered-By: Next.js ~ ETag: "14029lfikl41k6" ~ Content-Type: text/html; charset=utf-8 ~ Content-Length: 2022 ~ Vary: Accept-Encoding|3048aa674d4d0224
+  *** STATUS 200 CONSOLE REACHED *** dotdot-into-public [ALLOW-ip-session] /internal/xps/../ops/tenants
+
+  !! GATE-DEPENDENT: dotdot-into-public  path=/internal/xps/../ops/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession] => 307|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ location: /internal/ops/login ~ X-Powered-By: Next.js ~ Cache-Control: private, no-
+       [ALLOW-ip-session] => 200|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache, no-store, max-age=0, must
+  *** STATUS 200 CONSOLE REACHED *** dotdot-into-public-login [ALLOW-ip-nosession] /internal/xps/../ops/login
+  *** STATUS 200 CONSOLE REACHED *** dotdot-into-public-login [ALLOW-ip-session] /internal/xps/../ops/login
+
+  !! GATE-DEPENDENT: dotdot-into-public-login  path=/internal/xps/../ops/login
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 200|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/login ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache, no-store, max-age=0, must-r
+
+  !! GATE-DEPENDENT: nullbyte-in-secret  path=/internal/ops/nb-c-4f21c8a7e3d9b605%00/tenants
+       [DENY-unconfigured,DENY-unconf+token,DENY-noproxy-spoof,DENY-noproxy-spoof+tok,DENY-proxy-badip,DENY-proxy-noip] => 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+       [ALLOW-ip-nosession,ALLOW-ip-session] => 404|x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb-c-4f21c8a7e3d9b605%00/tenants ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ X-Powered-By: Next.js ~ Cache-Control: private, no-cache, 
+  ~~ NON-no-store cache header: escaped-secret api                cache-control: <absent>   /api/internal/o%70s/tenants
+
+=== summary ===
+spellings checked        : 147 x 8 states = 1176 responses
+gate-dependent spellings : 30
+spellings reaching the console (status 200): 4
+spellings without Cache-Control no-store  : 4
+distinct response classes across spellings: 24
+  [ 78 spellings] == plain-internal 404 (accepted round-4 residual)
+  [ 30 spellings] MULTI (gate-dependent)
+        sig: MULTI
+        members: BASELINE plain-public, secretseg-DOUBLE@0(n), secretseg-DOUBLE@1(b), secretseg-DOUBLE@2(-), secretseg-DOUBLE@3(c), secretseg-DOUBLE@4(-), secretseg-DOUBLE@5(4), secretseg-DOUBLE@6(f), secretseg-DOUBLE@7(2), secretseg-DOUBLE@8(1), secretseg-DOUBLE@9(c), secretseg-DOUBLE@10(8), secretseg-DOUBLE@11(a), secretseg-DOUBLE@12(7) ...
+  [ 16 spellings] == genuinely-missing 404
+  [  3 spellings] OTHER
+        sig: 400||e3b0c44298fc1c14
+        members: pubprefix-lc@0(/) +secret, pubprefix-lc@0(/) +tenants, pubprefix-UC@0(/) +secret
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/%74enants ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time:
+        members: tail-lc@0(t)
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/t%65nants ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time:
+        members: tail-lc@1(e)
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/te%6eants ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time:
+        members: tail-lc@2(n)
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/ten%61nts ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time:
+        members: tail-lc@3(a)
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/tena%6ets ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time:
+        members: tail-lc@4(n)
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/tenan%74s ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time:
+        members: tail-lc@5(t)
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/tenant%73 ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time:
+        members: tail-lc@6(s)
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/tenants% ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time: 
+        members: malformed-trailing-pct
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/tenants%zz ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time
+        members: malformed-pct-zz
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/tenants%2 ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time:
+        members: malformed-pct-2
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/%c3%28 ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time: 30
+        members: malformed-bad-utf8
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/%e2%80 ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time: 30
+        members: malformed-truncated-utf8
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/tenants%00 ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time
+        members: nullbyte-after-tail
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/tenants.json ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-ti
+        members: escaped-secret .json
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/tenants.segments/__PAGE__.segment ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 
+        members: escaped-secret segments
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time: 300 ~ X-P
+        members: escaped-secret root
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/login ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-time: 300
+        members: escaped-secret login
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/definitely-not-a-page ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs
+        members: escaped-secret nonpage
+  [  1 spellings] OTHER
+        sig: 404|x-middleware-rewrite: /internal/ops/tenants/new ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-prerender: 1 ~ x-nextjs-stale-tim
+        members: escaped-secret tenants-new
+  [  1 spellings] OTHER
+        sig: 404|vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-length: 9 ~ content-type: text/plain; charset=utf-8|0019dfc4b32d63c1
+        members: escaped-secret api

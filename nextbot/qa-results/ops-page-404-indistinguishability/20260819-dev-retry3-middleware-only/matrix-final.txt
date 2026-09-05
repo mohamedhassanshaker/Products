@@ -1,0 +1,51 @@
+OK  GET|suffix:plain|rsc=false                           195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  HEAD|suffix:plain|rsc=false                          195 responses, 1 signature, status 404, body 0B/e3b0c44298fc1c14
+OK  POST|suffix:plain|rsc=false                          195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  OPTIONS|suffix:plain|rsc=false                       195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  PUT|suffix:plain|rsc=false                           195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  DELETE|suffix:plain|rsc=false                        195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|suffix:plain|rsc=true                            195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  HEAD|suffix:plain|rsc=true                           195 responses, 1 signature, status 404, body 0B/e3b0c44298fc1c14
+OK  POST|suffix:plain|rsc=true                           195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  OPTIONS|suffix:plain|rsc=true                        195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  PUT|suffix:plain|rsc=true                            195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  DELETE|suffix:plain|rsc=true                         195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  GET|nextdata+suffix:plain|rsc=false                  195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|nextdata+suffix:plain|rsc=true                   195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  GET|nextdata-any+suffix:plain|rsc=false              195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|nextdata-any+suffix:plain|rsc=true               195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  GET|suffix:.rsc|rsc=false                            195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|suffix:.rsc|rsc=true                             195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  GET|nextdata+suffix:.rsc|rsc=false                   195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|nextdata+suffix:.rsc|rsc=true                    195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  GET|nextdata-any+suffix:.rsc|rsc=false               195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|nextdata-any+suffix:.rsc|rsc=true                195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  GET|suffix:.json|rsc=false                           195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|suffix:.json|rsc=true                            195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  GET|nextdata+suffix:.json|rsc=false                  195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|nextdata+suffix:.json|rsc=true                   195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  GET|nextdata-any+suffix:.json|rsc=false              195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|nextdata-any+suffix:.json|rsc=true               195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  GET|suffix:.segments/__PAGE__.segment.rsc|rsc=false  195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|suffix:.segments/__PAGE__.segment.rsc|rsc=true   195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  GET|nextdata+suffix:.segments/__PAGE__.segment.rsc|rsc=false 195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|nextdata+suffix:.segments/__PAGE__.segment.rsc|rsc=true 195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+OK  GET|nextdata-any+suffix:.segments/__PAGE__.segment.rsc|rsc=false 195 responses, 1 signature, status 404, body 6871B/87c7c33ac0fefa6d
+OK  GET|nextdata-any+suffix:.segments/__PAGE__.segment.rsc|rsc=true 195 responses, 1 signature, status 404, body 3982B/6cf5923579291af7
+
+Total responses: 7956; buckets: 34; distinguishable buckets: 0
+
+### internal-prefix probe (documented residual)
+  unconfigured /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  unconfigured+forged-denied-header /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  unconfigured+bogus-session /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  unconfigured+spoofed-xff-allowed-ip /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  configured-unresolvable-ip /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  configured-disallowed-ip /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  configured-disallowed-via-trusted-hop /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  configured-disallowed-multi-hop /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  configured-all-hops-trusted /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  configured-unparseable-hop /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  configured-realip-disallowed /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  configured-bogus-session-disallowed-ip /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops
+  configured-forged-denied-header-disallowed-ip /internal/ops/nb-c-4f21c8a7e3d9b605 -> 404 body=6871B/87c7c33ac0fefa6d extra=x-middleware-rewrite: /internal/ops

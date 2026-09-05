@@ -1,0 +1,22 @@
+{
+  "name": "@nextbot/yaml-diff",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ADR-0016 — structural, artifact-aware YAML diff. Works unconditionally on any two versions' stored definitionYaml, with no Git connection, no commit, and no network call (the Git-independent baseline diff; Git compare-API diff remains the enriched view, ADR-0009).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir ."
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

@@ -1,0 +1,160 @@
+# Multi-tenant isolation here is data-level (ADR-0001: shared schema + PostgreSQL
+# RLS), NOT namespace/network-level per-tenant — the HLD does not call for
+# namespace-per-tenant for this SaaS model, so these NetworkPolicies enforce
+# *inter-plane* boundaries only (ADR-0004's egress choke point, least-privilege
+# pod-to-pod traffic), which is the network-level security boundary this HLD
+# actually specifies. Default-deny-all ingress, then explicit allows per plane.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: nextbot
+spec:
+  podSelector: {}
+  policyTypes: ["Ingress"]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-web
+  namespace: nextbot
+spec:
+  podSelector: { matchLabels: { app: nextbot-web } }
+  policyTypes: ["Ingress"]
+  ingress:
+    - from: [{ namespaceSelector: {}, podSelector: { matchLabels: { app: ingress-nginx } } }]
+      ports: [{ protocol: TCP, port: 3000 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-gateway
+  namespace: nextbot
+spec:
+  podSelector: { matchLabels: { app: nextbot-gateway } }
+  policyTypes: ["Ingress"]
+  ingress:
+    - from: [{ namespaceSelector: {}, podSelector: { matchLabels: { app: ingress-nginx } } }]
+      ports: [{ protocol: TCP, port: 4001 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-widget-embed
+  namespace: nextbot
+spec:
+  podSelector: { matchLabels: { app: nextbot-widget-embed } }
+  policyTypes: ["Ingress"]
+  ingress:
+    - from: [{ namespaceSelector: {}, podSelector: { matchLabels: { app: ingress-nginx } } }]
+      ports: [{ protocol: TCP, port: 8080 }]
+---
+# Datastores accept traffic only from the four application planes/tools jobs, never
+# from each other or from outside the namespace.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-app-to-postgres
+  namespace: nextbot
+spec:
+  podSelector: { matchLabels: { app: postgres } }
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - podSelector: { matchLabels: { app: nextbot-web } }
+        - podSelector: { matchLabels: { app: nextbot-gateway } }
+        - podSelector: { matchLabels: { app: nextbot-worker } }
+        - podSelector: { matchLabels: { app: nextbot-tools } }
+      ports: [{ protocol: TCP, port: 5432 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-app-to-redis
+  namespace: nextbot
+spec:
+  podSelector: { matchLabels: { app: redis } }
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - podSelector: { matchLabels: { app: nextbot-web } }
+        - podSelector: { matchLabels: { app: nextbot-gateway } }
+        - podSelector: { matchLabels: { app: nextbot-worker } }
+      ports: [{ protocol: TCP, port: 6379 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-app-to-clickhouse
+  namespace: nextbot
+spec:
+  podSelector: { matchLabels: { app: clickhouse } }
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - podSelector: { matchLabels: { app: nextbot-web } }
+        - podSelector: { matchLabels: { app: nextbot-gateway } }
+        - podSelector: { matchLabels: { app: nextbot-worker } }
+      ports: [{ protocol: TCP, port: 8123 }]
+---
+# Target Architecture Blueprint Phase 7a (ADR-0018) — gap fix, 2026-09-01, this
+# policy was missing (the `neo4j` datastore had no ingress rule at all, same as
+# the graph-store env vars themselves — see docs/deployment/DEPLOYMENT.md). Same
+# shape as the three datastore policies above: only the app planes that actually
+# hold a `@nextbot/graph-store` dependency (`web`, `gateway`, `worker` — see
+# `docs/deployment/DEPLOYMENT.md`'s "Neo4j / graph store" section for how that was
+# confirmed) may reach it, never each other or outside the namespace.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-app-to-neo4j
+  namespace: nextbot
+spec:
+  podSelector: { matchLabels: { app: neo4j } }
+  policyTypes: ["Ingress"]
+  ingress:
+    # Deliberately NOT `nextbot-tools` (migrate/seed) — confirmed neither
+    # `packages/db`'s migration runner nor `scripts/seed.ts` touches
+    # `@nextbot/graph-store`; tenant graph-database provisioning is
+    # `apps/worker`'s `tenancy.graph-provisioning-reconcile` job's job, not a
+    # migration-time concern.
+    - from:
+        - podSelector: { matchLabels: { app: nextbot-web } }
+        - podSelector: { matchLabels: { app: nextbot-gateway } }
+        - podSelector: { matchLabels: { app: nextbot-worker } }
+      ports: [{ protocol: TCP, port: 7687 }]
+---
+# ADR-0004: the Gateway Plane is the platform's only I/O boundary with outbound
+# internet access (MCP servers, model providers, A2A peers). Every other plane's
+# egress is restricted to in-namespace datastores + DNS only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: restrict-non-gateway-egress
+  namespace: nextbot
+spec:
+  podSelector:
+    matchExpressions:
+      - { key: app, operator: In, values: [nextbot-web, nextbot-worker, nextbot-widget-embed] }
+  policyTypes: ["Egress"]
+  egress:
+    - to: [{ namespaceSelector: {} }]
+      # Port 7687 (Neo4j Bolt) added 2026-09-01 — was missing, same gap as the
+      # rest of this file's Neo4j-related additions.
+      ports: [{ protocol: TCP, port: 5432 }, { protocol: TCP, port: 6379 }, { protocol: TCP, port: 8123 }, { protocol: TCP, port: 7687 }]
+    - ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-gateway-egress
+  namespace: nextbot
+spec:
+  podSelector: { matchLabels: { app: nextbot-gateway } }
+  policyTypes: ["Egress"]
+  egress:
+    # In-namespace datastores + unrestricted external egress (MCP/model/A2A —
+    # ADR-0004). A production cell should tighten the external leg to the tenant
+    # egress allowlist the Gateway Plane already enforces in application code
+    # (`mcp-egress`), rather than relying on NetworkPolicy alone for that part.
+    - {}

@@ -1,0 +1,20 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mD:/work/products/nextbot[39m
+
+ [32m✓[39m [35m|isolation|[39m packages/db/src/rls-coverage.isolation.test.ts [2m([22m[2m54 tests[22m[2m)[22m[90m 243[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/tenancy/src/application/tenant-isolation.isolation.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 145[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/channels/src/application/channel-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 251[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/connectors/src/application/connector-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 267[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/iam/src/application/iam-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 376[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/conversations/src/application/conversation-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 278[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/channels/src/application/whatsapp-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 381[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/tool-registry/src/application/tool-registry-isolation.isolation.test.ts [2m([22m[2m1 test[22m[2m)[22m[90m 231[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/escalations/src/application/escalation-isolation.isolation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[90m 257[2mms[22m[39m
+ [32m✓[39m [35m|isolation|[39m packages/modules/agent-platform/src/application/agent-platform-isolation.isolation.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 630[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[32m76 passed[39m[22m[90m (76)[39m
+[2m   Start at [22m 02:09:03
+[2m   Duration [22m 8.94s[2m (transform 1.79s, setup 230ms, collect 17.21s, tests 3.06s, environment 1ms, prepare 1.94s)[22m
+
+EXIT=0

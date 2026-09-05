@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextbot-gateway
+  namespace: nextbot
+  labels: { app: nextbot-gateway }
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxSurge: 1, maxUnavailable: 0 }
+  selector:
+    matchLabels: { app: nextbot-gateway }
+  template:
+    metadata:
+      labels: { app: nextbot-gateway }
+    spec:
+      serviceAccountName: nextbot-gateway
+      # ADR-0002 §6 / HLD §7.3: the Gateway Plane needs a long graceful-drain window
+      # for in-flight tunnels/voice/SSE — it must be rolled before runtime/web.
+      terminationGracePeriodSeconds: 120
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+      containers:
+        - name: gateway
+          image: nextbot-gateway:REPLACE_ME_TAG
+          ports:
+            - containerPort: 4001
+          envFrom:
+            - configMapRef: { name: nextbot-config }
+            - secretRef: { name: nextbot-secrets }
+          env:
+            - name: PORT
+              value: "4001"
+          resources:
+            requests: { cpu: "500m", memory: "512Mi" }
+            limits: { cpu: "2", memory: "1Gi" }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+            - { name: next-cache, mountPath: /app/apps/gateway/.next/cache }
+          readinessProbe:
+            httpGet: { path: /, port: 4001 }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /, port: 4001 }
+            initialDelaySeconds: 20
+            periodSeconds: 20
+      volumes:
+        - { name: tmp, emptyDir: {} }
+        - { name: next-cache, emptyDir: {} }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextbot-gateway
+  namespace: nextbot
+spec:
+  selector: { app: nextbot-gateway }
+  ports:
+    - { port: 4001, targetPort: 4001 }
+  type: ClusterIP
+---
+# NFR-3: HPA on the Gateway Plane's open-connection/tool-call rate (500/s). No
+# connection-count custom metric is wired up in this MVP pass (that needs a
+# Prometheus adapter emitting a per-pod connection gauge, which doesn't exist yet)
+# — CPU is used as the interim proxy and flagged as a follow-up in DEPLOYMENT.md.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nextbot-gateway
+  namespace: nextbot
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nextbot-gateway
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target: { type: Utilization, averageUtilization: 70 }

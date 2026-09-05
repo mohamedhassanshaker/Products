@@ -1,0 +1,105 @@
+.la-test-call {
+  &__input {
+    width: 100%;
+    max-width: 480px;
+    display: block;
+  }
+
+  &__scope-note {
+    font-size: 12px;
+    color: var(--la-on-surface-variant, #44474f);
+    margin: 8px 0 0;
+  }
+
+  &__error {
+    color: var(--la-error, #b3261e);
+    font-size: 13px;
+  }
+
+  &__errors {
+    color: var(--la-error, #b3261e);
+    font-size: 13px;
+  }
+
+  &__summary {
+    font-size: 13px;
+    margin: 8px 0;
+  }
+
+  &__nodes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__node {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    border: 1px solid var(--la-outline, #74777f);
+    border-radius: 8px;
+    padding: 8px 12px;
+
+    &--failed {
+      border-color: var(--la-error, #b3261e);
+    }
+  }
+
+  &__node-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__node-title {
+    font-weight: 500;
+  }
+
+  &__node-type {
+    font-weight: 400;
+    color: var(--la-on-surface-variant, #44474f);
+  }
+
+  &__simulated-badge {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--la-on-surface-variant, #44474f);
+    margin-left: 4px;
+  }
+
+  &__node-status {
+    font-size: 12px;
+    text-transform: capitalize;
+  }
+
+  &__node-summary,
+  &__node-detail {
+    font-size: 13px;
+  }
+
+  &__node-detail {
+    color: var(--la-on-surface-variant, #44474f);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  &__final {
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 8px;
+    background: var(--la-surface-variant, #e1e2ec);
+
+    h4 {
+      margin: 0 0 4px;
+      font-size: 13px;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+}

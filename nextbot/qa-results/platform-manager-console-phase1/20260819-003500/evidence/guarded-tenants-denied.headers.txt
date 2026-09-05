@@ -1,0 +1,11 @@
+HTTP/1.1 404 Not Found
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
+cache-control: no-store, must-revalidate
+connection: keep-alive
+content-type: text/html; charset=utf-8
+date: Tue, 18 Aug 2026 20:36:08 GMT
+keep-alive: timeout=5
+x-powered-by: Next.js
+Transfer-Encoding: chunked
+

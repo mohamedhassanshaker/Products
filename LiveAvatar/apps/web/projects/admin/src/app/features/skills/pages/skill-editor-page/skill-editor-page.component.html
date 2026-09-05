@@ -1,0 +1,195 @@
+<la-page-header [title]="(tenant()?.name ?? 'Deployment') + ' · ' + (store.draft()?.name || 'Skill')" [subtitle]="headerSubtitle()">
+  <a mat-button [routerLink]="['/tenants', tenantId, 'builder', 'skills']">Back to Skills</a>
+  <button mat-button type="button" (click)="scrollToTest()">Test</button>
+  <button mat-button type="button" [disabled]="!store.dirty() || store.saving()" (click)="saveDraft()">
+    @if (store.saving()) {
+      <mat-spinner diameter="20" />
+    } @else {
+      Save draft
+    }
+  </button>
+  <button
+    mat-flat-button
+    color="primary"
+    type="button"
+    [disabled]="!store.canPublish() || store.publishing()"
+    [matTooltip]="!store.canPublish() ? 'No draft changes to publish' : ''"
+    (click)="publish()"
+  >
+    @if (store.publishing()) {
+      <mat-spinner diameter="20" />
+    } @else {
+      Publish v{{ store.nextVersionNumber() }}
+    }
+  </button>
+</la-page-header>
+
+@if (store.status() === 'loading') {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading skill" />
+}
+
+@if (store.status() === 'not_found') {
+  <la-empty-state
+    variant="error"
+    icon="error"
+    title="Skill not found"
+    body="This skill may have been deleted."
+    actionLabel="Back to Skills"
+    (action)="backToLibrary()"
+  />
+}
+
+@if (store.status() === 'error') {
+  <la-empty-state
+    variant="error"
+    icon="error_outline"
+    title="Could not load this skill"
+    body="Try again."
+    actionLabel="Retry"
+    (action)="retry()"
+  />
+}
+
+@if (store.status() === 'ready') {
+  @if (store.saveError()) {
+    <div class="la-skill-editor__banner" role="alert">Could not save: {{ store.saveError() }}</div>
+  }
+
+  @if (store.draft(); as draft) {
+    <div class="la-skill-editor__form">
+      <mat-form-field appearance="outline" class="la-skill-editor__field">
+        <mat-label>Name</mat-label>
+        <input matInput [ngModel]="draft.name" (ngModelChange)="onName($event)" maxlength="80" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="la-skill-editor__field">
+        <mat-label>Description</mat-label>
+        <textarea
+          matInput
+          rows="2"
+          [ngModel]="draft.description"
+          (ngModelChange)="onDescription($event)"
+          [maxlength]="descriptionMaxLength"
+        ></textarea>
+      </mat-form-field>
+      <p class="la-skill-editor__counter" aria-live="polite">{{ descriptionTokenEstimate() }} tokens</p>
+      <p class="la-skill-editor__helper">
+        This is the ONLY text in the base prompt — the model uses it to decide when to load this skill. Be specific about
+        when to trigger.
+      </p>
+
+      <fieldset class="la-skill-editor__triggering">
+        <legend>Triggering</legend>
+        <mat-radio-group [ngModel]="draft.trigger_mode" (ngModelChange)="onTriggerMode($event)">
+          <mat-radio-button value="model">Model decides from the description</mat-radio-button>
+          <mat-radio-button value="router">Router node only</mat-radio-button>
+        </mat-radio-group>
+        <p class="la-skill-editor__helper">
+          Model-decided adds ~200 ms selection latency but handles phrasing you didn't anticipate. Router is faster and
+          deterministic.
+        </p>
+      </fieldset>
+
+      <mat-form-field appearance="outline" class="la-skill-editor__field">
+        <mat-label>Instructions</mat-label>
+        <textarea
+          matInput
+          rows="8"
+          [ngModel]="draft.instructions"
+          (ngModelChange)="onInstructions($event)"
+          [maxlength]="instructionsByteLimit"
+        ></textarea>
+      </mat-form-field>
+      <p class="la-skill-editor__counter" [class.la-skill-editor__counter--error]="instructionsOverLimit()" aria-live="polite">
+        {{ instructionsByteLength() }} / {{ instructionsByteLimit }} bytes
+      </p>
+
+      <section class="la-skill-editor__tools">
+        <h3>Tools</h3>
+        @if (store.tools().length === 0) {
+          <p class="la-skill-editor__empty">No tools yet.</p>
+        } @else {
+          <ul class="la-skill-editor__tool-list">
+            @for (tool of store.tools(); track tool.id) {
+              <li>
+                <mat-checkbox [checked]="isToolAttached(tool)" (change)="toggleTool(tool)">{{ tool.name }}</mat-checkbox>
+              </li>
+            }
+          </ul>
+        }
+        <p class="la-skill-editor__helper">Not in the list yet? Create it in the Tools tab first, then come back here.</p>
+      </section>
+
+      <section class="la-skill-editor__knowledge">
+        <h3>Knowledge</h3>
+        <mat-form-field appearance="outline" class="la-skill-editor__field">
+          <mat-label>Source refs (comma-separated)</mat-label>
+          <input matInput [ngModel]="sourceRefsText()" (ngModelChange)="onSourceRefsChange($event)" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="la-skill-editor__field">
+          <mat-label>Top K (optional)</mat-label>
+          <input
+            matInput
+            type="number"
+            min="1"
+            max="20"
+            [ngModel]="draft.knowledge_filters.top_k ?? null"
+            (ngModelChange)="onTopK($event)"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="la-skill-editor__field">
+          <mat-label>Min score (optional, 0–1)</mat-label>
+          <input
+            matInput
+            type="number"
+            min="0"
+            max="1"
+            step="0.05"
+            [ngModel]="draft.knowledge_filters.min_score ?? null"
+            (ngModelChange)="onMinScore($event)"
+          />
+        </mat-form-field>
+      </section>
+
+      <section class="la-skill-editor__hitl">
+        <h3>Human approval</h3>
+        <mat-form-field appearance="outline" class="la-skill-editor__field">
+          <mat-label>HITL gate</mat-label>
+          <mat-select [ngModel]="draft.hitl_gate_id ?? ''" (ngModelChange)="onHitlGateId($event)">
+            <mat-option value="">None — no approval required</mat-option>
+            @for (gate of store.gates(); track gate.id) {
+              <mat-option [value]="gate.id">{{ gate.attachment_ref }} · {{ gate.gate_type }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <p class="la-skill-editor__helper">
+          The gate "travels with" this skill wherever it's invoked (R-S6). Configure the gate itself — trigger, reviewers,
+          SLA, hold treatment — in the <a [routerLink]="['/tenants', tenantId, 'builder', 'hitl']">HITL tab</a>.
+        </p>
+      </section>
+
+      <mat-form-field appearance="outline" class="la-skill-editor__field">
+        <mat-label>Budget (ms)</mat-label>
+        <input matInput type="number" min="1" max="60000" [ngModel]="draft.budget_ms" (ngModelChange)="onBudgetMs($event)" />
+      </mat-form-field>
+      <p class="la-skill-editor__helper">Counted on the critical path of any branch reaching this node (R-S5).</p>
+
+      <section class="la-skill-editor__environments">
+        <h3>Environments</h3>
+        @for (env of environments; track env) {
+          <mat-checkbox [checked]="isEnvEnabled(env)" (change)="toggleEnv(env)">{{ env }}</mat-checkbox>
+        }
+        <p class="la-skill-editor__helper">
+          UI-only labels this phase — no backend gating difference yet (ARCHITECTURE_NOTES.md §0.2).
+        </p>
+      </section>
+    </div>
+
+    <section class="la-skill-editor__test" id="la-skill-test-panel">
+      <h2>Test</h2>
+      @if (store.testConfig(); as config) {
+        <la-test-call-panel [tenantId]="tenantId" [config]="config" />
+      }
+    </section>
+  }
+}

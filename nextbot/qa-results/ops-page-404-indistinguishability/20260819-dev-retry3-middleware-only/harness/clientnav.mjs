@@ -1,0 +1,18 @@
+import { chromium } from "playwright";
+const OUT = process.argv[2];
+const b = await chromium.launch();
+const ctx = await b.newContext({ extraHTTPHeaders: { "X-Forwarded-For": "203.0.113.5" } });
+await ctx.addCookies([{ name: "nb_ops_session", value: "test-operator-token-abc123", domain: "127.0.0.1", path: "/" }]);
+const p = await ctx.newPage();
+await p.goto("http://127.0.0.1:3492/internal/ops/tenants/new", { waitUntil: "networkidle" });
+console.log("direct url:", p.url(), "| slug input:", await p.locator('input[name="slug"]').count(), "| heading:", (await p.locator("h1,h2").first().textContent())?.trim());
+await p.screenshot({ path: `${OUT}/b3-provision-form.png`, fullPage: true });
+await p.evaluate(() => { window.__nbNoReload = true; });
+await p.getByRole("link", { name: "Tenants" }).click();
+await p.waitForURL("**/internal/ops/tenants", { timeout: 20000 });
+await p.waitForLoadState("networkidle");
+console.log("after client-side nav:", p.url(), "| stayed SPA (no reload):", await p.evaluate(() => window.__nbNoReload === true));
+console.log("nav aria-current:", await p.getByRole("link", { name: "Tenants" }).getAttribute("aria-current"));
+console.log("body:", (await p.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 140));
+await p.screenshot({ path: `${OUT}/b2b-tenants-after-client-nav.png`, fullPage: true });
+await b.close();

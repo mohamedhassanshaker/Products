@@ -1,0 +1,192 @@
+// Shared styles across the Agent Builder shell and its own tabs (Pipeline,
+// Dynamics, Overview). Moved verbatim from the old `agent-builder-page`'s
+// stylesheet (Phase 16, BL-065) — every embedded existing-feature tab
+// (Reasoning/Skills/Tools/Knowledge/HITL) keeps its own stylesheet
+// unchanged, per that phase's "own header, own styles" convention
+// (`knowledge-page.component.ts`'s doc comment).
+
+.la-builder-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fdecea;
+  color: var(--la-error, #b3261e);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.la-builder-status-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.la-builder-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  padding: 2px 10px;
+  border-radius: 8px;
+  background: var(--la-surface-variant, #f2f2f6);
+
+  &--published {
+    color: var(--la-success, #1b7f4e);
+  }
+
+  &--changed {
+    color: var(--la-caution, #8b5a00);
+  }
+}
+
+// Two-column shell layout (tab content + persistent right rail), the same
+// >=1280px-two-column/<1280px-single-column rule `UX_SCOPE.md` §10.4
+// establishes and Phase 16 reuses for the shell itself.
+.la-builder-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+.la-builder-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h2 {
+    font-size: 15px;
+    margin: 16px 0 4px;
+  }
+}
+
+.la-builder-helper {
+  font-size: 12px;
+  color: var(--la-on-surface-variant, #44474f);
+  margin: -4px 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &--error {
+    color: var(--la-error, #b3261e);
+  }
+
+  &--caution {
+    color: var(--la-caution, #8b5a00);
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.la-builder-error {
+  font-size: 12px;
+  color: var(--la-error, #b3261e);
+  margin: -4px 0 8px;
+}
+
+.la-builder-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.la-builder-preview {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.la-builder-resolved {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+}
+
+// Overview's four read-only summary cards (A9.2).
+.la-builder-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.la-builder-card {
+  border: 1px solid var(--la-outline-variant, #c4c6d0);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h3 {
+    margin: 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--la-on-surface-variant, #44474f);
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  &__warn {
+    color: var(--la-caution, #8b5a00);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__edit {
+    align-self: flex-end;
+    font-size: 12px;
+  }
+}
+
+.la-builder-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__section h3 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--la-on-surface-variant, #44474f);
+  }
+}
+
+@media (max-width: 1279px) {
+  .la-builder-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .la-builder-preview,
+  .la-builder-rail {
+    position: static;
+  }
+}

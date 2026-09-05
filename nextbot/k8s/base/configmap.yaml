@@ -1,0 +1,43 @@
+# Non-secret configuration shared across planes (HLD §7.1 managed/infra deps).
+# Datastore/Redis/ClickHouse *hostnames* only — credentials are Secret-sourced
+# (secrets.yaml.example), never here.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextbot-config
+  namespace: nextbot
+data:
+  NEXTBOT_DB_ENV: "production"
+  POSTGRES_HOST: "postgres.nextbot.svc.cluster.local"
+  POSTGRES_DB: "nextbot"
+  NEXTBOT_REDIS_URL: "redis://redis.nextbot.svc.cluster.local:6379"
+  CLICKHOUSE_HOST: "clickhouse.nextbot.svc.cluster.local"
+  CLICKHOUSE_DB: "nextbot"
+  # AI subsystem (ADR-0006) — provider/model selection is non-secret; the API key
+  # and any on-prem baseURL with embedded credentials are not.
+  AI_PROVIDER: "openai-compatible"
+  AI_MODEL_CHAT_PRIMARY: "REPLACE_ME_MODEL_ID"
+  # Target Architecture Blueprint Phase 7a (ADR-0018) — graph store (Neo4j)
+  # connection config. Gap fix, 2026-09-01 (this whole block was missing — see
+  # docs/deployment/DEPLOYMENT.md "Neo4j / graph store"). Hostname only, matching
+  # the CLICKHOUSE_HOST/POSTGRES_HOST convention above; credentials are
+  # Secret-sourced (secrets.yaml.example). Assumes an externally-provisioned Neo4j
+  # 5 ENTERPRISE instance/cluster reachable at this hostname — this base does not
+  # itself deploy a Neo4j StatefulSet, the same convention already established
+  # here for Postgres/Redis/ClickHouse (see this file's own header comment).
+  # **A real Neo4j Enterprise commercial license is required for production — see
+  # docs/deployment/DEPLOYMENT.md "Neo4j Enterprise licensing" before deploying.**
+  GRAPH_STORE_PROVIDER: "neo4j"
+  GRAPH_STORE_URL: "bolt://neo4j.nextbot.svc.cluster.local:7687"
+  GRAPH_STORE_DATABASE_PREFIX: "t"
+  # `packages/modules/knowledge`'s local-disk upload store (Phase 7b) — see
+  # deployment-web.yaml/deployment-worker.yaml's `knowledge-uploads` volume mount.
+  # **Disclosed gap**: this base wires an `emptyDir` (see those Deployments'
+  # comments) so a write doesn't crash under `readOnlyRootFilesystem: true`, but an
+  # `emptyDir` is per-pod, NOT shared across `web`'s 2 replicas or between `web`
+  # and `worker` — a real multi-replica k8s deployment needs a ReadWriteMany PVC
+  # (no storage class is named anywhere in the HLD/ADRs — an open decision, see
+  # docs/deployment/DEPLOYMENT.md "Open decisions") or the object-storage
+  # extraction `packages/modules/knowledge/README.md` already flags as future work,
+  # before Upload-kind knowledge sources ingest reliably across replicas/nodes.
+  KNOWLEDGE_UPLOAD_STORE_ROOT: "/data/knowledge-uploads"

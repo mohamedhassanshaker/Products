@@ -1,0 +1,25 @@
+=== BEFORE-STATE (pre-round-5 middleware reconstruction, BUILD_ID G4a9GwzB-pz4WHi5370yH) ===
+--- PATH: /internal/ops/nb%2Dc%2D4f21c8a7e3d9b605/tenants
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: s-maxage=31536000 | Content-Length: 6871 | <no rewrite hdr>
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate |  | x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb%2Dc%2D4f21c8a7e3d9b605/tenants
+--- PATH: /internal/ops/nb%2Dc%2D4f21c8a7e3d9b605/login
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: s-maxage=31536000 | Content-Length: 6871 | <no rewrite hdr>
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate |  | x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb%2Dc%2D4f21c8a7e3d9b605/login
+--- PATH: /internal/ops/nb%2Dc%2D4f21c8a7e3d9b605/definitely-not-a-page
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | <no rewrite hdr>
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate |  | x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/nb%2Dc%2D4f21c8a7e3d9b605/definitely-not-a-page
+--- PATH: /internal/o%70s/nb-c-4f21c8a7e3d9b605/tenants
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: s-maxage=31536000 | Content-Length: 6871 | <no rewrite hdr>
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: s-maxage=31536000 | Content-Length: 6871 | <no rewrite hdr>
+--- PATH: /internal/o%70s/tenants
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | <no rewrite hdr>
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | <no rewrite hdr>
+--- PATH: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | x-middleware-rewrite: /internal/ops/tenants
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | x-middleware-rewrite: /internal/ops/tenants
+--- PATH: /internal/ops/tenants
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | <no rewrite hdr>
+    ALLOWED HTTP/1.1 200 OK | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate |  | x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+--- PATH: /internal/xps/tenants
+    DENIED  HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | <no rewrite hdr>
+    ALLOWED HTTP/1.1 404 Not Found | Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate | Content-Length: 6871 | <no rewrite hdr>

@@ -1,0 +1,24 @@
+
+--- n=5 samples/path, 40 trials, port 3491 (unconfigured/denied) ---
+  /internal/ops/tenants      classified as 'slower than control' in 20/40 trials   GATED (should be indistinguishable)
+  /internal/ops              classified as 'slower than control' in 17/40 trials   GATED root
+  /internal/ops/login        classified as 'slower than control' in 26/40 trials   GATED login
+  /internal/qqq/tenants      classified as 'slower than control' in 18/40 trials   control missing A
+  /internal/rrr/tenants      classified as 'slower than control' in 22/40 trials   control missing B
+  /admin/nothing             classified as 'slower than control' in 18/40 trials   control missing C
+
+--- n=20 samples/path, 40 trials, port 3491 (unconfigured/denied) ---
+  /internal/ops/tenants      classified as 'slower than control' in 22/40 trials   GATED (should be indistinguishable)
+  /internal/ops              classified as 'slower than control' in 19/40 trials   GATED root
+  /internal/ops/login        classified as 'slower than control' in 24/40 trials   GATED login
+  /internal/qqq/tenants      classified as 'slower than control' in 18/40 trials   control missing A
+  /internal/rrr/tenants      classified as 'slower than control' in 22/40 trials   control missing B
+  /admin/nothing             classified as 'slower than control' in 22/40 trials   control missing C
+
+--- n=50 samples/path, 40 trials, port 3491 (unconfigured/denied) ---
+  /internal/ops/tenants      classified as 'slower than control' in 26/40 trials   GATED (should be indistinguishable)
+  /internal/ops              classified as 'slower than control' in 16/40 trials   GATED root
+  /internal/ops/login        classified as 'slower than control' in 19/40 trials   GATED login
+  /internal/qqq/tenants      classified as 'slower than control' in 23/40 trials   control missing A
+  /internal/rrr/tenants      classified as 'slower than control' in 20/40 trials   control missing B
+  /admin/nothing             classified as 'slower than control' in 13/40 trials   control missing C

@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Rename deployment</h2>
+
+<mat-dialog-content>
+  @if (dialogAlert()) {
+    <div class="la-dialog-alert" role="alert">
+      {{ dialogAlert() }}
+      @if (conflict()) {
+        <div><button mat-button type="button" (click)="onRetry()">Retry</button></div>
+      }
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" [attr.aria-busy]="submitting()">
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" maxlength="80" [attr.aria-required]="true" />
+      @if (nameInvalid()) {
+        <mat-error>Name is required and must be 1–80 characters.</mat-error>
+      } @else if (form.controls.name.hasError('server')) {
+        <mat-error>{{ form.controls.name.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <p class="la-dialog-readonly">Slug: {{ data.slug }} — slug cannot be changed after creation.</p>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" type="button" [disabled]="submitDisabled()" (click)="onSubmit()">
+    @if (submitting()) {
+      <mat-spinner diameter="20" />
+    } @else {
+      Save
+    }
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,18 @@
+version: 1
+transport:
+  provider: livekit
+agent:
+  tools: []
+stt:
+  provider: faster-whisper
+  language: en-US
+llm:
+  primary:
+    provider: anthropic
+    model: claude-opus
+tts:
+  provider: elevenlabs
+  voice_id: voice-2
+avatar:
+  provider: alibaba-liveavatar
+  avatar_id: avatar-2

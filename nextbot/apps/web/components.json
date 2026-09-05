@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "base-lyra",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "app/globals.css",
+    "baseColor": "stone",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "iconLibrary": "hugeicons",
+  "rtl": true,
+  "aliases": {
+    "components": "@nextbot/ui/components",
+    "utils": "@nextbot/ui/lib/utils",
+    "ui": "@nextbot/ui/components/ui",
+    "lib": "@nextbot/ui/lib",
+    "hooks": "@nextbot/ui/hooks"
+  },
+  "menuColor": "default",
+  "menuAccent": "subtle",
+  "registries": {}
+}

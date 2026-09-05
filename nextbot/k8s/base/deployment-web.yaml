@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextbot-web
+  namespace: nextbot
+  labels: { app: nextbot-web }
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxSurge: 1, maxUnavailable: 0 }
+  selector:
+    matchLabels: { app: nextbot-web }
+  template:
+    metadata:
+      labels: { app: nextbot-web }
+    spec:
+      serviceAccountName: nextbot-web
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+      containers:
+        - name: web
+          image: nextbot-web:REPLACE_ME_TAG
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef: { name: nextbot-config }
+            - secretRef: { name: nextbot-secrets }
+          env:
+            - name: PORT
+              value: "3000"
+          resources:
+            requests: { cpu: "250m", memory: "384Mi" }
+            limits: { cpu: "1", memory: "768Mi" }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: { drop: ["ALL"] }
+          volumeMounts:
+            - { name: tmp, mountPath: /tmp }
+            - { name: next-cache, mountPath: /app/apps/web/.next/cache }
+            # Gap fix, 2026-09-01 — see configmap.yaml's KNOWLEDGE_UPLOAD_STORE_ROOT
+            # comment: an `emptyDir` only prevents a crash under
+            # `readOnlyRootFilesystem: true`, it does NOT share this data with
+            # `worker`'s own pod or `web`'s other replica. Disclosed gap, not
+            # silently fixed — see docs/deployment/DEPLOYMENT.md "Known gaps".
+            - { name: knowledge-uploads, mountPath: /data/knowledge-uploads }
+          readinessProbe:
+            httpGet: { path: /login, port: 3000 }
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /login, port: 3000 }
+            initialDelaySeconds: 20
+            periodSeconds: 20
+      volumes:
+        - { name: tmp, emptyDir: {} }
+        - { name: next-cache, emptyDir: {} }
+        - { name: knowledge-uploads, emptyDir: {} }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextbot-web
+  namespace: nextbot
+spec:
+  selector: { app: nextbot-web }
+  ports:
+    - { port: 3000, targetPort: 3000 }
+  type: ClusterIP

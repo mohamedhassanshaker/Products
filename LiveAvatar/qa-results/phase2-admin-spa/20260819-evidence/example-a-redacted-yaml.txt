@@ -1,0 +1,18 @@
+version: 1
+transport:
+  provider: livekit
+agent:
+  tools: []
+stt:
+  provider: deepgram
+  language: en-US
+llm:
+  primary:
+    provider: openai
+    model: gpt-4o
+tts:
+  provider: fish-speech
+  voice_id: voice-1
+avatar:
+  provider: bithuman
+  avatar_id: avatar-1

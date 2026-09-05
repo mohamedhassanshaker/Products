@@ -1,0 +1,173 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit gate' : 'New gate' }}</h2>
+
+<mat-dialog-content>
+  @if (dialogAlert()) {
+    <div class="la-dialog-alert" role="alert">{{ dialogAlert() }}</div>
+  }
+
+  <h3>Trigger</h3>
+  <mat-form-field appearance="outline" class="la-dialog-field">
+    <mat-label>Attachment kind</mat-label>
+    <mat-select [ngModel]="attachmentKind()" (ngModelChange)="attachmentKind.set($event)">
+      @for (kind of attachmentKinds; track kind) {
+        <mat-option [value]="kind">{{ kind === 'graph_node' ? 'Graph node' : kind }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="la-dialog-field">
+    <mat-label>Attachment reference (tool api_ref / skill id / node id)</mat-label>
+    <input matInput [ngModel]="attachmentRef()" (ngModelChange)="attachmentRef.set($event)" aria-describedby="la-gate-ref-error" />
+    @if (attachmentRef().trim().length === 0) {
+      <mat-error id="la-gate-ref-error">Attachment reference is required.</mat-error>
+    }
+  </mat-form-field>
+
+  <div class="la-gate-dialog__row-header">
+    <span>Trigger condition (key/value — v1 simple equality checks)</span>
+    <button mat-button type="button" (click)="addTriggerCondition()">+ Condition</button>
+  </div>
+  @for (cond of triggerConditions(); track $index) {
+    <div class="la-gate-dialog__row">
+      <mat-form-field appearance="outline">
+        <mat-label>Key (e.g. amount)</mat-label>
+        <input matInput [ngModel]="cond.key" [name]="'condKey' + $index" (ngModelChange)="updateTriggerConditionKey($index, $event)" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Value (e.g. &gt; 500)</mat-label>
+        <input matInput [ngModel]="cond.value" [name]="'condValue' + $index" (ngModelChange)="updateTriggerConditionValue($index, $event)" />
+      </mat-form-field>
+      <button mat-icon-button type="button" [attr.aria-label]="'Remove condition ' + ($index + 1)" (click)="removeTriggerCondition($index)">
+        <mat-icon aria-hidden="true">close</mat-icon>
+      </button>
+    </div>
+  }
+  @if (triggerConditions().length === 0) {
+    <p class="la-dialog-helper">No conditions — the gate fires on every call to this attachment.</p>
+  }
+
+  <h3>Gate type</h3>
+  <mat-radio-group [ngModel]="gateType()" (ngModelChange)="gateType.set($event)" aria-label="Gate type" class="la-gate-dialog__gate-types">
+    @for (type of allGateTypes; track type) {
+      <span
+        [matTooltip]="isGateTypeDisabled(type) ? 'Coming soon' : ''"
+        [attr.aria-description]="isGateTypeDisabled(type) ? 'Coming soon — not available in this version' : null"
+      >
+        <mat-radio-button [value]="type" [disabled]="isGateTypeDisabled(type)">
+          {{ gateTypeLabels[type] }}
+          @if (isGateTypeDisabled(type)) {
+            <span class="la-gate-dialog__coming-soon">Coming soon</span>
+          }
+        </mat-radio-button>
+      </span>
+    }
+  </mat-radio-group>
+
+  <h3>Reviewers</h3>
+  <mat-form-field appearance="outline" class="la-dialog-field">
+    <mat-label>Reviewer group</mat-label>
+    <mat-select [ngModel]="reviewerGroupId()" (ngModelChange)="reviewerGroupId.set($event)" aria-describedby="la-gate-reviewer-error">
+      @for (group of data.reviewerGroups; track group.id) {
+        <mat-option [value]="group.id">{{ group.name }} ({{ group.members.length }} member{{ group.members.length === 1 ? '' : 's' }})</mat-option>
+      }
+    </mat-select>
+    @if (!reviewerGroupId()) {
+      <mat-error id="la-gate-reviewer-error">Select a reviewer group.</mat-error>
+    }
+  </mat-form-field>
+  <p class="la-dialog-helper">Not in the list yet? Create one in Reviewer groups first, then come back here.</p>
+
+  <div class="la-gate-dialog__row-header">
+    <span>Notify via</span>
+  </div>
+  @for (type of notifyChannelTypes; track type) {
+    <mat-checkbox [checked]="notifyChannels().includes(type)" (change)="toggleNotifyChannel(type)">
+      {{ type === 'in_app' ? 'In-app' : 'Email' }}
+    </mat-checkbox>
+  }
+
+  <mat-form-field appearance="outline" class="la-dialog-field">
+    <mat-label>SLA (seconds)</mat-label>
+    <input matInput type="number" min="1" max="3600" [ngModel]="slaSeconds()" (ngModelChange)="slaSeconds.set($event)" aria-describedby="la-gate-sla-error" />
+    @if (slaSeconds() < 1 || slaSeconds() > 3600) {
+      <mat-error id="la-gate-sla-error">Enter a value between 1 and 3600 seconds.</mat-error>
+    }
+  </mat-form-field>
+
+  <h3>What the caller hears</h3>
+  <mat-form-field appearance="outline" class="la-dialog-field">
+    <mat-label>Hold treatment text</mat-label>
+    <textarea matInput rows="2" maxlength="500" [ngModel]="holdTreatmentText()" (ngModelChange)="holdTreatmentText.set($event)" aria-describedby="la-gate-hold-error"></textarea>
+    @if (holdTreatmentText().trim().length === 0) {
+      <mat-error id="la-gate-hold-error">Hold treatment text is required (R-H5 — silence during a gate is never acceptable).</mat-error>
+    }
+  </mat-form-field>
+
+  <h3>On timeout</h3>
+  <mat-form-field appearance="outline" class="la-dialog-field">
+    <mat-label>Timeout behaviour</mat-label>
+    <mat-select [ngModel]="timeoutBehavior()" (ngModelChange)="timeoutBehavior.set($event)">
+      @for (b of timeoutBehaviors; track b) {
+        <mat-option [value]="b">
+          @switch (b) {
+            @case ('auto_approve') { Approve automatically }
+            @case ('auto_deny') { Deny automatically }
+            @case ('escalate') { Escalate to another group }
+            @case ('defer_to_async') { Defer — submit for async approval (recommended) }
+          }
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  @if (timeoutBehavior() === 'escalate') {
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Escalate to group</mat-label>
+      <mat-select [ngModel]="escalateToGroupId()" (ngModelChange)="escalateToGroupId.set($event)" aria-describedby="la-gate-escalate-error">
+        @for (group of data.reviewerGroups; track group.id) {
+          <mat-option [value]="group.id">{{ group.name }}</mat-option>
+        }
+      </mat-select>
+      @if (!escalateToGroupId()) {
+        <mat-error id="la-gate-escalate-error">Select a group to escalate to.</mat-error>
+      }
+    </mat-form-field>
+  }
+
+  @if (timeoutBehavior() === 'auto_approve') {
+    <mat-form-field appearance="outline" class="la-dialog-field">
+      <mat-label>Written acknowledgement (R-H2/V-8)</mat-label>
+      <textarea matInput rows="2" maxlength="1000" [ngModel]="autoApproveAckText()" (ngModelChange)="autoApproveAckText.set($event)" aria-describedby="la-gate-ack-error"></textarea>
+      @if (autoApproveAckText().trim().length === 0) {
+        <mat-error id="la-gate-ack-error">Acknowledge that auto-approving means this gate does nothing under load.</mat-error>
+      }
+    </mat-form-field>
+    <p class="la-dialog-helper">
+      <mat-icon aria-hidden="true" inline="true">warning</mat-icon>
+      Auto-approve means the gate does nothing under load — exactly when it matters most (R-H2).
+    </p>
+  }
+
+  <h3>Environments</h3>
+  @for (env of environments; track env) {
+    <mat-checkbox [checked]="selectedEnvironments().includes(env)" (change)="toggleEnvironment(env)">{{ env }}</mat-checkbox>
+  }
+
+  @if (isEdit) {
+    <h3>Status</h3>
+    <mat-radio-group [ngModel]="status()" (ngModelChange)="status.set($event)" aria-label="Status">
+      <mat-radio-button value="active">Active</mat-radio-button>
+      <mat-radio-button value="disabled">Disabled</mat-radio-button>
+    </mat-radio-group>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" type="button" [disabled]="!canSave()" (click)="onSubmit()">
+    @if (submitting()) {
+      <mat-spinner diameter="20" />
+    } @else {
+      {{ isEdit ? 'Save' : 'Create' }}
+    }
+  </button>
+</mat-dialog-actions>

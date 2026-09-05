@@ -1,0 +1,32 @@
+{
+  "name": "@nextbot/conversations",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "BL-04/06: widget session issuance, conversation/message persistence, real-time SSE fan-out (LLD §3.7, §5.3).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir ."
+  },
+  "dependencies": {
+    "@nextbot/contracts": "workspace:*",
+    "@nextbot/db": "workspace:*",
+    "@nextbot/tenancy": "workspace:*",
+    "@nextbot/channels": "workspace:*",
+    "@sinclair/typebox": "^0.33.15",
+    "drizzle-orm": "^0.36.1",
+    "jose": "^5.9.6",
+    "ioredis": "^5.4.1"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "@types/pg": "^8.11.10",
+    "pg": "^8.13.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    // No `rootDir` here (deliberately removed in the shadcn migration, Plan
+    // Phase 0): `noEmit: true` already means TS never actually writes output, but
+    // an explicit `rootDir` still enforces "every file in the program must be
+    // under this directory" — which breaks the moment `@nextbot/ui/components/ui/*`
+    // resolves (via the `paths` mapping below) to real source files physically
+    // living in `packages/ui/src`. `next build` uses its own compiler for the real
+    // build; this tsconfig is only consulted for `tsc --noEmit` type-checking.
+    "jsx": "preserve",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "plugins": [{ "name": "next" }],
+    "paths": {
+      "@/*": ["./*"],
+      "@nextbot/ui/*": ["../../packages/ui/src/*"]
+    }
+  },
+  "include": ["app", "src", "next-env.d.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next", "dist"]
+}

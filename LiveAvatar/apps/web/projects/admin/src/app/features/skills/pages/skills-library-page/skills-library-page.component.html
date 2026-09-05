@@ -1,0 +1,94 @@
+<la-page-header [title]="(tenant()?.name ?? 'Deployment') + ' · Skills'">
+  <a mat-button [routerLink]="['/tenants', tenantId, 'builder', 'overview']">Back to Agent Builder</a>
+  <button mat-flat-button color="primary" type="button" (click)="openCreateDialog()">+ New skill</button>
+</la-page-header>
+
+@if (store.status() === 'loading') {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading skills" />
+}
+
+@if (store.loadError()) {
+  <la-empty-state
+    variant="error"
+    icon="error_outline"
+    title="Could not load skills"
+    body="Try again."
+    actionLabel="Retry"
+    (action)="retry()"
+  />
+} @else if (store.status() === 'ready' && store.items().length === 0) {
+  <la-empty-state
+    icon="auto_awesome"
+    title="No skills yet"
+    body="Package instructions, tools, and knowledge into a skill the model loads only when it's needed."
+    actionLabel="+ New skill"
+    (action)="openCreateDialog()"
+  />
+} @else if (store.status() === 'ready') {
+  <table mat-table [dataSource]="store.items()" class="la-skills-table">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Skill</th>
+      <td mat-cell *matCellDef="let row" data-label="Skill">
+        <a [routerLink]="['/tenants', tenantId, 'builder', 'skills', row.id]">{{ row.name }}</a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="version">
+      <th mat-header-cell *matHeaderCellDef>Version</th>
+      <td mat-cell *matCellDef="let row" data-label="Version">
+        {{ row.published_version ? 'v' + row.published_version.version_number : 'draft only' }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="tools">
+      <th mat-header-cell *matHeaderCellDef>Tools</th>
+      <td mat-cell *matCellDef="let row" data-label="Tools">{{ toolsCount(row) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="knowledge">
+      <th mat-header-cell *matHeaderCellDef>Knowledge</th>
+      <td mat-cell *matCellDef="let row" data-label="Knowledge">
+        @if (sourceRefsCount(row) === 0) {
+          —
+        } @else {
+          {{ sourceRefsCount(row) }} source{{ sourceRefsCount(row) === 1 ? '' : 's' }}
+        }
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="hitl">
+      <th mat-header-cell *matHeaderCellDef>HITL</th>
+      <td mat-cell *matCellDef="let row" data-label="HITL">
+        @if (hasHitlGate(row)) {
+          <span class="la-skills-table__hitl" matTooltip="A HITL gate is attached — edit the skill to see or change it.">
+            <mat-icon aria-hidden="true">gavel</mat-icon> Gated
+          </span>
+        } @else {
+          —
+        }
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="budget">
+      <th mat-header-cell *matHeaderCellDef>Budget</th>
+      <td mat-cell *matCellDef="let row" data-label="Budget">
+        {{ budgetMs(row) !== null ? budgetMs(row) + 'ms' : '—' }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="used_by">
+      <th mat-header-cell *matHeaderCellDef>Used by</th>
+      <td mat-cell *matCellDef="let row" data-label="Used by">
+        {{ row.used_by_agent_count }} agent{{ row.used_by_agent_count === 1 ? '' : 's' }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row" data-label="Actions">
+        <button mat-icon-button [matMenuTriggerFor]="menu" [attr.aria-label]="'Actions for ' + row.name">
+          <mat-icon aria-hidden="true">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item type="button" [routerLink]="['/tenants', tenantId, 'builder', 'skills', row.id]">Edit</button>
+          <button mat-menu-item type="button" (click)="deleteSkill(row)">Delete</button>
+        </mat-menu>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+}

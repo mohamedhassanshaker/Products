@@ -1,0 +1,80 @@
+.la-sessions__search {
+  min-width: 240px;
+}
+
+.la-sessions__table {
+  width: 100%;
+
+  tr[mat-row] {
+    cursor: pointer;
+  }
+}
+
+// Phone (QA fix, phase7-admin-spa D-6): this table never got the stacked-card
+// conversion UX_GUIDELINES §14.7 requires — at 375px the raw 7-column
+// `mat-table` rendered 721px wide with no page scroll, permanently hiding the
+// Status/Provider stack/Error code columns. This is the exact same recurring
+// phone-layout defect class (Phase 1 x3, Phase 2 x1) already fixed once for
+// `deployments-list-page.component.scss` — same pattern reused verbatim
+// (`data-label` attributes + releasing Angular Material's fixed row/cell
+// height back to `auto` at this breakpoint) rather than inventing a new one.
+@media (max-width: 767px) {
+  .la-sessions__table.mat-mdc-table,
+  .la-sessions__table {
+    display: block;
+    height: auto;
+  }
+
+  .la-sessions__table tbody,
+  .la-sessions__table .mdc-data-table__content {
+    display: block;
+    height: auto;
+  }
+
+  .la-sessions__table tr[mat-header-row],
+  .la-sessions__table tr.mat-mdc-header-row {
+    display: none;
+  }
+
+  .la-sessions__table tr[mat-row],
+  .la-sessions__table tr.mat-mdc-row,
+  .la-sessions__table tr.mdc-data-table__row {
+    display: block;
+    height: auto !important;
+    min-height: 0;
+    padding: 12px 0;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    overflow: visible;
+    border-bottom: 1px solid var(--la-outline, #74777f);
+  }
+
+  .la-sessions__table td[mat-cell],
+  .la-sessions__table td.mat-mdc-cell,
+  .la-sessions__table td.mdc-data-table__cell {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    height: auto !important;
+    min-height: 0;
+    padding: 4px 0;
+    border: none;
+    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .la-sessions__table tr[mat-row]:last-of-type,
+  .la-sessions__table tr.mat-mdc-row:last-of-type {
+    margin-bottom: 16px;
+    border-bottom: none;
+  }
+
+  .la-sessions__table td[mat-cell]::before {
+    content: attr(data-label);
+    font-weight: 500;
+    margin-right: 12px;
+    white-space: nowrap;
+  }
+}

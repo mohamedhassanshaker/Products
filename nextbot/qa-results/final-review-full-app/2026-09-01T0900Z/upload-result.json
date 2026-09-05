@@ -1,0 +1,5 @@
+{
+  "status": 201,
+  "body": "{\"locator\":{\"kind\":\"Upload\",\"storageRef\":\"250dc400-2dc7-434e-adcb-739c4435cd53\",\"filename\":\"qa-defect1-reverify.md\",\"mimeType\":\"text/markdown\",\"sizeBytes\":71}}",
+  "content": "QA Final Review retry DEFECT-1 re-verification 2026-09-01T03:52:49.125Z"
+}

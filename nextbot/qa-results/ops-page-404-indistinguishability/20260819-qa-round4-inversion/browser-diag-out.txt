@@ -1,0 +1,31 @@
+cookies: ["nb_ops_session path=/ secure=true sameSite=Strict httpOnly=true"]
+
+failed/4xx responses:
+  {"status":"FAILED","url":"http://127.0.0.1:3492/internal/ops/login","err":"net::ERR_ABORTED"}
+  {"status":"FAILED","url":"http://127.0.0.1:3492/internal/ops/tenants?_rsc=cqBx1wNPUNxh50r0","err":"net::ERR_ABORTED"}
+  {"status":"FAILED","url":"http://127.0.0.1:3492/internal/ops/tenants/new?_rsc=cqBx1wNPUNxh50r0","err":"net::ERR_ABORTED"}
+  {"status":"FAILED","url":"http://127.0.0.1:3492/internal/ops/tenants/01a008b9-61f8-7064-9cd3-66c6b4c92b77?_rsc=cqBx1wNPUNxh50r0","err":"net::ERR_ABORTED"}
+
+in-page fetch of the ops API from the console origin:
+  {"status":200,"body":"{\"tenants\":[{\"id\":\"01a008b9-61f8-7064-9cd3-66c6b4c92b77\",\"name\":\"NextBot Demo\",\"slug\":\"demo\",\"region\":\"UAE\",\"status\":\"Active\",\"planTier\":\"Enterprise\",\"createdAt\":\"2026-08-16T03:59:22.104Z\",\"maxConcurrentRuns\":null,\"liveConcurrentRuns\":0}]}"}
+
+rendered rows: 1 | body: Platform Manager Tenants Sign out Tenants Provision new tenant Filter by name or slug Name ▾ Slug Region Status Plan tier Concurrent runs NextBot Demo demo UAE Active Enterprise 0 (no cap)
+
+--- SPA nav check: click 'Provision new tenant' ---
+  link count(role=link): 0 | any element with text: 1
+  url now: http://127.0.0.1:3492/internal/ops/tenants/new | document 'load' events since click: 0 (0 == SPA transition)
+  slug field: 0
+
+all responses after nav (last 12):
+  200 GET http://127.0.0.1:3492/_next/static/chunks/8515-40b4e5a857e3cc78.js
+  200 GET http://127.0.0.1:3492/internal/ops/tenants?_rsc=cqBx1wNPUNxh50r0
+  200 GET http://127.0.0.1:3492/internal/ops/tenants/new?_rsc=cqBx1wNPUNxh50r0
+  200 GET http://127.0.0.1:3492/api/internal/ops/tenants
+  200 GET http://127.0.0.1:3492/internal/ops/tenants/01a008b9-61f8-7064-9cd3-66c6b4c92b77?_rsc=cqBx1wNPUNxh50r0
+  200 GET http://127.0.0.1:3492/api/internal/ops/tenants
+  200 GET http://127.0.0.1:3492/internal/ops/tenants/new?_rsc=FdIgXtPu1pWrgb00
+  200 GET http://127.0.0.1:3492/_next/static/chunks/7457-728c7531ccfcc1a2.js
+  200 GET http://127.0.0.1:3492/_next/static/chunks/8164-266cc3e7a9cb4d84.js
+  200 GET http://127.0.0.1:3492/_next/static/chunks/837-c9ca2819272ede88.js
+  200 GET http://127.0.0.1:3492/_next/static/chunks/2022-6b8f8e44189ffbad.js
+  200 GET http://127.0.0.1:3492/_next/static/chunks/app/internal/ops/nb-c-4f21c8a7e3d9b605/(console)/tenants/new/page-6a0f38f0af7d5bcd.js

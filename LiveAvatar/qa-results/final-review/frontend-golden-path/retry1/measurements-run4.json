@@ -1,0 +1,90 @@
+{
+  "results": [
+    {
+      "check": "GP-login-invalid",
+      "url": "http://127.0.0.1:4500/admin/login",
+      "body": "Sign in Email or password is incorrect. Email Password visibility Sign in"
+    },
+    {
+      "check": "GP-nav",
+      "nav": [
+        {
+          "text": "Dashboard",
+          "href": "/admin/dashboard",
+          "ariaDisabled": "false"
+        },
+        {
+          "text": "Deployments",
+          "href": "/admin/deployments",
+          "ariaDisabled": "false"
+        },
+        {
+          "text": "Providers",
+          "href": "/admin/providers",
+          "ariaDisabled": "false"
+        },
+        {
+          "text": "Sessions",
+          "href": "/admin/sessions",
+          "ariaDisabled": "false"
+        },
+        {
+          "text": "GPU health",
+          "href": "/admin/gpu",
+          "ariaDisabled": "false"
+        },
+        {
+          "text": "Alerts",
+          "href": "/admin/alerts",
+          "ariaDisabled": "false"
+        },
+        {
+          "text": "Residency",
+          "href": "/admin/residency",
+          "ariaDisabled": "false"
+        }
+      ]
+    },
+    {
+      "check": "GP-gpu-fresh",
+      "body": "tion 71.5% Memory utilization 62% check_circle Healthy Last heartbeat: 55 seconds ago Autoscaler: Not configured gpu-avatar-02 face Avatar GPU utilization 12% Memory utilization 30.5% error Unhealthy Last heartbeat: 18 minutes ago Autoscaler: Not configured gpu-stt-01 mic STT GPU utilization 44% Memory utilization 51.2% error Unhealthy Last heartbeat: 18 minutes ago Autoscaler: Not configured gpu-"
+    },
+    {
+      "check": "D4-sessions-filters",
+      "labels": [
+        "Tenant",
+        "Search transcript",
+        "Status"
+      ]
+    },
+    {
+      "check": "axe-dashboard",
+      "violations": []
+    },
+    {
+      "check": "axe-sessions-375",
+      "violations": []
+    },
+    {
+      "check": "axe-deployments-375",
+      "violations": []
+    },
+    {
+      "check": "GP-precall-published",
+      "body": "🧑‍💻 We'll ask for microphone access to start the call. Your name (optional) Turn on camera Join call",
+      "joinDisabled": false
+    }
+  ],
+  "consoleErrors": [
+    {
+      "url": "http://127.0.0.1:4500/admin/login",
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)"
+    }
+  ],
+  "netErrors": [
+    {
+      "url": "http://127.0.0.1:4500/api/auth/login",
+      "status": 401
+    }
+  ]
+}

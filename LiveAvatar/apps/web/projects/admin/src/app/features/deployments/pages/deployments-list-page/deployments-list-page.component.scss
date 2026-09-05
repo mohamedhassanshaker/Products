@@ -1,0 +1,109 @@
+.la-deployments-filters {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+
+  &__search {
+    flex: 1 1 320px;
+  }
+
+  &__status {
+    flex: 0 0 160px;
+  }
+}
+
+.la-deployments-table {
+  table {
+    width: 100%;
+  }
+
+  tr[mat-row] {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--la-primary-container, #d6e3f8);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--la-focus, #1b4b8a);
+      outline-offset: -2px;
+    }
+  }
+}
+
+// Phone: the table collapses into one stacked card per row. Angular Material
+// sets a fixed ~52px height on its row/cell elements, which the stacked
+// multi-line content overflows — rows then paint on top of each other and on
+// the paginator. Every element in the table's box chain therefore needs its
+// height released back to `auto` at this breakpoint.
+@media (max-width: 767px) {
+  .la-deployments-table table.mat-mdc-table,
+  .la-deployments-table table {
+    display: block;
+    height: auto;
+  }
+
+  // `tbody` must also become a block box, otherwise the block-level rows inside
+  // it are still laid out by the table algorithm and keep their fixed height.
+  .la-deployments-table tbody,
+  .la-deployments-table .mdc-data-table__content {
+    display: block;
+    height: auto;
+  }
+
+  .la-deployments-table tr[mat-header-row],
+  .la-deployments-table tr.mat-mdc-header-row {
+    display: none;
+  }
+
+  .la-deployments-table tr[mat-row],
+  .la-deployments-table tr.mat-mdc-row,
+  .la-deployments-table tr.mdc-data-table__row {
+    display: block;
+    // `!important` is required: Material sets the row height via its own
+    // `.mat-mdc-row` rule, which has equal-or-higher specificity here.
+    height: auto !important;
+    min-height: 0;
+    padding: 12px 0;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    overflow: visible;
+    border-bottom: 1px solid var(--la-outline, #74777f);
+  }
+
+  .la-deployments-table td[mat-cell],
+  .la-deployments-table td.mat-mdc-cell,
+  .la-deployments-table td.mdc-data-table__cell {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    height: auto !important;
+    min-height: 0;
+    padding: 4px 0;
+    border: none;
+    overflow: visible;
+    // Long slugs / provider summaries must wrap rather than force the card wide.
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  // Separate the last card from the paginator that follows it.
+  .la-deployments-table tr[mat-row]:last-of-type,
+  .la-deployments-table tr.mat-mdc-row:last-of-type {
+    margin-bottom: 16px;
+    border-bottom: none;
+  }
+
+  .la-deployments-table td[mat-cell]::before {
+    content: attr(data-label);
+    font-weight: 500;
+    margin-right: 12px;
+    // D-7: the cell's `white-space: normal` / `word-break: break-word` (needed
+    // so long slugs and provider summaries wrap) is inherited by this label
+    // pseudo-element, which broke short labels like "Providers" mid-word at
+    // narrow widths. The label is always short, so it never needs to wrap.
+    white-space: nowrap;
+  }
+}

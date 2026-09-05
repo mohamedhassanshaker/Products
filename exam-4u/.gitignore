@@ -1,0 +1,25 @@
+node_modules/
+dist/
+coverage/
+.next/
+*.tsbuildinfo
+*.log
+.env
+.env.*
+!.env.example
+logs/
+storage/
+.angular/
+.DS_Store
+Thumbs.db
+
+# Python (services/ai-engine)
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+*.coverage
+.coverage

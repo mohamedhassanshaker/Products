@@ -1,0 +1,41 @@
+node_modules
+**/node_modules
+**/dist
+**/coverage
+**/*.tsbuildinfo
+.git
+.github
+docs
+*.md
+docker/docker-compose.dev.yml
+
+# services/ai-engine is a wholly separate image (services/ai-engine/Dockerfile, HLD §8.5) built
+# from its own directory as build context — this (app) Dockerfile never COPYs anything from
+# services/, so including it here only bloats the build context transfer for no reason. Excluded
+# as a whole directory rather than just its caches, since none of it is ever needed here.
+services/
+
+# Test artifacts / QA scratch output (never inputs to the app image) — system prompt explicitly
+# calls out "anything in qa-results/".
+qa-results/
+qa-tmp-retry*/
+**/.tmp-storage/
+.tmp-storage/
+apps/**/test/
+apps/**/*.spec.ts
+apps/**/*.e2e-spec.ts
+
+# Local env files — never baked into an image layer (system prompt §5: "never a real credential,
+# connection string, or API key into an image layer").
+.env
+.env.*
+!.env.example
+
+# Editor/tooling caches with no place in a build context.
+**/.angular/
+**/.venv/
+**/__pycache__/
+**/.mypy_cache/
+**/.pytest_cache/
+**/.ruff_cache/
+*.log

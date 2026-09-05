@@ -1,0 +1,44 @@
+=== (A) '..'-normalized path spellings: denied side must stay uniform ===
+  dotdot ops/tenants     denied-side: uniform | ALLOWED operator -> status=200 len=13184  x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+  dotdot ops/login       denied-side: uniform | ALLOWED operator -> status=200 len=10996  x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/login
+  dotdot ops root        denied-side: uniform | ALLOWED operator -> status=404 len=6871   x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605
+  dotdot ops deep        denied-side: uniform | ALLOWED operator -> status=200 len=21376  x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new
+  !! DENIED-SIDE DEVIATION dotdot into secret [DENY-unconfigured]
+       ops    : 404|x-middleware-rewrite: /internal/ops/tenants ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cac
+       missing: 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-pre
+  !! DENIED-SIDE DEVIATION dotdot into secret [DENY-unconf+token]
+       ops    : 404|x-middleware-rewrite: /internal/ops/tenants ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cac
+       missing: 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-pre
+  !! DENIED-SIDE DEVIATION dotdot into secret [DENY-noproxy-spoofXFF]
+       ops    : 404|x-middleware-rewrite: /internal/ops/tenants ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cac
+       missing: 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-pre
+  !! DENIED-SIDE DEVIATION dotdot into secret [DENY-proxy-badip]
+       ops    : 404|x-middleware-rewrite: /internal/ops/tenants ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cac
+       missing: 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-pre
+  !! DENIED-SIDE DEVIATION dotdot into secret [DENY-proxy-noip]
+       ops    : 404|x-middleware-rewrite: /internal/ops/tenants ~ Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cac
+       missing: 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding ~ x-nextjs-cache: HIT ~ x-nextjs-prerender: 1 ~ x-nextjs-pre
+  dotdot into secret     denied-side: see above | ALLOWED operator -> status=404 len=6871   x-middleware-rewrite: /internal/ops/tenants
+  dotdot x2              denied-side: see above | ALLOWED operator -> status=404 len=6871   no-rewrite
+  encoded dotdot         denied-side: see above | ALLOWED operator -> status=200 len=13184  x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+  dot segment            denied-side: see above | ALLOWED operator -> status=200 len=13184  x-middleware-rewrite: /internal/ops/nb-c-4f21c8a7e3d9b605/tenants
+  denied-side deviations across 8 shapes x 5 caller states: 5
+
+=== (B) API-side: /api/internal/ops/** vs /api/[...unmatched], all methods/states ===
+  !! API DEVIATION GET /api/internal/ops/tenants [ALLOW-operator]
+       ops    : 200|vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-type: application/json ~ Transfer-Encoding: chunked|651b4974df0d84cf
+       missing: 404|vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-length: 9 ~ content-type: text/plain; charset=utf-8|0019dfc4b32d63c1
+  !! API DEVIATION POST /api/internal/ops/tenants [ALLOW-operator]
+       ops    : 422|vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-type: application/json ~ Transfer-Encoding: chunked|d770d78da5cf5ddf
+       missing: 404|vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-length: 9 ~ content-type: text/plain; charset=utf-8|0019dfc4b32d63c1
+  !! API DEVIATION HEAD /api/internal/ops/tenants [ALLOW-operator]
+       ops    : 200|vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-type: application/json|e3b0c44298fc1c14
+       missing: 404|vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-length: 9 ~ content-type: text/plain; charset=utf-8|e3b0c44298fc1c14
+  !! API DEVIATION GET /api/internal/ops/tenants/abc [ALLOW-operator]
+       ops    : 500|vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-type: application/json ~ Transfer-Encoding: chunked|f9cbfc1bdf5168bc
+       missing: 404|vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-length: 9 ~ content-type: text/plain; charset=utf-8|0019dfc4b32d63c1
+  !! API DEVIATION HEAD /api/internal/ops/tenants/abc [ALLOW-operator]
+       ops    : 500|vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-type: application/json|e3b0c44298fc1c14
+       missing: 404|vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-length: 9 ~ content-type: text/plain; charset=utf-8|e3b0c44298fc1c14
+  api pairs checked: 180; deviations: 5
+  sample: 404 len=9 body="Not Found" hdrs=vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch ~ content-length: 9 ~ content-type: text/plain; charset=utf-8

@@ -1,0 +1,27 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.angular/
+.nx/
+coverage/
+logs/
+secrets/
+.env
+.env.local
+*.log
+apps/api/src/generated/
+apps/web/.angular/
+.prisma/
+.DS_Store
+Thumbs.db
+
+# Python (apps/agent, Phase 4)
+.venv-agent/
+apps/agent/.venv/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+apps/agent/.coverage
+apps/agent/htmlcov/

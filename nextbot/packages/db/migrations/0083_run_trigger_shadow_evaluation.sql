@@ -1,0 +1,18 @@
+-- Target Architecture Blueprint Phase 17 (BL-48/BL-13, ADR-0019 §2.5, LLD §15.2).
+--
+-- `agent_run.trigger` gains `ShadowEvaluation`: a run produced by the shadow-evaluation
+-- replay of a candidate agent version against real live traffic. Such a run genuinely
+-- happened (real model calls, real spend, a real `agent_run` row and trace), but NO
+-- customer ever saw its output — so every existing aggregate over `agent_run` must
+-- exclude it or it silently corrupts real production metrics. ADR-0019 §2.5 names that
+-- consumer audit as the single highest-risk item in the phase; it is carried out in the
+-- application layer (see `agent-run-repository.ts`'s `excludeShadowRuns` predicate and
+-- the enumerated reader list in this phase's plan doc).
+--
+-- A single enum value with an audited consumer list is deliberately preferred over a
+-- redundant `is_shadow` boolean, which could disagree with `trigger`.
+--
+-- Kept in its own single-statement migration because Postgres forbids USING a
+-- freshly-added enum label in the same transaction it was added in — the same constraint
+-- migrations `0078`/`0070`/`0049`/`0039`-`0040` already record.
+ALTER TYPE run_trigger ADD VALUE 'ShadowEvaluation';

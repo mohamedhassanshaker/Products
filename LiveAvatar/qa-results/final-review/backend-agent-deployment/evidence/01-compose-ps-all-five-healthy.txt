@@ -1,0 +1,5 @@
+liveavatar-qa-agent-1	Up 38 minutes (healthy)
+liveavatar-qa-livekit-1	Up 39 minutes (healthy)
+liveavatar-qa-postgres-1	Up 45 minutes (healthy)
+liveavatar-qa-redis-1	Up 45 minutes (healthy)
+liveavatar-qa-web-1	Up 43 minutes (healthy)

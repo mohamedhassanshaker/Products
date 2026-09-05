@@ -1,0 +1,27 @@
+{
+  "name": "@nextbot/ai-registry",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Provider-agnostic model registry (LLD §7.1). ONLY package that may import @google/adk or a provider SDK — enforced by dependency-cruiser.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir ."
+  },
+  "dependencies": {
+    "@nextbot/contracts": "workspace:*",
+    "@sinclair/typebox": "^0.33.15",
+    "@anthropic-ai/sdk": "^0.117.1",
+    "@google/adk": "^1.6.0",
+    "@google/genai": "^2.9.0"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

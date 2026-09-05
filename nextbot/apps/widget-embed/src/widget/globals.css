@@ -1,0 +1,160 @@
+/**
+ * Widget's own, standalone Tailwind v4 / shadcn CSS build (Plan Phase 5,
+ * `docs/plans/chakra-to-shadcn-plan.md`) — mirrors the same design-system preset
+ * tokens `apps/web/app/globals.css` established (Style "Lyra", Base Color "Stone",
+ * accent/Theme "Orange", Radius "None") for visual consistency across the two
+ * apps, per this dispatch's scope. This file is imported only from
+ * `src/widget/main.tsx` (the widget SPA's own entrypoint) — it is never imported
+ * by, and never leaks into, the host page or `apps/web`'s bundle: the widget's
+ * entire DOM lives inside its own isolated iframe document (`docs/design/
+ * UX_GUIDELINES.md` §5.1), so this stylesheet is scoped there by construction.
+ */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Self-hosted font files (Vite SPA — no `next/font`), scoped to this iframe
+ * document only. Oxanium (heading) / Outfit (body), same faces as the Admin
+ * Console. Only the weights actually used by the widget's compact type scale are
+ * imported (400/500/600 body, 600/700 heading) to keep the widget's own bundle
+ * small — this is a size-sensitive embeddable asset, unlike the Admin Console. */
+@import "@fontsource/outfit/400.css";
+@import "@fontsource/outfit/500.css";
+@import "@fontsource/outfit/600.css";
+@import "@fontsource/oxanium/600.css";
+@import "@fontsource/oxanium/700.css";
+
+/* Tailwind v4's automatic content detection walks up from this file looking for a
+ * project root; `packages/ui/src` (the shared shadcn component home this widget
+ * reuses primitives from, see `docs/plans/instead-of-chackraui-modify-frolicking-
+ * haven.md` Phase 0/4/5) lives outside `apps/widget-embed`'s own directory tree, so
+ * it must be added explicitly or class names used only inside
+ * `packages/ui/src/components/**` would be tree-shaken out of this app's compiled
+ * CSS — same reasoning as `apps/web/app/globals.css`'s identical `@source` line. */
+@source "../../../../packages/ui/src";
+
+@theme inline {
+    --font-heading: "Oxanium", system-ui, sans-serif;
+    --font-sans: "Outfit", system-ui, sans-serif;
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.147 0.004 49.25);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.147 0.004 49.25);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.147 0.004 49.25);
+    /*
+     * FR-ADM-07/ADR-0010: `--primary`/`--primary-foreground` are the *only* two
+     * tenant-overridable tokens (same token contract Plan Phase 1 established for
+     * the Admin Console shell) — the default here matches `theme.ts`'s prior
+     * Chakra-era `DEFAULT_PRIMARY` (`#4f46e5`) so an unbranded/default-themed
+     * embed looks the same as before this migration. A tenant's real brand color
+     * overrides both via a client-rendered `<style>` tag
+     * (`branding/build-widget-brand-style-tag.ts`), injected by `WidgetApp.tsx`
+     * before first paint — this widget has no SSR step to do it server-side (Vite
+     * SPA), but the CSS-variable mechanism itself is identical to the admin
+     * shell's.
+     */
+    --primary: oklch(0.457 0.24 277.66);
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.967 0.001 286.375);
+    --secondary-foreground: oklch(0.21 0.006 285.885);
+    --muted: oklch(0.97 0.001 106.424);
+    --muted-foreground: oklch(0.553 0.013 58.071);
+    --accent: oklch(0.97 0.001 106.424);
+    --accent-foreground: oklch(0.216 0.006 56.043);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.923 0.003 48.717);
+    --input: oklch(0.923 0.003 48.717);
+    --ring: oklch(0.709 0.01 56.259);
+    --chart-1: oklch(0.837 0.128 66.29);
+    --chart-2: oklch(0.705 0.213 47.604);
+    --chart-3: oklch(0.646 0.222 41.116);
+    --chart-4: oklch(0.553 0.195 38.402);
+    --chart-5: oklch(0.47 0.157 37.304);
+    /* Radius "None" per the shared preset (`components.json`'s `base-lyra` style)
+     * — every shadcn primitive this widget reuses from `packages/ui` already
+     * hardcodes `rounded-none` directly in its own class list (not driven by this
+     * token), same convention `apps/web` established. The token is kept only for
+     * the handful of `--radius-*` derived utilities above that some reused
+     * primitives reference structurally. */
+    --radius: 0.625rem;
+
+    /* Reserved, non-tenant-overridable status tones — kept as plain Tailwind
+     * arbitrary-color utilities at each call site (`bg-[#16a34a]` etc.) rather than
+     * additional custom properties, since (unlike `--primary`) nothing here is ever
+     * runtime-overridden per tenant; duplicated from `packages/modules/tenancy`'s
+     * palette intentionally (same "never share a bundle across the widget/admin
+     * boundary" rule the old `theme.ts` documented) — not consumed by any component
+     * this phase (carried over unused from the prior Chakra theme for parity; see
+     * `theme.ts`'s doc comment).
+     */
+}
+
+/* Launcher's one-time "draw attention" pulse (docs/design/UX_GUIDELINES.md
+ * §5.2.1) — fires once (`Launcher.tsx` removes the class after ~1.2s via its own
+ * `useState`/`useEffect`, this isn't `animation-iteration-count: infinite`), and
+ * is only ever applied when `prefers-reduced-motion` is not set (checked in
+ * `Launcher.tsx` before adding this class at all) — kept as plain CSS outside
+ * Tailwind's `@layer` blocks so it can't be purged by content-detection (it's
+ * referenced via a template-string class name, not a static utility). */
+@keyframes nextbot-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-nextbot-pulse {
+  animation: nextbot-pulse 1.2s ease-in-out 1;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html,
+  body,
+  #root {
+    @apply bg-transparent text-foreground;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  html {
+    @apply font-sans;
+  }
+}

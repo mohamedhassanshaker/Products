@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: liveavatar-agent-config
+  namespace: liveavatar
+data:
+  CONTROL_PLANE_INTERNAL_URL: 'http://web-internal:8081'
+  SECRETS_DIR: '/app/secrets'
+  LIVEKIT_URL: 'ws://livekit:7880'
+  AGENT_NAME: 'avatar-agent'
+  MAX_CONCURRENT_JOBS: '10'
+  # AI subsystem defaults (ADR-001 §3) — used only when a tenant's published
+  # config has no override. Never a real key here; AI_API_KEY is a Secret ref.
+  AI_PROVIDER: 'openai'
+  AI_MODEL_CONVERSATION: 'gpt-4o-mini'
+  AI_MODEL_SUMMARY: 'gpt-4o-mini'
+  AI_BASE_URL: '' # set to an on-prem OpenAI-compatible endpoint (Ollama/vLLM/gateway) if used
+  AI_REQUEST_TIMEOUT_MS: '15000'
+  AI_CONNECT_TIMEOUT_MS: '5000'

@@ -1,0 +1,82 @@
+<la-page-header [title]="(tenant()?.name ?? 'Deployment') + ' · Human-in-the-loop'">
+  <a mat-button [routerLink]="['/tenants', tenantId, 'builder', 'overview']">Back to Agent Builder</a>
+  <a mat-button [routerLink]="['/tenants', tenantId, 'builder', 'hitl', 'reviewer-groups']">Reviewer groups</a>
+  <button mat-flat-button color="primary" type="button" (click)="openCreateDialog()">+ Add gate</button>
+</la-page-header>
+
+@if (store.status() === 'loading') {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading gates" />
+}
+
+@if (store.loadError()) {
+  <la-empty-state
+    variant="error"
+    icon="error_outline"
+    title="Could not load gates"
+    body="Try again."
+    actionLabel="Retry"
+    (action)="retry()"
+  />
+} @else if (store.status() === 'ready' && store.reviewerGroups().length === 0) {
+  <la-empty-state
+    icon="groups"
+    title="Create a reviewer group first"
+    body="Every gate needs a reviewer group with at least one member (R-H1). Set one up, then come back to add a gate."
+    actionLabel="Reviewer groups"
+    (action)="goToReviewerGroups()"
+  />
+} @else if (store.status() === 'ready' && store.items().length === 0) {
+  <la-empty-state
+    icon="gavel"
+    title="No gates yet"
+    body="Add a gate to require human approval before a consequential tool call, skill, or graph node fires."
+    actionLabel="+ Add gate"
+    (action)="openCreateDialog()"
+  />
+} @else if (store.status() === 'ready') {
+  <table mat-table [dataSource]="store.items()" class="la-hitl-gates-table">
+    <ng-container matColumnDef="attachment">
+      <th mat-header-cell *matHeaderCellDef>Trigger</th>
+      <td mat-cell *matCellDef="let row" data-label="Trigger">
+        {{ row.attachment_ref }}
+        <p class="la-hitl-gates-table__kind">{{ row.attachment_kind === 'graph_node' ? 'Graph node' : row.attachment_kind }}</p>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell *matCellDef="let row" data-label="Type">{{ row.gate_type }}</td>
+    </ng-container>
+    <ng-container matColumnDef="reviewers">
+      <th mat-header-cell *matHeaderCellDef>Reviewers</th>
+      <td mat-cell *matCellDef="let row" data-label="Reviewers">{{ reviewerGroupName(row) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="sla">
+      <th mat-header-cell *matHeaderCellDef>SLA</th>
+      <td mat-cell *matCellDef="let row" data-label="SLA">{{ row.sla_seconds }}s</td>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let row" data-label="Status">
+        @if (row.status === 'active') {
+          <span class="la-hitl-gates-table__status la-hitl-gates-table__status--active">Active</span>
+        } @else {
+          <span class="la-hitl-gates-table__status">Disabled</span>
+        }
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row" data-label="Actions">
+        <button mat-icon-button [matMenuTriggerFor]="menu" [attr.aria-label]="'Actions for ' + row.attachment_ref">
+          <mat-icon aria-hidden="true">more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item type="button" (click)="openEditDialog(row)">Edit</button>
+          <button mat-menu-item type="button" (click)="deleteGate(row)">Delete</button>
+        </mat-menu>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+}

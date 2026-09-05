@@ -1,0 +1,138 @@
+@if (store.status() === 'loading') {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading Dynamics" />
+}
+
+@if (store.status() === 'error') {
+  <la-empty-state
+    variant="error"
+    icon="error_outline"
+    title="Could not load this deployment"
+    body="Try again from the Overview tab."
+    actionLabel="Retry"
+    (action)="store.load(tenantId)"
+  />
+}
+
+@if (store.status() === 'ready') {
+  <form class="la-builder-form">
+    <p class="la-builder-helper">
+      These fields tune the live call's turn-taking behaviour once the agent runtime reads them — no runtime wiring
+      exists yet, so changing them today only stores the configuration.
+    </p>
+
+    <h2>Barge-in</h2>
+    <mat-slide-toggle
+      [ngModel]="store.dynamics().barge_in.enabled"
+      name="bargeInEnabled"
+      (ngModelChange)="onBargeInEnabled($event)"
+    >
+      Allow the caller to interrupt the agent while it's speaking
+    </mat-slide-toggle>
+    @if (store.dynamics().barge_in.enabled) {
+      <mat-form-field appearance="outline">
+        <mat-label>Sensitivity</mat-label>
+        <mat-select [ngModel]="store.dynamics().barge_in.sensitivity" name="bargeInSensitivity" (ngModelChange)="onBargeInSensitivity($event)">
+          @for (level of sensitivities; track level) {
+            <mat-option [value]="level">{{ level }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <p class="la-builder-helper">Higher sensitivity interrupts the agent on quieter/shorter caller speech.</p>
+    }
+    @for (message of errorsFor('/dynamics/barge_in/sensitivity'); track message) {
+      <p class="la-builder-error">{{ message }}</p>
+    }
+
+    <h2>Endpointing</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Silence before end-of-turn (ms)</mat-label>
+      <input
+        matInput
+        type="number"
+        min="100"
+        max="5000"
+        [ngModel]="store.dynamics().endpointing_silence_ms"
+        name="endpointingSilenceMs"
+        (ngModelChange)="onEndpointingSilenceMs($event)"
+      />
+    </mat-form-field>
+    <p class="la-builder-helper">How long the caller must stay silent before the agent treats the turn as finished.</p>
+    @for (message of errorsFor('/dynamics/endpointing_silence_ms'); track message) {
+      <p class="la-builder-error">{{ message }}</p>
+    }
+
+    <h2>Verbosity</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Response verbosity</mat-label>
+      <mat-select [ngModel]="store.dynamics().verbosity" name="verbosity" (ngModelChange)="onVerbosity($event)">
+        @for (level of verbosities; track level) {
+          <mat-option [value]="level">{{ level }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <h2>No-input handling</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Timeout before reprompting (ms)</mat-label>
+      <input
+        matInput
+        type="number"
+        min="1000"
+        max="60000"
+        [ngModel]="store.dynamics().no_input.timeout_ms"
+        name="noInputTimeoutMs"
+        (ngModelChange)="onNoInputTimeoutMs($event)"
+      />
+    </mat-form-field>
+    @for (message of errorsFor('/dynamics/no_input/timeout_ms'); track message) {
+      <p class="la-builder-error">{{ message }}</p>
+    }
+    <mat-form-field appearance="outline">
+      <mat-label>Max reprompts</mat-label>
+      <input
+        matInput
+        type="number"
+        min="0"
+        max="5"
+        [ngModel]="store.dynamics().no_input.max_reprompts"
+        name="noInputMaxReprompts"
+        (ngModelChange)="onNoInputMaxReprompts($event)"
+      />
+    </mat-form-field>
+    @for (message of errorsFor('/dynamics/no_input/max_reprompts'); track message) {
+      <p class="la-builder-error">{{ message }}</p>
+    }
+
+    <h2>Call limits</h2>
+    <mat-form-field appearance="outline">
+      <mat-label>Max tokens per turn</mat-label>
+      <input
+        matInput
+        type="number"
+        min="1"
+        max="8000"
+        [ngModel]="store.dynamics().call_limits.max_turn_tokens"
+        name="maxTurnTokens"
+        (ngModelChange)="onMaxTurnTokens($event)"
+      />
+    </mat-form-field>
+    @for (message of errorsFor('/dynamics/call_limits/max_turn_tokens'); track message) {
+      <p class="la-builder-error">{{ message }}</p>
+    }
+    <mat-form-field appearance="outline">
+      <mat-label>Max seconds per turn</mat-label>
+      <input
+        matInput
+        type="number"
+        min="1"
+        max="120"
+        [ngModel]="store.dynamics().call_limits.max_turn_seconds"
+        name="maxTurnSeconds"
+        (ngModelChange)="onMaxTurnSeconds($event)"
+      />
+    </mat-form-field>
+    @for (message of errorsFor('/dynamics/call_limits/max_turn_seconds'); track message) {
+      <p class="la-builder-error">{{ message }}</p>
+    }
+  </form>
+}

@@ -1,0 +1,103 @@
+@if (tenantNotFound()) {
+  <la-empty-state variant="error" icon="error" title="Tenant not found" body="Tenant not found." actionLabel="Back to deployments" (action)="backToDeployments()" />
+} @else {
+  <la-page-header [title]="(tenantName() || 'Deployment') + ' · Alerts & failover'">
+    <button type="button" (click)="backToDeployments()">Back to deployments</button>
+  </la-page-header>
+
+  <div class="la-alerts__tabs" role="tablist">
+    <button type="button" role="tab" [attr.aria-selected]="activeTab() === 'retry'" (click)="selectTab('retry')">Fallback &amp; retry</button>
+    <button type="button" role="tab" [attr.aria-selected]="activeTab() === 'alerts'" (click)="selectTab('alerts')">Alerts</button>
+  </div>
+
+  @if (activeTab() === 'retry') {
+    <section class="la-alerts__retry">
+      @if (!policyLoading()) {
+        <div class="la-alerts__field la-alerts__fallback">
+          <span class="la-alerts__fallback-label">Fallback LLM</span>
+          <span class="la-alerts__fallback-value">{{ fallbackLlmDisplay() }}</span>
+          <a [routerLink]="['/tenants', tenantId, 'builder']">Edit in Agent Builder</a>
+        </div>
+
+        <div class="la-alerts__field">
+          <label for="alerts-max-attempts">Retry max attempts</label>
+          <input
+            id="alerts-max-attempts"
+            type="number"
+            min="1"
+            max="5"
+            [value]="retryMaxAttempts()"
+            [readonly]="saving()"
+            (change)="onMaxAttemptsChange($any($event.target).valueAsNumber)"
+          />
+        </div>
+
+        @for (delay of retryBackoffMs(); track $index) {
+          <div class="la-alerts__field">
+            <label [for]="'alerts-backoff-' + $index">Attempt {{ $index + 1 }} delay (ms)</label>
+            <input
+              [id]="'alerts-backoff-' + $index"
+              type="number"
+              min="0"
+              [value]="delay"
+              [readonly]="saving()"
+              (change)="onBackoffChange($index, $any($event.target).valueAsNumber)"
+            />
+          </div>
+        }
+
+        <div class="la-alerts__field">
+          <label for="alerts-degraded-message">Degraded-mode message</label>
+          <textarea
+            id="alerts-degraded-message"
+            maxlength="500"
+            [value]="degradedModeMessage()"
+            [readonly]="saving()"
+            (input)="onMessageChange($any($event.target).value)"
+          ></textarea>
+          <div class="la-alerts__counter" aria-live="polite">{{ degradedModeMessage().length }} / 500</div>
+        </div>
+
+        @if (saveError()) {
+          <p role="alert" class="la-alerts__error">{{ saveError() }}</p>
+        }
+
+        <button type="button" [disabled]="saving()" (click)="save()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+
+        <div class="la-alerts__stats">
+          <h2>Failover stats (last 24h)</h2>
+          @if (stats()) {
+            <ul>
+              <li>Primary failures: {{ stats()!.primary_failures }}</li>
+              <li>Fallback successes: {{ stats()!.fallback_successes }}</li>
+              <li>Degraded-mode invocations: {{ stats()!.degraded_invocations }}</li>
+            </ul>
+          } @else if (statsError()) {
+            <p>Could not load failover stats.</p>
+          }
+        </div>
+      }
+    </section>
+  } @else {
+    <section class="la-alerts__events">
+      @if (alertsLoading()) {
+        <p>Loading…</p>
+      } @else if (alertsError()) {
+        <la-empty-state variant="error" icon="error" title="Could not load alerts" body="Could not load alerts. Try again." />
+      } @else if (alertEvents().length === 0) {
+        <la-empty-state icon="notifications_none" title="No alerts" body="No alerts in the last 7 days." />
+      } @else {
+        <ul class="la-alerts__list" role="list">
+          @for (event of alertEvents(); track event.id) {
+            <li>
+              <mat-icon aria-hidden="true">{{ eventTypeIcon(event.type) }}</mat-icon>
+              <strong>{{ eventTypeLabel(event.type) }}</strong>
+              <span>{{ event.message }}</span>
+              <time [attr.datetime]="event.created_at">{{ event.created_at }}</time>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  }
+}

@@ -1,0 +1,25 @@
+login page url: http://127.0.0.1:3492/internal/ops/login | title: NextBot Admin Console
+  has token field: 1
+after login url: http://127.0.0.1:3492/internal/ops/tenants
+  Platform Manager visible: true
+  nav href: /internal/ops/tenants | aria-current: page
+  heading: Tenants
+  [browser console error] Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+client-side nav: provision link not found on page
+  [browser console error] Failed to load resource: the server responded with a status of 404 (Not Found)
+operator mistyped url: http://127.0.0.1:3492/internal/ops/definitely-not-a-console-page | text: 404 This page could not be found.
+  [browser console error] Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+after logout url: http://127.0.0.1:3492/internal/ops/login | token field: 1
+
+denied-vs-missing browser view:
+  {"p":"/internal/ops","status":404,"title":"NextBot Admin Console","body":"404 This page could not be found.","htmlLen":6623}
+  {"p":"/internal/ops/tenants","status":404,"title":"NextBot Admin Console","body":"404 This page could not be found.","htmlLen":7175}
+  {"p":"/internal/ops/login","status":404,"title":"NextBot Admin Console","body":"404 This page could not be found.","htmlLen":7175}
+  {"p":"/internal/xps/tenants","status":404,"title":"NextBot Admin Console","body":"404 This page could not be found.","htmlLen":7175}
+  {"p":"/definitely-nothing-here","status":404,"title":"NextBot Admin Console","body":"404 This page could not be found.","htmlLen":7175}
+distinct rendered views: 2
+=== client-side navigation through the rewrite
+direct url: http://127.0.0.1:3492/internal/ops/tenants/new | slug input: 0 | heading: Provision new tenant
+after client-side nav: http://127.0.0.1:3492/internal/ops/tenants | stayed SPA (no reload): true
+nav aria-current: page
+body: Platform Manager Tenants Sign out Tenants Provision new tenant Filter by name or slug

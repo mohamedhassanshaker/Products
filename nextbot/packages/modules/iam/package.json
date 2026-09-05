@@ -1,0 +1,32 @@
+{
+  "name": "@nextbot/iam",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "BL-01 auth/RBAC slice: app_user/role/user_role/sso_group_mapping/login_attempt, password + TOTP MFA, lockout, RBAC permission-matrix guard (LLD §3.3).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir ."
+  },
+  "dependencies": {
+    "@nextbot/contracts": "workspace:*",
+    "@nextbot/db": "workspace:*",
+    "@nextbot/secrets": "workspace:*",
+    "@nextbot/tenancy": "workspace:*",
+    "@node-rs/argon2": "^2.0.2",
+    "@node-saml/node-saml": "^5",
+    "drizzle-orm": "^0.36.1",
+    "jose": "^5.9.6",
+    "openid-client": "^6",
+    "otpauth": "^9.3.4"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

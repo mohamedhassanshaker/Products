@@ -1,0 +1,12 @@
+REF plain-404 baseline: 404|Cache-Control: private, no-cache, no-store, max-age=0, must-revalidate ~ Vary: rsc, next-router-state-tree, next-rou...
+
+pubprefix-lc+tenants@0     status=400 ==baseline:false  ==pairedControl:true   hasRewriteHdr:false  needsSecret:false
+esc-secret-api             status=404 ==baseline:false  ==pairedControl:true   hasRewriteHdr:false  needsSecret:false
+ops-p-esc-nosecret         status=404 ==baseline:true   ==pairedControl:true   hasRewriteHdr:false  needsSecret:false
+double-pub                 status=404 ==baseline:true   ==pairedControl:true   hasRewriteHdr:false  needsSecret:true
+dotdot-public              status=404 ==baseline:true   ==pairedControl:true   hasRewriteHdr:false  needsSecret:false
+dotdot-public-login        status=404 ==baseline:true   ==pairedControl:true   hasRewriteHdr:false  needsSecret:false
+malformed-lone-pct-pub     status=404 ==baseline:true   ==pairedControl:true   hasRewriteHdr:false  needsSecret:true
+double-orig                status=404 ==baseline:true   ==pairedControl:true   hasRewriteHdr:false  needsSecret:false
+triple-orig                status=404 ==baseline:true   ==pairedControl:true   hasRewriteHdr:false  needsSecret:false
+esc-dotdot(has secret)     status=404 ==baseline:false  ==pairedControl:false  hasRewriteHdr:true   needsSecret:true

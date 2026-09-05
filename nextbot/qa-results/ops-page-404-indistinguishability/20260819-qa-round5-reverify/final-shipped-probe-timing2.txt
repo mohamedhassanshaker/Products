@@ -1,0 +1,54 @@
+
+########## MODE A  fixed order, ALLOWED render included  (round-1 script, verbatim)  (N=300/case, first 20 dropped) ##########
+  denied-gated  (3491 unconfigured)           {"n":280,"mean":3.277,"p50":3.177,"p90":3.65,"p99":5.396,"min":1.929,"max":11.866}
+  missing-path  (3491 unconfigured)           {"n":280,"mean":2.741,"p50":2.547,"p90":3.453,"p99":7.583,"min":1.579,"max":9.809}
+  missing-path2 (3491 unconfigured)           {"n":280,"mean":2.557,"p50":2.457,"p90":3.258,"p99":4.322,"min":1.366,"max":5.402}
+  denied-gated  (3492 bad IP, checks run)     {"n":280,"mean":3.236,"p50":3.146,"p90":3.796,"p99":4.983,"min":1.745,"max":5.898}
+  missing-path  (3492 bad IP)                 {"n":280,"mean":2.661,"p50":2.57,"p90":3.225,"p99":4.777,"min":1.521,"max":6.135}
+  denied-gated  (3493 spoof XFF, checks run)  {"n":280,"mean":3.315,"p50":3.202,"p90":3.778,"p99":6.493,"min":2.014,"max":10.325}
+  missing-path  (3493 spoof XFF)              {"n":280,"mean":2.73,"p50":2.619,"p90":3.406,"p99":5.193,"min":1.481,"max":7.577}
+  ALLOWED rewrite->console (3492)             {"n":280,"mean":8.82,"p50":8.232,"p90":10.589,"p99":18.607,"min":4.429,"max":21.018}
+  -> unconfigured (same shape/depth)  p50 delta 0.630 ms | mean delta 0.536 ms | Mann-Whitney z=13.295 p=0
+  -> unconfigured (shallow control)   p50 delta 0.720 ms | mean delta 0.720 ms | Mann-Whitney z=15.398 p=0
+  -> configured, disallowed IP        p50 delta 0.576 ms | mean delta 0.575 ms | Mann-Whitney z=14.248 p=0
+  -> configured, no trusted proxy     p50 delta 0.583 ms | mean delta 0.585 ms | Mann-Whitney z=13.492 p=0
+
+########## MODE B  SHUFFLED order, ALLOWED render included  (N=300/case, first 20 dropped) ##########
+  denied-gated  (3491 unconfigured)           {"n":280,"mean":2.688,"p50":2.685,"p90":3.194,"p99":4.813,"min":1.339,"max":5.196}
+  missing-path  (3491 unconfigured)           {"n":280,"mean":2.709,"p50":2.708,"p90":3.273,"p99":4.852,"min":1.661,"max":5.142}
+  missing-path2 (3491 unconfigured)           {"n":280,"mean":2.686,"p50":2.668,"p90":3.221,"p99":4.775,"min":1.729,"max":6.683}
+  denied-gated  (3492 bad IP, checks run)     {"n":280,"mean":2.807,"p50":2.794,"p90":3.298,"p99":4.618,"min":1.916,"max":5.631}
+  missing-path  (3492 bad IP)                 {"n":280,"mean":2.802,"p50":2.768,"p90":3.279,"p99":4.325,"min":1.602,"max":6.016}
+  denied-gated  (3493 spoof XFF, checks run)  {"n":280,"mean":2.863,"p50":2.871,"p90":3.322,"p99":4.415,"min":1.313,"max":5.71}
+  missing-path  (3493 spoof XFF)              {"n":280,"mean":2.931,"p50":2.91,"p90":3.327,"p99":4.533,"min":1.821,"max":6.908}
+  ALLOWED rewrite->console (3492)             {"n":280,"mean":7.611,"p50":7.388,"p90":8.844,"p99":12.267,"min":4.993,"max":12.825}
+  -> unconfigured (same shape/depth)  p50 delta -0.023 ms | mean delta -0.021 ms | Mann-Whitney z=-0.594 p=0.40055
+  -> unconfigured (shallow control)   p50 delta 0.017 ms | mean delta 0.002 ms | Mann-Whitney z=0.135 p=0.84885
+  -> configured, disallowed IP        p50 delta 0.026 ms | mean delta 0.005 ms | Mann-Whitney z=0.224 p=0.75188
+  -> configured, no trusted proxy     p50 delta -0.039 ms | mean delta -0.068 ms | Mann-Whitney z=-1.882 p=0.00778
+
+########## MODE C  fixed order, ALLOWED render REMOVED  (N=300/case, first 20 dropped) ##########
+  denied-gated  (3491 unconfigured)           {"n":280,"mean":2.752,"p50":2.65,"p90":3.178,"p99":4.239,"min":1.608,"max":5.098}
+  missing-path  (3491 unconfigured)           {"n":280,"mean":2.234,"p50":2.13,"p90":2.688,"p99":3.796,"min":1.196,"max":4.135}
+  missing-path2 (3491 unconfigured)           {"n":280,"mean":2.143,"p50":2.025,"p90":2.522,"p99":4.055,"min":1.325,"max":4.392}
+  denied-gated  (3492 bad IP, checks run)     {"n":280,"mean":2.875,"p50":2.808,"p90":3.207,"p99":4.867,"min":2.388,"max":5.423}
+  missing-path  (3492 bad IP)                 {"n":280,"mean":2.355,"p50":2.242,"p90":2.872,"p99":4.245,"min":1.352,"max":5.448}
+  denied-gated  (3493 spoof XFF, checks run)  {"n":280,"mean":2.898,"p50":2.823,"p90":3.275,"p99":4.882,"min":1.653,"max":6.849}
+  missing-path  (3493 spoof XFF)              {"n":280,"mean":2.436,"p50":2.288,"p90":2.988,"p99":5.237,"min":1.563,"max":5.602}
+  -> unconfigured (same shape/depth)  p50 delta 0.520 ms | mean delta 0.518 ms | Mann-Whitney z=15.462 p=0
+  -> unconfigured (shallow control)   p50 delta 0.625 ms | mean delta 0.609 ms | Mann-Whitney z=17.126 p=0
+  -> configured, disallowed IP        p50 delta 0.566 ms | mean delta 0.520 ms | Mann-Whitney z=15.351 p=0
+  -> configured, no trusted proxy     p50 delta 0.535 ms | mean delta 0.462 ms | Mann-Whitney z=14.004 p=0
+
+########## MODE D  SHUFFLED order, ALLOWED render REMOVED  (cleanest)  (N=300/case, first 20 dropped) ##########
+  denied-gated  (3491 unconfigured)           {"n":280,"mean":2.316,"p50":2.244,"p90":2.805,"p99":4.729,"min":1.053,"max":4.787}
+  missing-path  (3491 unconfigured)           {"n":280,"mean":2.325,"p50":2.271,"p90":2.799,"p99":5.56,"min":1.31,"max":6.469}
+  missing-path2 (3491 unconfigured)           {"n":280,"mean":2.315,"p50":2.27,"p90":2.823,"p99":4.772,"min":1.228,"max":6.178}
+  denied-gated  (3492 bad IP, checks run)     {"n":280,"mean":2.598,"p50":2.558,"p90":3.047,"p99":4.838,"min":1.705,"max":5.848}
+  missing-path  (3492 bad IP)                 {"n":280,"mean":2.614,"p50":2.57,"p90":3.094,"p99":4.596,"min":1.319,"max":4.625}
+  denied-gated  (3493 spoof XFF, checks run)  {"n":280,"mean":2.601,"p50":2.589,"p90":3.063,"p99":4.082,"min":1.282,"max":7.482}
+  missing-path  (3493 spoof XFF)              {"n":280,"mean":2.659,"p50":2.592,"p90":3.191,"p99":5.204,"min":1.449,"max":8.053}
+  -> unconfigured (same shape/depth)  p50 delta -0.027 ms | mean delta -0.009 ms | Mann-Whitney z=-0.169 p=0.81084
+  -> unconfigured (shallow control)   p50 delta -0.026 ms | mean delta 0.001 ms | Mann-Whitney z=0.003 p=0.99676
+  -> configured, disallowed IP        p50 delta -0.012 ms | mean delta -0.016 ms | Mann-Whitney z=-0.697 p=0.3246
+  -> configured, no trusted proxy     p50 delta -0.003 ms | mean delta -0.058 ms | Mann-Whitney z=-0.389 p=0.5826

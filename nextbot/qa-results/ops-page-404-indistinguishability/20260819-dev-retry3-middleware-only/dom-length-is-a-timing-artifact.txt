@@ -1,0 +1,13 @@
+# Hydrated-DOM length is NOT a signal: it varies non-deterministically for the SAME path
+# (React Float inserts <script async> tags into <head> as chunks load; page.content() races that).
+# Fresh browser context per load, alternating gated / genuinely-missing paths, denied server (3491):
+/internal/xps 6545 has-async-scripts
+/internal/ops 6623 has-async-scripts
+/internal/xps 6545 has-async-scripts
+/internal/ops 6545 has-async-scripts
+/nope 6545 has-async-scripts
+/internal/ops 6545 has-async-scripts
+/internal/xps 6545 has-async-scripts
+/nope 6545 has-async-scripts
+
+# Raw HTTP bodies for these same paths are byte-identical (one sha256 across all 7956 matrix responses).

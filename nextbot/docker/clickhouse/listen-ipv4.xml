@@ -1,0 +1,19 @@
+<!-- Forces ClickHouse to listen on the IPv4 wildcard address only.
+
+     The upstream `clickhouse/clickhouse-server` image's default
+     `docker_related_config.xml` sets `<listen_host>::</listen_host>` (IPv6
+     wildcard, relying on the OS's dual-stack socket to also accept IPv4
+     connections). On Docker networks/hosts where IPv6 is disabled or
+     unsupported (observed on this stack's Docker Desktop network — the
+     server logs "DNS error: EAI: Address family for hostname not supported"
+     for every port and never falls back), that bind fails outright and the
+     server never listens on 8123/9000/etc. at all, so the container never
+     becomes healthy and nothing (web/gateway/worker) can reach ClickHouse.
+
+     Overriding to the plain IPv4 wildcard sidesteps the IPv6-specific bind
+     failure entirely and is sufficient for this stack's local/single-node
+     topology (ADR-0008) — the server is not reachable from outside the
+     compose network's IPv4 space anyway. -->
+<clickhouse>
+  <listen_host replace="replace">0.0.0.0</listen_host>
+</clickhouse>

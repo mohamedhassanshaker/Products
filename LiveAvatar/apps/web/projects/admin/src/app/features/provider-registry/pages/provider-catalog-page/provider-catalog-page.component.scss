@@ -1,0 +1,97 @@
+.la-provider-catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  &__group h2 {
+    font-size: 16px;
+    margin: 0 0 8px;
+  }
+
+  &__table {
+    width: 100%;
+  }
+
+  &__interface {
+    font-family: 'Roboto Mono', ui-monospace, monospace;
+    font-size: 12px;
+    opacity: 0.8;
+  }
+
+  &__row-error {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--la-error, #b3261e);
+    font-size: 12px;
+    margin: 4px 0 0;
+  }
+}
+
+// Phone: same stacked-card pattern as Deployments (D-2 fix, UX_GUIDELINES
+// §9.7) — reused verbatim rather than reinvented, since it was hard-won
+// across 3 QA retry rounds in Phase 1. Angular Material sets a fixed ~52px
+// height on its row/cell elements, which the stacked multi-line content
+// overflows — rows then paint on top of each other without this override.
+@media (max-width: 767px) {
+  .la-provider-catalog__table.mat-mdc-table,
+  .la-provider-catalog__table {
+    display: block;
+    height: auto;
+  }
+
+  .la-provider-catalog__table tbody,
+  .la-provider-catalog__table .mdc-data-table__content {
+    display: block;
+    height: auto;
+  }
+
+  .la-provider-catalog__table tr[mat-header-row],
+  .la-provider-catalog__table tr.mat-mdc-header-row {
+    display: none;
+  }
+
+  .la-provider-catalog__table tr[mat-row],
+  .la-provider-catalog__table tr.mat-mdc-row,
+  .la-provider-catalog__table tr.mdc-data-table__row {
+    display: block;
+    // `!important` required: Material's own `.mat-mdc-row` rule has
+    // equal-or-higher specificity here.
+    height: auto !important;
+    min-height: 0;
+    padding: 12px 0;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    overflow: visible;
+    border-bottom: 1px solid var(--la-outline, #74777f);
+  }
+
+  .la-provider-catalog__table td[mat-cell],
+  .la-provider-catalog__table td.mat-mdc-cell,
+  .la-provider-catalog__table td.mdc-data-table__cell {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    height: auto !important;
+    min-height: 0;
+    padding: 4px 0;
+    border: none;
+    overflow: visible;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .la-provider-catalog__table tr[mat-row]:last-of-type,
+  .la-provider-catalog__table tr.mat-mdc-row:last-of-type {
+    margin-bottom: 16px;
+    border-bottom: none;
+  }
+
+  .la-provider-catalog__table td[mat-cell]::before {
+    content: attr(data-label);
+    font-weight: 500;
+    margin-right: 12px;
+    white-space: nowrap;
+  }
+}

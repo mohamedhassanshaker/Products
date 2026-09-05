@@ -1,0 +1,34 @@
+{
+  "session1Id": "407e0332-3088-406b-9e31-23fadcd87c71",
+  "session1RoomName": "qa-conv-demo_407e0332-3088-406b-9e31-23fadcd87c71",
+  "session1SummaryUrl": "http://localhost:25830/c/qa-conv-demo/summary/407e0332-3088-406b-9e31-23fadcd87c71/67a4b22e4b7235f5eb249c612be083c4605c75eda48acb535ca516201e87e886",
+  "consoleErrors": {
+    "negative-precall": [
+      "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+      "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+    ],
+    "session1-desktop": [],
+    "negative-summary": [
+      "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "session2-mobile": []
+  },
+  "networkFailures": {
+    "negative-precall": [
+      "HTTP 404 GET http://localhost:25830/api/public/deployments/qa-conv-unknown-slug-xyz/preflight",
+      "HTTP 403 GET http://localhost:25830/api/public/deployments/qa-conv-paused/preflight",
+      "HTTP 422 GET http://localhost:25830/api/public/deployments/qa-conv-incomplete/preflight"
+    ],
+    "session1-desktop": [],
+    "negative-summary": [
+      "HTTP 401 GET http://localhost:25830/api/public/sessions/407e0332-3088-406b-9e31-23fadcd87c71/summary",
+      "HTTP 404 GET http://localhost:25830/api/public/sessions/00000000-0000-0000-0000-000000000000/summary"
+    ],
+    "session2-mobile": []
+  },
+  "notes": [
+    "summary-after-reload confirmation still shown: true"
+  ]
+}

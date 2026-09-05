@@ -1,0 +1,30 @@
+{
+  "name": "@nextbot/tenancy",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "BL-01 (data/domain slice): tenant, tenant_data_policy, tenant_runtime_quota provisioning and the Enterprise dedicated-database routing record (LLD §3.3, §3.10).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --project unit --dir .",
+    "test:integration": "vitest run --project integration --dir .",
+    "test:isolation": "vitest run --project isolation --dir ."
+  },
+  "dependencies": {
+    "@nextbot/contracts": "workspace:*",
+    "@nextbot/db": "workspace:*",
+    "@nextbot/graph-store": "workspace:*",
+    "drizzle-orm": "^0.36.1",
+    "ioredis": "^5.4.1",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@nextbot/testing": "workspace:*",
+    "@types/pg": "^8.11.10",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

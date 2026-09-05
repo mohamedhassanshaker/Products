@@ -1,0 +1,1786 @@
+ Volume nextbot_nextbot-neo4j-logs Removing 
+ Volume nextbot_nextbot-neo4j-data Removing 
+ Volume nextbot_nextbot-postgres-data Removing 
+ Volume nextbot_nextbot-neo4j-logs Removed 
+ Volume nextbot_nextbot-redis-data Removing 
+ Volume nextbot_nextbot-seed-output Removing 
+ Volume nextbot_nextbot-neo4j-data Removed 
+ Volume nextbot_nextbot-clickhouse-data Removing 
+ Volume nextbot_nextbot-knowledge-uploads-data Removing 
+ Volume nextbot_nextbot-redis-data Removed 
+ Volume nextbot_nextbot-postgres-data Removed 
+ Volume nextbot_nextbot-seed-output Removed 
+ Volume nextbot_nextbot-knowledge-uploads-data Removed 
+ Volume nextbot_nextbot-clickhouse-data Removed 
+=== DOWN DONE ===
+ Image nextbot-worker Building 
+ Image nextbot-migrate Building 
+ Image nextbot-seed Building 
+ Image nextbot-gateway Building 
+ Image nextbot-web Building 
+ Image nextbot-widget-embed Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.71kB done
+#1 DONE 0.0s
+
+#2 [gateway internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.79kB done
+#2 DONE 0.0s
+
+#3 [seed internal] load build definition from tools.Dockerfile
+#3 transferring dockerfile: 1.60kB done
+#3 DONE 0.1s
+
+#4 [web internal] load build definition from Dockerfile
+#4 transferring dockerfile: 2.56kB done
+#4 DONE 0.1s
+
+#5 [widget-embed internal] load build definition from Dockerfile
+#5 transferring dockerfile: 1.68kB done
+#5 DONE 0.1s
+
+#6 [worker internal] load build definition from Dockerfile
+#6 transferring dockerfile: 2.94kB done
+#6 DONE 0.1s
+
+#7 [worker internal] load metadata for docker.io/library/node:22-slim
+#7 ...
+
+#8 [auth] library/node:pull token for registry-1.docker.io
+#8 DONE 0.0s
+
+#9 [auth] nginxinc/nginx-unprivileged:pull token for registry-1.docker.io
+#9 DONE 0.0s
+
+#10 [widget-embed internal] load metadata for docker.io/nginxinc/nginx-unprivileged:1.27-alpine
+#10 DONE 1.5s
+
+#7 [worker internal] load metadata for docker.io/library/node:22-slim
+#7 DONE 1.6s
+
+#11 [web internal] load .dockerignore
+#11 transferring context: 307B done
+#11 DONE 0.0s
+
+#12 [widget-embed runner 1/4] FROM docker.io/nginxinc/nginx-unprivileged:1.27-alpine@sha256:65e3e85dbaed8ba248841d9d58a899b6197106c23cb0ff1a132b7bfe0547e4c0
+#12 resolve docker.io/nginxinc/nginx-unprivileged:1.27-alpine@sha256:65e3e85dbaed8ba248841d9d58a899b6197106c23cb0ff1a132b7bfe0547e4c0 0.0s done
+#12 DONE 0.0s
+
+#13 [gateway 1/6] FROM docker.io/library/node:22-slim@sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5
+#13 resolve docker.io/library/node:22-slim@sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5 0.0s done
+#13 DONE 0.1s
+
+#14 [gateway 2/6] RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+#14 CACHED
+
+#15 [gateway 3/6] WORKDIR /app
+#15 CACHED
+
+#16 [widget-embed internal] load build context
+#16 transferring context: 10.44MB 1.3s done
+#16 DONE 1.4s
+
+#17 [gateway pruner 2/4] RUN pnpm add -g turbo@2.1.3
+#17 CACHED
+
+#18 [gateway pruner 3/4] COPY . .
+#18 DONE 1.0s
+
+#19 [migrate 4/6] COPY . .
+#19 DONE 1.0s
+
+#20 [migrate 5/6] RUN pnpm install --frozen-lockfile
+#20 1.533 Scope: all 42 workspace projects
+#20 1.585 Lockfile is up to date, resolution step is skipped
+#20 1.626 Progress: resolved 1, reused 0, downloaded 0, added 0
+#20 1.739 Packages: +1108
+#20 1.739 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#20 ...
+
+#21 [widget-embed pruner 4/4] RUN turbo prune --scope=nextbot-widget-embed --docker
+#21 1.212  WARNING  No locally installed `turbo` found. Using version: 2.1.3.
+#21 1.224 
+#21 1.224 Attention:
+#21 1.224 Turborepo now collects completely anonymous telemetry regarding usage.
+#21 1.224 This information is used to shape the Turborepo roadmap and prioritize features.
+#21 1.224 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#21 1.224 https://turbo.build/repo/docs/telemetry
+#21 1.224 
+#21 1.225 turbo 2.1.3
+#21 1.225 
+#21 1.308 Generating pruned monorepo for nextbot-widget-embed in /app/out
+#21 1.312  - Added @nextbot/agent-platform
+#21 1.313  - Added @nextbot/ai-registry
+#21 1.316  - Added @nextbot/audit
+#21 1.319  - Added @nextbot/authz
+#21 1.321  - Added @nextbot/connectors
+#21 1.322  - Added @nextbot/contracts
+#21 1.327  - Added @nextbot/db
+#21 1.329  - Added @nextbot/graph-store
+#21 1.332  - Added @nextbot/iam
+#21 1.338  - Added @nextbot/knowledge
+#21 1.339  - Added @nextbot/mcp-client
+#21 1.341  - Added @nextbot/model-gateway
+#21 1.341  - Added @nextbot/observability
+#21 1.344  - Added @nextbot/orchestration
+#21 1.345  - Added @nextbot/pii
+#21 1.346  - Added @nextbot/secrets
+#21 1.347  - Added @nextbot/skills
+#21 1.349  - Added @nextbot/telemetry-export
+#21 1.352  - Added @nextbot/tenancy
+#21 1.353  - Added @nextbot/testing
+#21 1.355  - Added @nextbot/tool-registry
+#21 1.358  - Added @nextbot/ui
+#21 1.358  - Added @nextbot/yaml-diff
+#21 1.361  - Added nextbot-widget-embed
+#21 DONE 2.1s
+
+#22 [web pruner 4/4] RUN turbo prune --scope=nextbot-web --docker
+#22 1.212  WARNING  No locally installed `turbo` found. Using version: 2.1.3.
+#22 1.224 
+#22 1.224 Attention:
+#22 1.224 Turborepo now collects completely anonymous telemetry regarding usage.
+#22 1.224 This information is used to shape the Turborepo roadmap and prioritize features.
+#22 1.224 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#22 1.224 https://turbo.build/repo/docs/telemetry
+#22 1.224 
+#22 1.225 turbo 2.1.3
+#22 1.225 
+#22 1.303 Generating pruned monorepo for nextbot-web in /app/out
+#22 1.307  - Added @nextbot/agent-platform
+#22 1.308  - Added @nextbot/ai-registry
+#22 1.310  - Added @nextbot/approvals
+#22 1.311  - Added @nextbot/audit
+#22 1.312  - Added @nextbot/authz
+#22 1.312  - Added @nextbot/channel-adapters
+#22 1.313  - Added @nextbot/channels
+#22 1.315  - Added @nextbot/connectors
+#22 1.316  - Added @nextbot/contracts
+#22 1.318  - Added @nextbot/conversations
+#22 1.321  - Added @nextbot/db
+#22 1.323  - Added @nextbot/escalations
+#22 1.324  - Added @nextbot/graph-store
+#22 1.328  - Added @nextbot/iam
+#22 1.332  - Added @nextbot/knowledge
+#22 1.333  - Added @nextbot/mcp-client
+#22 1.335  - Added @nextbot/mcp-registry
+#22 1.337  - Added @nextbot/model-gateway
+#22 1.338  - Added @nextbot/observability
+#22 1.339  - Added @nextbot/orchestration
+#22 1.340  - Added @nextbot/pii
+#22 1.342  - Added @nextbot/secrets
+#22 1.344  - Added @nextbot/skills
+#22 1.346  - Added @nextbot/teams
+#22 1.347  - Added @nextbot/telemetry-export
+#22 1.349  - Added @nextbot/tenancy
+#22 1.350  - Added @nextbot/testing
+#22 1.351  - Added @nextbot/tool-registry
+#22 1.353  - Added @nextbot/ui
+#22 1.354  - Added @nextbot/webhooks
+#22 1.357  - Added @nextbot/workflows
+#22 1.357  - Added @nextbot/yaml-diff
+#22 1.393  - Added nextbot-web
+#22 DONE 2.1s
+
+#23 [gateway pruner 4/4] RUN turbo prune --scope=nextbot-gateway --docker
+#23 1.212  WARNING  No locally installed `turbo` found. Using version: 2.1.3.
+#23 1.224 
+#23 1.224 Attention:
+#23 1.224 Turborepo now collects completely anonymous telemetry regarding usage.
+#23 1.224 This information is used to shape the Turborepo roadmap and prioritize features.
+#23 1.224 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#23 1.224 https://turbo.build/repo/docs/telemetry
+#23 1.224 
+#23 1.225 turbo 2.1.3
+#23 1.225 
+#23 1.304 Generating pruned monorepo for nextbot-gateway in /app/out
+#23 1.307  - Added @nextbot/agent-platform
+#23 1.308  - Added @nextbot/ai-registry
+#23 1.310  - Added @nextbot/audit
+#23 1.312  - Added @nextbot/authz
+#23 1.312  - Added @nextbot/channel-adapters
+#23 1.314  - Added @nextbot/channels
+#23 1.316  - Added @nextbot/connectors
+#23 1.318  - Added @nextbot/contracts
+#23 1.320  - Added @nextbot/conversations
+#23 1.324  - Added @nextbot/db
+#23 1.325  - Added @nextbot/escalations
+#23 1.326  - Added @nextbot/graph-store
+#23 1.330  - Added @nextbot/iam
+#23 1.335  - Added @nextbot/knowledge
+#23 1.336  - Added @nextbot/mcp-client
+#23 1.337  - Added @nextbot/model-gateway
+#23 1.338  - Added @nextbot/observability
+#23 1.340  - Added @nextbot/orchestration
+#23 1.341  - Added @nextbot/pii
+#23 1.342  - Added @nextbot/secrets
+#23 1.342  - Added @nextbot/skills
+#23 1.344  - Added @nextbot/telemetry-export
+#23 1.347  - Added @nextbot/tenancy
+#23 1.347  - Added @nextbot/testing
+#23 1.349  - Added @nextbot/tool-registry
+#23 1.350  - Added @nextbot/yaml-diff
+#23 1.356  - Added nextbot-gateway
+#23 DONE 2.1s
+
+#20 [migrate 5/6] RUN pnpm install --frozen-lockfile
+#20 2.012 
+#20 2.012    ╭───────────────────────────────────────────────────────────────────╮
+#20 2.012    │                                                                   │
+#20 2.012    │                Update available! 9.15.0 → 11.25.0.                │
+#20 2.012    │   Changelog: https://github.com/pnpm/pnpm/releases/tag/v11.25.0   │
+#20 2.012    │         Run "corepack install -g pnpm@11.25.0" to update.         │
+#20 2.012    │                                                                   │
+#20 2.012    ╰───────────────────────────────────────────────────────────────────╯
+#20 2.012 
+#20 ...
+
+#24 [worker pruner 4/4] RUN turbo prune --scope=nextbot-worker --docker
+#24 1.212  WARNING  No locally installed `turbo` found. Using version: 2.1.3.
+#24 1.224 
+#24 1.224 Attention:
+#24 1.224 Turborepo now collects completely anonymous telemetry regarding usage.
+#24 1.224 This information is used to shape the Turborepo roadmap and prioritize features.
+#24 1.224 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#24 1.224 https://turbo.build/repo/docs/telemetry
+#24 1.224 
+#24 1.225 turbo 2.1.3
+#24 1.225 
+#24 1.308 Generating pruned monorepo for nextbot-worker in /app/out
+#24 1.312  - Added @nextbot/agent-platform
+#24 1.313  - Added @nextbot/ai-registry
+#24 1.315  - Added @nextbot/approvals
+#24 1.316  - Added @nextbot/audit
+#24 1.318  - Added @nextbot/authz
+#24 1.318  - Added @nextbot/channel-adapters
+#24 1.320  - Added @nextbot/channels
+#24 1.321  - Added @nextbot/connectors
+#24 1.324  - Added @nextbot/contracts
+#24 1.326  - Added @nextbot/conversations
+#24 1.331  - Added @nextbot/db
+#24 1.333  - Added @nextbot/escalations
+#24 1.334  - Added @nextbot/graph-store
+#24 1.336  - Added @nextbot/iam
+#24 1.339  - Added @nextbot/knowledge
+#24 1.341  - Added @nextbot/mcp-client
+#24 1.342  - Added @nextbot/mcp-registry
+#24 1.344  - Added @nextbot/model-gateway
+#24 1.345  - Added @nextbot/observability
+#24 1.347  - Added @nextbot/orchestration
+#24 1.348  - Added @nextbot/pii
+#24 1.349  - Added @nextbot/secrets
+#24 1.351  - Added @nextbot/skills
+#24 1.352  - Added @nextbot/telemetry-export
+#24 1.354  - Added @nextbot/tenancy
+#24 1.354  - Added @nextbot/testing
+#24 1.356  - Added @nextbot/tool-registry
+#24 1.357  - Added @nextbot/webhooks
+#24 1.360  - Added @nextbot/workflows
+#24 1.361  - Added @nextbot/yaml-diff
+#24 1.362  - Added nextbot-worker
+#24 DONE 2.1s
+
+#25 [web installer 3/4] COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+#25 CACHED
+
+#26 [web installer 4/4] RUN pnpm install --frozen-lockfile
+#26 CACHED
+
+#27 [web installer 2/4] COPY --from=pruner /app/out/json/ .
+#27 CACHED
+
+#28 [web builder 1/4] WORKDIR /app
+#28 CACHED
+
+#29 [gateway installer 2/4] COPY --from=pruner /app/out/json/ .
+#29 DONE 0.2s
+
+#30 [widget-embed installer 2/4] COPY --from=pruner /app/out/json/ .
+#30 DONE 0.2s
+
+#31 [gateway installer 3/4] COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+#31 DONE 0.2s
+
+#32 [worker installer 2/4] COPY --from=pruner /app/out/json/ .
+#32 DONE 0.2s
+
+#33 [web builder 2/4] COPY --from=pruner /app/out/full/ .
+#33 DONE 0.3s
+
+#34 [gateway installer 4/4] RUN pnpm install --frozen-lockfile
+#34 ...
+
+#35 [widget-embed installer 3/4] COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+#35 DONE 0.1s
+
+#36 [worker installer 3/4] COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+#36 DONE 0.2s
+
+#37 [web builder 3/4] COPY turbo.json tsconfig.base.json ./
+#37 DONE 0.2s
+
+#38 [web builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-web
+#38 2.015 Progress: resolved 1, reused 0, downloaded 0, added 0
+#38 3.016 Progress: resolved 6, reused 0, downloaded 1, added 0
+#38 3.103 Packages: +2
+#38 3.103 ++
+#38 4.016 Progress: resolved 7, reused 0, downloaded 1, added 1
+#38 ...
+
+#34 [gateway installer 4/4] RUN pnpm install --frozen-lockfile
+#34 1.946 Scope: all 28 workspace projects
+#34 2.039 Lockfile is up to date, resolution step is skipped
+#34 2.163 Progress: resolved 1, reused 0, downloaded 0, added 0
+#34 2.627 Packages: +943
+#34 2.627 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#34 2.975 
+#34 2.975    ╭───────────────────────────────────────────────────────────────────╮
+#34 2.975    │                                                                   │
+#34 2.975    │                Update available! 9.15.0 → 11.25.0.                │
+#34 2.975    │   Changelog: https://github.com/pnpm/pnpm/releases/tag/v11.25.0   │
+#34 2.975    │         Run "corepack install -g pnpm@11.25.0" to update.         │
+#34 2.975    │                                                                   │
+#34 2.975    ╰───────────────────────────────────────────────────────────────────╯
+#34 2.975 
+#34 3.198 Progress: resolved 943, reused 0, downloaded 21, added 16
+#34 4.215 Progress: resolved 943, reused 0, downloaded 224, added 227
+#34 5.216 Progress: resolved 943, reused 0, downloaded 330, added 338
+#34 6.225 Progress: resolved 943, reused 0, downloaded 436, added 443
+#34 7.252 Progress: resolved 943, reused 0, downloaded 487, added 495
+#34 ...
+
+#38 [web builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-web
+#38 6.191 Progress: resolved 7, reused 0, downloaded 2, added 1
+#38 6.267 Progress: resolved 7, reused 0, downloaded 2, added 2, done
+#38 6.503 
+#38 6.503 /pnpm/global/5:
+#38 6.503 + turbo 2.1.3 (2.10.12 is available)
+#38 6.503 
+#38 6.564 Done in 5.2s
+#38 6.681  WARNING  No locally installed `turbo` found. Using version: 2.1.3.
+#38 6.685 
+#38 6.685 Attention:
+#38 6.685 Turborepo now collects completely anonymous telemetry regarding usage.
+#38 6.685 This information is used to shape the Turborepo roadmap and prioritize features.
+#38 6.685 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#38 6.686 https://turbo.build/repo/docs/telemetry
+#38 6.686 
+#38 6.686 turbo 2.1.3
+#38 6.686 
+#38 6.789 • Packages in scope: nextbot-web
+#38 6.789 • Running build in 1 packages
+#38 6.789 • Remote caching disabled
+#38 6.950 nextbot-web:build: cache miss, executing b394b3cb9a1eb476
+#38 7.657 nextbot-web:build: 
+#38 7.658 nextbot-web:build: > nextbot-web@0.0.0 build /app/apps/web
+#38 7.658 nextbot-web:build: > next build
+#38 7.658 nextbot-web:build: 
+#38 8.971 nextbot-web:build:    ▲ Next.js 15.5.23
+#38 8.971 nextbot-web:build: 
+#38 9.288 nextbot-web:build:    Creating an optimized production build ...
+#38 ...
+
+#39 [widget-embed installer 4/4] RUN pnpm install --frozen-lockfile
+#39 1.944 Scope: all 25 workspace projects
+#39 2.072 Lockfile is up to date, resolution step is skipped
+#39 2.175 Progress: resolved 1, reused 0, downloaded 0, added 0
+#39 2.483 Packages: +1102
+#39 2.483 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#39 3.204 Progress: resolved 1102, reused 0, downloaded 38, added 38
+#39 4.090 
+#39 4.090    ╭───────────────────────────────────────────────────────────────────╮
+#39 4.090    │                                                                   │
+#39 4.090    │                Update available! 9.15.0 → 11.25.0.                │
+#39 4.090    │   Changelog: https://github.com/pnpm/pnpm/releases/tag/v11.25.0   │
+#39 4.090    │         Run "corepack install -g pnpm@11.25.0" to update.         │
+#39 4.090    │                                                                   │
+#39 4.090    ╰───────────────────────────────────────────────────────────────────╯
+#39 4.090 
+#39 4.204 Progress: resolved 1102, reused 0, downloaded 230, added 236
+#39 5.228 Progress: resolved 1102, reused 0, downloaded 365, added 369
+#39 6.231 Progress: resolved 1102, reused 0, downloaded 445, added 452
+#39 7.240 Progress: resolved 1102, reused 0, downloaded 510, added 513
+#39 8.241 Progress: resolved 1102, reused 0, downloaded 633, added 640
+#39 9.246 Progress: resolved 1102, reused 0, downloaded 758, added 766
+#39 ...
+
+#20 [migrate 5/6] RUN pnpm install --frozen-lockfile
+#20 2.626 Progress: resolved 1108, reused 0, downloaded 197, added 202
+#20 3.626 Progress: resolved 1108, reused 0, downloaded 418, added 425
+#20 4.627 Progress: resolved 1108, reused 0, downloaded 498, added 505
+#20 5.627 Progress: resolved 1108, reused 0, downloaded 555, added 563
+#20 6.628 Progress: resolved 1108, reused 0, downloaded 698, added 707
+#20 7.628 Progress: resolved 1108, reused 0, downloaded 738, added 748
+#20 8.631 Progress: resolved 1108, reused 0, downloaded 797, added 805
+#20 9.645 Progress: resolved 1108, reused 0, downloaded 852, added 866
+#20 10.66 Progress: resolved 1108, reused 0, downloaded 879, added 891
+#20 11.69 Progress: resolved 1108, reused 0, downloaded 914, added 926
+#20 12.69 Progress: resolved 1108, reused 0, downloaded 963, added 979
+#20 ...
+
+#40 [worker installer 4/4] RUN pnpm install --frozen-lockfile
+#40 1.839 Scope: all 32 workspace projects
+#40 1.955 Lockfile is up to date, resolution step is skipped
+#40 2.065 Progress: resolved 1, reused 0, downloaded 0, added 0
+#40 2.395 Packages: +891
+#40 2.395 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#40 3.093 
+#40 3.093    ╭───────────────────────────────────────────────────────────────────╮
+#40 3.093    │                                                                   │
+#40 3.093    │                Update available! 9.15.0 → 11.25.0.                │
+#40 3.093    │   Changelog: https://github.com/pnpm/pnpm/releases/tag/v11.25.0   │
+#40 3.093    │         Run "corepack install -g pnpm@11.25.0" to update.         │
+#40 3.093    │                                                                   │
+#40 3.093    ╰───────────────────────────────────────────────────────────────────╯
+#40 3.093 
+#40 3.106 Progress: resolved 891, reused 0, downloaded 49, added 47
+#40 4.105 Progress: resolved 891, reused 0, downloaded 252, added 259
+#40 5.110 Progress: resolved 891, reused 0, downloaded 399, added 407
+#40 6.134 Progress: resolved 891, reused 0, downloaded 485, added 493
+#40 7.137 Progress: resolved 891, reused 0, downloaded 555, added 565
+#40 8.173 Progress: resolved 891, reused 0, downloaded 662, added 671
+#40 9.194 Progress: resolved 891, reused 0, downloaded 702, added 715
+#40 10.19 Progress: resolved 891, reused 0, downloaded 761, added 776
+#40 ...
+
+#39 [widget-embed installer 4/4] RUN pnpm install --frozen-lockfile
+#39 10.25 Progress: resolved 1102, reused 0, downloaded 846, added 861
+#39 11.25 Progress: resolved 1102, reused 0, downloaded 908, added 924
+#39 12.26 Progress: resolved 1102, reused 0, downloaded 965, added 981
+#39 13.26 Progress: resolved 1102, reused 0, downloaded 1054, added 1070
+#39 14.28 Progress: resolved 1102, reused 0, downloaded 1080, added 1096
+#39 15.28 Progress: resolved 1102, reused 0, downloaded 1081, added 1098
+#39 ...
+
+#40 [worker installer 4/4] RUN pnpm install --frozen-lockfile
+#40 11.20 Progress: resolved 891, reused 0, downloaded 796, added 811
+#40 12.20 Progress: resolved 891, reused 0, downloaded 875, added 890
+#40 13.93 Progress: resolved 891, reused 0, downloaded 876, added 890
+#40 13.93 Progress: resolved 891, reused 0, downloaded 876, added 891, done
+#40 14.59 .../node_modules/protobufjs postinstall$ node scripts/postinstall
+#40 14.63 .../node_modules/unrs-resolver postinstall$ node postinstall.js
+#40 14.64 .../esbuild@0.28.2/node_modules/esbuild postinstall$ node install.js
+#40 14.64 .../esbuild@0.21.5/node_modules/esbuild postinstall$ node install.js
+#40 14.64 .../sqlite3@5.1.7/node_modules/sqlite3 install$ prebuild-install -r napi || node-gyp rebuild
+#40 14.79 .../node_modules/protobufjs postinstall: Done
+#40 14.90 .../node_modules/unrs-resolver postinstall: Done
+#40 14.95 .../esbuild@0.28.2/node_modules/esbuild postinstall: Done
+#40 14.96 .../esbuild@0.18.20/node_modules/esbuild postinstall$ node install.js
+#40 15.08 .../esbuild@0.21.5/node_modules/esbuild postinstall: Done
+#40 15.12 .../esbuild@0.18.20/node_modules/esbuild postinstall: Done
+#40 15.15 .../esbuild@0.19.12/node_modules/esbuild postinstall$ node install.js
+#40 15.34 .../esbuild@0.19.12/node_modules/esbuild postinstall: Done
+#40 16.20 .../sqlite3@5.1.7/node_modules/sqlite3 install: Done
+#40 16.39 .../node_modules/@google/genai preinstall$ echo 'preinstall: no-op'
+#40 16.42 .../node_modules/@google/genai preinstall: preinstall: no-op
+#40 16.42 .../node_modules/@google/genai preinstall: Done
+#40 16.42 .../node_modules/@google/genai preinstall$ echo 'preinstall: no-op'
+#40 16.45 .../node_modules/@google/genai preinstall: preinstall: no-op
+#40 16.46 .../node_modules/@google/genai preinstall: Done
+#40 16.90 
+#40 16.90 dependencies:
+#40 16.90 + @nextbot/agent-platform 0.0.0 <- packages/modules/agent-platform
+#40 16.90 + @nextbot/connectors 0.0.0 <- packages/modules/connectors
+#40 16.90 + @nextbot/contracts 0.0.0 <- packages/contracts
+#40 16.90 + @nextbot/db 0.0.0 <- packages/db
+#40 16.90 + @nextbot/iam 0.0.0 <- packages/modules/iam
+#40 16.90 + @nextbot/tenancy 0.0.0 <- packages/modules/tenancy
+#40 16.90 + @nextbot/tool-registry 0.0.0 <- packages/modules/tool-registry
+#40 16.90 + drizzle-orm 0.36.4
+#40 16.90 
+#40 16.90 devDependencies:
+#40 16.90 + @eslint/js 9.39.5
+#40 16.90 + @types/node 22.20.1
+#40 16.90 + @vitest/coverage-v8 2.1.9
+#40 16.90 + dependency-cruiser 16.10.4
+#40 16.90 + dotenv 16.6.1
+#40 16.90 + eslint 9.39.5
+#40 16.90 + eslint-import-resolver-typescript 4.4.5
+#40 16.90 + eslint-plugin-boundaries 4.2.2
+#40 16.90 + globals 17.11.0
+#40 16.90 + prettier 3.9.6
+#40 16.90 + tsx 4.23.12
+#40 16.90 + turbo 2.10.10
+#40 16.90 + typescript 5.9.3
+#40 16.90 + typescript-eslint 8.67.0
+#40 16.90 + vitest 2.1.9
+#40 16.90 
+#40 17.09 Done in 15.6s
+#40 ...
+
+#34 [gateway installer 4/4] RUN pnpm install --frozen-lockfile
+#34 8.282 Progress: resolved 943, reused 0, downloaded 558, added 566
+#34 9.291 Progress: resolved 943, reused 0, downloaded 634, added 646
+#34 10.29 Progress: resolved 943, reused 0, downloaded 721, added 734
+#34 11.30 Progress: resolved 943, reused 0, downloaded 771, added 785
+#34 12.31 Progress: resolved 943, reused 0, downloaded 839, added 854
+#34 13.32 Progress: resolved 943, reused 0, downloaded 921, added 936
+#34 14.32 Progress: resolved 943, reused 0, downloaded 924, added 939
+#34 15.69 Progress: resolved 943, reused 0, downloaded 925, added 939
+#34 16.70 Progress: resolved 943, reused 0, downloaded 926, added 941
+#34 17.76 Progress: resolved 943, reused 0, downloaded 927, added 941
+#34 18.76 Progress: resolved 943, reused 0, downloaded 927, added 942
+#34 18.78 Progress: resolved 943, reused 0, downloaded 928, added 943, done
+#34 19.59 .../esbuild@0.21.5/node_modules/esbuild postinstall$ node install.js
+#34 19.59 .../esbuild@0.28.2/node_modules/esbuild postinstall$ node install.js
+#34 19.59 .../node_modules/unrs-resolver postinstall$ node postinstall.js
+#34 19.59 .../sqlite3@5.1.7/node_modules/sqlite3 install$ prebuild-install -r napi || node-gyp rebuild
+#34 19.59 .../sharp@0.34.5/node_modules/sharp install$ node install/check.js || npm run build
+#34 ...
+
+#20 [migrate 5/6] RUN pnpm install --frozen-lockfile
+#20 13.70 Progress: resolved 1108, reused 0, downloaded 996, added 1012
+#20 14.73 Progress: resolved 1108, reused 0, downloaded 1082, added 1098
+#20 15.73 Progress: resolved 1108, reused 0, downloaded 1089, added 1106
+#20 17.98 Progress: resolved 1108, reused 0, downloaded 1090, added 1106
+#20 18.98 Progress: resolved 1108, reused 0, downloaded 1090, added 1107
+#20 21.18 Progress: resolved 1108, reused 0, downloaded 1091, added 1107
+#20 21.19 Progress: resolved 1108, reused 0, downloaded 1091, added 1108, done
+#20 22.15 .../sharp@0.34.5/node_modules/sharp install$ node install/check.js || npm run build
+#20 22.16 .../esbuild@0.28.2/node_modules/esbuild postinstall$ node install.js
+#20 22.16 .../esbuild@0.21.5/node_modules/esbuild postinstall$ node install.js
+#20 22.28 .../sqlite3@5.1.7/node_modules/sqlite3 install$ prebuild-install -r napi || node-gyp rebuild
+#20 22.32 .../node_modules/unrs-resolver postinstall$ node postinstall.js
+#20 22.32 .../sharp@0.34.5/node_modules/sharp install: Done
+#20 22.42 .../esbuild@0.21.5/node_modules/esbuild postinstall: Done
+#20 22.46 .../esbuild@0.28.2/node_modules/esbuild postinstall: Done
+#20 22.48 .../node_modules/protobufjs postinstall$ node scripts/postinstall
+#20 ...
+
+#34 [gateway installer 4/4] RUN pnpm install --frozen-lockfile
+#34 19.90 .../node_modules/unrs-resolver postinstall: Done
+#34 19.90 .../esbuild@0.28.2/node_modules/esbuild postinstall: Done
+#34 19.90 .../esbuild@0.21.5/node_modules/esbuild postinstall: Done
+#34 19.96 .../node_modules/protobufjs postinstall$ node scripts/postinstall
+#34 20.01 .../sharp@0.34.5/node_modules/sharp install: Done
+#34 20.03 .../node_modules/protobufjs postinstall: Done
+#34 20.09 .../esbuild@0.18.20/node_modules/esbuild postinstall$ node install.js
+#34 20.19 .../esbuild@0.19.12/node_modules/esbuild postinstall$ node install.js
+#34 20.44 .../esbuild@0.18.20/node_modules/esbuild postinstall: Done
+#34 20.45 .../esbuild@0.19.12/node_modules/esbuild postinstall: Done
+#34 ...
+
+#40 [worker installer 4/4] RUN pnpm install --frozen-lockfile
+#40 DONE 20.4s
+
+#34 [gateway installer 4/4] RUN pnpm install --frozen-lockfile
+#34 20.70 .../sqlite3@5.1.7/node_modules/sqlite3 install: Done
+#34 20.76 .../node_modules/@google/genai preinstall$ echo 'preinstall: no-op'
+#34 20.76 .../node_modules/@google/genai preinstall$ echo 'preinstall: no-op'
+#34 20.85 .../node_modules/@google/genai preinstall: preinstall: no-op
+#34 20.85 .../node_modules/@google/genai preinstall: preinstall: no-op
+#34 20.85 .../node_modules/@google/genai preinstall: Done
+#34 20.85 .../node_modules/@google/genai preinstall: Done
+#34 22.31 
+#34 22.31 dependencies:
+#34 22.31 + @nextbot/agent-platform 0.0.0 <- packages/modules/agent-platform
+#34 22.31 + @nextbot/connectors 0.0.0 <- packages/modules/connectors
+#34 22.31 + @nextbot/contracts 0.0.0 <- packages/contracts
+#34 22.31 + @nextbot/db 0.0.0 <- packages/db
+#34 22.31 + @nextbot/iam 0.0.0 <- packages/modules/iam
+#34 22.31 + @nextbot/tenancy 0.0.0 <- packages/modules/tenancy
+#34 22.31 + @nextbot/tool-registry 0.0.0 <- packages/modules/tool-registry
+#34 22.31 + drizzle-orm 0.36.4
+#34 22.31 
+#34 22.31 devDependencies:
+#34 22.31 + @eslint/js 9.39.5
+#34 22.31 + @types/node 22.20.1
+#34 22.31 + @vitest/coverage-v8 2.1.9
+#34 22.31 + dependency-cruiser 16.10.4
+#34 22.31 + dotenv 16.6.1
+#34 22.31 + eslint 9.39.5
+#34 22.31 + eslint-import-resolver-typescript 4.4.5
+#34 22.31 + eslint-plugin-boundaries 4.2.2
+#34 22.31 + globals 17.11.0
+#34 22.31 + prettier 3.9.6
+#34 22.31 + tsx 4.23.12
+#34 22.31 + turbo 2.10.10
+#34 22.31 + typescript 5.9.3
+#34 22.31 + typescript-eslint 8.67.0
+#34 22.31 + vitest 2.1.9
+#34 22.31 
+#34 ...
+
+#20 [seed 5/6] RUN pnpm install --frozen-lockfile
+#20 22.52 .../node_modules/unrs-resolver postinstall: Done
+#20 22.54 .../node_modules/protobufjs postinstall: Done
+#20 22.59 .../esbuild@0.19.12/node_modules/esbuild postinstall$ node install.js
+#20 22.59 .../esbuild@0.18.20/node_modules/esbuild postinstall$ node install.js
+#20 22.92 .../esbuild@0.19.12/node_modules/esbuild postinstall: Done
+#20 22.99 .../esbuild@0.18.20/node_modules/esbuild postinstall: Done
+#20 23.19 .../sqlite3@5.1.7/node_modules/sqlite3 install: Done
+#20 23.26 .../node_modules/@google/genai preinstall$ echo 'preinstall: no-op'
+#20 23.26 .../node_modules/@google/genai preinstall$ echo 'preinstall: no-op'
+#20 23.33 .../node_modules/@google/genai preinstall: preinstall: no-op
+#20 23.33 .../node_modules/@google/genai preinstall: Done
+#20 23.33 .../node_modules/@google/genai preinstall: preinstall: no-op
+#20 23.33 .../node_modules/@google/genai preinstall: Done
+#20 24.37 
+#20 24.37 dependencies:
+#20 24.37 + @nextbot/agent-platform 0.0.0 <- packages/modules/agent-platform
+#20 24.37 + @nextbot/connectors 0.0.0 <- packages/modules/connectors
+#20 24.37 + @nextbot/contracts 0.0.0 <- packages/contracts
+#20 24.37 + @nextbot/db 0.0.0 <- packages/db
+#20 24.37 + @nextbot/iam 0.0.0 <- packages/modules/iam
+#20 24.37 + @nextbot/tenancy 0.0.0 <- packages/modules/tenancy
+#20 24.37 + @nextbot/tool-registry 0.0.0 <- packages/modules/tool-registry
+#20 24.37 + drizzle-orm 0.36.4
+#20 24.37 
+#20 24.37 devDependencies:
+#20 24.37 + @eslint/js 9.39.5
+#20 24.37 + @types/node 22.20.1
+#20 24.37 + @vitest/coverage-v8 2.1.9
+#20 24.37 + dependency-cruiser 16.10.4
+#20 24.37 + dotenv 16.6.1
+#20 24.37 + eslint 9.39.5
+#20 24.37 + eslint-import-resolver-typescript 4.4.5
+#20 24.37 + eslint-plugin-boundaries 4.2.2
+#20 24.37 + globals 17.11.0
+#20 24.37 + prettier 3.9.6
+#20 24.37 + tsx 4.23.12
+#20 24.37 + turbo 2.10.10
+#20 24.37 + typescript 5.9.3
+#20 24.37 + typescript-eslint 8.67.0
+#20 24.37 + vitest 2.1.9
+#20 24.37 
+#20 24.59 Done in 23.3s
+#20 DONE 24.9s
+
+#41 [worker runner 1/4] WORKDIR /app
+#41 DONE 1.8s
+
+#42 [seed 6/6] RUN groupadd --system --gid 1001 nextbot &&     useradd --system --uid 1001 --gid nextbot --create-home --home-dir /home/nextbot nextbot &&     mkdir -p /seed-output && chown nextbot:nextbot /app /seed-output /home/nextbot
+#42 ...
+
+#34 [gateway installer 4/4] RUN pnpm install --frozen-lockfile
+#34 22.43 Done in 20.8s
+#34 DONE 22.7s
+
+#39 [widget-embed installer 4/4] RUN pnpm install --frozen-lockfile
+#39 16.28 Progress: resolved 1102, reused 0, downloaded 1082, added 1099
+#39 18.98 Progress: resolved 1102, reused 0, downloaded 1083, added 1099
+#39 19.30 Progress: resolved 1102, reused 0, downloaded 1085, added 1102, done
+#39 20.00 .../esbuild@0.21.5/node_modules/esbuild postinstall$ node install.js
+#39 20.00 .../esbuild@0.28.2/node_modules/esbuild postinstall$ node install.js
+#39 20.11 .../node_modules/protobufjs postinstall$ node scripts/postinstall
+#39 20.18 .../node_modules/protobufjs postinstall: Done
+#39 20.19 .../sqlite3@5.1.7/node_modules/sqlite3 install$ prebuild-install -r napi || node-gyp rebuild
+#39 20.25 .../node_modules/unrs-resolver postinstall$ node postinstall.js
+#39 20.36 .../node_modules/unrs-resolver postinstall: Done
+#39 20.38 .../esbuild@0.18.20/node_modules/esbuild postinstall$ node install.js
+#39 20.44 .../esbuild@0.28.2/node_modules/esbuild postinstall: Done
+#39 20.44 .../esbuild@0.21.5/node_modules/esbuild postinstall: Done
+#39 20.48 .../esbuild@0.19.12/node_modules/esbuild postinstall$ node install.js
+#39 20.54 .../sharp@0.34.5/node_modules/sharp install$ node install/check.js || npm run build
+#39 20.62 .../esbuild@0.18.20/node_modules/esbuild postinstall: Done
+#39 20.65 .../esbuild@0.19.12/node_modules/esbuild postinstall: Done
+#39 20.65 .../sharp@0.34.5/node_modules/sharp install: Done
+#39 20.79 .../sqlite3@5.1.7/node_modules/sqlite3 install: Done
+#39 20.88 .../node_modules/@google/genai preinstall$ echo 'preinstall: no-op'
+#39 20.88 .../node_modules/@google/genai preinstall$ echo 'preinstall: no-op'
+#39 20.94 .../node_modules/@google/genai preinstall: preinstall: no-op
+#39 20.94 .../node_modules/@google/genai preinstall: Done
+#39 20.98 .../node_modules/@google/genai preinstall: preinstall: no-op
+#39 20.98 .../node_modules/@google/genai preinstall: Done
+#39 22.25 
+#39 22.25 dependencies:
+#39 22.25 + @nextbot/agent-platform 0.0.0 <- packages/modules/agent-platform
+#39 22.25 + @nextbot/connectors 0.0.0 <- packages/modules/connectors
+#39 22.25 + @nextbot/contracts 0.0.0 <- packages/contracts
+#39 22.25 + @nextbot/db 0.0.0 <- packages/db
+#39 22.25 + @nextbot/iam 0.0.0 <- packages/modules/iam
+#39 22.25 + @nextbot/tenancy 0.0.0 <- packages/modules/tenancy
+#39 22.25 + @nextbot/tool-registry 0.0.0 <- packages/modules/tool-registry
+#39 22.25 + drizzle-orm 0.36.4
+#39 22.25 
+#39 22.25 devDependencies:
+#39 22.25 + @eslint/js 9.39.5
+#39 22.25 + @types/node 22.20.1
+#39 22.25 + @vitest/coverage-v8 2.1.9
+#39 22.25 + dependency-cruiser 16.10.4
+#39 22.25 + dotenv 16.6.1
+#39 22.25 + eslint 9.39.5
+#39 22.25 + eslint-import-resolver-typescript 4.4.5
+#39 22.25 + eslint-plugin-boundaries 4.2.2
+#39 22.25 + globals 17.11.0
+#39 22.25 + prettier 3.9.6
+#39 22.25 + tsx 4.23.12
+#39 22.25 + turbo 2.10.10
+#39 22.25 + typescript 5.9.3
+#39 22.25 + typescript-eslint 8.67.0
+#39 22.25 + vitest 2.1.9
+#39 22.25 
+#39 22.41 Done in 20.8s
+#39 DONE 22.7s
+
+#43 [widget-embed builder 1/4] WORKDIR /app
+#43 DONE 3.3s
+
+#44 [gateway builder 1/4] WORKDIR /app
+#44 DONE 3.4s
+
+#45 [gateway builder 2/4] COPY --from=pruner /app/out/full/ .
+#45 ...
+
+#42 [seed 6/6] RUN groupadd --system --gid 1001 nextbot &&     useradd --system --uid 1001 --gid nextbot --create-home --home-dir /home/nextbot nextbot &&     mkdir -p /seed-output && chown nextbot:nextbot /app /seed-output /home/nextbot
+#42 3.939 useradd warning: nextbot's uid 1001 is greater than SYS_UID_MAX 999
+#42 DONE 4.1s
+
+#42 [migrate 6/6] RUN groupadd --system --gid 1001 nextbot &&     useradd --system --uid 1001 --gid nextbot --create-home --home-dir /home/nextbot nextbot &&     mkdir -p /seed-output && chown nextbot:nextbot /app /seed-output /home/nextbot
+#42 DONE 4.1s
+
+#46 [seed] exporting to image
+#46 exporting layers
+#46 ...
+
+#47 [widget-embed builder 2/4] COPY --from=pruner /app/out/full/ .
+#47 DONE 1.0s
+
+#48 [worker runner 2/4] COPY --from=pruner /app/out/full/ .
+#48 DONE 4.6s
+
+#45 [gateway builder 2/4] COPY --from=pruner /app/out/full/ .
+#45 DONE 1.0s
+
+#49 [worker runner 3/4] RUN apt-get update && apt-get install -y --no-install-recommends procps &&     rm -rf /var/lib/apt/lists/*
+#49 ...
+
+#50 [widget-embed builder 3/4] COPY turbo.json tsconfig.base.json ./
+#50 DONE 0.3s
+
+#51 [gateway builder 3/4] COPY turbo.json tsconfig.base.json ./
+#51 DONE 0.3s
+
+#52 [gateway builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-gateway
+#52 1.048 Progress: resolved 1, reused 0, downloaded 0, added 0
+#52 1.233 Packages: +2
+#52 1.233 ++
+#52 2.008 Progress: resolved 7, reused 0, downloaded 2, added 2, done
+#52 2.066 
+#52 2.066 /pnpm/global/5:
+#52 2.066 + turbo 2.1.3 (2.10.12 is available)
+#52 2.066 
+#52 2.083 Done in 1.4s
+#52 2.408  WARNING  No locally installed `turbo` found. Using version: 2.1.3.
+#52 2.411 
+#52 2.411 Attention:
+#52 2.411 Turborepo now collects completely anonymous telemetry regarding usage.
+#52 2.411 This information is used to shape the Turborepo roadmap and prioritize features.
+#52 2.411 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#52 2.411 https://turbo.build/repo/docs/telemetry
+#52 2.411 
+#52 2.411 turbo 2.1.3
+#52 2.411 
+#52 2.481 • Packages in scope: nextbot-gateway
+#52 2.481 • Running build in 1 packages
+#52 2.481 • Remote caching disabled
+#52 2.597 nextbot-gateway:build: cache miss, executing b44c7778f7bcb9aa
+#52 2.840 nextbot-gateway:build: 
+#52 2.840 nextbot-gateway:build: > nextbot-gateway@0.0.0 build /app/apps/gateway
+#52 2.840 nextbot-gateway:build: > next build
+#52 2.840 nextbot-gateway:build: 
+#52 3.285 nextbot-gateway:build:    ▲ Next.js 15.5.23
+#52 3.286 nextbot-gateway:build: 
+#52 3.304 nextbot-gateway:build:    Creating an optimized production build ...
+#52 ...
+
+#49 [worker runner 3/4] RUN apt-get update && apt-get install -y --no-install-recommends procps &&     rm -rf /var/lib/apt/lists/*
+#49 0.779 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#49 0.830 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#49 0.881 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+#49 0.925 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8790 kB]
+#49 1.991 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+#49 1.998 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [335 kB]
+#49 2.719 Fetched 9374 kB in 2s (4525 kB/s)
+#49 2.719 Reading package lists...
+#49 3.164 Reading package lists...
+#49 3.518 Building dependency tree...
+#49 3.625 Reading state information...
+#49 3.720 The following additional packages will be installed:
+#49 3.721   libncursesw6 libproc2-0
+#49 3.721 Recommended packages:
+#49 3.721   libgpm2 psmisc
+#49 3.743 The following NEW packages will be installed:
+#49 3.743   libncursesw6 libproc2-0 procps
+#49 3.772 0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+#49 3.772 Need to get 905 kB of archives.
+#49 3.772 After this operation, 2801 kB of additional disk space will be used.
+#49 3.772 Get:1 http://deb.debian.org/debian bookworm/main amd64 libncursesw6 amd64 6.4-4 [134 kB]
+#49 3.878 Get:2 http://deb.debian.org/debian bookworm/main amd64 libproc2-0 amd64 2:4.0.2-3 [62.8 kB]
+#49 3.997 Get:3 http://deb.debian.org/debian bookworm/main amd64 procps amd64 2:4.0.2-3 [709 kB]
+#49 4.679 debconf: delaying package configuration, since apt-utils is not installed
+#49 4.708 Fetched 905 kB in 1s (1142 kB/s)
+#49 4.780 Selecting previously unselected package libncursesw6:amd64.
+#49 4.780 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 6096 files and directories currently installed.)
+#49 4.810 Preparing to unpack .../libncursesw6_6.4-4_amd64.deb ...
+#49 4.834 Unpacking libncursesw6:amd64 (6.4-4) ...
+#49 4.971 Selecting previously unselected package libproc2-0:amd64.
+#49 4.971 Preparing to unpack .../libproc2-0_2%3a4.0.2-3_amd64.deb ...
+#49 4.985 Unpacking libproc2-0:amd64 (2:4.0.2-3) ...
+#49 5.103 Selecting previously unselected package procps.
+#49 5.104 Preparing to unpack .../procps_2%3a4.0.2-3_amd64.deb ...
+#49 5.141 Unpacking procps (2:4.0.2-3) ...
+#49 5.251 Setting up libproc2-0:amd64 (2:4.0.2-3) ...
+#49 5.289 Setting up libncursesw6:amd64 (6.4-4) ...
+#49 5.330 Setting up procps (2:4.0.2-3) ...
+#49 5.423 Processing triggers for libc-bin (2.36-9+deb12u14) ...
+#49 DONE 5.9s
+
+#53 [widget-embed builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-widget-embed
+#53 0.865 Progress: resolved 1, reused 0, downloaded 0, added 0
+#53 1.032 Packages: +2
+#53 1.032 ++
+#53 1.788 Progress: resolved 7, reused 0, downloaded 2, added 2, done
+#53 1.863 
+#53 1.863 /pnpm/global/5:
+#53 1.863 + turbo 2.1.3 (2.10.12 is available)
+#53 1.863 
+#53 1.875 Done in 1.3s
+#53 2.123  WARNING  No locally installed `turbo` found. Using version: 2.1.3.
+#53 2.144 
+#53 2.144 Attention:
+#53 2.144 Turborepo now collects completely anonymous telemetry regarding usage.
+#53 2.144 This information is used to shape the Turborepo roadmap and prioritize features.
+#53 2.144 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+#53 2.144 https://turbo.build/repo/docs/telemetry
+#53 2.144 
+#53 2.145 turbo 2.1.3
+#53 2.145 
+#53 2.205 • Packages in scope: nextbot-widget-embed
+#53 2.206 • Running build in 1 packages
+#53 2.206 • Remote caching disabled
+#53 2.270 nextbot-widget-embed:build: cache miss, executing 68933d6ea27fa54b
+#53 2.571 nextbot-widget-embed:build: 
+#53 2.571 nextbot-widget-embed:build: > nextbot-widget-embed@0.0.0 build /app/apps/widget-embed
+#53 2.571 nextbot-widget-embed:build: > pnpm run build:widget && pnpm run build:loader
+#53 2.571 nextbot-widget-embed:build: 
+#53 2.817 nextbot-widget-embed:build: 
+#53 2.817 nextbot-widget-embed:build: > nextbot-widget-embed@0.0.0 build:widget /app/apps/widget-embed
+#53 2.817 nextbot-widget-embed:build: > vite build --config vite.widget.config.ts
+#53 2.817 nextbot-widget-embed:build: 
+#53 3.080 nextbot-widget-embed:build: vite v5.4.21 building for production...
+#53 3.118 nextbot-widget-embed:build: transforming...
+#53 4.977 nextbot-widget-embed:build: ✓ 287 modules transformed.
+#53 5.167 nextbot-widget-embed:build: rendering chunks...
+#53 5.175 nextbot-widget-embed:build: computing gzip size...
+#53 5.197 nextbot-widget-embed:build: dist-widget/index.html                                            0.96 kB │ gzip:   0.58 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/oxanium-latin-ext-700-normal-BSlCClLu.woff2    5.18 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/oxanium-latin-ext-600-normal-B2S5WIA4.woff2    5.18 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/oxanium-latin-ext-700-normal-CPlnVieJ.woff     6.07 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/oxanium-latin-ext-600-normal-DywhiVWf.woff     6.14 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-ext-500-normal-zeox_O30.woff2     6.24 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-ext-400-normal-5tcqmc2S.woff2     6.38 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-ext-600-normal-B85nYjL1.woff2     6.53 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-ext-500-normal-DrCvqoFD.woff      8.49 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-ext-400-normal-DHm7mdGe.woff      8.64 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-ext-600-normal-CWJcPgd7.woff      8.75 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/oxanium-latin-700-normal-l0hKEjh4.woff2        8.78 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/oxanium-latin-600-normal-DW9ldEDP.woff2        8.94 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/oxanium-latin-700-normal-b_KP-pae.woff         9.83 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/oxanium-latin-600-normal-DNQhW0y0.woff         9.94 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-500-normal-DKnIMDSk.woff2        13.53 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-400-normal-BGsTXAXT.woff2        14.03 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-600-normal-B7SfZ07L.woff2        14.14 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-500-normal-ClnHRwRh.woff         17.69 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-400-normal-DMwTpYkH.woff         18.23 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/outfit-latin-600-normal-BEfTtDA7.woff         18.41 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/index-Cuomiu_1.css                            66.14 kB │ gzip:  11.68 kB
+#53 5.197 nextbot-widget-embed:build: dist-widget/assets/index-CF28ikzB.js                            385.85 kB │ gzip: 124.32 kB
+#53 5.197 nextbot-widget-embed:build: ✓ built in 2.10s
+#53 5.441 nextbot-widget-embed:build: 
+#53 5.441 nextbot-widget-embed:build: > nextbot-widget-embed@0.0.0 build:loader /app/apps/widget-embed
+#53 5.441 nextbot-widget-embed:build: > vite build --config vite.loader.config.ts
+#53 5.441 nextbot-widget-embed:build: 
+#53 5.594 nextbot-widget-embed:build: vite v5.4.21 building for production...
+#53 5.629 nextbot-widget-embed:build: transforming...
+#53 5.645 nextbot-widget-embed:build: ✓ 1 modules transformed.
+#53 5.655 nextbot-widget-embed:build: rendering chunks...
+#53 5.657 nextbot-widget-embed:build: computing gzip size...
+#53 5.659 nextbot-widget-embed:build: dist-loader/nextbot.js  1.81 kB │ gzip: 0.96 kB
+#53 5.659 nextbot-widget-embed:build: ✓ built in 44ms
+#53 5.687 
+#53 5.687  Tasks:    1 successful, 1 total
+#53 5.687 Cached:    0 cached, 1 total
+#53 5.687   Time:    3.541s 
+#53 5.687 
+#53 ...
+
+#54 [worker runner 4/4] RUN groupadd --system --gid 1001 nextbot &&     useradd --system --uid 1001 --gid nextbot --create-home --home-dir /home/nextbot nextbot
+#54 0.445 useradd warning: nextbot's uid 1001 is greater than SYS_UID_MAX 999
+#54 DONE 0.6s
+
+#55 [migrate] exporting to image
+#55 ...
+
+#53 [widget-embed builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-widget-embed
+#53 DONE 6.2s
+
+#56 [widget-embed runner 2/4] COPY apps/widget-embed/nginx.conf /etc/nginx/conf.d/default.conf
+#56 CACHED
+
+#57 [widget-embed runner 3/4] COPY --from=builder /app/apps/widget-embed/dist-widget /usr/share/nginx/html/widget
+#57 CACHED
+
+#58 [worker] exporting to image
+#58 exporting layers
+#58 ...
+
+#59 [widget-embed runner 4/4] COPY --from=builder /app/apps/widget-embed/dist-loader /usr/share/nginx/html/loader
+#59 CACHED
+
+#60 [widget-embed] exporting to image
+#60 exporting layers done
+#60 exporting manifest sha256:c601c9b2893d87f170de4ef3823f116b00cc0afa09861c3111f3e60f62aeb857 0.1s done
+#60 exporting config sha256:9b4778d98ab6cb895d926d5dd06d491e9991b5bb03c2ae257e63e48b6edb1790
+#60 exporting config sha256:9b4778d98ab6cb895d926d5dd06d491e9991b5bb03c2ae257e63e48b6edb1790 0.1s done
+#60 exporting attestation manifest sha256:c7ff344743f909a622ef24ea38f5f2e9ebb14d9d9570a51841403e956292bf45
+#60 exporting attestation manifest sha256:c7ff344743f909a622ef24ea38f5f2e9ebb14d9d9570a51841403e956292bf45 0.2s done
+#60 exporting manifest list sha256:a7a0f73183b842ac96fbeed1abf2110806101f6095f8bd3e730ba780ca98b588
+#60 exporting manifest list sha256:a7a0f73183b842ac96fbeed1abf2110806101f6095f8bd3e730ba780ca98b588 0.1s done
+#60 naming to docker.io/library/nextbot-widget-embed:latest 0.0s done
+#60 unpacking to docker.io/library/nextbot-widget-embed:latest
+#60 unpacking to docker.io/library/nextbot-widget-embed:latest 0.0s done
+#60 DONE 0.8s
+
+#58 [worker] exporting to image
+#58 ...
+
+#61 [widget-embed] resolving provenance for metadata file
+#61 DONE 0.0s
+
+#58 [worker] exporting to image
+#58 ...
+
+#52 [gateway builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-gateway
+#52 23.86 nextbot-gateway:build:  ⚠ Compiled with warnings in 20.3s
+#52 23.86 nextbot-gateway:build: 
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#52 23.86 nextbot-gateway:build: Critical dependency: the request of a dependency is an expression
+#52 23.86 nextbot-gateway:build: 
+#52 23.86 nextbot-gateway:build: Import trace for requested module:
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+#52 23.86 nextbot-gateway:build: ../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+#52 23.86 nextbot-gateway:build: ../../packages/ai-registry/src/index.ts
+#52 23.86 nextbot-gateway:build: ../../packages/modules/orchestration/src/application/goal-selection.ts
+#52 23.86 nextbot-gateway:build: ../../packages/modules/orchestration/src/index.ts
+#52 23.86 nextbot-gateway:build: ./src/lib/turn-pipeline-adapter.ts
+#52 23.86 nextbot-gateway:build: ./app/api/v1/widget/messages/route.ts
+#52 23.86 nextbot-gateway:build: 
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#52 23.86 nextbot-gateway:build: require.extensions is not supported by webpack. Use a loader instead.
+#52 23.86 nextbot-gateway:build: 
+#52 23.86 nextbot-gateway:build: Import trace for requested module:
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+#52 23.86 nextbot-gateway:build: ../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+#52 23.86 nextbot-gateway:build: ../../packages/ai-registry/src/index.ts
+#52 23.86 nextbot-gateway:build: ../../packages/modules/orchestration/src/application/goal-selection.ts
+#52 23.86 nextbot-gateway:build: ../../packages/modules/orchestration/src/index.ts
+#52 23.86 nextbot-gateway:build: ./src/lib/turn-pipeline-adapter.ts
+#52 23.86 nextbot-gateway:build: ./app/api/v1/widget/messages/route.ts
+#52 23.86 nextbot-gateway:build: 
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#52 23.86 nextbot-gateway:build: require.extensions is not supported by webpack. Use a loader instead.
+#52 23.86 nextbot-gateway:build: 
+#52 23.86 nextbot-gateway:build: Import trace for requested module:
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+#52 23.86 nextbot-gateway:build: ../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+#52 23.86 nextbot-gateway:build: ../../packages/ai-registry/src/index.ts
+#52 23.86 nextbot-gateway:build: ../../packages/modules/orchestration/src/application/goal-selection.ts
+#52 23.86 nextbot-gateway:build: ../../packages/modules/orchestration/src/index.ts
+#52 23.86 nextbot-gateway:build: ./src/lib/turn-pipeline-adapter.ts
+#52 23.86 nextbot-gateway:build: ./app/api/v1/widget/messages/route.ts
+#52 23.86 nextbot-gateway:build: 
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#52 23.86 nextbot-gateway:build: Module not found: Can't resolve '../../package.json' in '/app/node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils'
+#52 23.86 nextbot-gateway:build: 
+#52 23.86 nextbot-gateway:build: Import trace for requested module:
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+#52 23.86 nextbot-gateway:build: ../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+#52 23.86 nextbot-gateway:build: ../../packages/ai-registry/src/index.ts
+#52 23.86 nextbot-gateway:build: ../../packages/modules/orchestration/src/application/goal-selection.ts
+#52 23.86 nextbot-gateway:build: ../../packages/modules/orchestration/src/index.ts
+#52 23.86 nextbot-gateway:build: ./src/lib/turn-pipeline-adapter.ts
+#52 23.86 nextbot-gateway:build: ./app/api/v1/widget/messages/route.ts
+#52 23.86 nextbot-gateway:build: 
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/require-in-the-middle@8.0.1/node_modules/require-in-the-middle/index.js
+#52 23.86 nextbot-gateway:build: Critical dependency: require function is used in a way in which dependencies cannot be statically extracted
+#52 23.86 nextbot-gateway:build: 
+#52 23.86 nextbot-gateway:build: Import trace for requested module:
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/require-in-the-middle@8.0.1/node_modules/require-in-the-middle/index.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@opentelemetry+sdk-node@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/sdk-node/build/src/sdk.js
+#52 23.86 nextbot-gateway:build: ../../node_modules/.pnpm/@opentelemetry+sdk-node@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/sdk-node/build/src/index.js
+#52 23.86 nextbot-gateway:build: ../../packages/observability/src/tracing.ts
+#52 23.86 nextbot-gateway:build: ../../packages/observability/src/index.ts
+#52 23.86 nextbot-gateway:build: ../../packages/modules/agent-platform/src/application/agent-run-service.ts
+#52 23.86 nextbot-gateway:build: ../../packages/modules/agent-platform/src/index.ts
+#52 23.86 nextbot-gateway:build: ./src/lib/turn-pipeline-adapter.ts
+#52 23.86 nextbot-gateway:build: ./app/api/v1/widget/messages/route.ts
+#52 23.86 nextbot-gateway:build: 
+#52 23.86 nextbot-gateway:build:    Linting and checking validity of types ...
+#52 ...
+
+#58 [worker] exporting to image
+#58 exporting layers 24.3s done
+#58 exporting manifest sha256:55ff7b730bff6ac694c6b723c4237704e0d194ab4dc3dc61858d7695588bbfe4
+#58 exporting manifest sha256:55ff7b730bff6ac694c6b723c4237704e0d194ab4dc3dc61858d7695588bbfe4 0.1s done
+#58 exporting config sha256:7a29d75927a88e285b323ee677e8a40c192991985b2e80123772cb97863343ec 0.1s done
+#58 exporting attestation manifest sha256:87e1901afdac73cedfb8227bfc34429b6e23d6364b30c9f73f79721d77a20107 0.1s done
+#58 exporting manifest list sha256:4612276c03c0020c4e4193e181c0f8ee3b823113601e52f0e6d0c732a2ab2486
+#58 exporting manifest list sha256:4612276c03c0020c4e4193e181c0f8ee3b823113601e52f0e6d0c732a2ab2486 0.1s done
+#58 naming to docker.io/library/nextbot-worker:latest done
+#58 unpacking to docker.io/library/nextbot-worker:latest
+#58 unpacking to docker.io/library/nextbot-worker:latest 9.0s done
+#58 DONE 33.7s
+
+#52 [gateway builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-gateway
+#52 33.55 nextbot-gateway:build:    Collecting page data ...
+#52 37.99 nextbot-gateway:build:    Generating static pages (0/9) ...
+#52 38.92 nextbot-gateway:build:    Generating static pages (2/9) 
+#52 38.92 nextbot-gateway:build:    Generating static pages (4/9) 
+#52 38.92 nextbot-gateway:build:    Generating static pages (6/9) 
+#52 39.41 nextbot-gateway:build:  ✓ Generating static pages (9/9)
+#52 39.75 nextbot-gateway:build:    Finalizing page optimization ...
+#52 39.75 nextbot-gateway:build:    Collecting build traces ...
+#52 ...
+
+#62 [worker] resolving provenance for metadata file
+#62 DONE 0.0s
+
+#52 [gateway builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-gateway
+#52 ...
+
+#46 [seed] exporting to image
+#46 exporting layers 55.7s done
+#46 exporting manifest sha256:22ae69212466e2401cb7b824000aac2c50d50dcb98b6a2f435545f71a903e2db 0.1s done
+#46 exporting config sha256:81fc29adc6e0d6b4e383ec1434b241d15d16137b1e90ed423c2777e996c1c4e0 0.2s done
+#46 exporting attestation manifest sha256:0e378948e13d6f4f5fde5001f5b1ca0002c514238440e6fe06da03fdc9ccbb4e
+#46 exporting attestation manifest sha256:0e378948e13d6f4f5fde5001f5b1ca0002c514238440e6fe06da03fdc9ccbb4e 0.4s done
+#46 exporting manifest list sha256:45bf3f2516880dca860ba791ccfcd76ff1ae61478272220acd8476aa53d06702
+#46 exporting manifest list sha256:45bf3f2516880dca860ba791ccfcd76ff1ae61478272220acd8476aa53d06702 0.2s done
+#46 naming to docker.io/library/nextbot-seed:latest
+#46 naming to docker.io/library/nextbot-seed:latest 0.0s done
+#46 unpacking to docker.io/library/nextbot-seed:latest
+#46 ...
+
+#52 [gateway builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-gateway
+#52 60.87 nextbot-gateway:build: 
+#52 60.88 nextbot-gateway:build: Route (app)                                                       Size  First Load JS
+#52 60.88 nextbot-gateway:build: ┌ ○ /                                                            147 B         102 kB
+#52 60.88 nextbot-gateway:build: ├ ○ /_not-found                                                  989 B         103 kB
+#52 60.88 nextbot-gateway:build: ├ ƒ /api/agent-platform/git/webhooks/[provider]/[tenantId]       147 B         102 kB
+#52 60.88 nextbot-gateway:build: ├ ƒ /api/v1/channels/whatsapp/webhooks/[tenantId]/[channelId]    147 B         102 kB
+#52 60.88 nextbot-gateway:build: ├ ƒ /api/v1/widget/language                                      147 B         102 kB
+#52 60.88 nextbot-gateway:build: ├ ƒ /api/v1/widget/messages                                      147 B         102 kB
+#52 60.88 nextbot-gateway:build: ├ ƒ /api/v1/widget/sessions                                      147 B         102 kB
+#52 60.88 nextbot-gateway:build: ├ ƒ /api/v1/widget/stream                                        147 B         102 kB
+#52 60.88 nextbot-gateway:build: ├ ƒ /api/v1/widget/tool-calls/[id]/confirm                       147 B         102 kB
+#52 60.88 nextbot-gateway:build: └ ƒ /api/v1/widget/typing                                        147 B         102 kB
+#52 60.88 nextbot-gateway:build: + First Load JS shared by all                                   102 kB
+#52 60.88 nextbot-gateway:build:   ├ chunks/46c15ccd-09898f56e26807db.js                        54.2 kB
+#52 60.88 nextbot-gateway:build:   ├ chunks/531-6b98911bd9382b4f.js                             45.7 kB
+#52 60.88 nextbot-gateway:build:   └ other shared chunks (total)                                1.82 kB
+#52 60.88 nextbot-gateway:build: 
+#52 60.88 nextbot-gateway:build: 
+#52 60.88 nextbot-gateway:build: ○  (Static)   prerendered as static content
+#52 60.88 nextbot-gateway:build: ƒ  (Dynamic)  server-rendered on demand
+#52 60.88 nextbot-gateway:build: 
+#52 61.03 
+#52 61.03  Tasks:    1 successful, 1 total
+#52 61.03 Cached:    0 cached, 1 total
+#52 61.03   Time:    58.615s 
+#52 61.03 
+#52 ...
+
+#55 [migrate] exporting to image
+#55 exporting layers 55.7s done
+#55 exporting manifest sha256:6cab75c6d9eaa83f27b279fd6b3243fb4e3b2c889934fc094e3cdbf99f885bd1 0.1s done
+#55 exporting config sha256:acbc8d6910cfded5b2cbc63d94601fc64604b919a7ae57d04fb7515aefce8ffb 0.2s done
+#55 exporting attestation manifest sha256:61a5736a1a288d9634dba94a2cb7902df95fda1a463f3995ba161e21af09ef6b 0.4s done
+#55 exporting manifest list sha256:c3a51cece07aae1f35d0af7574bb010f2f204061eeb5f43c47220e74a44432c9 0.2s done
+#55 naming to docker.io/library/nextbot-migrate:latest 0.0s done
+#55 unpacking to docker.io/library/nextbot-migrate:latest
+#55 ...
+
+#38 [web builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-web
+#38 85.18 nextbot-web:build:  ⚠ Compiled with warnings in 75s
+#38 85.18 nextbot-web:build: 
+#38 85.21 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#38 85.21 nextbot-web:build: Critical dependency: the request of a dependency is an expression
+#38 85.21 nextbot-web:build: 
+#38 85.21 nextbot-web:build: Import trace for requested module:
+#38 85.21 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#38 85.21 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+#38 85.21 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+#38 85.21 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+#38 85.30 nextbot-web:build: ../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+#38 85.30 nextbot-web:build: ../../packages/ai-registry/src/index.ts
+#38 85.30 nextbot-web:build: ../../packages/modules/escalations/src/application/draft-reply.ts
+#38 85.30 nextbot-web:build: ../../packages/modules/escalations/src/index.ts
+#38 85.30 nextbot-web:build: ./app/api/v1/admin/agent-presence/route.ts
+#38 85.30 nextbot-web:build: 
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#38 85.30 nextbot-web:build: require.extensions is not supported by webpack. Use a loader instead.
+#38 85.30 nextbot-web:build: 
+#38 85.30 nextbot-web:build: Import trace for requested module:
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+#38 85.30 nextbot-web:build: ../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+#38 85.30 nextbot-web:build: ../../packages/ai-registry/src/index.ts
+#38 85.30 nextbot-web:build: ../../packages/modules/escalations/src/application/draft-reply.ts
+#38 85.30 nextbot-web:build: ../../packages/modules/escalations/src/index.ts
+#38 85.30 nextbot-web:build: ./app/api/v1/admin/agent-presence/route.ts
+#38 85.30 nextbot-web:build: 
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#38 85.30 nextbot-web:build: require.extensions is not supported by webpack. Use a loader instead.
+#38 85.30 nextbot-web:build: 
+#38 85.30 nextbot-web:build: Import trace for requested module:
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+#38 85.30 nextbot-web:build: ../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+#38 85.30 nextbot-web:build: ../../packages/ai-registry/src/index.ts
+#38 85.30 nextbot-web:build: ../../packages/modules/escalations/src/application/draft-reply.ts
+#38 85.30 nextbot-web:build: ../../packages/modules/escalations/src/index.ts
+#38 85.30 nextbot-web:build: ./app/api/v1/admin/agent-presence/route.ts
+#38 85.30 nextbot-web:build: 
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#38 85.30 nextbot-web:build: Module not found: Can't resolve '../../package.json' in '/app/node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils'
+#38 85.30 nextbot-web:build: 
+#38 85.30 nextbot-web:build: Import trace for requested module:
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/utils/Utils.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/typings.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@mikro-orm+core@6.6.16/node_modules/@mikro-orm/core/index.mjs
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/sessions/database_session_service.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@google+adk@1.6.0_@grpc+grpc-js@1.14.4_@mikro-orm+mariadb@6.6.16_@mikro-orm+core@6.6.16_mysql_utk2mzzv6zsusxw4k7fdc6wytu/node_modules/@google/adk/dist/esm/index.js
+#38 85.30 nextbot-web:build: ../../packages/ai-registry/src/adk/adk-graph-runtime.ts
+#38 85.30 nextbot-web:build: ../../packages/ai-registry/src/index.ts
+#38 85.30 nextbot-web:build: ../../packages/modules/escalations/src/application/draft-reply.ts
+#38 85.30 nextbot-web:build: ../../packages/modules/escalations/src/index.ts
+#38 85.30 nextbot-web:build: ./app/api/v1/admin/agent-presence/route.ts
+#38 85.30 nextbot-web:build: 
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/require-in-the-middle@8.0.1/node_modules/require-in-the-middle/index.js
+#38 85.30 nextbot-web:build: Critical dependency: require function is used in a way in which dependencies cannot be statically extracted
+#38 85.30 nextbot-web:build: 
+#38 85.30 nextbot-web:build: Import trace for requested module:
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/require-in-the-middle@8.0.1/node_modules/require-in-the-middle/index.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/instrumentation.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/platform/node/index.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/platform/index.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@opentelemetry+instrumentation@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation/build/esm/index.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@opentelemetry+sdk-node@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/sdk-node/build/src/sdk.js
+#38 85.30 nextbot-web:build: ../../node_modules/.pnpm/@opentelemetry+sdk-node@0.221.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/sdk-node/build/src/index.js
+#38 85.30 nextbot-web:build: ../../packages/observability/src/tracing.ts
+#38 85.30 nextbot-web:build: ../../packages/observability/src/index.ts
+#38 85.30 nextbot-web:build: ../../packages/modules/agent-platform/src/application/agent-run-service.ts
+#38 85.30 nextbot-web:build: ../../packages/modules/agent-platform/src/index.ts
+#38 85.30 nextbot-web:build: ./app/api/v1/admin/agent-platform/blueprints/route.ts
+#38 85.30 nextbot-web:build: 
+#38 85.30 nextbot-web:build:    Linting and checking validity of types ...
+#38 ...
+
+#52 [gateway builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-gateway
+#52 DONE 84.5s
+
+#46 [seed] exporting to image
+#46 ...
+
+#55 [migrate] exporting to image
+#55 unpacking to docker.io/library/nextbot-migrate:latest 29.0s done
+#55 DONE 85.8s
+
+#46 [seed] exporting to image
+#46 unpacking to docker.io/library/nextbot-seed:latest 29.1s done
+#46 DONE 85.8s
+
+#38 [web builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-web
+#38 ...
+
+#63 [gateway runner 2/5] RUN groupadd --system --gid 1001 nextbot &&     useradd --system --uid 1001 --gid nextbot nextbot
+#63 CACHED
+
+#64 [gateway runner 3/5] WORKDIR /app
+#64 CACHED
+
+#63 [web runner 2/5] RUN groupadd --system --gid 1001 nextbot &&     useradd --system --uid 1001 --gid nextbot nextbot
+#63 CACHED
+
+#65 [gateway runner 4/5] COPY --from=builder --chown=nextbot:nextbot /app/apps/gateway/.next/standalone ./
+#65 DONE 1.2s
+
+#38 [web builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-web
+#38 ...
+
+#66 [gateway runner 5/5] COPY --from=builder --chown=nextbot:nextbot /app/apps/gateway/.next/static ./apps/gateway/.next/static
+#66 ...
+
+#67 [migrate] resolving provenance for metadata file
+#67 DONE 0.3s
+
+#68 [seed] resolving provenance for metadata file
+#68 DONE 0.0s
+
+#66 [gateway runner 5/5] COPY --from=builder --chown=nextbot:nextbot /app/apps/gateway/.next/static ./apps/gateway/.next/static
+#66 DONE 0.4s
+
+#38 [web builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-web
+#38 ...
+
+#69 [gateway] exporting to image
+#69 exporting layers
+#69 exporting layers 2.7s done
+#69 exporting manifest sha256:532441390009fae797eb77aaa68fb132d10db200533afce15bc348102284a145 0.1s done
+#69 exporting config sha256:966a90499bafc50ed3fb2ffb8ddd403cfa496d3b39cc9deab525d95e5e194d9e 0.1s done
+#69 exporting attestation manifest sha256:16701472787bc8142c250779e3f651bd19e1982cb53dbfa47079603758f49c5b
+#69 exporting attestation manifest sha256:16701472787bc8142c250779e3f651bd19e1982cb53dbfa47079603758f49c5b 0.1s done
+#69 exporting manifest list sha256:14cb7c97ec90924db4af0b3ddb66c0de5f762108ce6ed80efa66cf8ca5935f7e
+#69 exporting manifest list sha256:14cb7c97ec90924db4af0b3ddb66c0de5f762108ce6ed80efa66cf8ca5935f7e 0.2s done
+#69 naming to docker.io/library/nextbot-gateway:latest
+#69 naming to docker.io/library/nextbot-gateway:latest 0.0s done
+#69 unpacking to docker.io/library/nextbot-gateway:latest
+#69 unpacking to docker.io/library/nextbot-gateway:latest 0.6s done
+#69 DONE 3.9s
+
+#38 [web builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-web
+#38 116.4 nextbot-web:build:    Collecting page data ...
+#38 ...
+
+#70 [gateway] resolving provenance for metadata file
+#70 DONE 0.0s
+
+#38 [web builder 4/4] RUN pnpm add -g turbo@2.1.3 && turbo run build --filter=nextbot-web
+#38 122.3 nextbot-web:build:    Generating static pages (0/131) ...
+#38 123.7 nextbot-web:build:    Generating static pages (32/131) 
+#38 123.7 nextbot-web:build:    Generating static pages (65/131) 
+#38 123.7 nextbot-web:build:    Generating static pages (98/131) 
+#38 123.7 nextbot-web:build:  ✓ Generating static pages (131/131)
+#38 126.8 nextbot-web:build:    Finalizing page optimization ...
+#38 126.8 nextbot-web:build:    Collecting build traces ...
+#38 146.7 nextbot-web:build: 
+#38 146.7 nextbot-web:build: Route (app)                                                                         Size  First Load JS
+#38 146.7 nextbot-web:build: ┌ ƒ /                                                                              720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ○ /_not-found                                                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /agent-platform/blueprints                                                   5.71 kB         188 kB
+#38 146.7 nextbot-web:build: ├ ƒ /agent-platform/definitions                                                   4.7 kB         180 kB
+#38 146.7 nextbot-web:build: ├ ƒ /agent-platform/definitions/[id]                                             24.2 kB         216 kB
+#38 146.7 nextbot-web:build: ├ ƒ /agent-platform/definitions/[id]/versions/new                                8.88 kB         258 kB
+#38 146.7 nextbot-web:build: ├ ƒ /agent-platform/definitions/[id]/versions/studio                             8.34 kB         186 kB
+#38 146.7 nextbot-web:build: ├ ƒ /agent-platform/diff                                                         6.64 kB         170 kB
+#38 146.7 nextbot-web:build: ├ ƒ /agent-platform/evals                                                        5.49 kB         177 kB
+#38 146.7 nextbot-web:build: ├ ƒ /agent-platform/evals/[id]                                                   6.66 kB         194 kB
+#38 146.7 nextbot-web:build: ├ ƒ /agent-platform/model-gateway                                                  720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /agent-platform/traces                                                       5.32 kB         191 kB
+#38 146.7 nextbot-web:build: ├ ƒ /agent-platform/versions/[versionId]                                         9.85 kB         196 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/[...unmatched]                                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/health-rollup                                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/plan-tiers                                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/plan-tiers/[tier]                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/tenants                                                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/tenants/[id]                                                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/tenants/[id]/breakglass/activate                             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/tenants/[id]/breakglass/conversations                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/tenants/[id]/breakglass/conversations/[conversationId]       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/tenants/[id]/breakglass/escalations                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/tenants/[id]/breakglass/escalations/[escalationId]           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/tenants/[id]/breakglass/status                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/tenants/[id]/plan-tier                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/tenants/[id]/plan-tier/reseed-quota                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/internal/ops/tenants/[id]/status                                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/scim/v2/[tenantSlug]/Users                                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/scim/v2/[tenantSlug]/Users/[id]                                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/sso/[tenantSlug]/login                                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/sso/[tenantSlug]/oidc/callback                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/sso/[tenantSlug]/saml/acs                                                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/blueprints                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/blueprints/[id]                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/blueprints/[id]/instantiate                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/definitions                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/definitions/[id]                                  720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/definitions/[id]/deployments                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/definitions/[id]/deployments/history              720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/definitions/[id]/deployments/promote-canary       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/definitions/[id]/emergency-rollback               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/definitions/[id]/shadow-evaluations               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/definitions/[id]/shadow-evaluations/[sid]         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/definitions/[id]/shadow-evaluations/[sid]/runs    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/definitions/[id]/shadow-evaluations/[sid]/stop    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/definitions/[id]/versions                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/eval-cases/harvest                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/eval-runs/[id]/results                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/eval-suites                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/eval-suites/[id]/cases                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/git/connect/[provider]                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/git/connect/[provider]/callback                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/git/connection                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/model-providers                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/model-routes                                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/available-skill-eval-cases                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts                                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]/audience                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]/evals                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]/guardrails                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]/knowledge                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]/memory                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]/model-budgets                  720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]/preview                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]/purpose                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]/skills                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]/submit                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/studio/drafts/[id]/tools                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/versions/[id]                                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/versions/[id]/bind-eval-suite                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/versions/[id]/eval-runs                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/versions/[id]/promote                             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/versions/[id]/promotion-check                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/versions/[id]/runs                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/versions/[id]/sandbox-preview-token               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/versions/[id]/submit-review                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/versions/diff                                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-platform/versions/structural-diff                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-presence                                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-presence/[userId]                                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-presence/me                                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/agent-runs/[runId]/delegation-tree                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/approvals                                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/approvals/[id]                                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/approvals/[id]/decision                                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/audit-log                                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/audit-log/export                                                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/authz/simulate                                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/branding                                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/breakglass-grants                                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/breakglass-grants/[id]/revoke                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels                                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels/[channelId]                                             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels/[channelId]/whatsapp                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels/[channelId]/whatsapp/activate                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels/[channelId]/whatsapp/consent                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels/[channelId]/whatsapp/consent/export                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels/[channelId]/whatsapp/consent/import                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels/[channelId]/whatsapp/credentials                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels/[channelId]/whatsapp/numbers                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels/[channelId]/whatsapp/templates                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels/[channelId]/whatsapp/webhook                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/channels/[channelId]/whatsapp/webhook/reverify                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/config-portability/export                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/config-portability/restore                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/connector-alert-rules                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/connectors                                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/connectors/[id]/discover                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/conversations                                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/conversations/[id]                                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/conversations/[id]/customer-identifier                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/conversations/[id]/linked                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/conversations/[id]/trace                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/conversations/bulk                                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/conversations/export                                             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/data-policy                                                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/dsr                                                              720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalation-queues                                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalation-routing-rules                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalations                                                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalations/[id]                                                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalations/[id]/claim                                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalations/[id]/draft                                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalations/[id]/messages                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalations/[id]/reassign                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalations/[id]/resolve                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalations/[id]/return-to-bot                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalations/[id]/ticketing-tools                                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/escalations/[id]/tool-calls                                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/guardrail-rules                                                  720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/chunks/[id]                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/collections                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/collections/[id]                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/collections/[id]/config                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/collections/[id]/freshness                             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/collections/[id]/generations                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/collections/[id]/sources                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/generations/[id]/cancel                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/generations/[id]/graph/communities                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/generations/[id]/graph/communities/[communityId]       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/generations/[id]/graph/entities                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/generations/[id]/graph/entities/[entityId]             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/generations/[id]/progress                              720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/playground                                             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/sources/[id]                                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/sources/[id]/failures                                  720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/sources/[id]/sync                                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/knowledge/upload                                                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp-health                                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp-health/reset-breaker                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/enrolments                                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/enrolments/[draftId]                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/enrolments/[draftId]/auth                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/enrolments/[draftId]/classify                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/enrolments/[draftId]/discover                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/enrolments/[draftId]/dry-run                                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/enrolments/[draftId]/enrol                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/enrolments/[draftId]/grouping                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/enrolments/[draftId]/identify                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/enrolments/[draftId]/policy                                  720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/enrolments/[draftId]/transport                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/servers                                                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/servers/[id]                                                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/servers/[id]/drift                                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/servers/[id]/drift/review                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/servers/[id]/reconcile                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/servers/[id]/versions                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/mcp/servers/migrate-connectors                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/catalog                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/catalog/[id]                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/providers                                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/providers/[id]                                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/providers/[id]/probe                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/providers/[id]/sync-catalog                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/routes                                             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/routes/[id]                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/routes/[id]/versions                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/routes/[id]/versions/[vid]/publish                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/routes/[id]/versions/validate                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/standard-routes                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/usage                                              720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/model-gateway/usage/cost-per-resolved-conversation               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/pii-policies                                                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/pii-rules                                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/roles                                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/roles/[id]                                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/scim-token                                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/service-accounts                                                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/service-accounts/[id]                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/service-accounts/[id]/api-keys                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/service-accounts/[id]/api-keys/[keyId]                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/session                                                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/sessions                                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/sessions/[id]                                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/sessions/tenant                                                  720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/sessions/tenant/[id]                                             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/settings/identity-resolution-policy                              720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/skills                                                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/skills/[id]                                                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/skills/[id]/upgrade-consumers                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/skills/[id]/versions                                             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/skills/[id]/versions/[versionId]                                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/skills/[id]/versions/[versionId]/deprecate                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/skills/[id]/versions/[versionId]/publish                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/skills/[id]/versions/diff                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/skills/[id]/where-used                                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/sso/connection                                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/sso/connection/status                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/sso/group-mappings                                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/sso/group-mappings/[id]                                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/teams                                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/teams/[id]                                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/teams/[id]/versions                                              720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/teams/[id]/versions/[versionId]                                  720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/teams/[id]/versions/[versionId]/sandbox-run                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/teams/[id]/versions/[versionId]/transition                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/teams/[id]/versions/[versionId]/validate                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/teams/[id]/versions/diff                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/telemetry-export/otel                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/telemetry-export/siem                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/tools                                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/tools/[id]                                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/tools/[id]/permissions                                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/tools/[id]/permissions/simulate                                  720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/tools/capability-groups                                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/tools/capability-groups/[id]                                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/users                                                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/users/[id]/mfa-reset                                             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/users/[id]/roles                                                 720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/webhooks                                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/webhooks/[id]                                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/webhooks/[id]/deliveries                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflow-runs                                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflow-runs/[id]                                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflow-runs/[id]/cancel                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflow-runs/[id]/resume                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflows                                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflows/[id]                                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflows/[id]/versions                                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflows/[id]/versions/[versionId]                              720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflows/[id]/versions/[versionId]/sandbox-run                  720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflows/[id]/versions/[versionId]/transition                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflows/[id]/versions/[versionId]/validate                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/admin/workflows/[id]/versions/diff                                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/agent-platform/definitions                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/agent-platform/definitions/[id]                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/agent-platform/definitions/[id]/versions                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/agent-platform/versions/[id]                                  720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/agent-platform/versions/[id]/promote                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/agent-platform/versions/[id]/submit-review                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/knowledge/collections                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/knowledge/collections/[id]                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/knowledge/collections/[id]/sources                            720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/knowledge/sources/[id]                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/skills                                                        720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/skills/[id]                                                   720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/skills/[id]/versions                                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/skills/[id]/versions/[versionId]                              720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/skills/[id]/versions/[versionId]/deprecate                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/skills/[id]/versions/[versionId]/publish                      720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/teams                                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/teams/[id]                                                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/teams/[id]/versions                                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/teams/[id]/versions/[versionId]                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/teams/[id]/versions/[versionId]/transition                    720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/workflows                                                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/workflows/[id]                                                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/workflows/[id]/versions                                       720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/workflows/[id]/versions/[versionId]                           720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/external/workflows/[id]/versions/[versionId]/transition                720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/public/sso-status/[slug]                                               720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/public/tenant-branding/[slug]                                          720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /api/v1/workflows/triggers/[path]                                              720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /approvals                                                                   3.96 kB         168 kB
+#38 146.7 nextbot-web:build: ├ ƒ /audit-log                                                                   4.09 kB         193 kB
+#38 146.7 nextbot-web:build: ├ ƒ /channels                                                                    5.74 kB         195 kB
+#38 146.7 nextbot-web:build: ├ ƒ /channels/[channelId]/test                                                   2.93 kB         167 kB
+#38 146.7 nextbot-web:build: ├ ƒ /channels/[channelId]/whatsapp                                               11.8 kB         177 kB
+#38 146.7 nextbot-web:build: ├ ƒ /channels/new                                                                6.62 kB         228 kB
+#38 146.7 nextbot-web:build: ├ ƒ /connectors                                                                  3.03 kB         167 kB
+#38 146.7 nextbot-web:build: ├ ƒ /connectors/[id]                                                               500 B         151 kB
+#38 146.7 nextbot-web:build: ├ ƒ /connectors/new                                                                500 B         151 kB
+#38 146.7 nextbot-web:build: ├ ƒ /conversations                                                               5.41 kB         197 kB
+#38 146.7 nextbot-web:build: ├ ƒ /conversations/[id]                                                          6.42 kB         201 kB
+#38 146.7 nextbot-web:build: ├ ƒ /dashboard                                                                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /escalations                                                                  5.2 kB         191 kB
+#38 146.7 nextbot-web:build: ├ ƒ /escalations/[id]                                                            4.23 kB         196 kB
+#38 146.7 nextbot-web:build: ├ ○ /forgot-password                                                               165 B         106 kB
+#38 146.7 nextbot-web:build: ├ ƒ /internal/ops/nb-c-4f21c8a7e3d9b605/[...unmatched]                             720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /internal/ops/nb-c-4f21c8a7e3d9b605/health                                   4.96 kB         129 kB
+#38 146.7 nextbot-web:build: ├ ƒ /internal/ops/nb-c-4f21c8a7e3d9b605/login                                    3.53 kB         121 kB
+#38 146.7 nextbot-web:build: ├ ƒ /internal/ops/nb-c-4f21c8a7e3d9b605/plan-tiers                               5.49 kB         146 kB
+#38 146.7 nextbot-web:build: ├ ƒ /internal/ops/nb-c-4f21c8a7e3d9b605/tenants                                   4.4 kB         126 kB
+#38 146.7 nextbot-web:build: ├ ƒ /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/[id]                             8.94 kB         177 kB
+#38 146.7 nextbot-web:build: ├ ƒ /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/[id]/breakglass                   4.7 kB         120 kB
+#38 146.7 nextbot-web:build: ├ ƒ /internal/ops/nb-c-4f21c8a7e3d9b605/tenants/new                              4.51 kB         172 kB
+#38 146.7 nextbot-web:build: ├ ƒ /knowledge                                                                   2.87 kB         167 kB
+#38 146.7 nextbot-web:build: ├ ƒ /knowledge/[id]                                                              7.12 kB         192 kB
+#38 146.7 nextbot-web:build: ├ ƒ /knowledge/[id]/generations/[generationId]                                   6.55 kB         173 kB
+#38 146.7 nextbot-web:build: ├ ƒ /knowledge/[id]/generations/[generationId]/communities/[communityId]         3.31 kB         162 kB
+#38 146.7 nextbot-web:build: ├ ƒ /knowledge/[id]/generations/[generationId]/entities/[entityId]               5.43 kB         174 kB
+#38 146.7 nextbot-web:build: ├ ƒ /knowledge/[id]/playground                                                   6.52 kB         172 kB
+#38 146.7 nextbot-web:build: ├ ƒ /knowledge/new                                                               5.37 kB         181 kB
+#38 146.7 nextbot-web:build: ├ ○ /login                                                                       5.94 kB         162 kB
+#38 146.7 nextbot-web:build: ├ ƒ /mcp-health                                                                  7.93 kB         201 kB
+#38 146.7 nextbot-web:build: ├ ƒ /mcp/capability-groups                                                         720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /mcp/servers                                                                 2.92 kB         167 kB
+#38 146.7 nextbot-web:build: ├ ƒ /mcp/servers/[id]                                                            6.54 kB         175 kB
+#38 146.7 nextbot-web:build: ├ ƒ /mcp/servers/[id]/drift                                                      5.89 kB         188 kB
+#38 146.7 nextbot-web:build: ├ ƒ /mcp/servers/new                                                             7.99 kB         195 kB
+#38 146.7 nextbot-web:build: ├ ƒ /model-gateway                                                               11.1 kB         203 kB
+#38 146.7 nextbot-web:build: ├ ƒ /roles                                                                       9.28 kB         231 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings                                                                      497 B         151 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/branding                                                           5.99 kB         172 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/breakglass-access                                                  4.26 kB         203 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/config-portability                                                 3.56 kB         167 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/connector-alerts                                                     720 B         103 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/data-policy                                                        3.59 kB         195 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/dsr                                                                3.72 kB         192 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/escalation-routing                                                 4.63 kB         196 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/identity-resolution                                                3.96 kB         171 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/integrations                                                        3.9 kB         179 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/integrations/git-callback                                          5.23 kB         158 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/pii-guardrails                                                     4.77 kB         193 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/service-accounts                                                   3.68 kB         215 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/sessions                                                           3.42 kB         119 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/sso                                                                 4.9 kB         196 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/telemetry-export                                                   4.77 kB         171 kB
+#38 146.7 nextbot-web:build: ├ ƒ /settings/webhooks                                                           3.65 kB         170 kB
+#38 146.7 nextbot-web:build: ├ ƒ /skills                                                                      2.98 kB         167 kB
+#38 146.7 nextbot-web:build: ├ ƒ /skills/[id]                                                                 4.73 kB         164 kB
+#38 146.7 nextbot-web:build: ├ ƒ /skills/[id]/versions/new                                                    1.02 kB         174 kB
+#38 146.7 nextbot-web:build: ├ ƒ /skills/new                                                                    583 B         159 kB
+#38 146.7 nextbot-web:build: ├ ƒ /teams                                                                       3.04 kB         167 kB
+#38 146.7 nextbot-web:build: ├ ƒ /teams/[id]                                                                  3.97 kB         170 kB
+#38 146.7 nextbot-web:build: ├ ƒ /teams/[id]/versions/new                                                     2.76 kB         211 kB
+#38 146.7 nextbot-web:build: ├ ƒ /teams/new                                                                   2.76 kB         211 kB
+#38 146.7 nextbot-web:build: ├ ƒ /tools                                                                       6.11 kB         195 kB
+#38 146.7 nextbot-web:build: ├ ƒ /tools/[id]/permissions                                                      6.88 kB         191 kB
+#38 146.7 nextbot-web:build: ├ ƒ /tools/capability-groups                                                     5.85 kB         181 kB
+#38 146.7 nextbot-web:build: ├ ƒ /workflows                                                                   3.04 kB         167 kB
+#38 146.7 nextbot-web:build: ├ ƒ /workflows/[id]                                                              3.61 kB         182 kB
+#38 146.7 nextbot-web:build: ├ ƒ /workflows/[id]/versions/new                                                 2.56 kB         211 kB
+#38 146.7 nextbot-web:build: └ ƒ /workflows/new                                                               2.56 kB         211 kB
+#38 146.7 nextbot-web:build: + First Load JS shared by all                                                     102 kB
+#38 146.7 nextbot-web:build:   ├ chunks/1531-f9dcfd28087a4559.js                                              46.2 kB
+#38 146.7 nextbot-web:build:   ├ chunks/46c15ccd-2b25221f16c68bb4.js                                          54.2 kB
+#38 146.7 nextbot-web:build:   └ other shared chunks (total)                                                  1.88 kB
+#38 146.7 nextbot-web:build: 
+#38 146.7 nextbot-web:build: 
+#38 146.7 nextbot-web:build: ƒ Middleware                                                                     33.1 kB
+#38 146.7 nextbot-web:build: 
+#38 146.7 nextbot-web:build: ○  (Static)   prerendered as static content
+#38 146.7 nextbot-web:build: ƒ  (Dynamic)  server-rendered on demand
+#38 146.7 nextbot-web:build: 
+#38 147.2 
+#38 147.2  Tasks:    1 successful, 1 total
+#38 147.2 Cached:    0 cached, 1 total
+#38 147.2   Time:    2m20.458s 
+#38 147.2 
+#38 DONE 151.6s
+
+#71 [web runner 4/5] COPY --from=builder --chown=nextbot:nextbot /app/apps/web/.next/standalone ./
+#71 DONE 1.1s
+
+#72 [web runner 5/5] COPY --from=builder --chown=nextbot:nextbot /app/apps/web/.next/static ./apps/web/.next/static
+#72 DONE 0.3s
+
+#73 [web] exporting to image
+#73 exporting layers
+#73 exporting layers 2.8s done
+#73 exporting manifest sha256:26f36ca54fe9f6736fd97752241ea8582a36a09e5cc386176c2c6db7f06fea39 0.1s done
+#73 exporting config sha256:ef88fdbfe3ca38225e7af10434b40d1ca03341b0c7382dd2e0078376c9f4c79d 0.1s done
+#73 exporting attestation manifest sha256:1c2f494a38b5f24d7d4245c282a8a9339c65ca04e46882526270c0e66f7ffa45
+#73 exporting attestation manifest sha256:1c2f494a38b5f24d7d4245c282a8a9339c65ca04e46882526270c0e66f7ffa45 0.1s done
+#73 exporting manifest list sha256:56acc2a423793bc75b551fb28d14cac72c7046a34019f10da5f9891129c2f190 0.1s done
+#73 naming to docker.io/library/nextbot-web:latest
+#73 naming to docker.io/library/nextbot-web:latest 0.0s done
+#73 unpacking to docker.io/library/nextbot-web:latest
+#73 unpacking to docker.io/library/nextbot-web:latest 0.7s done
+#73 DONE 3.9s
+
+#74 [web] resolving provenance for metadata file
+#74 DONE 0.0s
+ Image nextbot-seed Built 
+ Image nextbot-worker Built 
+ Image nextbot-web Built 
+ Image nextbot-widget-embed Built 
+ Image nextbot-migrate Built 
+ Image nextbot-gateway Built 
+ Volume nextbot_nextbot-neo4j-data Creating 
+ Volume nextbot_nextbot-neo4j-logs Creating 
+ Volume nextbot_nextbot-neo4j-logs Creating 
+ Volume nextbot_nextbot-clickhouse-data Creating 
+ Volume nextbot_nextbot-clickhouse-data Creating 
+ Volume nextbot_nextbot-redis-data Creating 
+ Volume nextbot_nextbot-redis-data Creating 
+ Volume nextbot_nextbot-knowledge-uploads-data Creating 
+ Volume nextbot_nextbot-neo4j-data Creating 
+ Volume nextbot_nextbot-postgres-data Creating 
+ Volume nextbot_nextbot-seed-output Creating 
+ Volume nextbot_nextbot-seed-output Creating 
+ Volume nextbot_nextbot-knowledge-uploads-data Creating 
+ Volume nextbot_nextbot-postgres-data Creating 
+ Network nextbot_default Creating 
+ Network nextbot_default Creating 
+ Volume nextbot_nextbot-neo4j-logs Created 
+ Volume nextbot_nextbot-neo4j-logs Created 
+ Volume nextbot_nextbot-seed-output Created 
+ Volume nextbot_nextbot-seed-output Created 
+ Volume nextbot_nextbot-clickhouse-data Created 
+ Volume nextbot_nextbot-clickhouse-data Created 
+ Volume nextbot_nextbot-neo4j-data Created 
+ Volume nextbot_nextbot-neo4j-data Created 
+ Volume nextbot_nextbot-postgres-data Created 
+ Volume nextbot_nextbot-postgres-data Created 
+ Volume nextbot_nextbot-knowledge-uploads-data Created 
+ Volume nextbot_nextbot-knowledge-uploads-data Created 
+ Volume nextbot_nextbot-redis-data Created 
+ Volume nextbot_nextbot-redis-data Created 
+ Network nextbot_default Created 
+ Network nextbot_default Created 
+ Container nextbot-redis-1 Creating 
+ Container nextbot-postgres-1 Creating 
+ Container nextbot-clickhouse-1 Creating 
+ Container nextbot-neo4j-1 Creating 
+ Container nextbot-widget-embed-1 Creating 
+ Container nextbot-clickhouse-1 Created 
+ Container nextbot-redis-1 Created 
+ Container nextbot-neo4j-1 Created 
+ Container nextbot-postgres-1 Created 
+ Container nextbot-migrate-1 Creating 
+ Container nextbot-widget-embed-1 Created 
+ Container nextbot-migrate-1 Created 
+ Container nextbot-worker-1 Creating 
+ Container nextbot-seed-1 Creating 
+ Container nextbot-web-1 Creating 
+ Container nextbot-gateway-1 Creating 
+ Container nextbot-seed-1 Created 
+ Container nextbot-worker-1 Created 
+ Container nextbot-gateway-1 Created 
+ Container nextbot-web-1 Created 
+ Container nextbot-web-proxy-1 Creating 
+ Container nextbot-web-proxy-1 Created 
+ Container nextbot-neo4j-1 Starting 
+ Container nextbot-postgres-1 Starting 
+ Container nextbot-redis-1 Starting 
+ Container nextbot-widget-embed-1 Starting 
+ Container nextbot-clickhouse-1 Starting 
+ Container nextbot-widget-embed-1 Started 
+ Container nextbot-redis-1 Started 
+ Container nextbot-clickhouse-1 Started 
+ Container nextbot-neo4j-1 Started 
+ Container nextbot-postgres-1 Started 
+ Container nextbot-postgres-1 Waiting 
+ Container nextbot-postgres-1 Healthy 
+ Container nextbot-migrate-1 Starting 
+ Container nextbot-migrate-1 Started 
+ Container nextbot-redis-1 Waiting 
+ Container nextbot-neo4j-1 Waiting 
+ Container nextbot-migrate-1 Waiting 
+ Container nextbot-neo4j-1 Waiting 
+ Container nextbot-migrate-1 Waiting 
+ Container nextbot-migrate-1 Waiting 
+ Container nextbot-neo4j-1 Waiting 
+ Container nextbot-migrate-1 Waiting 
+ Container nextbot-redis-1 Waiting 
+ Container nextbot-redis-1 Waiting 
+ Container nextbot-redis-1 Healthy 
+ Container nextbot-redis-1 Healthy 
+ Container nextbot-redis-1 Healthy 
+ Container nextbot-migrate-1 Exited 
+ Container nextbot-migrate-1 Exited 
+ Container nextbot-migrate-1 Exited 
+ Container nextbot-seed-1 Starting 
+ Container nextbot-migrate-1 Exited 
+ Container nextbot-seed-1 Started 
+ Container nextbot-neo4j-1 Healthy 
+ Container nextbot-gateway-1 Starting 
+ Container nextbot-neo4j-1 Healthy 
+ Container nextbot-worker-1 Starting 
+ Container nextbot-neo4j-1 Healthy 
+ Container nextbot-web-1 Starting 
+ Container nextbot-worker-1 Started 
+ Container nextbot-gateway-1 Started 
+ Container nextbot-web-1 Started 
+ Container nextbot-web-1 Waiting 
+ Container nextbot-web-1 Healthy 
+ Container nextbot-web-proxy-1 Starting 
+ Container nextbot-web-proxy-1 Started 
+UPEXIT:0

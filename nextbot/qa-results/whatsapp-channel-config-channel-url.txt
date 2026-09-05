@@ -1,0 +1,1 @@
+http://localhost:3200/channels/01a00e48-d2a6-7b47-ab0f-63535a25213e/whatsapp

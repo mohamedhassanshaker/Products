@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "shj3.fullname" . }}-ai
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-ai") | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "shj3.selectorLabels" (dict "root" $ "component" "shj3-ai") | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.ai.containerPort }}
+      targetPort: http
+      protocol: TCP
+    # §7.7's shown NetworkPolicy rule 1 already opens this exact port for
+    # the otel-collector's scrape ("plus the collector scrape port from
+    # app=otel-collector"). No code in apps/ai exposes a Prometheus-format
+    # /metrics endpoint on it yet (confirmed by search) — see
+    # servicemonitor.yaml's own comment.
+    - name: metrics
+      port: {{ .Values.networkPolicy.otelCollector.metricsPort }}
+      targetPort: metrics
+      protocol: TCP

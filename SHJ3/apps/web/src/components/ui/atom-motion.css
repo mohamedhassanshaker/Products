@@ -1,0 +1,95 @@
+/**
+ * Shared keyframe animations for the atoms in this batch that need one:
+ * `Skeleton`'s shimmer, `Spinner`'s rotation, and `ProgressBar`'s
+ * indeterminate sweep.
+ *
+ * Why this file exists — a real bug found while building these atoms, not a
+ * style preference. `tailwind-theme.generated.css` resets Tailwind's built-in
+ * `--animate-*` theme namespace to `initial` (design-system.md §3.4 — "replace,
+ * not extend") and its `@theme inline` bridge never re-declares it, because no
+ * token in the §4 catalogue currently backs one (confirmed by reading the
+ * generated bridge file directly, not assumed). That silently removes
+ * Tailwind's `animate-pulse` / `animate-spin` / `animate-bounce` /
+ * `animate-ping` utilities for the whole app — the pre-existing `skeleton.tsx`
+ * scaffold's `animate-pulse` class was therefore already dead the moment the
+ * bridge was generated, not something this change breaks. Worth flagging
+ * beyond this file: anyone who later reaches for `animate-spin` on, say, a
+ * button's loading state will hit the same silent no-op.
+ *
+ * The fix here is scoped to the three atoms in this batch that actually need
+ * motion, not a rewrite of the generated bridge — that file has its own
+ * generator and drift gate (`scripts/gates/tailwind-theme-drift.mjs`), and
+ * deciding whether `--animate-*` deserves a token belongs to whoever owns that
+ * generator, not to an atom-level fix.
+ *
+ * Durations reference `--duration-*` tokens so they collapse under
+ * `prefers-reduced-motion` exactly like every transition in the system
+ * (packages/tokens/src/semantic.ts `REDUCED_MOTION_OVERRIDES`). But a
+ * collapsed *duration* alone just makes an infinite-loop animation cycle
+ * almost instantaneously — a flicker, arguably worse than the motion it was
+ * meant to reduce — so every rule below additionally sets `animation: none`
+ * inside the same `prefers-reduced-motion: reduce` query the token emitter
+ * already uses (design-system.md §4.8, §10.5), rather than inventing a second
+ * reduced-motion mechanism next to the token-driven one.
+ */
+
+@keyframes shj3-shimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shj3-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/**
+ * Sweeps a short segment across the track using logical inset/size
+ * properties, not `left`/`transform: translateX`, for the same reason
+ * `ProgressBar`'s determinate fill does (see progress-bar.tsx): a physical
+ * left-anchored sweep does not reverse under `dir="rtl"`, and logical
+ * properties do, automatically, with zero JS.
+ */
+@keyframes shj3-indeterminate-sweep {
+  0% {
+    inset-inline-start: -40%;
+    inline-size: 40%;
+  }
+  50% {
+    inset-inline-start: 30%;
+    inline-size: 45%;
+  }
+  100% {
+    inset-inline-start: 100%;
+    inline-size: 40%;
+  }
+}
+
+.shj3-animate-shimmer {
+  animation: shj3-shimmer var(--duration-slower) var(--ease-standard) infinite;
+}
+
+.shj3-animate-spin {
+  animation: shj3-spin var(--duration-slower) linear infinite;
+}
+
+.shj3-animate-sweep {
+  animation: shj3-indeterminate-sweep var(--duration-slower) var(--ease-standard) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shj3-animate-shimmer,
+  .shj3-animate-spin,
+  .shj3-animate-sweep {
+    animation: none;
+  }
+}

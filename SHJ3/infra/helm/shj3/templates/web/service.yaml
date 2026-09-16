@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "shj3.fullname" . }}-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-web") | nindent 4 }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "shj3.selectorLabels" (dict "root" $ "component" "shj3-web") | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.web.containerPort }}
+      targetPort: http
+      protocol: TCP
+    # §7.7's own NetworkPolicy rule already opens this exact port for the
+    # otel-collector's scrape (networkpolicy/web.yaml). Declared on the
+    # Service for consistency with that policy and with servicemonitor.yaml;
+    # no code in apps/web exposes a Prometheus-format /metrics endpoint on
+    # it yet (confirmed by search) — see servicemonitor.yaml's own comment.
+    - name: metrics
+      port: {{ .Values.networkPolicy.otelCollector.metricsPort }}
+      targetPort: metrics
+      protocol: TCP

@@ -1,0 +1,98 @@
+{{/*
+shj3-worker: same image as shj3-ai (`.Values.ai.image`), SHJ3_AI_ROLE=worker
+is the one variable that makes it a different workload (ADR-0001 constraint
+1 — never a third deployable). No Service (§7.1 lists none, and nothing
+calls a worker directly — it leases jobs, it does not answer requests).
+
+No probes, deliberately, matching current reality rather than fabricating
+one: read entrypoint.py directly before writing this — `_run_worker()`
+starts no HTTP server at all (just logs and idles, since there is no real
+job/queue-consumer logic yet, tasks/todo.md's own Phase B checklist still
+lists "Outbox + reconciliation" as unbuilt). An httpGet probe against a port
+nothing listens on would crash-loop a container that is otherwise healthy —
+worse than no probe. docker-compose.yml independently disables its
+HEALTHCHECK for this same reason (ai.Dockerfile's `dev` stage comment).
+Revisit once the real reconciliation loop exists and can answer a real
+health question.
+*/}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "shj3.fullname" . }}-worker
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-worker") | nindent 4 }}
+spec:
+  replicas: {{ .Values.worker.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      {{- include "shj3.selectorLabels" (dict "root" $ "component" "shj3-worker") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "shj3.labels" (dict "root" $ "component" "shj3-worker") | nindent 8 }}
+      annotations:
+        checksum/config: {{ include "shj3.configChecksum" (dict "context" $ "templatePath" "/config/configmap-ai.yaml") }}
+        checksum/secret: {{ include "shj3.secretChecksum" (dict "context" $ "namespace" .Release.Namespace "name" .Values.secrets.ai) }}
+    spec:
+      serviceAccountName: {{ include "shj3.fullname" . }}-ai
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      # §7.6: jobs are leased, not requested — finishing the current batch
+      # (up to 600s) avoids repeating paid embedding work. A killed batch is
+      # not data loss (derived stores are rebuildable, ADR-0003 rule 1) but
+      # finishing it is cheaper than redoing it.
+      terminationGracePeriodSeconds: {{ .Values.worker.terminationGracePeriodSeconds }}
+      containers:
+        - name: worker
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.ai.image.repository }}:{{ .Values.ai.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          env:
+            - name: SHJ3_AI_ROLE
+              value: "worker"
+          envFrom:
+            - configMapRef:
+                name: {{ include "shj3.fullname" . }}-ai-config
+            - secretRef:
+                name: {{ .Values.secrets.ai }}
+          resources:
+            {{- toYaml .Values.worker.resources | nindent 12 }}
+          lifecycle:
+            preStop:
+              exec:
+                # Stop leasing new jobs, finish the current batch. Same
+                # honest caveat as shj3-ai's preStop: the real
+                # lease-draining mechanism this shells out to does not exist
+                # yet (no queue-consumer implementation — see this
+                # Deployment's own top comment), so this currently exits
+                # quickly rather than actually draining anything. Kept as
+                # the documented, spec-faithful shape for when it does.
+                command: ["/bin/sh", "-c", "sleep {{ .Values.worker.preStopDrainTimeoutSeconds }}"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: litellm-config
+              mountPath: /etc/shj3
+              readOnly: true
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: litellm-config
+          configMap:
+            name: {{ include "shj3.fullname" . }}-litellm-config

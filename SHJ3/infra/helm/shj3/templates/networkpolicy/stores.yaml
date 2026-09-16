@@ -1,0 +1,88 @@
+{{/*
+§7.7 rule 2, verbatim: ONLY shj3-ai (and shj3-worker, same image and
+ServiceAccount label) may reach Neo4j and Qdrant (ADR-0003 ownership).
+shj3-web opens no graph or vector connection — B6's graph explorer calls
+the AI service's HTTP API instead. §2.2's second ownership rule, and the one
+place a NetworkPolicy is the graph's outermost *and* only infrastructure
+control (§16.4, RISK-024) — get this rule's selector right.
+*/}}
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: derived-stores-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3") | nindent 4 }}
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: [neo4j, qdrant]
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values: [shj3-ai, shj3-worker]
+      ports:
+        - { protocol: TCP, port: 7687 } # bolt
+        - { protocol: TCP, port: 6333 } # qdrant http
+        - { protocol: TCP, port: 6334 } # qdrant grpc
+{{- end }}
+{{/*
+A REAL, PRE-EXISTING GAP found while wiring the SQL backup CronJob (Phase C,
+2026-09-09), fixed here rather than silently worked around: this file (the
+only NetworkPolicy in the chart governing the store pods' own ingress) never
+had a rule for `sqlserver` at all. `default-deny.yaml`'s empty podSelector
+covers every pod including sqlserver, and web/ai's own egress policies
+already claim to reach it (networkpolicy/web.yaml, networkpolicy/ai.yaml) —
+but NetworkPolicy requires the DESTINATION pod's ingress to be separately
+allowed too. Without this rule, a real cluster with NetworkPolicies enforced
+would have silently blocked shj3-web and shj3-ai from ever reaching the
+in-cluster SQL Server, despite every other layer (Service, egress rule,
+env var) looking correctly wired. Never caught before because no live
+cluster has ever run this chart (tasks/todo.md's Helm/Kubernetes review
+states this plainly) — `helm template` cannot detect a missing NetworkPolicy
+rule, only a real CNI enforcing one can.
+
+Fixed narrowly: adds sqlserver's own ingress rule, sources are exactly the
+three real consumers per §2.3 (shj3-web owns the schema; shj3-ai/shj3-worker
+read via shj3_ai_ro per §16.4; the new SQL backup CronJob added alongside
+this fix, stores/sqlserver-backup-cronjob.yaml).
+
+NOT fixed here, flagged instead (out of this task's scope — SQL backup, not
+a general NetworkPolicy audit): `redis` has the identical gap — no ingress
+rule anywhere in this chart — and was not touched, since nothing in this
+pass depends on it. Worth a dedicated pass before this chart's first real
+cluster deploy.
+*/}}
+{{- if and .Values.networkPolicy.enabled (eq .Values.stores.sqlserver.mode "in-cluster") }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: sqlserver-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3") | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels: { app: sqlserver }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels: { app: shj3-web }
+        - podSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values: [shj3-ai, shj3-worker]
+        - podSelector:
+            matchLabels: { app: shj3-sql-backup }
+      ports:
+        - { protocol: TCP, port: 1433 }
+{{- end }}

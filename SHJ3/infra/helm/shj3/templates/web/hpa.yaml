@@ -1,0 +1,24 @@
+{{/* §7.5: shj3-web scales on CPU — request/response BFF work is CPU-bound and short. */}}
+{{- if .Values.web.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "shj3.fullname" . }}-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-web") | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "shj3.fullname" . }}-web
+  minReplicas: {{ .Values.web.hpa.minReplicas }}
+  maxReplicas: {{ .Values.web.hpa.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.web.hpa.targetCPUUtilizationPercentage }}
+{{- end }}

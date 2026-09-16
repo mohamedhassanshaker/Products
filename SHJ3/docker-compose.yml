@@ -1,0 +1,342 @@
+# SHJ3 — full-stack local and staging parity.
+#
+# `docker compose up` brings up both runtimes, the worker and all four stores.
+# Local development is deliberately NOT a reduced configuration: the tenant
+# isolation guarantee (ADR-0002) cannot be exercised against a single-tenant
+# environment, so the seed provisions at least two government entities, and all
+# four stores run because the reconciliation and outbox behaviour between them
+# is a real source of defects (ADR-0003).
+#
+# Seed data is deterministic and reproduces the wireframe's exact sample state,
+# because the E2E suite depends on it and the cross-module wiring only
+# demonstrates correctly from a known starting point.
+
+name: shj3
+
+services:
+  # ---------------------------------------------------------------- stores ---
+
+  sqlserver:
+    # System of record. Schema per tenant (ADR-0002).
+    image: mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-Shj3_Local_Dev!2026}
+      MSSQL_PID: Developer
+    ports:
+      - "${SQLSERVER_PORT:-1433}:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      # `sqlcmd` moved under /opt/mssql-tools18 in 2022 CU and requires -C for
+      # the self-signed dev certificate. Getting this wrong yields a container
+      # that never reports healthy and a very confusing dependency wait.
+      test:
+        [
+          "CMD-SHELL",
+          '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -C -Q ''SELECT 1'' -b -o /dev/null',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 40s
+
+  neo4j:
+    # Knowledge graph. SINGLE Community instance with logical tenant
+    # partitioning (ADR-0009) — no Enterprise licence, so no multi-database, no
+    # RBAC and no clustering. Derived store: rebuildable by re-index, so its
+    # volume is a convenience rather than a system of record.
+    image: neo4j:5.26-community
+    environment:
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-shj3_local_dev}
+      # NOT named NEO4J_*: the image's entrypoint treats every NEO4J_-prefixed
+      # variable as a server-setting override (NEO4J_dbms_foo -> dbms.foo) and
+      # refuses to start on one it does not recognise, with strict validation
+      # on by default in 5.x. This is read by the healthcheck below, which runs
+      # *inside* the container and needs the password as a shell variable —
+      # compose-level ${...} interpolation happens on the host and does not by
+      # itself land a value in the container's environment.
+      SHJ3_NEO4J_HEALTHCHECK_PASSWORD: ${NEO4J_PASSWORD:-shj3_local_dev}
+      NEO4J_server_memory_heap_initial__size: 512m
+      NEO4J_server_memory_heap_max__size: 1G
+      NEO4J_server_memory_pagecache_size: 512m
+      # No dbms_mode / causal_clustering keys. Community silently ignores them,
+      # and a compose file that appears to configure a cluster while running a
+      # single instance is worse than one that never claimed to.
+    ports:
+      - "${NEO4J_HTTP_PORT:-7474}:7474"
+      - "${NEO4J_BOLT_PORT:-7687}:7687"
+    volumes:
+      - neo4j-data:/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'cypher-shell -u neo4j -p "$$SHJ3_NEO4J_HEALTHCHECK_PASSWORD" ''RETURN 1'' >/dev/null 2>&1 || exit 1',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  qdrant:
+    # Vector index. Collection per tenant (ADR-0002). Derived store.
+    #
+    # Pinned to match qdrant-client's resolved version (pyproject.toml floors it
+    # at >=1.10, currently resolving to 1.19.x): collection-level metadata —
+    # which QdrantProvisioner uses to record the embedding model + dimension a
+    # collection was built for (ADR-0004 rule 3, RISK-016) — is a server feature
+    # absent before Qdrant ~1.16. Verified directly: v1.12.4 and v1.15.4 both
+    # silently accept a create_collection call carrying `metadata` and then
+    # return `config.metadata: None`, so the poisoning check passes create and
+    # fails verify with no error in between. v1.16+ persists and returns it.
+    image: qdrant/qdrant:v1.19.0
+    ports:
+      - "${QDRANT_HTTP_PORT:-6333}:6333"
+      - "${QDRANT_GRPC_PORT:-6334}:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    healthcheck:
+      # The Qdrant image has no curl or wget, so probe from inside with the
+      # bundled binary's own readiness endpoint via bash's /dev/tcp.
+      test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/6333' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 15s
+
+  redis:
+    # Ephemeral only: chat sessions, breaker state, rate limits, campaign queue.
+    # Deliberately NOT backed up and deliberately not persisted here — losing it
+    # must be survivable by design (ADR-0003 rule 2), and a dev environment that
+    # persists it hides breakage that production would expose.
+    image: redis:7.4-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  # -------------------------------------------------------------- runtimes ---
+
+  web:
+    # shj3-web: UI + BFF + config API. Owns the SQL Server schema.
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+      target: dev
+    environment:
+      NODE_ENV: development
+      SHJ3_ENVIRONMENT: development
+      SHJ3_SQL_URL: sqlserver://sqlserver:1433;database=shj3;user=sa;password=${MSSQL_SA_PASSWORD:-Shj3_Local_Dev!2026};encrypt=true;trustServerCertificate=true
+      SHJ3_REDIS_URL: redis://redis:6379
+      SHJ3_AI_BASE_URL: http://ai:8000
+      # Real, previously-untested gap found wiring this: config.ts's boot-time validator
+      # REQUIRES both of these, and neither was ever set here — every earlier verification
+      # pass ran web via host `next dev` reading the root .env directly, never through
+      # compose, so this never crashed anything until now. Without them the container
+      # refuses to start at all (ConfigurationError), before it can even serve /api/healthz.
+      SHJ3_VERIFICATION_ADAPTER: ${SHJ3_VERIFICATION_ADAPTER:-mock}
+      # B-8's payments analogue — config.ts's boot-time validator requires this too now.
+      SHJ3_PAYMENT_GATEWAY_ADAPTER: ${SHJ3_PAYMENT_GATEWAY_ADAPTER:-mock}
+      SHJ3_ENCRYPTION_KEY: ${SHJ3_ENCRYPTION_KEY:-+yddTmNwlSyCtqzv2bABbnYmDiwu9hojxvkrJ73e4U8=}
+      # provisioning_router.py's require_platform_scope() refuses every call (503) with this
+      # unset — web and ai must agree on the same value, matching .env.example's default.
+      SHJ3_AI_PLATFORM_TOKEN: ${SHJ3_AI_PLATFORM_TOKEN:-local-dev-platform-token-not-for-production}
+      SHJ3_SESSION_SECRET: ${SHJ3_SESSION_SECRET:-local-dev-session-secret-not-for-production}
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    volumes:
+      - ./apps/web:/app/apps/web
+      - ./packages:/app/packages
+      - ./prisma:/app/prisma
+      # Carve `prisma/generated/` back OUT of the bind mount above, into its own
+      # container-only volume. Windows-host-specific reasoning, verified rather than
+      # assumed: `prisma/generated/*` holds Prisma's native query-engine binary, selected
+      # for whatever OS last ran `prisma generate` there. This dev image regenerates it at
+      # build time for Linux (`docker/web.Dockerfile`'s `dev` stage); without this line the
+      # bind mount above would immediately shadow that with whatever this Windows host's own
+      # `pnpm db:generate` last produced (real Windows .dll engine binaries — confirmed
+      # present on disk during this session), breaking Prisma Client inside the container.
+      # This anonymous volume seeds itself from the image's own (Linux-correct) content on
+      # first container creation, then persists independently of the host's `prisma/generated/`
+      # from that point on — a well-known Docker Compose idiom for a cache/build directory
+      # nested inside an otherwise-live-reloaded bind-mounted parent.
+      - /app/prisma/generated
+      # Same idiom, same reason, found the same way (a real container failing to start,
+      # not reasoned about in advance): pnpm's per-package `node_modules` holds symlinks
+      # into the workspace's `.pnpm` content-addressable store, and this host's are real
+      # Windows symlinks pointing at a Windows absolute path (confirmed by reading them
+      # directly: `typescript -> /d/work/products/SHJ3/node_modules/.pnpm/...`) — which a
+      # Linux container cannot resolve. Every workspace package this image bind-mounts
+      # over needs its own entry; today that is @shj3/web and @shj3/tokens.
+      - /app/apps/web/node_modules
+      - /app/packages/tokens/node_modules
+      - web-next-cache:/app/apps/web/.next
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ai:
+        condition: service_healthy
+      init:
+        condition: service_completed_successfully
+
+  ai:
+    # shj3-ai: agent runtime + Graph RAG. Sole writer of Neo4j and Qdrant.
+    build:
+      context: .
+      dockerfile: docker/ai.Dockerfile
+      target: dev
+    environment:
+      SHJ3_ENVIRONMENT: development
+      SHJ3_AI_ROLE: api
+      SHJ3_SQL_DSN: mssql+aioodbc://sa:${MSSQL_SA_PASSWORD:-Shj3_Local_Dev!2026}@sqlserver:1433/shj3?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes
+      # bolt+s:// not neo4j+s:// — Community cannot cluster, so a routing URI
+      # has nothing to route to and fails with a confusing discovery error.
+      SHJ3_NEO4J_URI: bolt://neo4j:7687
+      SHJ3_NEO4J_USERNAME: neo4j
+      SHJ3_NEO4J_PASSWORD: ${NEO4J_PASSWORD:-shj3_local_dev}
+      SHJ3_NEO4J_DATABASE: neo4j
+      SHJ3_NEO4J_TENANT_LABEL_PREFIX: Tenant_
+      SHJ3_QDRANT_URL: http://qdrant:6333
+      SHJ3_REDIS_URL: redis://redis:6379
+      # require_platform_scope() (provisioning_router.py) refuses every provisioning call
+      # with this unset — web (and init, which calls the same endpoints while seeding
+      # tenants) must send the identical value.
+      SHJ3_AI_PLATFORM_TOKEN: ${SHJ3_AI_PLATFORM_TOKEN:-local-dev-platform-token-not-for-production}
+      # Model providers. Absent keys are tolerated in development: the runtime
+      # falls back to the deterministic stub adapters the test suite uses, which
+      # is what lets the pipeline be developed without spending tokens.
+      SHJ3_OPENROUTER_API_KEY: ${SHJ3_OPENROUTER_API_KEY:-}
+      SHJ3_OPENAI_API_KEY: ${SHJ3_OPENAI_API_KEY:-}
+      SHJ3_COHERE_API_KEY: ${SHJ3_COHERE_API_KEY:-}
+      SHJ3_OPENAI_EMBEDDING_MODEL: text-embedding-3-large
+      SHJ3_OPENAI_EMBEDDING_DIM: "3072"
+      SHJ3_COHERE_RERANK_MODEL: rerank-v3.5
+    ports:
+      - "${AI_PORT:-8000}:8000"
+    volumes:
+      - ./apps/ai:/app
+      # Carve `.venv` back OUT of the bind mount above — the same Windows-bind-mount
+      # hazard as web's `prisma/generated` carve-out, and found the same way: a real
+      # container failing to start. `ai.Dockerfile`'s WORKDIR is `/app` itself (unlike
+      # web, which bind-mounts a SUBDIRECTORY, `/app/apps/web`), so this bind mount
+      # replaces the container's entire `/app` — including the `.venv` the `dev` stage
+      # just built for Linux — with whatever's on the host at `apps/ai/`. This host
+      # already has its own real, Windows-built `.venv` (`make setup`'s output: native
+      # .exe launchers, Windows-path shebangs), which is not just stale but genuinely
+      # broken if it ever reaches a Linux container. This anonymous volume seeds itself
+      # from the image's own (Linux-correct) `.venv` on first container creation and
+      # persists independently of the host's `apps/ai/.venv` from that point on.
+      - /app/.venv
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    # Same image and codebase as `ai`, different entrypoint. ADR-0001 constraint
+    # 1: background work is a replica of shj3-ai with another role, never a
+    # third deployable.
+    build:
+      context: .
+      dockerfile: docker/ai.Dockerfile
+      target: dev
+    environment:
+      SHJ3_ENVIRONMENT: development
+      SHJ3_AI_ROLE: worker
+      SHJ3_SQL_DSN: mssql+aioodbc://sa:${MSSQL_SA_PASSWORD:-Shj3_Local_Dev!2026}@sqlserver:1433/shj3?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes
+      SHJ3_NEO4J_URI: bolt://neo4j:7687
+      SHJ3_NEO4J_USERNAME: neo4j
+      SHJ3_NEO4J_PASSWORD: ${NEO4J_PASSWORD:-shj3_local_dev}
+      SHJ3_NEO4J_DATABASE: neo4j
+      SHJ3_NEO4J_TENANT_LABEL_PREFIX: Tenant_
+      SHJ3_QDRANT_URL: http://qdrant:6333
+      SHJ3_REDIS_URL: redis://redis:6379
+      SHJ3_OPENAI_EMBEDDING_MODEL: text-embedding-3-large
+      SHJ3_OPENAI_EMBEDDING_DIM: "3072"
+    volumes:
+      - ./apps/ai:/app
+      # Same carve-out as `ai`'s, same reason — see that service's own comment.
+      - /app/.venv
+    depends_on:
+      ai:
+        condition: service_started
+      init:
+        condition: service_completed_successfully
+    # entrypoint.py's `_run_worker()` idles honestly — no scheduled job exists yet (see its
+    # own doc comment), and correspondingly starts no HTTP server at all, on 8000 or any
+    # other port. `docker/ai.Dockerfile`'s HEALTHCHECK (inherited from the shared image) would
+    # therefore never succeed here, not because the process is unhealthy but because there is
+    # nothing on 8000 to answer it — a health check with nothing real to check is worse than
+    # none, so it is disabled for this service specifically until real worker logic (the
+    # outbox reconciliation sweep, still unbuilt — tasks/todo.md Phase B) gives it something
+    # genuine to report. deployment.md §6.2's own representative compose entry documents a
+    # SEPARATE metrics port (9100) for exactly this future case; building that now, for a role
+    # that does no real work yet, would be speculative infrastructure ahead of the code it
+    # would be reporting on.
+    healthcheck:
+      disable: true
+
+  init:
+    # One-shot platform-schema bootstrap + deterministic seed data. Runs once per `docker
+    # compose up`, then exits — `restart: "no"` below is deliberate, this is not a
+    # long-running service, and nothing else in this file depends on it staying up, only on
+    # it having COMPLETED (see web's and worker's `service_completed_successfully` condition).
+    #
+    # A real, previously-hidden gap, found while wiring this rather than assumed away: no
+    # checked-in mechanism anywhere in this codebase ever created the `platform`/
+    # `tenant_template` schemas from an empty SQL Server instance — every tested tenant-
+    # provisioning path (`SqlStoreProvisioner`, the isolation suite) assumed that already-done.
+    # `scripts/bootstrap-platform-schema.ts` closes that gap; `db:seed:iam`/`db:seed:appearance`
+    # already handle real tenant provisioning (four government entities, matching this file's
+    # own header comment) and demo data, unmodified, once their precondition is finally real.
+    #
+    # Reuses `web`'s own image/target rather than a third Dockerfile: this is TypeScript
+    # composition-root code (`tsx scripts/*.ts`), needing the identical toolchain and
+    # workspace layout `web`'s `dev` stage already has, and none of `web`'s own bind mounts
+    # (no live-reload need for a one-shot task).
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+      target: dev
+    environment:
+      NODE_ENV: development
+      SHJ3_ENVIRONMENT: development
+      SHJ3_SQL_URL: sqlserver://sqlserver:1433;database=shj3;user=sa;password=${MSSQL_SA_PASSWORD:-Shj3_Local_Dev!2026};encrypt=true;trustServerCertificate=true
+      SHJ3_REDIS_URL: redis://redis:6379
+      SHJ3_AI_BASE_URL: http://ai:8000
+      SHJ3_AI_PLATFORM_TOKEN: ${SHJ3_AI_PLATFORM_TOKEN:-local-dev-platform-token-not-for-production}
+      SHJ3_SESSION_SECRET: ${SHJ3_SESSION_SECRET:-local-dev-session-secret-not-for-production}
+      SHJ3_VERIFICATION_ADAPTER: ${SHJ3_VERIFICATION_ADAPTER:-mock}
+      SHJ3_PAYMENT_GATEWAY_ADAPTER: ${SHJ3_PAYMENT_GATEWAY_ADAPTER:-mock}
+      SHJ3_ENCRYPTION_KEY: ${SHJ3_ENCRYPTION_KEY:-+yddTmNwlSyCtqzv2bABbnYmDiwu9hojxvkrJ73e4U8=}
+      # Same embedding contract seed-iam-demo-data.ts and tests/isolation/setup.ts already
+      # read this from — keeps the collections this seeds honest about what they were built
+      # for (RISK-016) rather than a script-local constant that could drift from it.
+      SHJ3_OPENAI_EMBEDDING_MODEL: text-embedding-3-large
+      SHJ3_OPENAI_EMBEDDING_DIM: "3072"
+    command:
+      ["sh", "-c", "pnpm db:bootstrap-platform && pnpm db:seed:iam && pnpm db:seed:appearance"]
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      ai:
+        condition: service_healthy
+    restart: "no"
+
+volumes:
+  sqlserver-data:
+  neo4j-data:
+  qdrant-data:
+  web-next-cache:

@@ -1,0 +1,108 @@
+{{/*
+§7.9 gating + §3.1: SQL Server is in-cluster only in `development`
+("StatefulSet, 1 replica, Developer edition"); managed (HA pair, PITR) in
+uat/production. Image/env matched to docker-compose.yml's already-tested
+sqlserver service, not reinvented — same MSSQL_PID=Developer, same sqlcmd
+healthcheck shape (`/opt/mssql-tools18` — moved there in 2022 CU, and the
+compose file's own comment notes getting this path wrong yields a container
+that never reports healthy).
+*/}}
+{{- if eq .Values.stores.sqlserver.mode "in-cluster" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "shj3.fullname" . }}-sqlserver
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "sqlserver") | nindent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    {{- include "shj3.selectorLabels" (dict "root" $ "component" "sqlserver") | nindent 4 }}
+  ports:
+    - name: tds
+      port: 1433
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "shj3.fullname" . }}-sqlserver
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "sqlserver") | nindent 4 }}
+spec:
+  serviceName: {{ include "shj3.fullname" . }}-sqlserver
+  replicas: 1
+  podManagementPolicy: OrderedReady
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  selector:
+    matchLabels:
+      {{- include "shj3.selectorLabels" (dict "root" $ "component" "sqlserver") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "shj3.labels" (dict "root" $ "component" "sqlserver") | nindent 8 }}
+    spec:
+      # SQL Server's own image runs as mssql (uid 10001) internally already;
+      # no fsGroup override needed beyond what the image itself sets up for
+      # /var/opt/mssql — matching how docker-compose.yml runs it (no
+      # explicit user override there either).
+      containers:
+        - name: sqlserver
+          image: "mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04"
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_PID
+              value: {{ .Values.stores.sqlserver.edition | default "Developer" | quote }}
+            # §4.3's secret inventory never anticipated an in-cluster SQL
+            # Server needing its OWN bootstrap admin credential — production/
+            # uat use a managed instance, where this StatefulSet does not
+            # render at all. Reusing shj3-migrator-secrets (the one existing
+            # secret already conceptually tied to "elevated SQL access") is
+            # this chart's own pragmatic choice for the one environment
+            # (development) where this matters, not a doc-specified mapping.
+            - name: MSSQL_SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.migrator }}
+                  key: MSSQL_SA_PASSWORD
+          ports:
+            - name: tds
+              containerPort: 1433
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -C -Q "SELECT 1" -b -o /dev/null'
+            periodSeconds: 10
+            failureThreshold: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$MSSQL_SA_PASSWORD" -C -Q "SELECT 1" -b -o /dev/null'
+            periodSeconds: 30
+            failureThreshold: 3
+            timeoutSeconds: 5
+          resources:
+            requests: { cpu: "1", memory: 4Gi }
+            limits: { cpu: "4", memory: 8Gi }
+          volumeMounts:
+            - name: data
+              mountPath: /var/opt/mssql
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        storageClassName: {{ .Values.storageClass }}
+        resources:
+          requests:
+            storage: {{ .Values.stores.sqlserver.storage }}
+{{- end }}

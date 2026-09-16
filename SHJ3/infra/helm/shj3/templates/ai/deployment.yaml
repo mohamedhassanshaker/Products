@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "shj3.fullname" . }}-ai
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-ai") | nindent 4 }}
+spec:
+  {{- if not .Values.ai.hpa.enabled }}
+  replicas: {{ .Values.ai.replicas }}
+  {{- end }}
+  # §7.6: a new pod becomes Ready before an old one is touched — capacity
+  # never dips mid-rollout, which matters because in-flight conversation
+  # turns are exactly what the preStop sequence below protects.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      {{- include "shj3.selectorLabels" (dict "root" $ "component" "shj3-ai") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "shj3.labels" (dict "root" $ "component" "shj3-ai") | nindent 8 }}
+      annotations:
+        checksum/config: {{ include "shj3.configChecksum" (dict "context" $ "templatePath" "/config/configmap-ai.yaml") }}
+        checksum/secret: {{ include "shj3.secretChecksum" (dict "context" $ "namespace" .Release.Namespace "name" .Values.secrets.ai) }}
+        checksum/litellm: {{ include "shj3.configChecksum" (dict "context" $ "templatePath" "/config/litellm-configmap.yaml") }}
+    spec:
+      serviceAccountName: {{ include "shj3.fullname" . }}-ai
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      # §7.6 rule 4: must exceed the preStop budget (5s readiness sleep +
+      # up to 120s draining), or the kubelet SIGKILLs mid-drain and the
+      # whole mechanism is decorative.
+      terminationGracePeriodSeconds: {{ .Values.ai.terminationGracePeriodSeconds }}
+      containers:
+        - name: ai
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.ai.image.repository }}:{{ .Values.ai.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          ports:
+            - name: http
+              containerPort: {{ .Values.ai.containerPort }}
+              protocol: TCP
+            # See service.yaml's own comment: declared for consistency with
+            # the NetworkPolicy/ServiceMonitor, not yet backed by a real
+            # /metrics handler.
+            - name: metrics
+              containerPort: {{ .Values.networkPolicy.otelCollector.metricsPort }}
+              protocol: TCP
+          env:
+            - name: SHJ3_AI_ROLE
+              value: "api" # the one variable distinguishing this Deployment from shj3-worker
+          envFrom:
+            - configMapRef:
+                name: {{ include "shj3.fullname" . }}-ai-config
+            - secretRef:
+                name: {{ .Values.secrets.ai }}
+          resources:
+            {{- toYaml .Values.ai.resources | nindent 12 }}
+          # §7.4 — "the generous startup probe, called out because getting
+          # this wrong produces a restart loop that is indistinguishable
+          # from a crash". Budget: 60 x 3s = 180s > SHJ3_AI_MODEL_INIT_TIMEOUT_S
+          # (90s default), so the APPLICATION gives up and logs a diagnosable
+          # error BEFORE the PROBE gives up and restarts the container.
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 3
+            failureThreshold: 60
+            timeoutSeconds: 3
+          # Model clients ready AND active turns < ceiling (runtime_state.py).
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 3
+            timeoutSeconds: 4
+          # Rule 1: liveness NEVER points at /readyz — a dependency blip must
+          # not restart every pod simultaneously.
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 20
+            failureThreshold: 3
+            timeoutSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                # 1. Flip /readyz to 503 so the Service stops sending new
+                #    turns (kill -USR1 1 — a real signal handler for this is
+                #    B-5's job; entrypoint.py has no handler for it yet, see
+                #    this chart's own review note on that gap).
+                # 2. Sleep past the endpoint-propagation window (~5s).
+                # 3. Drain active turns, up to the configured timeout, then
+                #    let SIGTERM land.
+                command:
+                  - /bin/sh
+                  - -c
+                  - >-
+                    kill -USR1 1;
+                    sleep {{ .Values.ai.preStopReadinessSleepSeconds }};
+                    python -m shj3_ai.tools.await_drain --timeout {{ .Values.ai.preStopDrainTimeoutSeconds }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: litellm-config
+              mountPath: /etc/shj3
+              readOnly: true
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: litellm-config
+          configMap:
+            name: {{ include "shj3.fullname" . }}-litellm-config

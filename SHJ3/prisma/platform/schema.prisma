@@ -1,0 +1,873 @@
+// =====================================================================================
+//  SHJ3 — Prisma schema: PLATFORM (SQL Server)
+//  One of two schema files that together are this system's single source of truth for
+//  its relational shape (ADR-0005, ADR-0011). This file owns the `platform` schema — the
+//  23 genuinely global models (§3.2): tenant registry, provisioning steps, migration
+//  status, staff accounts and credentials, code-referenced key tables (Permissions,
+//  Policies, OverridablePolicies, Environments, Locales), the platform audit log, the
+//  vector-collection registry, the system-default theme and the Phase F user guide.
+//  Its sibling is prisma/tenant/schema.prisma — the tenant_template models. Read
+//  ADR-0011 before touching either file.
+//  Spec: docs/data-model.md — §1 conventions, §3 tenancy keys, §4 entity catalogue,
+//        §10 retention, §13 entity counts. Follow the spec, not intuition.
+// =====================================================================================
+//
+//  WHY TWO FILES, NOT ONE (ADR-0011 — supersedes ADR-0010's amendment of ADR-0005)
+//  ------------------------------------------------------------------------------------
+//  `platform` is ONE real, fixed, always-present schema — exactly the case Prisma's
+//  `multiSchema` preview feature is designed for, so THIS file keeps `@@schema("platform")`
+//  and `multiSchema`, unchanged from before the split (ADR-0011 point 2: "moved as-is").
+//  `prisma/tenant/schema.prisma` cannot use the same mechanism: `multiSchema` resolves
+//  `@@schema()` to a literal schema name at `prisma generate` time, identical for every
+//  generated-client instance regardless of its connection string — fatal for a model set
+//  that must address N *dynamically created* tenant schemas, one per connection, chosen
+//  at runtime. Splitting the file in two, with `multiSchema` kept only here, is what makes
+//  `getTenantDb()` (`tenant-db.ts`) work correctly: proven directly against a live
+//  database that plain connection-string `schema=` routing IS correct for both reads and
+//  writes once `multiSchema` is out of the way (ADR-0011's `probea`/`probeb` experiment).
+//  ADR-0010's raw-SQL alternative is superseded; do not implement it.
+//
+//  CROSS-SCHEMA REFERENCES FROM tenant_template
+//  ------------------------------------------------------------------------------------
+//  Five relationships cross the platform/tenant boundary: `Environment.deployments`,
+//  `Permission.rolePermissions`, `OverridablePolicy.policySettings`,
+//  `OverridablePolicy.policyOverrides`, `Locale.localeSettings`. Prisma cannot express a
+//  `@relation` across two separately generated clients, so the *tenant* side of each is a
+//  plain scalar foreign-key field in prisma/tenant/schema.prisma (e.g.
+//  `RolePermission.permissionKey`), not a modeled relation — and correspondingly THIS file
+//  carries no back-relation array field for any of the five (no `Environment.deployments`,
+//  etc.). A query needing both sides performs two reads — one via `getPlatformDb()`, one
+//  via `getTenantDb()` — and joins in application code. The underlying SQL Server FOREIGN
+//  KEY constraints are unaffected by any of this: they are hand-written, idempotent DDL in
+//  `prisma/sql/001_constraints.sql` (ADR-0011), not Prisma-managed, so referential
+//  integrity never depended on either schema file declaring the relation.
+//
+//  ------------------------------------------------------------------------------------
+//  CONVENTIONS (§1) — applied without exception, identically in both schema files
+//  ------------------------------------------------------------------------------------
+//  * Model names are PascalCase singular; `@@map` gives the PascalCase-plural table
+//    name (§1.1). Columns are camelCase singular and carry NO `@map`, so the generated
+//    SQLAlchemy attributes mirror the column names character-for-character and the
+//    pre-commit drift check (ADR-0005 §4) is trivially total.
+//  * Ids are ULIDs stored as `CHAR(26)` (`Latin1_General_100_BIN2`), generated
+//    client-side in both runtimes, clustered primary key (§1.2). `autoincrement()` is
+//    NOT used for entity ids — see §1.2's rejection of `INT IDENTITY`. Four tables use
+//    a code-referenced natural key instead: `Permissions.key`, `Policies.policyKey`,
+//    `Environments.key`, `Locales.code`.
+//  * Every `…At` column is `DATETIME2`, always UTC, and `createdAt` / `updatedAt` are
+//    always set by the application — no database-side default, because two runtimes plus
+//    a clock-sensitive audit log must have exactly one clock source (§1.3). §1.3 also
+//    fixes the precision at `(3)`: Prisma's `@db.DateTime2` takes no precision argument,
+//    so the millisecond precision is applied by a single set-based `ALTER COLUMN` loop
+//    over `sys.columns` in `prisma/sql/001_constraints.sql` rather than being restated on
+//    ~500 fields. Wall-clock business data is `TIME` (working hours, quiet hours) plus an
+//    IANA zone column, never converted to UTC at rest.
+//  * Soft delete is NOT uniform (§1.4). `deletedAt` (or `removedAt`) exists if and only
+//    if a historical record or an audit entry can point at the row. Configuration leaves
+//    and join rows are hard-deleted. Append-only ledgers are never deleted.
+//  * NO Prisma `enum` and NO Prisma `Json`: the SQL Server connector supports neither
+//    (§1.5). Closed sets are `VarChar(32)`-style columns whose permitted values are
+//    asserted by a generated `CK_<Table>_<column>` CHECK constraint; JSON payloads are
+//    `NVarChar(Max)` with `CK_<Table>_<col>_isJson`. Both live in
+//    `prisma/sql/001_constraints.sql`, emitted from `packages/contracts/src/enums.ts`.
+//
+//  ------------------------------------------------------------------------------------
+//  WHAT THIS FILE CANNOT SAY — and where it is said instead
+//  ------------------------------------------------------------------------------------
+//  Prisma's SQL Server connector cannot declare CHECK constraints, filtered/partial
+//  indexes, computed/PERSISTED columns, triggers, views or GRANTs. data-model.md
+//  specifies many of each and they carry real business rules. Every one of them is
+//  hand-written T-SQL in `prisma/sql/001_constraints.sql`, idempotent, applied to
+//  `platform` once and to each tenant schema N times with `{{SCHEMA}}` substituted. Where
+//  a rule left this file, the owning model or field carries a `///` doc comment naming the
+//  constraint and the file. A reader of this schema must never conclude a rule is absent —
+//  it is elsewhere, by necessity, and it is named.
+// =====================================================================================
+
+generator client {
+  provider = "prisma-client-js"
+  // Distinct from tenant/schema.prisma's client — two schema files, two generators, two
+  // generated clients (ADR-0011). Output kept outside src/ and outside node_modules'
+  // implicit default location, because that default can only serve one generated client
+  // per project; both are named explicitly and gitignored (never committed — regenerated
+  // by `pnpm db:generate`).
+  output   = "../generated/platform-client"
+  // multiSchema needs no preview flag from Prisma 6.x — declaring it emits a
+  // deprecation warning on every command, and a build that always warns is a
+  // build whose warnings stop being read.
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+  schemas  = ["platform"]
+}
+
+// #####################################################################################
+// #                                                                                   #
+// #   PLATFORM SCHEMA — genuinely global (§3.2). 23 models.                           #
+// #                                                                                   #
+// #####################################################################################
+
+// -------------------------------------------------------------------------------------
+// platform · 4.1 tenancy substrate
+// -------------------------------------------------------------------------------------
+
+/// The registry (§3.2 #1). The only place the four isolation-unit names are decided,
+/// and what the tenant resolver reads to turn an authenticated principal into a schema
+/// name, a Neo4j tenant label, a Qdrant collection and a Redis prefix.
+///
+/// Constraints in `prisma/sql/001_constraints.sql`:
+/// `CK_Tenants_slugPattern` (slug matches `^[a-z][a-z0-9_]{2,29}$` and is not a
+/// reserved slug — closes the injection path of ADR-0002 rule 4),
+/// `CK_Tenants_status`, and `CK_Tenants_derivedNames` which asserts
+/// `sqlSchema = slug AND redisPrefix = slug AND neo4jTenantLabel = 'Tenant_' + slug` —
+/// the isolation-unit names are *derived*, never typed. `TR_Tenants_syncProfiles`
+/// mirrors the row into each tenant's `TenantProfiles`, and
+/// `TR_Tenants_activationRequiresFourSteps` blocks activation until all four
+/// provisioning steps are `Completed` (ADR-0002 rule 6).
+model Tenant {
+  id               String    @id @db.Char(26)
+  slug             String    @unique(map: "UQ_Tenants_slug") @db.VarChar(30)
+  displayName      String    @db.NVarChar(200)
+  /// `GovernmentEntity` | `PlatformOperator`.
+  entityKind       String    @db.VarChar(32)
+  sqlSchema        String    @db.VarChar(30)
+  /// ADR-0009: one shared Neo4j Community database, logically partitioned. This is a
+  /// LABEL (`Tenant_<slug>`), not a database name — `VARCHAR(38)` because `Tenant_`
+  /// plus a 30-character slug is 37.
+  neo4jTenantLabel String    @unique(map: "UQ_Tenants_neo4jTenantLabel") @db.VarChar(38)
+  qdrantCollection String    @unique(map: "UQ_Tenants_qdrantCollection") @db.VarChar(63)
+  redisPrefix      String    @db.VarChar(30)
+  dataResidency    String    @db.VarChar(32)
+  /// `Provisioning` | `Active` | `Suspended` | `Deprovisioning` | `Deprovisioned` | `Failed`.
+  /// `Failed` is distinct from `Deprovisioned`: a row never reaches `Active` before
+  /// landing here (ProvisionTenant's compensating rollback after a mid-provisioning
+  /// failure — architecture.md §5, ADR-0002 rule 6), so it carries no `activatedAt`
+  /// and blocks its slug from reuse without implying the tenant was ever live.
+  /// Added after CK_Tenants_status originally omitted it — found running the real
+  /// provisioning rollback path against a live database.
+  status           String    @db.VarChar(24)
+  activatedAt      DateTime? @db.DateTime2
+  suspendedAt      DateTime? @db.DateTime2
+  deprovisionedAt  DateTime? @db.DateTime2
+  createdAt        DateTime  @db.DateTime2
+  updatedAt        DateTime  @updatedAt @db.DateTime2
+
+  provisioningSteps TenantProvisioningStep[]
+  migrations        TenantMigration[]
+  memberships       TenantMembership[]
+  vectorCollections VectorCollectionRegistryEntry[]
+  homeStaffUsers    StaffUser[]                     @relation("StaffUserHomeTenant")
+  platformAuditLog  PlatformAuditLogEntry[]
+  erasureRequests   PlatformErasureRequest[]
+
+  @@map("Tenants")
+  @@schema("platform")
+}
+
+/// Proves the four-store provisioning of a tenant was atomic, or records which store
+/// failed (§3.2 #2). Exactly four rows per tenant — one per store — which is what makes
+/// ADR-0002 rule 6 ("a half-provisioned tenant is the one state where isolation
+/// reasoning breaks down") checkable. The record must survive a rollback that drops the
+/// tenant schema, so it cannot live inside one.
+///
+/// `CK_TenantProvisioningSteps_store` and `_state` in `prisma/sql/001_constraints.sql`.
+model TenantProvisioningStep {
+  id           String    @id @db.Char(26)
+  tenantId     String    @db.Char(26)
+  /// `SqlServer` | `Neo4j` | `Qdrant` | `Redis`. For `Neo4j` this records "created the
+  /// tenant's graph constraints and per-label indexes" (ADR-0009), not "created the
+  /// database"; rollback is a batched label delete, not `DROP DATABASE`.
+  store        String    @db.VarChar(16)
+  state        String    @db.VarChar(16)
+  attemptCount Int
+  startedAt    DateTime? @db.DateTime2
+  completedAt  DateTime? @db.DateTime2
+  rolledBackAt DateTime? @db.DateTime2
+  lastError    String?   @db.NVarChar(2000)
+  createdAt    DateTime  @db.DateTime2
+  updatedAt    DateTime  @updatedAt @db.DateTime2
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([tenantId, store], map: "UQ_TenantProvisioningSteps_tenantId_store")
+  @@map("TenantProvisioningSteps")
+  @@schema("platform")
+}
+
+/// Per-tenant migration status; what makes the N× run resumable (ADR-0005 §2). Status
+/// inside the schema being migrated would be unreadable in exactly the failure case it
+/// exists for, which is why it is global (§3.2 #3).
+///
+/// `CK_TenantMigrations_state` and
+/// `CK_TenantMigrations_appliedHasTime CHECK (state <> 'Applied' OR appliedAt IS NOT NULL)`
+/// live in `prisma/sql/001_constraints.sql`.
+model TenantMigration {
+  id             String    @id @db.Char(26)
+  tenantId       String    @db.Char(26)
+  migrationName  String    @db.VarChar(200)
+  checksum       String    @db.Char(64)
+  /// `Pending` | `Applied` | `Failed` | `Skipped`.
+  state          String    @db.VarChar(16)
+  migrationRunId String?   @db.Char(26)
+  appliedAt      DateTime? @db.DateTime2
+  durationMs     Int?
+  error          String?   @db.NVarChar(Max)
+  createdAt      DateTime  @db.DateTime2
+  updatedAt      DateTime  @updatedAt @db.DateTime2
+
+  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  migrationRun MigrationRun? @relation(fields: [migrationRunId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([tenantId, migrationName], map: "UQ_TenantMigrations_tenantId_migrationName")
+  @@index([state, tenantId], map: "IX_TenantMigrations_state_tenantId")
+  @@map("TenantMigrations")
+  @@schema("platform")
+}
+
+/// One orchestration pass over the tenant registry (ADR-0005 §2). `resumedFromRunId` is
+/// what makes "resume a partially applied N-tenant migration" a first-class record
+/// rather than a runbook step.
+///
+/// `CK_MigrationRuns_json` (`ISJSON(migrationNamesJson) = 1`) and `CK_MigrationRuns_state`
+/// live in `prisma/sql/001_constraints.sql`.
+model MigrationRun {
+  id                     String    @id @db.Char(26)
+  migrationNamesJson     String    @db.NVarChar(Max)
+  initiatedByStaffUserId String    @db.Char(26)
+  state                  String    @db.VarChar(16)
+  tenantsTotal           Int
+  tenantsApplied         Int
+  tenantsFailed          Int
+  startedAt              DateTime  @db.DateTime2
+  finishedAt             DateTime? @db.DateTime2
+  resumedFromRunId       String?   @db.Char(26)
+  createdAt              DateTime  @db.DateTime2
+  updatedAt              DateTime  @updatedAt @db.DateTime2
+
+  initiatedBy      StaffUser         @relation("MigrationRunInitiator", fields: [initiatedByStaffUserId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  resumedFrom      MigrationRun?     @relation("MigrationRunResume", fields: [resumedFromRunId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  resumedBy        MigrationRun[]    @relation("MigrationRunResume")
+  tenantMigrations TenantMigration[]
+
+  @@index([state, startedAt], map: "IX_MigrationRuns_state_startedAt")
+  @@map("MigrationRuns")
+  @@schema("platform")
+}
+
+/// The promotion chain, mirroring the Kubernetes namespaces of architecture §12
+/// (§3.2 #9). Code-referenced natural key, seeded by migration: `development`, `uat`,
+/// `production`. The per-tenant half — which version sits in which environment — is
+/// `tenant_template.VersionDeployments`.
+///
+/// In `prisma/sql/001_constraints.sql`:
+/// `UQ_Environments_isLive ... WHERE isLive = 1` (filtered — exactly one live
+/// environment), `CK_Environments_noSelfPromotion CHECK (promotesToKey <> [key])`, and
+/// `CK_Environments_terminalIsLive CHECK ((promotesToKey IS NULL) = (isLive = 1))`.
+model Environment {
+  /// `development` | `uat` | `production`. A legible key, because
+  /// `PromotionRequests.toEnvironmentKey` is compared in code and a ULID in source is a
+  /// bug waiting to be pasted wrong (§1.2).
+  key           String   @id @db.VarChar(16)
+  displayName   String   @db.NVarChar(200)
+  ordinal       Int      @unique(map: "UQ_Environments_ordinal") @db.TinyInt
+  promotesToKey String?  @db.VarChar(16)
+  isLive        Boolean
+  createdAt     DateTime @db.DateTime2
+  updatedAt     DateTime @updatedAt @db.DateTime2
+
+  promotesTo   Environment?  @relation("EnvironmentChain", fields: [promotesToKey], references: [key], onDelete: NoAction, onUpdate: NoAction)
+  promotedFrom Environment[] @relation("EnvironmentChain")
+  /// No `VersionDeployment[]` back-relation: `VersionDeployment` lives in
+  /// prisma/tenant/schema.prisma, a separate generated client (ADR-0011). See
+  /// `VersionDeployment.environmentKey` there for the scalar FK side of this reference.
+
+  @@map("Environments")
+  @@schema("platform")
+}
+
+/// The 8 code-enforced permissions of B9 tab 3 (§3.2 #7). Seeded by migration and not
+/// admin-editable: a permission with no enforcement point is a lie in a matrix. `Roles`
+/// and `RolePermissions` are per-tenant, which is what makes B9's **+ Add custom role**
+/// work.
+model Permission {
+  key         String   @id @db.VarChar(64)
+  displayName String   @db.NVarChar(200)
+  moduleKey   String   @db.VarChar(32)
+  /// `UQ_Permissions_ordinal` fixes the column order of B9's 7×8 matrix.
+  ordinal     Int      @unique(map: "UQ_Permissions_ordinal") @db.TinyInt
+  description String   @db.NVarChar(1000)
+  createdAt   DateTime @db.DateTime2
+  updatedAt   DateTime @updatedAt @db.DateTime2
+
+  /// No `RolePermission[]` back-relation: `RolePermission` lives in
+  /// prisma/tenant/schema.prisma, a separate generated client (ADR-0011). See
+  /// `RolePermission.permissionKey` there for the scalar FK side of this reference.
+
+  @@map("Permissions")
+  @@schema("platform")
+}
+
+/// The B12 tab 1 policy catalogue including the `isLocked` platform floor (§3.4).
+/// "Locked policies cannot be toggled or overridden by any role — the platform floor is
+/// not negotiable per entity." A floor each tenant stores its own copy of is not a
+/// floor, so it is global.
+///
+/// In `prisma/sql/001_constraints.sql`: `CK_Policies_kind CHECK (kind IN
+/// ('Boolean','Threshold','Enum'))`, `CK_Policies_defaultValueJson_isJson`,
+/// `CK_Policies_floorValueJson_isJson`, `CK_Policies_appliesTo`, and
+/// `TR_Policies_syncOverridable` — which keeps `OverridablePolicies` honest: inserting a
+/// policy with `isLocked = 0` inserts the key, flipping to 1 deletes it (cascading every
+/// tenant override away, the correct behaviour), flipping back to 0 re-inserts it.
+model Policy {
+  policyKey        String   @id @db.VarChar(64)
+  title            String   @db.NVarChar(200)
+  detail           String   @db.NVarChar(1000)
+  /// `Boolean` | `Threshold` | `Enum`.
+  kind             String   @db.VarChar(32)
+  defaultValueJson String   @db.NVarChar(Max)
+  /// The strictest value an override may take. `TR_PolicyOverrides_respectFloor` reads it.
+  floorValueJson   String?  @db.NVarChar(Max)
+  isLocked         Boolean
+  /// `Runtime` | `Storage`.
+  appliesTo        String   @db.VarChar(32)
+  createdAt        DateTime @db.DateTime2
+  updatedAt        DateTime @updatedAt @db.DateTime2
+
+  overridable OverridablePolicy?
+
+  @@map("Policies")
+  @@schema("platform")
+}
+
+/// The unlocked subset of `Policies`. **Existence in this table IS the permission to
+/// override** (§3.4). Maintained by `TR_Policies_syncOverridable`; contains a row only
+/// where `Policies.isLocked = 0`.
+///
+/// Every tenant's `PolicySettings` and `PolicyOverrides` foreign-key here and NOT into
+/// `Policies`, so an attempt to store a tenant toggle or per-agent override for a locked
+/// policy (B12's `mask_pii_in_transcripts`, `prompt_injection_filter`) fails at the
+/// database — there is no row to point at. Super Admin included; a grant cannot conjure
+/// a parent row.
+model OverridablePolicy {
+  policyKey String   @id @db.VarChar(64)
+  createdAt DateTime @db.DateTime2
+  updatedAt DateTime @updatedAt @db.DateTime2
+
+  policy Policy @relation(fields: [policyKey], references: [policyKey], onDelete: Cascade, onUpdate: NoAction)
+  /// No `PolicySetting[]` / `PolicyOverride[]` back-relations: both models live in
+  /// prisma/tenant/schema.prisma, a separate generated client (ADR-0011). See
+  /// `PolicySetting.policyKey` and `PolicyOverride.policyKey` there for the scalar FK
+  /// side of these references.
+
+  @@map("OverridablePolicies")
+  @@schema("platform")
+}
+
+/// Locale reference catalogue (§3.2 #10): BCP-47 code, English/native name, direction,
+/// default TTS voice. Direction is a property of the language, not of a tenant's opinion
+/// of it. The per-tenant half — enabled, translated %, fallback, voice override — is
+/// `tenant_template.LocaleSettings`.
+///
+/// `CK_Locales_direction CHECK (direction IN ('LTR','RTL'))` and
+/// `CK_Locales_codePattern` live in `prisma/sql/001_constraints.sql`.
+model Locale {
+  code                  String   @id @db.VarChar(16)
+  englishName           String   @db.NVarChar(200)
+  nativeName            String   @db.NVarChar(200)
+  /// `LTR` | `RTL`.
+  direction             String   @db.VarChar(3)
+  defaultVoiceName      String?  @db.NVarChar(80)
+  isEnabledPlatformWide Boolean
+  createdAt             DateTime @db.DateTime2
+  updatedAt             DateTime @updatedAt @db.DateTime2
+
+  /// No `LocaleSetting[]` back-relation: `LocaleSetting` lives in
+  /// prisma/tenant/schema.prisma, a separate generated client (ADR-0011). See
+  /// `LocaleSetting.localeCode` there for the scalar FK side of this reference.
+
+  @@map("Locales")
+  @@schema("platform")
+}
+
+/// Which embedding model and dimension produced each tenant collection (§3.2 #12, §7).
+/// Read by the provisioning path and the re-index orchestrator, both of which operate on
+/// collections whose tenant may be mid-provision or mid-rebuild — so it cannot live
+/// inside a tenant schema. Also the one place a mixed-model collection is detectable
+/// platform-wide.
+///
+/// In `prisma/sql/001_constraints.sql`:
+/// `UQ_VectorCollectionRegistry_tenantId_active ... WHERE state = 'Active'` (filtered —
+/// a tenant has exactly one live collection),
+/// `CK_VectorCollectionRegistry_dimension CHECK (embeddingDimension IN (1536, 3072))`,
+/// `CK_VectorCollectionRegistry_state`, `CK_VectorCollectionRegistry_distance`.
+model VectorCollectionRegistryEntry {
+  id                 String    @id @db.Char(26)
+  tenantId           String    @db.Char(26)
+  collectionName     String    @unique(map: "UQ_VectorCollectionRegistry_collectionName") @db.VarChar(63)
+  aliasName          String    @db.VarChar(63)
+  embeddingModel     String    @db.VarChar(64)
+  embeddingDimension Int
+  distance           String    @db.VarChar(16)
+  pointCount         BigInt
+  lastFullReindexAt  DateTime? @db.DateTime2
+  /// `Building` | `Active` | `Retiring` | `Retired`.
+  state              String    @db.VarChar(16)
+  createdAt          DateTime  @db.DateTime2
+  updatedAt          DateTime  @updatedAt @db.DateTime2
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("VectorCollectionRegistry")
+  @@schema("platform")
+}
+
+/// Cross-tenant, pre-tenant and post-tenant audit (§3.3). Three reasons it exists
+/// separately from `<tenant>.AuditLogEntries`: a cross-tenant action has no single
+/// schema to belong to; authentication events precede tenant binding; and the erasure
+/// record must outlive the data — if the proof of completeness were written into the
+/// tenant schema, the last step of the operation would destroy the evidence that the
+/// operation was performed.
+///
+/// **Append-only.** In `prisma/sql/001_constraints.sql`:
+/// `DENY UPDATE, DELETE ... TO PUBLIC`, `TR_PlatformAuditLogEntries_blockMutation`
+/// (covers a `db_owner` session the grants do not constrain), and the `prevHash` /
+/// `entryHash` chain that makes an out-of-band mutation *detectable* rather than merely
+/// forbidden. Clustered on `(occurredAt, id)`, so the primary key is non-clustered.
+model PlatformAuditLogEntry {
+  id                       String   @id(map: "PK_PlatformAuditLogEntries", clustered: false) @db.Char(26)
+  occurredAt               DateTime @db.DateTime2
+  actorStaffUserId         String?  @db.Char(26)
+  /// Denormalised so the entry stays legible after the account is removed (§4.13).
+  actorDisplayNameSnapshot String   @db.NVarChar(200)
+  actorRoleSnapshot        String   @db.NVarChar(120)
+  action                   String   @db.VarChar(64)
+  targetKind               String   @db.VarChar(48)
+  targetId                 String?  @db.Char(26)
+  targetLabelSnapshot      String   @db.NVarChar(300)
+  environmentKey           String?  @db.VarChar(16)
+  beforeJson               String?  @db.NVarChar(Max)
+  afterJson                String?  @db.NVarChar(Max)
+  summary                  String   @db.NVarChar(500)
+  correlationId            String   @db.Char(26)
+  requestId                String?  @db.Char(26)
+  ipHash                   String?  @db.Char(64)
+  userAgentHash            String?  @db.Char(64)
+  /// Chain position. `IDENTITY`, unlike entity ids (§1.2), because the chain needs a
+  /// gapless monotone sequence the database issues.
+  sequenceNo               BigInt   @unique(map: "UQ_PlatformAuditLogEntries_sequenceNo") @default(autoincrement())
+  prevHash                 String?  @db.Char(64)
+  entryHash                String   @db.Char(64)
+  /// NULL for a pre-tenant or genuinely cross-tenant action.
+  tenantId                 String?  @db.Char(26)
+  /// Frozen slug, so the entry survives the tenant's deprovisioning.
+  tenantSlugSnapshot       String?  @db.NVarChar(30)
+  createdAt                DateTime @db.DateTime2
+  updatedAt                DateTime @updatedAt @db.DateTime2
+
+  actor  StaffUser? @relation("PlatformAuditLogActor", fields: [actorStaffUserId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tenant Tenant?    @relation(fields: [tenantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([occurredAt, id], map: "IX_PlatformAuditLogEntries_occurredAt_id", clustered: true)
+  @@index([actorStaffUserId, occurredAt], map: "IX_PlatformAuditLogEntries_actor_occurredAt")
+  @@index([action, occurredAt], map: "IX_PlatformAuditLogEntries_action_occurredAt")
+  @@index([targetKind, targetId], map: "IX_PlatformAuditLogEntries_targetKind_targetId")
+  @@map("PlatformAuditLogEntries")
+  @@schema("platform")
+}
+
+/// The platform-side erasure record (§3.3, §10.4). In the tenant-erasure case the tenant
+/// schema that would hold the proof no longer exists at the moment the operation
+/// succeeds, so the proof of erasure — the one record that must outlive the data it
+/// describes — is written here alongside `PlatformAuditLogEntries`.
+/// `verificationEvidenceJson` carries the per-store queries and their zero results, plus
+/// the `Transactions` count deliberately NOT erased with FR-PAY-08 cited as the
+/// statutory obligation (FR-GOV-22).
+///
+/// `CK_PlatformErasureRequests_status`, `_rejectedHasReason` and
+/// `_verificationEvidenceJson_isJson` live in `prisma/sql/001_constraints.sql`.
+model PlatformErasureRequest {
+  id                       String    @id @db.Char(26)
+  /// `Tenant` | `CitizenIdentity` | `ContactHash`.
+  subjectKind              String    @db.VarChar(24)
+  subjectHash              String    @db.Char(64)
+  tenantId                 String?   @db.Char(26)
+  tenantSlugSnapshot       String?   @db.NVarChar(30)
+  receivedVia              String    @db.VarChar(32)
+  requestedAt              DateTime  @db.DateTime2
+  /// `Received` | `InProgress` | `Completed` | `Rejected`.
+  status                   String    @db.VarChar(16)
+  rejectionReason          String?   @db.NVarChar(500)
+  completedAt              DateTime? @db.DateTime2
+  verificationEvidenceJson String?   @db.NVarChar(Max)
+  createdAt                DateTime  @db.DateTime2
+  updatedAt                DateTime  @updatedAt @db.DateTime2
+
+  tenant Tenant? @relation(fields: [tenantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([status, requestedAt], map: "IX_PlatformErasureRequests_status_requestedAt")
+  @@map("ErasureRequests")
+  @@schema("platform")
+}
+
+// -------------------------------------------------------------------------------------
+// platform · 4.2 iam — the three global tables
+// -------------------------------------------------------------------------------------
+
+/// Backoffice account identity (§3.2 #4). Global because **authentication happens before
+/// the tenant is known**: a staff member logs in with an email and a password and the
+/// system must find that account with no tenant context. Email is also globally unique
+/// across the backoffice, which a per-tenant users table cannot enforce, and a user is
+/// movable between entities — moving a membership row is an update, moving a row between
+/// schemas is a migration.
+///
+/// In `prisma/sql/001_constraints.sql`:
+/// `UQ_StaffUsers_email ... WHERE deletedAt IS NULL` (filtered, so a soft-deleted account
+/// frees its address), `CK_StaffUsers_status CHECK (status IN
+/// ('Invited','Active','Suspended'))`, and
+/// `CK_StaffUsers_invitedHasNoLogin CHECK (status <> 'Invited' OR lastLoginAt IS NULL)`.
+model StaffUser {
+  id                   String    @id @db.Char(26)
+  /// Stored lowercased.
+  email                String    @db.NVarChar(320)
+  displayName          String    @db.NVarChar(200)
+  /// `Invited` | `Active` | `Suspended` — a status transition, never a deletion (§1.4).
+  status               String    @db.VarChar(16)
+  homeTenantId         String    @db.Char(26)
+  invitedByStaffUserId String?   @db.Char(26)
+  invitedAt            DateTime? @db.DateTime2
+  acceptedAt           DateTime? @db.DateTime2
+  lastLoginAt          DateTime? @db.DateTime2
+  /// Bumped to invalidate every live session for this principal.
+  sessionEpoch         Int       @default(0)
+  deletedAt            DateTime? @db.DateTime2
+  createdAt            DateTime  @db.DateTime2
+  updatedAt            DateTime  @updatedAt @db.DateTime2
+
+  homeTenant           Tenant                  @relation("StaffUserHomeTenant", fields: [homeTenantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  invitedBy            StaffUser?              @relation("StaffUserInviter", fields: [invitedByStaffUserId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  invitees             StaffUser[]             @relation("StaffUserInviter")
+  credential           StaffCredential?
+  memberships          TenantMembership[]      @relation("TenantMembershipMember")
+  membershipsGranted   TenantMembership[]      @relation("TenantMembershipGrantor")
+  migrationRunsStarted MigrationRun[]          @relation("MigrationRunInitiator")
+  platformAuditEntries PlatformAuditLogEntry[] @relation("PlatformAuditLogActor")
+  guideEntriesUpdated  GuideEntry[]            @relation("GuideEntryEditor")
+  platformSkinsCreated PlatformSkin[]          @relation("PlatformSkinAuthor")
+
+  @@index([status], map: "IX_StaffUsers_status")
+  @@map("StaffUsers")
+  @@schema("platform")
+}
+
+/// Secrets, split from `StaffUsers` into their own table so they carry their own,
+/// narrower grant (§3.2 #5). Argon2id hashes, TOTP secrets and lockout counters are
+/// readable by the auth adapter's database role and by nothing else — which means a
+/// per-tenant export or an entity-admin-facing user listing *physically cannot* include
+/// them, rather than relying on a column projection someone must remember to write.
+///
+/// In `prisma/sql/001_constraints.sql`:
+/// `CK_StaffCredentials_algorithm CHECK (passwordAlgorithm = 'argon2id')` and the
+/// `DENY SELECT ... TO PUBLIC` / narrow `GRANT` pair.
+model StaffCredential {
+  /// PK **and** FK — 1:1 with `StaffUsers`, no surrogate id.
+  staffUserId        String    @id @db.Char(26)
+  passwordHash       String    @db.NVarChar(255)
+  passwordAlgorithm  String    @default("argon2id") @db.VarChar(24)
+  passwordUpdatedAt  DateTime  @db.DateTime2
+  mustChangePassword Boolean
+  /// Envelope-encrypted; the key lives in config/env only (architecture §10).
+  totpSecretCipher   Bytes?    @db.VarBinary(512)
+  totpEnrolledAt     DateTime? @db.DateTime2
+  failedAttemptCount Int       @db.TinyInt
+  lockedUntil        DateTime? @db.DateTime2
+  createdAt          DateTime  @db.DateTime2
+  updatedAt          DateTime  @updatedAt @db.DateTime2
+
+  staffUser StaffUser @relation(fields: [staffUserId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("StaffCredentials")
+  @@schema("platform")
+}
+
+/// The set of tenants a principal may resolve into (§3.2 #6). Read at login — i.e.
+/// pre-tenant-binding — to decide which schema the session may bind to. If this lived
+/// per-tenant, deciding whether a user may enter tenant B would require reading tenant
+/// B's schema, which is the very thing being authorised.
+///
+/// In `prisma/sql/001_constraints.sql`:
+/// `UQ_TenantMemberships_primary (staffUserId) WHERE isPrimary = 1 AND revokedAt IS NULL`
+/// — exactly one home tenant per live principal.
+model TenantMembership {
+  id                   String    @id @db.Char(26)
+  staffUserId          String    @db.Char(26)
+  tenantId             String    @db.Char(26)
+  isPrimary            Boolean
+  grantedByStaffUserId String    @db.Char(26)
+  grantedAt            DateTime  @db.DateTime2
+  revokedAt            DateTime? @db.DateTime2
+  createdAt            DateTime  @db.DateTime2
+  updatedAt            DateTime  @updatedAt @db.DateTime2
+
+  staffUser StaffUser @relation("TenantMembershipMember", fields: [staffUserId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  grantedBy StaffUser @relation("TenantMembershipGrantor", fields: [grantedByStaffUserId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([staffUserId, tenantId], map: "UQ_TenantMemberships_staffUserId_tenantId")
+  @@index([tenantId], map: "IX_TenantMemberships_tenantId")
+  @@map("TenantMemberships")
+  @@schema("platform")
+}
+
+// -------------------------------------------------------------------------------------
+// platform · 4.16 theming — the terminal fallback tier only
+// -------------------------------------------------------------------------------------
+
+/// The `kind = 'SystemDefault'` token sets (§3.2 #13). ADR-0007's resolution order is
+/// `user preference → tenant theme → system default`; the system default is the terminal
+/// fallback and must exist before any tenant does, because it is what the
+/// tenant-provisioning screen itself renders with. Tenant and user skins live in
+/// `tenant_template.TokenSets`.
+///
+/// In `prisma/sql/001_constraints.sql`:
+/// `UQ_TokenSets_kind_mode ... WHERE kind = 'SystemDefault'` (exactly one light and one
+/// dark), `CK_TokenSets_tokensJson_isJson`,
+/// `CK_TokenSets_noPrimitiveLeak CHECK (tokensJson NOT LIKE '%--shj3-%')` (a token set
+/// may set only *semantic* tokens — ADR-0007's three-layer contract), and
+/// `CK_TokenSets_contrastGate` requiring `contrastValidatedAt` on any live row.
+model PlatformTokenSet {
+  id                  String    @id @db.Char(26)
+  name                String    @db.NVarChar(160)
+  /// `SystemDefault` here by construction; the enum is shared with the tenant table.
+  kind                String    @db.VarChar(16)
+  /// `Light` | `Dark`.
+  mode                String    @db.VarChar(8)
+  schemaVersion       Int       @db.SmallInt
+  tokensJson          String    @db.NVarChar(Max)
+  parentTokenSetId    String?   @db.Char(26)
+  /// The contrast gate **blocks**, it does not warn (ADR-0007). An unvalidated token set
+  /// cannot be persisted at all.
+  contrastValidatedAt DateTime? @db.DateTime2
+  contrastReportJson  String?   @db.NVarChar(Max)
+  deletedAt           DateTime? @db.DateTime2
+  createdAt           DateTime  @db.DateTime2
+  updatedAt           DateTime  @updatedAt @db.DateTime2
+
+  parent   PlatformTokenSet?  @relation("PlatformTokenSetLineage", fields: [parentTokenSetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children PlatformTokenSet[] @relation("PlatformTokenSetLineage")
+  lightFor PlatformSkin[]     @relation("PlatformSkinLight")
+  darkFor  PlatformSkin[]     @relation("PlatformSkinDark")
+
+  @@index([kind, mode], map: "IX_TokenSets_kind_mode")
+  @@map("TokenSets")
+  @@schema("platform")
+}
+
+/// The two shipped skins (§3.2 #13). Named presets pairing a light and a dark token set;
+/// `isSystem` rows cannot be deleted (`TR_Skins_blockSystemDelete`), which is what keeps
+/// ADR-0007's one-click restore-to-default always available.
+///
+/// In `prisma/sql/001_constraints.sql`:
+/// `UQ_Skins_name ... WHERE deletedAt IS NULL`,
+/// `CK_Skins_modesDiffer CHECK (lightTokenSetId <> darkTokenSetId)`,
+/// `CK_Skins_status`, `TR_Skins_blockSystemDelete`.
+model PlatformSkin {
+  id                   String    @id @db.Char(26)
+  name                 String    @db.NVarChar(160)
+  description          String?   @db.NVarChar(1000)
+  lightTokenSetId      String    @db.Char(26)
+  darkTokenSetId       String    @db.Char(26)
+  isSystem             Boolean
+  /// `Draft` | `Published`.
+  status               String    @db.VarChar(12)
+  duplicatedFromSkinId String?   @db.Char(26)
+  exportSchemaVersion  Int       @db.SmallInt
+  createdByStaffUserId String?   @db.Char(26)
+  deletedAt            DateTime? @db.DateTime2
+  createdAt            DateTime  @db.DateTime2
+  updatedAt            DateTime  @updatedAt @db.DateTime2
+
+  lightTokenSet  PlatformTokenSet @relation("PlatformSkinLight", fields: [lightTokenSetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  darkTokenSet   PlatformTokenSet @relation("PlatformSkinDark", fields: [darkTokenSetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  duplicatedFrom PlatformSkin?    @relation("PlatformSkinDuplicate", fields: [duplicatedFromSkinId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  duplicates     PlatformSkin[]   @relation("PlatformSkinDuplicate")
+  createdBy      StaffUser?       @relation("PlatformSkinAuthor", fields: [createdByStaffUserId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("Skins")
+  @@schema("platform")
+}
+
+// -------------------------------------------------------------------------------------
+// platform · 4.17 userguide — Phase F. All global (§3.2 #14): the guide documents one
+// application, and the application is one release shared by every tenant. A per-tenant
+// copy would mean N screenshot sets to keep current against one UI.
+// -------------------------------------------------------------------------------------
+
+/// The side menu, mirroring real app navigation: module → submodule → page.
+///
+/// In `prisma/sql/001_constraints.sql`:
+/// `CK_GuideSections_depth CHECK (depth BETWEEN 0 AND 2)`,
+/// `CK_GuideSections_noSelfParent`, `TR_GuideSections_depthMatchesParent`.
+model GuideSection {
+  id              String   @id @db.Char(26)
+  parentSectionId String?  @db.Char(26)
+  title           String   @db.NVarChar(200)
+  slug            String   @db.VarChar(120)
+  ordinal         Int      @db.SmallInt
+  moduleKey       String?  @db.VarChar(32)
+  depth           Int      @db.TinyInt
+  isPublished     Boolean
+  createdAt       DateTime @db.DateTime2
+  updatedAt       DateTime @updatedAt @db.DateTime2
+
+  parent   GuideSection?  @relation("GuideSectionTree", fields: [parentSectionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children GuideSection[] @relation("GuideSectionTree")
+  entries  GuideEntry[]
+
+  @@unique([parentSectionId, slug], map: "UQ_GuideSections_parent_slug")
+  @@unique([parentSectionId, ordinal], map: "UQ_GuideSections_parent_ordinal")
+  @@map("GuideSections")
+  @@schema("platform")
+}
+
+/// **One entry per page in the system.** `UQ_GuideEntries_appRoute` is the Phase F
+/// maintenance rule as far as a schema can carry it: no constraint can enforce a process,
+/// but uniqueness on the route makes the route-manifest-to-guide comparison a set
+/// difference rather than a heuristic, which is what lets `GuideCoverageChecks` produce a
+/// definitive list of undocumented pages.
+///
+/// In `prisma/sql/001_constraints.sql`: `CK_GuideEntries_howToStepsJson_isJson`,
+/// `CK_GuideEntries_permissionNotesJson_isJson`,
+/// `CK_GuideEntries_appRouteAbsolute CHECK (appRoute LIKE '/%')`, `CK_GuideEntries_status`,
+/// and the full-text index on `(title, purpose, walkthroughMarkdown)` that powers the
+/// module's search.
+model GuideEntry {
+  id                   String   @id @db.Char(26)
+  guideSectionId       String   @db.Char(26)
+  slug                 String   @unique(map: "UQ_GuideEntries_slug") @db.VarChar(160)
+  title                String   @db.NVarChar(200)
+  purpose              String   @db.NVarChar(2000)
+  walkthroughMarkdown  String   @db.NVarChar(Max)
+  howToStepsJson       String   @db.NVarChar(Max)
+  permissionNotesJson  String?  @db.NVarChar(Max)
+  /// The real application route this entry documents. One entry per page, no duplicates
+  /// and no orphan second copy.
+  appRoute             String   @unique(map: "UQ_GuideEntries_appRoute") @db.NVarChar(300)
+  /// Wireframe screen reference, e.g. `B6 tab 3`.
+  screenRef            String?  @db.VarChar(24)
+  releaseVersion       String   @db.VarChar(24)
+  /// `Draft` | `Published`.
+  status               String   @db.VarChar(12)
+  updatedByStaffUserId String   @db.Char(26)
+  createdAt            DateTime @db.DateTime2
+  updatedAt            DateTime @updatedAt @db.DateTime2
+
+  section        GuideSection            @relation(fields: [guideSectionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedBy      StaffUser               @relation("GuideEntryEditor", fields: [updatedByStaffUserId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  screenshots    GuideScreenshot[]
+  translations   GuideEntryTranslation[]
+  coverageChecks GuideCoverageCheck[]
+
+  @@index([guideSectionId], map: "IX_GuideEntries_guideSectionId")
+  @@map("GuideEntries")
+  @@schema("platform")
+}
+
+/// The screenshot for a page, versioned against the app release that produced it.
+/// `TR_GuideScreenshots_markStaleOnRelease` sets `isStale` where `capturedAppVersion`
+/// falls behind the current release, and the filtered
+/// `IX_GuideScreenshots_isStale ... WHERE isStale = 1` is the review queue that makes
+/// "kept current with the UI" operable. Both live in
+/// `prisma/sql/001_constraints.sql`.
+model GuideScreenshot {
+  id                 String   @id @db.Char(26)
+  guideEntryId       String   @db.Char(26)
+  guideAssetId       String   @db.Char(26)
+  caption            String?  @db.NVarChar(300)
+  localeCode         String   @db.VarChar(16)
+  ordinal            Int      @db.SmallInt
+  capturedAt         DateTime @db.DateTime2
+  capturedAppVersion String   @db.VarChar(24)
+  isStale            Boolean
+  createdAt          DateTime @db.DateTime2
+  updatedAt          DateTime @updatedAt @db.DateTime2
+
+  entry GuideEntry @relation(fields: [guideEntryId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  asset GuideAsset @relation(fields: [guideAssetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([guideEntryId, localeCode, ordinal], map: "UQ_GuideScreenshots_entry_locale_ordinal")
+  @@map("GuideScreenshots")
+  @@schema("platform")
+}
+
+/// Screenshot binaries.
+///
+/// `CK_GuideAssets_mimeAllowed CHECK (mimeType IN ('image/png','image/webp'))` lives in
+/// `prisma/sql/001_constraints.sql`.
+model GuideAsset {
+  id         String   @id @db.Char(26)
+  fileName   String   @db.NVarChar(260)
+  mimeType   String   @db.VarChar(120)
+  byteSize   Int
+  width      Int      @db.SmallInt
+  height     Int      @db.SmallInt
+  checksum   String   @unique(map: "UQ_GuideAssets_checksum") @db.Char(64)
+  storageRef String   @db.NVarChar(500)
+  createdAt  DateTime @db.DateTime2
+  updatedAt  DateTime @updatedAt @db.DateTime2
+
+  screenshots GuideScreenshot[]
+
+  @@map("GuideAssets")
+  @@schema("platform")
+}
+
+/// EN/AR parity for the guide itself.
+///
+/// `CK_GuideEntryTranslations_state` and `_howToStepsJson_isJson` live in
+/// `prisma/sql/001_constraints.sql`.
+model GuideEntryTranslation {
+  id                  String   @id @db.Char(26)
+  guideEntryId        String   @db.Char(26)
+  localeCode          String   @db.VarChar(16)
+  title               String   @db.NVarChar(200)
+  purpose             String   @db.NVarChar(2000)
+  walkthroughMarkdown String   @db.NVarChar(Max)
+  howToStepsJson      String   @db.NVarChar(Max)
+  /// `Missing` | `Draft` | `Translated` | `Reviewed`.
+  state               String   @db.VarChar(12)
+  createdAt           DateTime @db.DateTime2
+  updatedAt           DateTime @updatedAt @db.DateTime2
+
+  entry GuideEntry @relation(fields: [guideEntryId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([guideEntryId, localeCode], map: "UQ_GuideEntryTranslations_entry_locale")
+  @@index([localeCode, state], map: "IX_GuideEntryTranslations_localeCode_state")
+  @@map("GuideEntryTranslations")
+  @@schema("platform")
+}
+
+/// The enforcement surface for the Phase F maintenance rule. Rows are produced by a
+/// route-manifest scan in pre-commit — with no CI (ADR-0008) that is the only place it
+/// can live, and a review rule with no mechanical check is a review rule that lapses.
+///
+/// The filtered `IX_GuideCoverageChecks_hasEntry ... WHERE hasEntry = 0` — the
+/// undocumented-pages queue — lives in `prisma/sql/001_constraints.sql`.
+model GuideCoverageCheck {
+  id                   String   @id @db.Char(26)
+  appRoute             String   @unique(map: "UQ_GuideCoverageChecks_appRoute") @db.NVarChar(300)
+  discoveredAt         DateTime @db.DateTime2
+  guideEntryId         String?  @db.Char(26)
+  hasEntry             Boolean
+  hasCurrentScreenshot Boolean
+  lastCheckedAt        DateTime @db.DateTime2
+  releaseVersion       String   @db.VarChar(24)
+  createdAt            DateTime @db.DateTime2
+  updatedAt            DateTime @updatedAt @db.DateTime2
+
+  entry GuideEntry? @relation(fields: [guideEntryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("GuideCoverageChecks")
+  @@schema("platform")
+}

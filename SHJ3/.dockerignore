@@ -1,0 +1,108 @@
+# SHJ3 — Docker build-context exclusions.
+#
+# ONE file at the repo root, not one per app: both `docker/web.Dockerfile` and
+# `docker/ai.Dockerfile` are built with `context: .` in docker-compose.yml (the
+# monorepo root), so a single `.dockerignore` here governs the context both
+# Dockerfiles see. Splitting this into a per-app file would need Docker's
+# `<dockerfile>.dockerignore` convention for no real benefit — every pattern
+# below is either irrelevant-but-harmless or actively wrong to ship for BOTH
+# images (e.g. apps/ai/.venv bloats web's context exactly as much as it does
+# ai's, since the context root is the same directory either way).
+#
+# Mirrors .gitignore's shape (same reasons: build artifacts, caches, local
+# venvs), plus Docker-specific additions .gitignore has no reason to carry —
+# most importantly `prisma/generated/` and every env file, both covered below
+# with the *why*, since those two are the ones that matter for correctness and
+# secrecy rather than just context size.
+
+# ---------------------------------------------------------------------------
+# Node / TypeScript build artifacts and caches
+# ---------------------------------------------------------------------------
+node_modules/
+**/node_modules/
+.pnpm-store/
+dist/
+build/
+.next/
+**/.next/
+out/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+# ---------------------------------------------------------------------------
+# Python build artifacts and caches (apps/ai)
+#
+# .venv especially: it is a Windows-built virtualenv on this dev machine (real
+# .exe launchers, Windows-path shebangs) and would be actively broken if it
+# ever reached a Linux image layer, quite apart from bloating the context.
+# ---------------------------------------------------------------------------
+**/__pycache__/
+*.py[cod]
+.venv/
+**/.venv/
+.ruff_cache/
+**/.ruff_cache/
+.pytest_cache/
+**/.pytest_cache/
+.mypy_cache/
+**/.mypy_cache/
+.import_linter_cache/
+**/.import_linter_cache/
+
+# ---------------------------------------------------------------------------
+# Generated Prisma clients (ADR-0011) — NEVER ship a host-generated client.
+#
+# Prisma's generated output embeds a native query-engine binary selected for
+# the machine `prisma generate` ran on. This repo generates on Windows during
+# local dev; the web image runs on Linux. Copying a Windows-generated client
+# into the image would ship the wrong engine binary entirely. The web
+# Dockerfile's build stage runs `prisma generate` fresh, inside Linux, from
+# the checked-in schema files — this directory must never be copied in.
+# ---------------------------------------------------------------------------
+prisma/generated/
+
+# ---------------------------------------------------------------------------
+# Secrets — never in an image layer, config/env only (CLAUDE.md rule).
+#
+# No `!.env.example` exception here unlike .gitignore's: git legitimately
+# tracks .env.example as a developer template, but nothing inside either image
+# reads it — all runtime config arrives via docker-compose's own `environment:`
+# block or a deployed environment's injected secrets, never a baked-in file.
+# ---------------------------------------------------------------------------
+.env
+.env.*
+*.pem
+*.key
+*.crt
+
+# ---------------------------------------------------------------------------
+# Test artifacts, reports, stray local logs
+# ---------------------------------------------------------------------------
+playwright-report/
+test-results/
+blob-report/
+tests/
+_ai_server.log
+
+# ---------------------------------------------------------------------------
+# Editor / OS cruft
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# ---------------------------------------------------------------------------
+# Compose bind-mount data dir (mirrors .gitignore) — never a build input.
+# ---------------------------------------------------------------------------
+docker/volumes/
+tmp/
+
+# ---------------------------------------------------------------------------
+# Repo-management directories no image needs at build or run time.
+# ---------------------------------------------------------------------------
+.git/
+.claude/
+docs/
+tasks/

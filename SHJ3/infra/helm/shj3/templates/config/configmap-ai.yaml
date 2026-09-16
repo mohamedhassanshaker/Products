@@ -1,0 +1,73 @@
+{{/*
+Non-secret configuration for shj3-ai / shj3-worker (same image, ADR-0001).
+Also unconditional — see configmap-web.yaml's own comment on why the
+version-consistency guard is invoked from here too (belt and braces: either
+ConfigMap alone is enough, both together match this repo's established
+"two independent controls" pattern, e.g. deployment.md §7.7's NetworkPolicy +
+absent-secret combo for the graph stores).
+*/}}
+{{- include "shj3.checkVersionConsistency" . -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "shj3.fullname" . }}-ai-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-ai") | nindent 4 }}
+data:
+  # Platform / common
+  SHJ3_ENVIRONMENT: {{ .Values.global.env | quote }}
+  SHJ3_RELEASE_VERSION: {{ .Chart.AppVersion | quote }}
+  SHJ3_GIT_SHA: {{ .Values.global.gitSha | default "unknown" | quote }}
+  SHJ3_LOG_LEVEL: {{ .Values.ai.logLevel | default "info" | quote }}
+  SHJ3_LOG_FORMAT: {{ .Values.ai.logFormat | default "json" | quote }}
+  SHJ3_PLATFORM_SCHEMA: {{ .Values.ai.platformSchema | default "platform" | quote }}
+  SHJ3_DATA_RESIDENCY: {{ .Values.global.residency | quote }}
+
+  # shj3-ai service (§4.2 #19-22 — role is set per-Deployment, not here, since
+  # it is the one variable distinguishing shj3-ai from shj3-worker)
+  SHJ3_AI_PORT: {{ .Values.ai.containerPort | quote }}
+  SHJ3_AI_HOST: "0.0.0.0" # container-internal bind; fronted by the Service/NetworkPolicy boundary, not exposed directly
+  SHJ3_AI_MAX_CONCURRENT_TURNS: {{ .Values.ai.maxConcurrentTurns | quote }}
+  SHJ3_AI_MODEL_INIT_TIMEOUT_S: {{ .Values.ai.modelInitTimeoutS | default "90" | quote }}
+
+  # SQL Server (§4.2 #31-33 — #30 (SHJ3_SQL_DSN, real name) is a secret)
+  SHJ3_SQL_MAX_RESIDENT_CLIENTS: {{ .Values.ai.sqlMaxResidentClients | default "32" | quote }}
+  SHJ3_SQL_POOL_IDLE_TIMEOUT_S: {{ .Values.ai.sqlPoolIdleTimeoutS | default "300" | quote }}
+  SHJ3_SQL_TLS_MODE: {{ .Values.ai.sqlTlsMode | default "require" | quote }}
+
+  # Neo4j (§4.2 #34-39 — corrected to the real SHJ3_-prefixed names;
+  # #36/NEO4J_PASSWORD is a secret, read by both this service AND the neo4j
+  # StatefulSet itself under a second, unprefixed key name — see
+  # stores/neo4j-sts.yaml's own comment)
+  SHJ3_NEO4J_URI: {{ .Values.ai.neo4jUri | default (printf "bolt://%s-neo4j:7687" (include "shj3.fullname" .)) | quote }}
+  SHJ3_NEO4J_USERNAME: {{ .Values.ai.neo4jUsername | default "neo4j" | quote }}
+  SHJ3_NEO4J_DATABASE: {{ .Values.ai.neo4jDatabase | default "neo4j" | quote }}
+  SHJ3_NEO4J_TENANT_LABEL_PREFIX: {{ .Values.ai.neo4jTenantLabelPrefix | default "Tenant_" | quote }}
+  NEO4J_MAX_POOL_SIZE: {{ .Values.ai.neo4jMaxPoolSize | default "50" | quote }}
+
+  # Qdrant (§4.2 #40-43 — corrected; #41 is a secret)
+  SHJ3_QDRANT_URL: {{ .Values.ai.qdrantUrl | default (printf "http://%s-qdrant:6333" (include "shj3.fullname" .)) | quote }}
+  QDRANT_COLLECTION_SUFFIX: {{ .Values.ai.qdrantCollectionSuffix | default "knowledge" | quote }}
+
+  # Redis (§4.2 #46 — #44/#45 are secrets, corrected name)
+  SHJ3_REDIS_KEY_NAMESPACE: {{ printf "shj3-%s" .Values.global.env | quote }}
+
+  # Model providers (§4.2 #48, #49, #51, #52, #54, #55 — corrected where
+  # confirmed; #47/#50/#53 are secrets)
+  SHJ3_OPENROUTER_BASE_URL: {{ .Values.ai.openrouterBaseUrl | default "https://openrouter.ai/api/v1" | quote }}
+  LITELLM_CONFIG_PATH: {{ .Values.ai.litellmConfigPath | default "/etc/shj3/litellm.yaml" | quote }}
+  SHJ3_OPENAI_EMBEDDING_MODEL: {{ .Values.ai.openaiEmbeddingModel | default "text-embedding-3-large" | quote }}
+  SHJ3_OPENAI_EMBEDDING_DIM: {{ .Values.ai.openaiEmbeddingDim | default "3072" | quote }}
+  SHJ3_COHERE_RERANK_MODEL: {{ .Values.ai.cohereRerankModel | default "rerank-v3.5" | quote }}
+  SHJ3_MODEL_DAILY_COST_CEILING_USD: {{ .Values.ai.modelDailyCostCeilingUsd | default "250" | quote }}
+
+  # shj3-worker-only (§4.2 #26-27) — harmless, unread env vars on shj3-ai
+  # pods; kept in the shared ConfigMap rather than a second one, since
+  # duplicating this whole file for two keys would be the worse trade
+  SHJ3_WORKER_QUEUES: {{ .Values.worker.queues | default "ingest,reindex,campaign,reconcile" | quote }}
+  SHJ3_WORKER_LEASE_TTL_S: {{ .Values.worker.leaseTtlSeconds | default "900" | quote }}
+
+  # Observability
+  SHJ3_OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.observability.otlpEndpoint | default "" | quote }}
+  OTEL_RESOURCE_ATTRIBUTES: {{ printf "service.name=shj3-ai,deployment.environment=%s,service.version=%s" .Values.global.env .Chart.AppVersion | quote }}

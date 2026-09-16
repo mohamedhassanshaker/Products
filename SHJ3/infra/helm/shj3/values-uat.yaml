@@ -1,0 +1,82 @@
+# deployment.md §3.1's environment matrix for `uat`: SQL Server "Managed
+# instance, single node, Standard"; Neo4j "StatefulSet, 1 replica, Community";
+# Qdrant "StatefulSet, 1 replica"; Redis "Managed, single node"; shj3-web 2
+# replicas; shj3-ai 2 replicas; shj3-worker 1 replica (fixed).
+#
+# §7.2 gives production's HPA/PDB shape verbatim but does not give uat's —
+# every uat replica count in §3.1 is a single fixed number (not a min/max
+# range the way production's "3 min -> 10 max" is), so HPA is disabled here,
+# matching development's treatment rather than production's. PDB is enabled
+# with minAvailable: 1 — a reasonable, flagged extrapolation (not verbatim
+# from the doc): 2 replicas can still tolerate one voluntary disruption
+# without dropping to zero, which is the property a PDB exists to protect,
+# and uat is a shared acceptance surface (§3.1) worth protecting from an
+# accidental full-capacity drain the way development deliberately is not.
+
+global:
+  env: uat
+  residency: uae-sharjah-dc
+  imageRegistry: registry.shj.ae/shj3
+
+web:
+  image: { repository: shj3-web, tag: "" }
+  replicas: 2
+  hpa:
+    enabled: false
+  pdb:
+    enabled: true
+    minAvailable: 1
+
+ai:
+  image: { repository: shj3-ai, tag: "" }
+  replicas: 2
+  hpa:
+    enabled: false
+  pdb:
+    enabled: true
+    minAvailable: 1
+  maxConcurrentTurns: 24
+  startupBudgetSeconds: 180
+
+worker:
+  replicas: 1
+  pdb:
+    enabled: false # single replica — see development's identical reasoning
+
+stores:
+  sqlserver:
+    mode: managed
+    managedHost: shj3-sql.uat.privatelink.shj.ae
+  neo4j:
+    mode: in-cluster
+    edition: community
+    replicas: 1
+    storage: 100Gi
+  qdrant:
+    mode: in-cluster
+    replicas: 1
+    storage: 150Gi
+  redis:
+    mode: managed
+    managedHost: shj3-redis.uat.privatelink.shj.ae
+
+backup:
+  neo4j:
+    storage: 30Gi # scaled with stores.neo4j.storage (100Gi) above; a compressed dump is far smaller than the live graph
+
+migration:
+  runAsHook: true
+
+ingress:
+  enabled: true
+  className: nginx
+  host: assistant.uat.shj.ae
+  tls:
+    enabled: true
+    secretName: shj3-edge-tls
+
+networkPolicy:
+  enabled: true
+
+serviceMonitor:
+  enabled: true

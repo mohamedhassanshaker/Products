@@ -1,0 +1,35 @@
+packages:
+  - apps/web
+  - packages/*
+
+# Build scripts we explicitly permit. Prisma must run its postinstall to fetch
+# query engines and generate the client; esbuild needs its platform binary.
+# Everything else stays blocked by default, which is the posture we want given
+# there is no CI to scan dependencies (RISK-002).
+allowBuilds:
+  "@prisma/client": true
+  "@prisma/engines": true
+  esbuild: true
+  prisma: true
+  # Native resolver binary for eslint-import-resolver-typescript, which is what
+  # lets the module-boundary rules resolve NodeNext ".js" specifiers to their
+  # ".ts" sources. Without it those rules silently pass.
+  unrs-resolver: true
+  # Transitive dependency of @opentelemetry/exporter-trace-otlp-http (protobuf
+  # encoding for OTLP). Its install script only regenerates its own bundled
+  # .js from .proto sources shipped in the package — no native binary, no
+  # network access — so approving it does not widen what the app can do.
+  protobufjs: true
+  # Both pulled in solely by next-intl@4.14.2 (verified via `pnpm why`), whose
+  # v4 SWC-based extraction plugin depends on them directly. Provenance checked
+  # before approving, given RISK-002 (no CI dependency scanning): next-intl
+  # itself carries npm's GitHub Actions OIDC trusted-publisher + SLSA
+  # attestation, maintained by the same publisher (jan@amann.me) since 2020.
+  # @swc/core (swc-project/swc, Apache-2.0) and @parcel/watcher
+  # (parcel-bundler/watcher, MIT) are themselves widely-adopted native addons —
+  # their scripts (read directly from the installed package.json, not assumed)
+  # are the standard prebuilt-binary-loader/build-from-source-fallback pattern,
+  # same category as esbuild above. Neither reaches the network beyond the
+  # platform binary pnpm already resolves via optionalDependencies.
+  '@parcel/watcher': true
+  '@swc/core': true

@@ -1,0 +1,58 @@
+{{/*
+§13.2/§14.3: feeds B14 tab 3's per-service p95/error-rate/status and the
+shj3_ai_active_turns HPA signal (§7.5). Requires the Prometheus Operator's
+CRDs installed cluster-side — disabled by default (values.yaml) so this
+chart does not fail `helm install` on a cluster that does not have them;
+`helm template` still renders it correctly regardless (CRD absence is only
+checked by the API server at apply time, not by the template engine).
+
+Scrapes the `metrics` port (9100) — the same port §7.7's own NetworkPolicy
+rule already opens for "the collector scrape port from app=otel-collector",
+not the main application port. Flagged honestly: no code in apps/web or
+apps/ai exposes a Prometheus-format `/metrics` handler on that port yet
+(confirmed by search) — this ServiceMonitor, and the matching `metrics`
+port declared on each Service/Deployment, are correctly SHAPED per the
+doc's own port convention, wired ahead of the exporter that will one day
+answer them, the same disposition applied to `SHJ3_AI_MAX_CONCURRENT_TURNS`'
+readiness check and the litellm ConfigMap elsewhere in this chart. Enabling
+`serviceMonitor.enabled` today would install a ServiceMonitor object that
+scrapes nothing successfully — real, but inert, until a metrics exporter
+exists.
+
+DEVIATION FROM §7.1, flagged plainly: §14.3 also names "a PrometheusRule"
+template living alongside this ServiceMonitor ("Alert rules live in the
+chart... so they version with the code that emits the metrics"), but §7.1's
+own chart-structure listing enumerates `servicemonitor.yaml` only — no
+`prometheusrule.yaml`. This chart follows §7.1's explicit file list (this
+task's own stated scope: "every template under templates/ §7.1 lists"), not
+§14.3's fuller aspiration — a real inconsistency between the two sections of
+the doc, not a silent choice between them. tasks/todo.md's review entry
+names this for whoever reconciles it (either add prometheusrule.yaml to
+§7.1's list and build it, or narrow §14.3's prose to match).
+*/}}
+{{- if .Values.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "shj3.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3") | nindent 4 }}
+    {{- with .Values.serviceMonitor.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: [shj3-web, shj3-ai]
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: {{ .Values.serviceMonitor.interval }}
+      scrapeTimeout: {{ .Values.serviceMonitor.scrapeTimeout }}
+{{- end }}

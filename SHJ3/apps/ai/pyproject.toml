@@ -1,0 +1,199 @@
+[project]
+name = "shj3-ai"
+version = "0.1.0"
+description = "SHJ3 agent runtime and Graph RAG service"
+requires-python = ">=3.12,<3.14"
+
+# Floors only, chosen permissively on purpose.
+#
+# google-adk is the agent framework and it pins fastapi and opentelemetry
+# fairly tightly. Since ADK is a stack decision (ADR-0004) and the web
+# framework is not, ADK wins any conflict — so these floors are set low enough
+# to let the resolver find a coherent set rather than making the dependency
+# graph unsolvable in exchange for newer point releases.
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.30",
+  "pydantic>=2.8",
+  "pydantic-settings>=2.4",
+  # Agent framework. Model-agnostic via LiteLLM, which is how OpenRouter is
+  # reached (ADR-0004).
+  "google-adk>=1.0",
+  "litellm>=1.60",
+  # Stores. shj3-ai is the sole writer of Neo4j and Qdrant (ADR-0003).
+  "neo4j>=5.20",
+  "qdrant-client>=1.10",
+  "redis>=5.0",
+  "sqlalchemy>=2.0",
+  "aioodbc>=0.4",
+  # Retrieval models (ADR-0004). Behind ports, so these are adapter-only deps.
+  "openai>=1.50",
+  "cohere>=5.10",
+  # B-5: the real ApiConnector-kind tool invocation adapter's outbound HTTP
+  # client (adapters/outbound/tools/skill_invoker.py). Promoted from the `dev`
+  # extra (where it served only as FastAPI's TestClient transport) to a real
+  # runtime dependency now that production code calls it directly.
+  "httpx>=0.27",
+  # Observability. One trace id spans web -> ai -> tool call, which is what
+  # makes B14 tab 3 real rather than decorative.
+  #
+  # Version floors only, no ceilings: google-adk pins opentelemetry-sdk below
+  # 1.36, and since ADK is the agent framework it wins. Pinning a higher floor
+  # here would make the dependency set unsolvable rather than getting us newer
+  # tracing.
+  "opentelemetry-api>=1.30.0",
+  "opentelemetry-sdk>=1.30.0",
+  "opentelemetry-instrumentation-fastapi>=0.51b0",
+  # OTLP/HTTP span exporter (observability/tracing.py). Same floor-only reasoning as the
+  # trio above — it must resolve against whatever opentelemetry-sdk ADK's floor allows.
+  "opentelemetry-exporter-otlp-proto-http>=1.30.0",
+  "structlog>=25.0.0",
+  # B-MCP: the real MCP (Model Context Protocol) client — `docs/api.md` §9.12's
+  # `McpClient` port, `POST /v1/tools/mcp/servers/{id}/connect` (§5.6). The
+  # official, Anthropic-maintained reference SDK, not a hand-rolled JSON-RPC/
+  # capability-negotiation client — §9.12's own swap-cost note anticipates
+  # exactly this ("ADK -> the reference MCP Python SDK... is one adapter").
+  "mcp>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=9.0.0",
+  "pytest-asyncio>=1.3.0",
+  "pytest-cov>=7.0.0",
+  "ruff>=0.15.0",
+  "mypy>=1.19.0",
+  "import-linter>=2.6",
+  "testcontainers>=4.15.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/shj3_ai"]
+
+# ---------------------------------------------------------------------------
+# Lint and format
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+# The generated SQLAlchemy models are excluded from BOTH format and lint.
+#
+# The generator owns that file's formatting (ADR-0005 rule 3). Letting ruff
+# reformat it would guarantee a permanent diff against the generator's output,
+# which would make the drift check — the only protection against two ORMs
+# disagreeing about one schema (RISK-011) — fail on every run and therefore get
+# ignored. A gate that cries wolf is a gate that is switched off.
+exclude = ["src/shj3_ai/adapters/outbound/sql/_generated_models.py"]
+
+[tool.ruff.lint]
+select = [
+  "E", "W",    # pycodestyle
+  "F",         # pyflakes
+  "I",         # isort
+  "N",         # pep8-naming
+  "UP",        # pyupgrade
+  "B",         # bugbear
+  "C4",        # comprehensions
+  "SIM",       # simplify
+  "TID",       # tidy imports
+  "RUF",       # ruff-specific
+  "ASYNC",     # async correctness
+  "S",         # bandit — security
+]
+ignore = [
+  "E501",   # line length is the formatter's job
+  "B008",   # FastAPI's Depends() in defaults is idiomatic
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests legitimately assert against hardcoded credentials and attempt the
+# unsafe operations they are proving are refused.
+"tests/**" = ["S101", "S105", "S106", "S311"]
+# Generated file; the generator owns its style.
+"src/shj3_ai/adapters/outbound/sql/_generated_models.py" = ["ALL"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+# ---------------------------------------------------------------------------
+# Types
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+disallow_any_explicit = false
+plugins = ["pydantic.mypy"]
+exclude = ["_generated_models\\.py$"]
+
+[[tool.mypy.overrides]]
+module = ["google.adk.*", "litellm.*", "qdrant_client.*", "cohere.*", "aioodbc.*"]
+ignore_missing_imports = true
+
+# ---------------------------------------------------------------------------
+# Tests
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+  "integration: requires real stores from docker compose",
+  "isolation: tenant isolation release gate (ADR-0002)",
+]
+
+# ---------------------------------------------------------------------------
+# Module boundaries — the Python half of architecture.md §3 and §4.
+#
+# The important contract is the last one: domain and application hold zero
+# vendor imports, which is the "swap test". Replacing Qdrant with pgvector, or
+# OpenRouter with Bedrock, must not touch a domain file.
+# ---------------------------------------------------------------------------
+[tool.importlinter]
+root_packages = ["shj3_ai"]
+# Required for the "forbidden" contract below to see third-party packages at
+# all. Without it import-linter silently reports success on a real violation,
+# which is the worst possible failure mode for an architectural gate.
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Layers: adapters -> application -> ports -> domain"
+type = "layers"
+layers = [
+  "shj3_ai.adapters",
+  "shj3_ai.application",
+  "shj3_ai.ports",
+  "shj3_ai.domain",
+]
+
+[[tool.importlinter.contracts]]
+name = "Domain and application are vendor-free (the swap test)"
+type = "forbidden"
+source_modules = ["shj3_ai.domain", "shj3_ai.application"]
+forbidden_modules = [
+  "neo4j",
+  "qdrant_client",
+  "redis",
+  "sqlalchemy",
+  "openai",
+  "cohere",
+  "litellm",
+  "google",
+  "fastapi",
+  "httpx",
+  # The real MCP client SDK (and the "httpx2" name its own vendored httpx major
+  # version resolves under) — same reasoning as every other adapter-only vendor
+  # import above: `ports/mcp_client.py` and `application/connect_and_discover_mcp.py`
+  # know only the `McpClient` Protocol, never the SDK that implements it.
+  "mcp",
+  "httpx2",
+  # Observability (architecture.md §10, deployment.md §13.1). Tracing wiring belongs in
+  # observability/ and the adapters that call it — TenantContext.trace_id stays a plain
+  # string constructor argument precisely so domain/application never need to import this.
+  "opentelemetry",
+]

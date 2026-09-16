@@ -1,0 +1,57 @@
+node_modules
+.next
+dist
+build
+coverage
+out
+pnpm-lock.yaml
+pnpm-workspace.yaml
+apps/ai/.venv
+**/__pycache__
+prisma/migrations
+
+# Generated — the generator owns the formatting, and reformatting it here would
+# guarantee a permanent diff against what the generator produces (ADR-0005 rule 4).
+apps/ai/src/shj3_ai/adapters/outbound/sql/_generated_models.py
+
+# Generated — the Tailwind v4 theme bridge derived from @shj3/tokens (ADR-0007,
+# design-system.md §3.4). Same reasoning: the generator owns the formatting.
+apps/web/src/styles/tailwind-theme.generated.css
+
+# Generated — the two Prisma clients (ADR-0011). `prisma generate` owns their formatting
+# (and they are gitignored entirely — see .gitignore — so this mostly guards a local
+# `prettier --write .` from touching them before they're regenerated away).
+prisma/generated/
+
+# Generated — the embeddable widget bundle (B-6). `esbuild` (via
+# `apps/web/scripts/build-widget-embed.ts`) owns this file's output; it is a
+# minified IIFE regenerated on every `pnpm run build`/`build:widget`, not
+# authored code — same reasoning as the two exclusions above.
+apps/web/public/embed/
+
+# Documentation is a reviewed prose deliverable, not code. Prettier's markdown
+# pass repads every table cell, which on these documents means thousands of
+# lines of churn with no readability gain — and several tables are deliberately
+# wide (the requirements risk register, the traceability matrix). Docs are held
+# to review, not to a formatter.
+docs/
+tasks/
+.claude/
+*.md
+.import_linter_cache
+
+# Generated — Playwright's own JSON test-result output (`playwright.config.ts`'s
+# `reporter` list), rewritten on every `pnpm exec playwright test` run. Formatting a
+# regenerated report file guarantees a permanent diff the next real run produces again —
+# same reasoning as the other generated-artifact exclusions above.
+reports/
+
+# Helm chart templates are Go-template-flavoured YAML, not plain YAML —
+# `{{- if .Values.x }}`/`{{ include "..." }}` are not valid YAML tokens, so
+# Prettier's YAML parser throws a SyntaxError on every file under here
+# (found by actually running `pnpm verify` against the chart, not assumed).
+# `helm lint`/`helm template` (scripts/verify-chart.sh) are this content's
+# real format/correctness gates. values*.yaml and Chart.yaml are plain YAML
+# with no template syntax and are deliberately NOT excluded — they stay
+# Prettier-formatted like every other YAML file in the repo.
+infra/helm/*/templates/

@@ -1,0 +1,81 @@
+{{/*
+Non-secret configuration for shj3-web. This template always renders (no
+`if` gate around it), which is why `shj3.checkVersionConsistency` is invoked
+here — see _helpers.tpl's own doc comment on why an unconditional template
+is where that guard has to live.
+
+Real-name correction, stated once here rather than repeated at every key:
+deployment.md §4.2's env-var table was written during Phase A and has
+drifted from what the implementation actually reads — confirmed directly by
+grep against real source (not assumed): the app reads `SHJ3_ENVIRONMENT`,
+not the table's `SHJ3_ENV` (row #1); `SHJ3_SQL_URL`, not `DATABASE_URL`
+(#28, though DATABASE_URL is ALSO set below — see that key's own comment);
+`SHJ3_REDIS_URL`, not `REDIS_URL` (#44); `SHJ3_OTEL_EXPORTER_OTLP_ENDPOINT`,
+not `OTEL_EXPORTER_OTLP_ENDPOINT` (#67). The pattern is systematic, not a
+handful of typos: every SHJ3-owned process-configuration variable was given
+an `SHJ3_` prefix during implementation, including several the original
+table left unprefixed. This chart uses the real, `.env.example`- and
+source-confirmed name everywhere one exists; docs/deployment.md's own §4.2
+carries a review note alongside this chart flagging the table itself for
+correction. Variables belonging to features not yet built (payments,
+WhatsApp, mTLS) have no real code to confirm a name against, so those keep
+the doc's own name exactly, flagged in `values.yaml` as illustrative.
+*/}}
+{{- include "shj3.checkVersionConsistency" . -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "shj3.fullname" . }}-web-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-web") | nindent 4 }}
+data:
+  # Platform / common (§4.2 #1-7 — #1 corrected, #8 is conditional/production-only, see the secret)
+  SHJ3_ENVIRONMENT: {{ .Values.global.env | quote }}
+  SHJ3_RELEASE_VERSION: {{ .Chart.AppVersion | quote }}
+  SHJ3_LOG_LEVEL: {{ .Values.web.logLevel | default "info" | quote }}
+  SHJ3_LOG_FORMAT: {{ .Values.web.logFormat | default "json" | quote }}
+  SHJ3_PLATFORM_SCHEMA: {{ .Values.web.platformSchema | default "platform" | quote }}
+  SHJ3_DATA_RESIDENCY: {{ .Values.global.residency | quote }}
+
+  # shj3-web service (§4.2 #9-18, #69 — #69's VALUE is a secret, wired via
+  # envFrom on the Deployment; only its non-secret siblings are here)
+  PORT: {{ .Values.web.containerPort | quote }}
+  SHJ3_PUBLIC_URL: {{ .Values.web.publicUrl | default "http://localhost:3000" | quote }}
+  SHJ3_WIDGET_ALLOWED_ORIGINS: {{ .Values.web.widgetAllowedOrigins | default "" | quote }}
+  SHJ3_AI_BASE_URL: {{ .Values.web.aiBaseUrl | default (printf "http://%s-ai:%v" (include "shj3.fullname" .) .Values.ai.containerPort) | quote }}
+  SHJ3_AI_TIMEOUT_MS: {{ .Values.web.aiTimeoutMs | default "120000" | quote }}
+
+  # SQL Server (§4.2 #31-33 — #28/#29/#30 are secrets)
+  # DATABASE_URL is the Prisma CLI's own mandated name (`db:generate` at
+  # image-build time already relies on this — docker/web.Dockerfile's own
+  # comment) — kept unprefixed deliberately, matching .env.example's own
+  # "DATABASE_URL is read by the Prisma CLI... which only accepts that name"
+  # comment. It is set from `shj3-web-secrets`, alongside SHJ3_SQL_URL, which
+  # is what the running application itself reads (tenant-db.ts) — same
+  # value, two names, "keep them in step" per .env.example.
+  SHJ3_SQL_MAX_RESIDENT_CLIENTS: {{ .Values.web.sqlMaxResidentClients | default "32" | quote }}
+  SHJ3_SQL_POOL_IDLE_TIMEOUT_S: {{ .Values.web.sqlPoolIdleTimeoutS | default "300" | quote }}
+  SHJ3_SQL_TLS_MODE: {{ .Values.web.sqlTlsMode | default "require" | quote }}
+
+  # Redis (§4.2 #46 — #44/#45 are secrets)
+  SHJ3_REDIS_KEY_NAMESPACE: {{ printf "shj3-%s" .Values.global.env | quote }}
+
+  # Channels — WhatsApp BSP (§4.2 #56-57; #58-60 are secrets). Not yet wired
+  # into any real code (B-6 unbuilt) — kept at the doc's own names, since
+  # there is no implementation to confirm or correct against yet.
+  WHATSAPP_BSP: {{ .Values.web.whatsappBsp | default "mock" | quote }}
+
+  # Payments (§4.2 #61-63, #65; #64/#66 are secrets). Same "unbuilt, doc name
+  # kept as-is" treatment as WhatsApp above (B-8 unbuilt).
+  SHARJAH_PAY_MODE: {{ .Values.web.sharjahPayMode | default "mock" | quote }}
+  SEWA_DIRECT_DEBIT_MODE: {{ .Values.web.sewaDirectDebitMode | default "sandbox" | quote }}
+
+  # Observability (§4.2 #67-68 — #67 corrected to the real, SHJ3_-prefixed name)
+  SHJ3_OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.observability.otlpEndpoint | default "" | quote }}
+  # OTEL_RESOURCE_ATTRIBUTES is a standard OpenTelemetry SDK variable (the
+  # SDK's own resource-detection layer reads this exact, unprefixed name
+  # across every language) — the one deliberate exception to "use the
+  # SHJ3_-prefixed name": there is no SHJ3_-prefixed equivalent to correct
+  # to, because this name is not this project's own to prefix.
+  OTEL_RESOURCE_ATTRIBUTES: {{ printf "service.name=shj3-web,deployment.environment=%s,service.version=%s" .Values.global.env .Chart.AppVersion | quote }}

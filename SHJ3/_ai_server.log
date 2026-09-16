@@ -1,0 +1,157 @@
+INFO:     Started server process [179532]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:62975 - "GET /docs HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=54, offset=53>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 53, 'line': 1, 'column': 54}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_sewa) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:50734 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50737 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57006 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57009 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57006 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57009 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53264 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53267 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53264 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53267 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=54, offset=53>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 53, 'line': 1, 'column': 54}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_sewa) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:62814 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62817 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=57, offset=56>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 56, 'line': 1, 'column': 57}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_customs) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:62814 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62817 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53973 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57442 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57445 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57442 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57445 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63500 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63503 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63500 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63503 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=54, offset=53>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 53, 'line': 1, 'column': 54}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_sewa) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:64264 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64267 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=57, offset=56>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 56, 'line': 1, 'column': 57}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_customs) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:64264 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64267 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62611 - "GET /healthz HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62614 - "GET / HTTP/1.1" 404 Not Found
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=62, offset=61>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 61, 'line': 1, 'column': 62}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_themingprobe) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+Received notification from DBMS server: <GqlStatusObject gql_status='01N50', status_description='warn: label does not exist. The label `Tenant_themingprobe` does not exist. Verify that the spelling is correct.', position=<SummaryInputPosition line=1, column=25, offset=24>, raw_classification='UNRECOGNIZED', classification=<NotificationClassification.UNRECOGNIZED: 'UNRECOGNIZED'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'UNRECOGNIZED', '_severity': 'WARNING', '_position': {'offset': 24, 'line': 1, 'column': 25}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'OPTIONAL MATCH (byLabel:Tenant_themingprobe) WITH count(byLabel) AS labelled OPTIONAL MATCH (byProp) WHERE byProp.tenant_id = $tenant_id RETURN labelled, count(byProp) AS propertied'
+INFO:     127.0.0.1:56923 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56928 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=62, offset=61>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 61, 'line': 1, 'column': 62}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_themingprobe) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+Received notification from DBMS server: <GqlStatusObject gql_status='01N50', status_description='warn: label does not exist. The label `Tenant_themingprobe` does not exist. Verify that the spelling is correct.', position=<SummaryInputPosition line=1, column=25, offset=24>, raw_classification='UNRECOGNIZED', classification=<NotificationClassification.UNRECOGNIZED: 'UNRECOGNIZED'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'UNRECOGNIZED', '_severity': 'WARNING', '_position': {'offset': 24, 'line': 1, 'column': 25}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'OPTIONAL MATCH (byLabel:Tenant_themingprobe) WITH count(byLabel) AS labelled OPTIONAL MATCH (byProp) WHERE byProp.tenant_id = $tenant_id RETURN labelled, count(byProp) AS propertied'
+INFO:     127.0.0.1:56977 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56980 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55913 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55916 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55913 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55916 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=62, offset=61>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 61, 'line': 1, 'column': 62}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_themingprobe) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:55913 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55916 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57252 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57255 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57252 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57255 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=62, offset=61>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 61, 'line': 1, 'column': 62}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_themingprobe) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:57252 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57255 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50098 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50101 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50098 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50101 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=62, offset=61>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 61, 'line': 1, 'column': 62}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_themingprobe) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:50098 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50101 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60622 - "GET /health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60624 - "GET /healthz HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58338 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58340 - "GET / HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58344 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63008 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63012 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63008 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63012 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65059 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65062 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65059 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65062 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61442 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61445 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61442 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61445 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62011 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62015 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62011 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62015 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54512 - "POST /v1/tools/mcp/servers/01M237R0YF5DKDJP503W3AND5T/connect HTTP/1.1" 404 Not Found
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=54, offset=53>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 53, 'line': 1, 'column': 54}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_sewa) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:57234 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63760 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=54, offset=53>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 53, 'line': 1, 'column': 54}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_sewa) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:51041 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51046 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61870 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61873 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61870 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61873 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=54, offset=53>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 53, 'line': 1, 'column': 54}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_sewa) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:53481 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53484 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=57, offset=56>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 56, 'line': 1, 'column': 57}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_customs) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:53481 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53484 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55386 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55389 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55386 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55389 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58925 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58928 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58925 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58928 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=54, offset=53>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 53, 'line': 1, 'column': 54}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_sewa) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:49267 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49938 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+Received notification from DBMS server: <GqlStatusObject gql_status='01N00', status_description='warn: feature deprecated. CALL subquery without a variable scope clause is deprecated. Use CALL (n) { ... }', position=<SummaryInputPosition line=1, column=57, offset=56>, raw_classification='DEPRECATION', classification=<NotificationClassification.DEPRECATION: 'DEPRECATION'>, raw_severity='WARNING', severity=<NotificationSeverity.WARNING: 'WARNING'>, diagnostic_record={'_classification': 'DEPRECATION', '_severity': 'WARNING', '_position': {'offset': 56, 'line': 1, 'column': 57}, 'OPERATION': '', 'OPERATION_CODE': '0', 'CURRENT_SCHEMA': '/'}> for query: 'MATCH (n:Tenant_customs) WHERE n.tenant_id = $tenant_id CALL { WITH n DETACH DELETE n } IN TRANSACTIONS OF 10000 ROWS'
+INFO:     127.0.0.1:49267 - "POST /v1/internal/provisioning/graph/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49938 - "POST /v1/internal/provisioning/vector/destroy HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56577 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56580 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56577 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56580 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50650 - "POST /v1/internal/provisioning/graph/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50653 - "POST /v1/internal/provisioning/graph/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50650 - "POST /v1/internal/provisioning/vector/create HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50653 - "POST /v1/internal/provisioning/vector/verify HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50262 - "POST /v1/tools/mcp/servers/01M23A0MD5KA9HSYSFJBEF0C5Z/connect HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50780 - "POST /v1/tools/mcp/servers/01M23A0MD5KA9HSYSFJBEF0C5Z/connect HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64693 - "POST /v1/tools/mcp/servers/01M23A0MD5KA9HSYSFJBEF0C5Z/connect HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53511 - "POST /v1/tools/mcp/servers/01M23A0MD5KA9HSYSFJBEF0C5Z/connect HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64026 - "POST /v1/tools/mcp/servers/01M23A0MD5KA9HSYSFJBEF0C5Z/connect HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61973 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:61973 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52669 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52669 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50062 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50062 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52468 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52468 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57288 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57288 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65413 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65413 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52598 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52598 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57464 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57464 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59702 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59702 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64715 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:64715 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52582 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:65118 - "POST /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60699 - "GET /healthz HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60701 - "GET /v1/knowledge/reconcile/graph-invariants HTTP/1.1" 404 Not Found

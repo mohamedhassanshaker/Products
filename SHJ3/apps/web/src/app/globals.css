@@ -1,0 +1,124 @@
+/**
+ * Tailwind v4 entry point (design-system.md §3.4, ADR-0007).
+ *
+ * `tailwindcss` first, so its own built-in default theme registers before this
+ * package's generated bridge runs its `initial` reset and `@theme inline`
+ * overrides — both live in `tailwind-theme.generated.css`, in that order.
+ * Import order here matters for the same reason (verified against
+ * tailwindcss@4.3.3): the reset and the overrides must be textually after
+ * Tailwind's own defaults to win.
+ *
+ * This file defines *only* Tailwind's build-time theme mapping. It never sets
+ * a token's value — that stays `serializeBaseStylesheet`'s job, inlined into
+ * `<head>` server-side per request/tenant (`layout.tsx`, css.ts). Every rule
+ * Tailwind emits from here still only ever names a runtime custom property.
+ */
+@import "tailwindcss";
+@import "../styles/tailwind-theme.generated.css";
+@import "@xyflow/react/dist/style.css";
+
+/*
+ * Arabic typeface under RTL, and inside any Arabic-language subtree even when
+ * the surrounding page is LTR (design-system.md §11.2, §4.6). The
+ * `--font-arabic` token itself is already emitted by @shj3/tokens and bridged
+ * into Tailwind's `font-arabic` utility (tailwind-theme.generated.css) — this
+ * is only the selector that actually applies it; nothing did before.
+ */
+:root:dir(rtl),
+[lang="ar"] {
+  font-family: var(--font-arabic);
+}
+
+/*
+ * AppShell's light/dark logo swap (design-system.md §9.1's Brand section,
+ * `app-shell.tsx`'s `AppShellLogo` prop). Both `<img>`s render server-side on
+ * every request; which one is VISIBLE is decided purely by this selector
+ * against `data-theme` on `<html>` — the same "one attribute repaints
+ * everything" mechanism §9.4 already establishes for colour tokens. `data-
+ * theme` is always a concrete `"light"`/`"dark"` value, never absent
+ * (`[locale]/layout.tsx`'s own doc comment), so exactly one rule below ever
+ * matches. Doing this in CSS rather than a client-side conditional means the
+ * correct logo is already showing on the very first paint, with no hydration
+ * mismatch and no flash of the wrong one.
+ */
+[data-theme="light"] [data-slot="app-shell-logo-dark"],
+[data-theme="dark"] [data-slot="app-shell-logo-light"] {
+  display: none;
+}
+
+/*
+ * Chrome/Edge/Safari repaint an autofilled <input>'s background (and its text
+ * colour) with a browser-chosen tint the instant a saved credential is
+ * applied — a real UA behaviour, not a bug in `input.tsx`'s own styling
+ * (design-system.md §5.3 #3, `bg-input`/`text-foreground`). WebKit/Blink only
+ * let `:-webkit-autofill`'s background be overridden via a *transition*, not a
+ * plain declaration — the long delay below is the standard workaround: it is
+ * set so far in the future it never visibly runs, so the token-driven colour
+ * is what paints on the very first frame instead of the browser's own tint.
+ * Scoped to `[data-slot="input"]` (this app's one text-field atom) rather than
+ * a bare `input` selector, matching this file's existing `data-slot` scoping
+ * convention above.
+ */
+[data-slot="input"]:-webkit-autofill,
+[data-slot="input"]:-webkit-autofill:hover,
+[data-slot="input"]:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--foreground);
+  -webkit-box-shadow: 0 0 0 1000px var(--input) inset;
+  box-shadow: 0 0 0 1000px var(--input) inset;
+  transition: background-color 600000s ease-in-out 0s;
+}
+
+/*
+ * @xyflow/react token remap (flow-canvas-graph, design-system.md §5.5 #45).
+ * ADR-0007's "replace, not extend" pattern applied to a third-party
+ * stylesheet: `style.css` above only ever *defines* its own `--xy-*-default`
+ * fallbacks — every rule that actually paints reads the bare `--xy-*` name
+ * first (see the real stylesheet, e.g. `.react-flow__node { background-color:
+ * var(--xy-node-background-color, var(--xy-node-background-color-default)) }`),
+ * so redeclaring the bare names here on `.react-flow` wins without touching
+ * vendor CSS. Every value below is a real semantic/component token — never a
+ * literal color — so a tenant skin change repaints the canvas along with
+ * everything else, with zero further work.
+ */
+.react-flow {
+  --xy-background-color: var(--surface-sunken);
+  --xy-background-pattern-color: var(--border);
+
+  --xy-node-color: var(--card-foreground);
+  --xy-node-background-color: var(--card);
+  --xy-node-border: 1px solid var(--border);
+  --xy-node-border-radius: var(--radius-md);
+  --xy-node-group-background-color: var(--muted);
+  --xy-node-boxshadow-hover: var(--shadow-sm);
+  --xy-node-boxshadow-selected: 0 0 0 2px var(--ring);
+
+  --xy-handle-background-color: var(--primary);
+  --xy-handle-border-color: var(--card);
+
+  --xy-edge-stroke: var(--flow-canvas-edge-stroke);
+  --xy-edge-stroke-width: 1.5;
+  --xy-edge-stroke-selected: var(--primary);
+  --xy-edge-label-background-color: var(--card);
+  --xy-edge-label-color: var(--card-foreground);
+  --xy-connectionline-stroke: var(--primary);
+  --xy-connectionline-stroke-width: 1.5;
+
+  --xy-selection-background-color: var(--selection);
+  --xy-selection-border: 1px dotted var(--ring);
+
+  --xy-controls-button-background-color: var(--card);
+  --xy-controls-button-background-color-hover: var(--muted);
+  --xy-controls-button-color: var(--card-foreground);
+  --xy-controls-button-color-hover: var(--card-foreground);
+  --xy-controls-button-border-color: var(--border);
+  --xy-controls-box-shadow: var(--shadow-sm);
+
+  --xy-minimap-background-color: var(--card);
+  --xy-minimap-mask-background-color: var(--overlay);
+  --xy-minimap-mask-stroke-color: var(--border);
+  --xy-minimap-node-background-color: var(--muted);
+  --xy-minimap-node-stroke-color: var(--border-strong);
+
+  --xy-resize-background-color: var(--primary);
+  --xy-attribution-background-color: transparent;
+}

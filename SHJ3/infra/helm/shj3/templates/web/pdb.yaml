@@ -1,0 +1,15 @@
+{{/* §7.6: omitted entirely where disabled — a PDB on a single replica blocks every node drain for no benefit. */}}
+{{- if .Values.web.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "shj3.fullname" . }}-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-web") | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.web.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "shj3.selectorLabels" (dict "root" $ "component" "shj3-web") | nindent 6 }}
+{{- end }}

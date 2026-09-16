@@ -1,0 +1,14 @@
+{{- if .Values.ai.pdb.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "shj3.fullname" . }}-ai
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-ai") | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.ai.pdb.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "shj3.selectorLabels" (dict "root" $ "component" "shj3-ai") | nindent 6 }}
+{{- end }}

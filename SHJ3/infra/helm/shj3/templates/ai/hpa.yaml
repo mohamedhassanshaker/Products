@@ -1,0 +1,49 @@
+{{/*
+§7.5: concurrency, not CPU — a pod holding 24 conversations waiting on
+OpenRouter is nearly idle on CPU while completely full. [ASSUMPTION], stated
+plainly rather than hidden: this metric requires a cluster-side
+prometheus-adapter configured to expose shj3_ai_active_turns as a Kubernetes
+custom/external metric. This chart renders the HPA correctly per spec; it
+cannot itself install or configure that adapter — a real, named operational
+dependency for whoever operates the target cluster, not a gap in this chart.
+*/}}
+{{- if .Values.ai.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "shj3.fullname" . }}-ai
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-ai") | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "shj3.fullname" . }}-ai
+  minReplicas: {{ .Values.ai.hpa.minReplicas }}
+  maxReplicas: {{ .Values.ai.hpa.maxReplicas }}
+  metrics:
+    - type: Pods
+      pods:
+        metric:
+          name: {{ .Values.ai.hpa.metric.name }}
+        target:
+          type: AverageValue
+          averageValue: {{ .Values.ai.hpa.metric.averageValue | quote }}
+  behavior:
+    # scaleDown is deliberately slow (600s window, one pod at a time) —
+    # scaling in aggressively terminates pods holding multi-second turns,
+    # and avoiding exactly that is why the concurrency metric exists at all.
+    scaleUp:
+      stabilizationWindowSeconds: 30
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 30
+    scaleDown:
+      stabilizationWindowSeconds: 600
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 120
+{{- end }}

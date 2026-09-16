@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "shj3.fullname" . }}-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-web") | nindent 4 }}
+spec:
+  {{- if not .Values.web.hpa.enabled }}
+  replicas: {{ .Values.web.replicas }}
+  {{- end }}
+  # §7.6: short requests, short drain — 20s is the same rolling shape as
+  # shj3-ai/shj3-worker use, scaled to a request that is seconds, not minutes.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      {{- include "shj3.selectorLabels" (dict "root" $ "component" "shj3-web") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "shj3.labels" (dict "root" $ "component" "shj3-web") | nindent 8 }}
+      annotations:
+        # §7.8: "A ConfigMap or Secret change alone does NOT restart pods.
+        # Both Deployments carry checksum/config and checksum/secret
+        # annotations... so helm upgrade rolls pods when either changes."
+        checksum/config: {{ include "shj3.configChecksum" (dict "context" $ "templatePath" "/config/configmap-web.yaml") }}
+        checksum/secret: {{ include "shj3.secretChecksum" (dict "context" $ "namespace" .Release.Namespace "name" .Values.secrets.web) }}
+    spec:
+      serviceAccountName: {{ include "shj3.fullname" . }}-web
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: {{ .Values.web.terminationGracePeriodSeconds }}
+      containers:
+        - name: web
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          ports:
+            - name: http
+              containerPort: {{ .Values.web.containerPort }}
+              protocol: TCP
+            # See service.yaml's own comment: declared for consistency with
+            # the NetworkPolicy/ServiceMonitor, not yet backed by a real
+            # /metrics handler.
+            - name: metrics
+              containerPort: {{ .Values.networkPolicy.otelCollector.metricsPort }}
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ include "shj3.fullname" . }}-web-config
+            - secretRef:
+                name: {{ .Values.secrets.web }}
+            # #69 SHJ3_AI_PLATFORM_TOKEN — shared with shj3-ai, "Same value on
+            # both services" (§4.2). Also required unconditionally, so no
+            # `optional: true` here — see shj3-tls below for the one secret
+            # that genuinely is conditional (mTLS, uat/prod only).
+          resources:
+            {{- toYaml .Values.web.resources | nindent 12 }}
+          # §7.4: three probes, three different questions.
+          startupProbe:
+            httpGet:
+              path: /api/healthz
+              port: http
+            periodSeconds: 3
+            failureThreshold: 20 # 60s
+          readinessProbe:
+            httpGet:
+              path: /api/readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/healthz
+              port: http
+            periodSeconds: 15
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              exec:
+                # Short drain: shj3-web's requests are short (§7.6), so there
+                # is no active-turn concept to wait out the way shj3-ai's
+                # await_drain does — just outlast the endpoint-propagation
+                # window before the container actually stops.
+                command: ["/bin/sh", "-c", "sleep {{ .Values.web.preStopDrainSeconds }}"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        # readOnlyRootFilesystem: true (above) means Node's own incidental
+        # temp-file usage needs somewhere writable that is not the image
+        # layer itself.
+        - name: tmp
+          emptyDir: {}

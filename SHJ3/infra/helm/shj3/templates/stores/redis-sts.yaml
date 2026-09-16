@@ -1,0 +1,67 @@
+{{/*
+§7.9 gating + §3.1: Redis is in-cluster only in `development` ("StatefulSet,
+1 replica, no persistence" — ADR-0003: ephemeral, NOT backed up); managed
+(HA with automatic failover) in uat/production. No PVC at all, deliberately
+— "no persistence" is not a storage-sizing choice, it is the point (a lost
+key must never be able to cause a side effect to repeat, per .env.example's
+own comment); an emptyDir means a pod restart legitimately loses everything,
+which is the correct, honest behaviour for this store.
+*/}}
+{{- if eq .Values.stores.redis.mode "in-cluster" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "shj3.fullname" . }}-redis
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "redis") | nindent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    {{- include "shj3.selectorLabels" (dict "root" $ "component" "redis") | nindent 4 }}
+  ports:
+    - name: redis
+      port: 6379
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "shj3.fullname" . }}-redis
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "redis") | nindent 4 }}
+spec:
+  serviceName: {{ include "shj3.fullname" . }}-redis
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "shj3.selectorLabels" (dict "root" $ "component" "redis") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "shj3.labels" (dict "root" $ "component" "redis") | nindent 8 }}
+    spec:
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+      containers:
+        - name: redis
+          image: "redis:7.4-alpine" # matches docker-compose.yml's own pinned tag
+          ports:
+            - name: redis
+              containerPort: 6379
+          readinessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            periodSeconds: 15
+            failureThreshold: 3
+          resources:
+            requests: { cpu: 100m, memory: 256Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+{{- end }}

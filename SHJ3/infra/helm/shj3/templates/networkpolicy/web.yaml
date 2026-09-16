@@ -1,0 +1,113 @@
+{{/*
+CONSTRUCTED, not verbatim from the doc — flagged plainly. §7.7 shows the
+ai/stores/egress NetworkPolicies in full but gives no from-scratch YAML for
+shj3-web's own ingress/egress, even though §7.1 lists `networkpolicy/
+web.yaml` as a real file this chart must have (default-deny blocks
+everything, so shj3-web cannot function without one). Built by extending the
+exact same pattern the doc DOES give verbatim for shj3-ai, adjusted for
+shj3-web's own real needs per §2.1's topology diagram and §2.3's boundary
+table:
+
+- Ingress: the edge Ingress controller only (§2.3: "ingress -> shj3-web:3000
+  exclusively"), on shj3-web's own port; plus the same otel-collector
+  metrics-scrape allowance shj3-ai's own policy carries, since §13.2's
+  shj3_http_request_duration_seconds metric applies to shj3-web too.
+- Egress: shj3-ai (the only path into it, mTLS'd at the application layer),
+  SQL Server + Redis (shj3-web owns the SQL schema and reads sessions from
+  Redis — §2.3: "shj3-web -> SQL Server, Redis"), the egress proxy (§2.1's
+  topology diagram shows shj3-web calling the WhatsApp BSP and payment
+  gateways directly, which — like shj3-ai's model-provider calls — must go
+  through the auditable egress proxy, not a direct external connection), and
+  DNS.
+
+The ingress-controller selector (`.Values.networkPolicy.ingressController`)
+is this chart's own reasonable default (ingress-nginx's own documented
+namespace/label convention) — override it if your cluster's install differs
+from that default, since no specific selector is named in deployment.md.
+*/}}
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: shj3-web-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-web") | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app: shj3-web
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            {{- toYaml .Values.networkPolicy.ingressController.namespaceSelector | nindent 12 }}
+          podSelector:
+            {{- toYaml .Values.networkPolicy.ingressController.podSelector | nindent 12 }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.web.containerPort }}
+    - from:
+        - podSelector:
+            {{- toYaml .Values.networkPolicy.otelCollector.podSelector | nindent 12 }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.networkPolicy.otelCollector.metricsPort }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: shj3-web-egress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-web") | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app: shj3-web
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - podSelector:
+            matchLabels: { app: shj3-ai }
+      ports:
+        - protocol: TCP
+          port: {{ .Values.ai.containerPort }}
+    {{- if eq .Values.stores.sqlserver.mode "managed" }}
+    - to:
+        - ipBlock:
+            cidr: {{ .Values.networkPolicy.managedStoreCidr }}
+      ports:
+        - { port: 1433 }
+    {{- else }}
+    - to:
+        - podSelector:
+            matchLabels: { app: sqlserver }
+      ports:
+        - { port: 1433 }
+    {{- end }}
+    {{- if eq .Values.stores.redis.mode "managed" }}
+    - to:
+        - ipBlock:
+            cidr: {{ .Values.networkPolicy.managedStoreCidr }}
+      ports:
+        - { port: 6379 }
+    {{- else }}
+    - to:
+        - podSelector:
+            matchLabels: { app: redis }
+      ports:
+        - { port: 6379 }
+    {{- end }}
+    - to:
+        - podSelector:
+            {{- toYaml .Values.networkPolicy.egressProxy.podSelector | nindent 12 }}
+      ports:
+        - { protocol: TCP, port: {{ .Values.networkPolicy.egressProxy.port }} }
+    - to:
+        - namespaceSelector:
+            {{- toYaml .Values.networkPolicy.dns.namespaceSelector | nindent 12 }}
+      ports:
+        - { protocol: UDP, port: 53 }
+        - { protocol: TCP, port: 53 }
+{{- end }}

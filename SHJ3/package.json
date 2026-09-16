@@ -1,0 +1,92 @@
+{
+  "name": "shj3",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SHJ3 — agentic government-services assistant for the Emirate of Sharjah, and its backoffice",
+  "packageManager": "pnpm@11.20.0",
+  "engines": {
+    "node": ">=22.16.0",
+    "pnpm": ">=11.0.0"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "gate:secrets": "node scripts/gates/no-secrets.mjs",
+    "gate:tokens": "node scripts/gates/no-hardcoded-design-values.mjs",
+    "gate:cypher": "node scripts/gates/no-raw-cypher.mjs",
+    "gate:clients": "node scripts/gates/no-unscoped-store-clients.mjs",
+    "gate:drift": "node scripts/gates/prisma-sqlalchemy-drift.mjs",
+    "gate:tailwind-theme": "node scripts/gates/tailwind-theme-drift.mjs",
+    "gate:token-refs": "node scripts/gates/no-undefined-token.mjs",
+    "gate:table": "node scripts/gates/no-raw-table.mjs",
+    "gate:i18n-strings": "node scripts/gates/no-hardcoded-user-string.mjs",
+    "gate:user-guide": "node scripts/gates/user-guide-coverage.mjs",
+    "gate": "pnpm gate:secrets && pnpm gate:tokens && pnpm gate:cypher && pnpm gate:clients && pnpm gate:drift && pnpm gate:tailwind-theme && pnpm gate:token-refs && pnpm gate:table && pnpm gate:i18n-strings && pnpm gate:user-guide",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "test:isolation": "vitest run --project isolation",
+    "test:e2e": "playwright test",
+    "verify": "node scripts/verify.mjs",
+    "db:generate": "prisma generate --schema prisma/platform/schema.prisma && prisma generate --schema prisma/tenant/schema.prisma",
+    "db:migrate": "tsx scripts/migrate-tenants.ts",
+    "db:bootstrap-platform": "tsx scripts/bootstrap-platform-schema.ts",
+    "db:seed:appearance": "tsx scripts/seed-system-skins.ts",
+    "db:seed:iam": "tsx scripts/seed-iam-demo-data.ts",
+    "db:seed:agents": "tsx scripts/seed-agents-tools-demo-data.ts",
+    "db:seed:knowledge": "tsx scripts/seed-knowledge-demo-data.ts",
+    "db:seed:agent-runtime": "tsx scripts/seed-agent-runtime-demo-data.ts",
+    "db:seed:identity-payments": "tsx scripts/seed-identity-payments-demo-data.ts",
+    "db:seed:channels": "tsx scripts/seed-channels-demo-data.ts",
+    "db:seed:escalations": "tsx scripts/seed-escalation-demo-data.ts",
+    "db:seed:governance": "tsx scripts/seed-governance-demo-data.ts",
+    "db:seed:e2e-credentials": "tsx scripts/seed-e2e-credentials.ts",
+    "db:seed:e2e-sessions": "tsx scripts/mint-e2e-sessions.ts",
+    "userguide:screenshots": "tsx scripts/capture-user-guide-screenshots.ts",
+    "db:models": "node scripts/generate-python-models.mjs",
+    "tokens:tailwind": "node scripts/generate-tailwind-theme.mjs",
+    "hooks:install": "node scripts/install-hooks.mjs",
+    "chart:verify": "bash scripts/verify-chart.sh",
+    "db:backup:sql": "bash scripts/backup-sql.sh",
+    "db:restore:sql": "bash scripts/restore-sql.sh",
+    "db:backup:neo4j": "bash scripts/backup-neo4j.sh",
+    "db:restore:neo4j": "bash scripts/restore-neo4j.sh"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@playwright/test": "^1.63.0",
+    "@prisma/client": "6.19.3",
+    "@prisma/internals": "^6.19.3",
+    "@shj3/tokens": "workspace:*",
+    "@types/node": "^22.18.0",
+    "eslint": "^9.39.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-boundaries": "^5.0.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "globals": "^17.12.0",
+    "jsdom": "^30.0.1",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.6.2",
+    "prisma": "^6.19.0",
+    "tsx": "^4.23.13",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.0",
+    "vitest": "^3.2.4"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,mts,mjs,js,jsx}": [
+      "prettier --write",
+      "eslint --fix --max-warnings=0"
+    ],
+    "*.{json,md,yml,yaml,css}": [
+      "prettier --write"
+    ],
+    "*.py": [
+      "uv run --directory apps/ai ruff format",
+      "uv run --directory apps/ai ruff check --fix"
+    ],
+    "prisma/{platform,tenant}/schema.prisma": [
+      "prisma format"
+    ]
+  }
+}

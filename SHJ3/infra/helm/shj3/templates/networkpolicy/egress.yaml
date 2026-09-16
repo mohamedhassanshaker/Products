@@ -1,0 +1,124 @@
+{{/*
+§7.7 rule 3, verbatim: shj3-ai/shj3-worker's egress allowlist. Everything
+external goes through the forward proxy so the external-dependency set is
+auditable in one object — RISK-001's surface is exactly the model-provider
+entries reachable through it.
+
+One real extension beyond §7.7's literal example, flagged rather than
+silently added: the doc's shown rule only covers the `managed` (production/
+uat) SQL Server + Redis case, an ipBlock CIDR pointed at an external
+privatelink range. That rule cannot possibly work in `development`, where
+`stores.sqlserver.mode`/`stores.redis.mode` are `in-cluster` — the target is
+a pod in this same namespace, not an external CIDR at all. Branches on each
+store's own mode to emit the right rule shape for whichever value it
+actually has, rather than always emitting a CIDR-based rule.
+*/}}
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: shj3-ai-egress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3") | nindent 4 }}
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: [shj3-ai, shj3-worker]
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - podSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values: [neo4j, qdrant]
+        - podSelector:
+            {{- toYaml .Values.networkPolicy.otelCollector.podSelector | nindent 12 }}
+    {{- if eq .Values.stores.sqlserver.mode "managed" }}
+    - to:
+        - ipBlock:
+            cidr: {{ .Values.networkPolicy.managedStoreCidr }}
+      ports:
+        - { port: 1433 }
+    {{- else }}
+    - to:
+        - podSelector:
+            matchLabels: { app: sqlserver }
+      ports:
+        - { port: 1433 }
+    {{- end }}
+    {{- if eq .Values.stores.redis.mode "managed" }}
+    - to:
+        - ipBlock:
+            cidr: {{ .Values.networkPolicy.managedStoreCidr }}
+      ports:
+        - { port: 6379 }
+    {{- else }}
+    - to:
+        - podSelector:
+            matchLabels: { app: redis }
+      ports:
+        - { port: 6379 }
+    {{- end }}
+    - to:
+        - podSelector:
+            {{- toYaml .Values.networkPolicy.egressProxy.podSelector | nindent 12 }}
+      ports:
+        - { protocol: TCP, port: {{ .Values.networkPolicy.egressProxy.port }} }
+    - to:
+        - namespaceSelector:
+            {{- toYaml .Values.networkPolicy.dns.namespaceSelector | nindent 12 }}
+      ports:
+        - { protocol: UDP, port: 53 }
+        - { protocol: TCP, port: 53 }
+{{- end }}
+{{/*
+The neo4j-backup orchestrator's own egress — a REAL, new need this chart has
+never had before: every other workload here talks only to another pod in
+this namespace (a store, the egress proxy) or DNS, because every other
+workload's privilege is a database credential, never the Kubernetes API
+(neo4j-backup-cronjob.yaml / serviceaccount-neo4j-backup.yaml explain why
+Neo4j Community's offline-only backup breaks that pattern). Without this
+rule, default-deny.yaml's whole-namespace egress deny would silently block
+the orchestrator from ever reaching the API server to scale the neo4j
+StatefulSet or create its worker pod — the exact same class of "looks wired,
+fails the first time a real CNI enforces it" gap the SQL backup CronJob's own
+`sqlserver-ingress` fix (networkpolicy/stores.yaml) closed for SQL Server.
+
+`networkPolicy.apiServerCidr` is a placeholder value (see values.yaml's own
+comment on it, mirroring `managedStoreCidr`'s identical existing pattern) —
+confirm the real address against the target cluster before a real deploy.
+DNS egress is also granted: `kubectl`'s in-cluster client normally reaches
+the API server via env-var-injected IP/port (no DNS lookup needed for that
+alone), but `kubectl logs`/`wait`/`apply` and the underlying HTTP client may
+still resolve hostnames depending on kubeconfig/cluster DNS setup, and every
+other egress-capable pod in this chart is granted DNS for the same reason.
+*/}}
+{{- if and .Values.networkPolicy.enabled (eq .Values.stores.neo4j.mode "in-cluster") }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: neo4j-backup-egress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3") | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels: { app: shj3-neo4j-backup }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - ipBlock:
+            cidr: {{ .Values.networkPolicy.apiServerCidr }}
+      ports:
+        - { protocol: TCP, port: 443 }
+    - to:
+        - namespaceSelector:
+            {{- toYaml .Values.networkPolicy.dns.namespaceSelector | nindent 12 }}
+      ports:
+        - { protocol: UDP, port: 53 }
+        - { protocol: TCP, port: 53 }
+{{- end }}

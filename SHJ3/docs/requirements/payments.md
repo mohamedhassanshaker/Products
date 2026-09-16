@@ -1,0 +1,19 @@
+[← Requirements index](./README.md)
+
+# 5.12 `payments` — gateways, transactions, receipts, refunds (B11 tabs 3, 4)
+
+| ID | Requirement | Source | Pri | Acceptance criteria |
+|---|---|---|---|---|
+| FR-PAY-01 | The system shall maintain a payment gateway registry recording supported methods and a status of `Live` or `Sandbox`. | B11 tab 3 | MUST | The two seeded gateways render with their methods and statuses. Gateways sit behind a port so a provider change does not alter payment domain logic. |
+| FR-PAY-02 | The system shall configure receipt delivery in-conversation, receipt delivery by emailed PDF, and whether refund requests may be raised from the assistant. | B11 tab 3 | MUST | All three settings persist and are honoured. With assistant-initiated refunds off, the assistant declines the request and offers a human instead of creating a refund record. |
+| FR-PAY-03 | The system shall maintain a transaction log recording reference, citizen, amount, service, status and timestamp. | B11 tab 4 | MUST | The four seeded transactions render with all six fields. Amounts carry an explicit currency and are stored as exact decimal values, never as floating-point. |
+| FR-PAY-04 | The system shall support the transaction statuses `Settled`, `Failed`, `Refund requested` and `Refunded`, with transitions restricted to a documented state machine. | B11 tab 4 | MUST | An invalid transition — for example `Failed` → `Refunded` — is rejected. Every transition is recorded with actor and timestamp. |
+| FR-PAY-05 | The system shall resolve a refund request by approval to `Refunded` or by decline back to `Settled`, and shall audit either outcome with the deciding actor and a reason. | B11 tab 4 | MUST | Approving the seeded pending refund sets `Refunded`; declining restores `Settled`. Both write an audit entry. Neither is available to a role lacking the permission. |
+| FR-PAY-06 | The system shall require assurance level L2 — verified identity plus OTP — before initiating a payment or changing a registered mobile number. | B11 tab 2 | MUST | A payment attempted at L0 or L1 is refused with a step-up prompt and no gateway call is made. Verified at L2, the payment proceeds. |
+| FR-PAY-07 | The system shall make payment initiation idempotent using a client-supplied idempotency key, so a retry cannot double-charge. | ADR-0003 (Redis idempotency keys) | MUST | Submitting the same payment twice with the same key produces one transaction and one gateway charge. A different key produces a second transaction. |
+| FR-PAY-08 | The system shall retain transaction records for seven years regardless of the transcript retention setting. | B14 tab 4 `[rule]` | MUST | With transcript retention at 30 days, transactions older than 30 days remain complete and retrievable. The purge job's scope excludes transaction records by construction, not by a configured exception. |
+| FR-PAY-09 | The system shall prevent a gateway in `Sandbox` status from processing a payment in a production environment. | B11 tab 3; ADR-0006 rule 6 | MUST | Attempting a production payment through the sandbox gateway is refused with a configuration error and no charge is attempted. **[ASSUMPTION]** — the wireframe shows the status without stating the rule; a sandbox gateway in production is treated the same way as a mock verification adapter. |
+| FR-PAY-10 | The system shall link every transaction to the conversation and, where applicable, the handover ticket that produced it. | architecture §8 | MUST | From a transaction the originating conversation is retrievable, and from a conversation its transactions are retrievable. The link survives transcript purge, since the transaction outlives the transcript (FR-PAY-08). |
+
+---
+[← `verification`](./verification.md) · [Requirements index](./README.md) · [Next: `governance` →](./governance.md)

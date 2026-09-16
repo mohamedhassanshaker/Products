@@ -1,0 +1,2432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SHJ3 — System Wireframes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F5F1;
+    --panel:#FFFFFF;
+    --ink:#20242B;
+    --ink-soft:#5B6270;
+    --line:#C7CBD1;
+    --line-soft:#E7E9EC;
+    --accent:#1F6F5C;
+    --accent-soft:#DCEBE7;
+    --accent-ink:#123F34;
+    --warn:#B4553F;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    --sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--sans);}
+  .app{display:flex;min-height:100vh;}
+
+  /* ---------- Sidebar ---------- */
+  aside.side{
+    width:252px;flex:0 0 252px;background:var(--panel);border-right:1px solid var(--line-soft);
+    display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;
+  }
+  .brand{padding:22px 20px 16px;font-family:var(--mono);font-weight:600;font-size:15px;letter-spacing:.02em;color:var(--ink);}
+  .brand span{display:block;font-family:var(--sans);font-weight:400;font-size:11.5px;color:var(--ink-soft);margin-top:2px;letter-spacing:.01em;}
+  nav{padding:4px 12px;flex:1;}
+  .group-label{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);padding:16px 10px 6px;letter-spacing:.03em;}
+  .navbtn{
+    display:block;width:100%;text-align:left;padding:9px 10px;margin-bottom:2px;border:none;background:transparent;
+    border-radius:6px;font-size:13.5px;color:var(--ink);cursor:pointer;font-family:var(--sans);line-height:1.3;
+  }
+  .navbtn:hover{background:var(--line-soft);}
+  .navbtn.active{background:var(--accent-soft);color:var(--accent-ink);font-weight:600;}
+  .side-foot{padding:14px 20px 20px;font-size:11px;color:var(--ink-soft);border-top:1px solid var(--line-soft);line-height:1.5;}
+
+  /* ---------- Main ---------- */
+  main{flex:1;padding:32px 40px 80px;max-width:1180px;}
+  .screen{display:none;}
+  .screen.active{display:block;}
+  .screen-head{margin-bottom:22px;}
+  .screen-head h1{font-size:20px;margin:0 0 4px;font-weight:700;}
+  .screen-head p{margin:0;color:var(--ink-soft);font-size:13.5px;max-width:640px;line-height:1.5;}
+
+  .canvas{background:var(--panel);border:1px solid var(--line-soft);border-radius:10px;padding:24px;margin-bottom:18px;}
+
+  /* legend */
+  .legend{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:12.5px;color:var(--ink-soft);padding:2px 4px;}
+  .legend b{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;
+    background:var(--accent);color:#fff;font-family:var(--mono);font-size:10px;margin-right:6px;flex:0 0 auto;}
+  .legend li{display:flex;align-items:flex-start;}
+  .legend ul{list-style:none;margin:0;padding:0;display:contents;}
+
+  .tag{
+    position:absolute;width:17px;height:17px;border-radius:50%;background:var(--accent);color:#fff;
+    font-family:var(--mono);font-size:10px;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 2px #fff; z-index:5;
+  }
+  .rel{position:relative;}
+
+  /* generic wireframe primitives */
+  .wf-box{border:1.5px solid var(--line);border-radius:8px;background:#fff;}
+  .wf-line{height:8px;background:var(--line-soft);border-radius:3px;}
+  .wf-line.short{width:40%;}
+  .wf-line.med{width:65%;}
+  .wf-dash{border:1.5px dashed var(--line);border-radius:6px;}
+
+  /* ============ Assistant widget shell ============ */
+  .phone-frame{width:400px;margin:0 auto;background:#EFEEE9;border:1px solid var(--line-soft);border-radius:16px;
+    padding:16px;position:relative;min-height:520px;}
+  .portal-chrome{display:flex;gap:10px;align-items:center;padding:6px 4px 12px;border-bottom:1px solid var(--line-soft);margin-bottom:10px;}
+  .portal-chrome .wf-line{height:9px;}
+  .widget-window{background:var(--panel);border:1.5px solid var(--line);border-radius:10px;overflow:hidden;
+    box-shadow:0 6px 18px rgba(20,30,25,.06);}
+  .widget-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line-soft);}
+  .widget-head .idn{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;}
+  .idn .dot{width:16px;height:16px;border-radius:4px;background:var(--accent-soft);border:1px solid var(--accent);flex:0 0 auto;}
+  .head-ctrls{display:flex;gap:6px;}
+  .head-ctrls .ic{width:20px;height:20px;border:1.5px solid var(--line);border-radius:4px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink-soft);background:#fff;}
+  .head-ctrls .ic:hover{border-color:var(--accent);color:var(--accent-ink);}
+  .disclaimer{background:#F1F0EA;border-bottom:1px solid var(--line-soft);padding:9px 12px;font-size:11px;color:var(--ink-soft);
+    display:flex;justify-content:space-between;gap:10px;line-height:1.4;}
+  .disclaimer .x{cursor:pointer;color:var(--ink-soft);font-family:var(--mono);}
+  .thread{padding:14px 12px;min-height:220px;max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .bubble{max-width:82%;padding:9px 11px;border-radius:10px;font-size:12.5px;line-height:1.45;position:relative;}
+  .bubble.assist{align-self:flex-start;background:#F1F0EA;border:1px solid var(--line-soft);}
+  .bubble.user{align-self:flex-end;background:var(--accent-soft);border:1px solid #BFDCD4;color:var(--accent-ink);}
+  .bubble .meta{margin-top:4px;font-size:10px;color:var(--ink-soft);display:flex;gap:6px;align-items:center;}
+  .bubble .meta .ic{width:12px;height:12px;border:1px solid var(--line);border-radius:2px;display:inline-block;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+  .chip{border:1px solid var(--line);border-radius:14px;padding:5px 11px;font-size:11.5px;background:#fff;cursor:pointer;color:var(--ink);}
+  .chip:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink);}
+  .chip.picked{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .composer{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid var(--line-soft);}
+  .composer .field{flex:1;height:32px;border:1px solid var(--line);border-radius:16px;background:#fff;
+    display:flex;align-items:center;padding:0 12px;font-size:11.5px;color:var(--ink-soft);}
+  .composer .mic{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;
+    justify-content:center;font-size:12px;flex:0 0 auto;background:#fff;}
+  .launcher-fab{position:absolute;right:6px;bottom:-2px;width:38px;height:38px;border-radius:50%;background:var(--panel);
+    border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 4px 10px rgba(0,0,0,.08);}
+
+  .toggle-row{display:flex;gap:8px;margin-bottom:16px;}
+  .toggle-btn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:7px 13px;font-size:12.5px;cursor:pointer;}
+  .toggle-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  /* ============ Wizard ============ */
+  .stepper{display:flex;gap:0;margin-bottom:20px;overflow-x:auto;border-bottom:1px solid var(--line-soft);padding-bottom:0;}
+  .step{flex:0 0 auto;padding:9px 15px;font-size:12px;font-family:var(--mono);color:var(--ink-soft);cursor:pointer;
+    border-bottom:2px solid transparent;white-space:nowrap;}
+  .step.active{color:var(--accent-ink);border-bottom:2px solid var(--accent);font-weight:600;}
+  .progress-track{height:5px;background:var(--line-soft);border-radius:3px;margin-bottom:22px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .2s ease;}
+  .field-row{margin-bottom:14px;}
+  .field-row label{display:block;font-size:11.5px;color:var(--ink-soft);margin-bottom:5px;font-family:var(--mono);}
+  .field-in{border:1.5px solid var(--line);border-radius:7px;height:34px;background:#fff;padding:0 10px;
+    display:flex;align-items:center;font-size:12px;color:var(--ink-soft);}
+  .field-in.ta{height:70px;align-items:flex-start;padding-top:9px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .pill-select{display:flex;flex-wrap:wrap;gap:7px;}
+  .pill{border:1.5px solid var(--line);border-radius:14px;padding:5px 12px;font-size:11.5px;cursor:pointer;background:#fff;}
+  .pill.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink);}
+  .switch{width:34px;height:19px;border-radius:10px;border:1.5px solid var(--line);position:relative;cursor:pointer;background:#fff;flex:0 0 auto;}
+  .switch .knob{position:absolute;top:1.5px;left:1.5px;width:14px;height:14px;border-radius:50%;background:var(--line);transition:.15s;}
+  .switch.on{border-color:var(--accent);background:var(--accent-soft);}
+  .switch.on .knob{left:17px;background:var(--accent);}
+  .channel-row{display:flex;align-items:center;justify-content:space-between;padding:10px 4px;border-bottom:1px solid var(--line-soft);font-size:12.5px;}
+  .wizard-actions{display:flex;justify-content:space-between;margin-top:20px;}
+  .btn{border:1.5px solid var(--ink);background:var(--ink);color:#fff;border-radius:7px;padding:8px 16px;font-size:12.5px;cursor:pointer;}
+  .btn.ghost{background:#fff;color:var(--ink);}
+
+  /* ============ Dashboard ============ */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+  .kpi{border:1px solid var(--line-soft);border-radius:9px;padding:14px;background:#fff;}
+  .kpi .num{font-family:var(--mono);font-size:22px;font-weight:600;}
+  .kpi .lbl{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+  .bars{display:flex;align-items:flex-end;gap:8px;height:90px;margin-top:10px;}
+  .bars i{display:block;width:16px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:3px 3px 0 0;}
+  .list-row{display:flex;justify-content:space-between;padding:7px 2px;font-size:12px;border-bottom:1px solid var(--line-soft);}
+
+  /* ============ Orchestrator diagram ============ */
+  .diagram{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:26px 6px;position:relative;}
+  .node{border:1.5px solid var(--line);border-radius:8px;background:#fff;padding:10px 12px;font-size:11.5px;text-align:center;min-width:92px;}
+  .node.hot{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink);font-weight:600;}
+  .arrow{flex:1;height:2px;background:var(--line);position:relative;min-width:20px;}
+  .arrow::after{content:'';position:absolute;right:-1px;top:-3px;border:4px solid transparent;border-left-color:var(--line);}
+  .agent-col{display:flex;flex-direction:column;gap:8px;}
+  .trace-log{border:1px solid var(--line-soft);border-radius:8px;padding:12px 14px;font-family:var(--mono);font-size:11.5px;
+    color:var(--ink-soft);background:#FBFAF7;line-height:1.9;}
+  .trace-log b{color:var(--ink);}
+
+  /* ============ Tools table ============ */
+  table.wf-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.wf-table th{text-align:left;font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);padding:8px 10px;border-bottom:1px solid var(--line);}
+  table.wf-table td{padding:9px 10px;border-bottom:1px solid var(--line-soft);}
+  .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:6px;}
+  .connect-card{border:1.5px dashed var(--line);border-radius:9px;padding:16px;margin-top:16px;}
+
+  /* ---- Skills & tools (wizard step 4) ---- */
+  .subtabs{display:flex;gap:4px;margin-bottom:18px;border-bottom:1px solid var(--line-soft);}
+  .subtab{padding:8px 14px;font-size:12.5px;background:transparent;border:none;cursor:pointer;color:var(--ink-soft);
+    border-bottom:2px solid transparent;font-family:var(--sans);}
+  .subtab:hover{color:var(--ink);}
+  .subtab.active{color:var(--accent-ink);border-bottom-color:var(--accent);font-weight:600;}
+  .tool-card{border:1px solid var(--line-soft);border-radius:8px;padding:12px 14px;margin-bottom:10px;background:#fff;}
+  .tool-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .mono-sub{font-family:var(--mono);font-size:10.5px;color:var(--ink-soft);margin-top:3px;}
+  .badge{font-size:10px;padding:3px 9px;border-radius:10px;white-space:nowrap;font-family:var(--mono);flex:0 0 auto;}
+  .badge.ok{background:var(--accent-soft);color:var(--accent-ink);border:1px solid var(--accent);}
+  .badge.warn{background:#F3E7E3;color:var(--warn);border:1px solid var(--warn);}
+  .tool-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .tool-pill{border:1.5px solid var(--line);border-radius:12px;padding:4px 10px;font-size:11px;cursor:pointer;
+    background:#fff;color:var(--ink-soft);}
+  .tool-pill.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink);}
+  .api-preview{margin-top:10px;background:#FBFAF7;border:1px solid var(--line-soft);border-radius:6px;
+    padding:8px 10px;font-family:var(--mono);font-size:11px;color:var(--ink-soft);}
+  .attach-summary{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);background:#FBFAF7;
+    border:1px solid var(--line-soft);border-radius:8px;padding:10px 12px;margin-top:18px;}
+
+  /* ============ Knowledge / graph ============ */
+  .kn-wrap{display:grid;grid-template-columns:250px 1fr;gap:20px;}
+  .src-item{border:1px solid var(--line-soft);border-radius:7px;padding:9px 10px;margin-bottom:8px;font-size:12px;}
+  .src-item .bar-track{height:5px;background:var(--line-soft);border-radius:3px;margin-top:6px;}
+  .src-item .bar-fill{height:100%;background:var(--accent);border-radius:3px;}
+  .bar-track{height:5px;background:var(--line-soft);border-radius:3px;}
+  .bar-fill{height:100%;background:var(--accent);border-radius:3px;}
+  svg.graph{width:100%;height:300px;}
+  .gnode{cursor:pointer;}
+  .gnode circle{fill:#fff;stroke:var(--line);stroke-width:1.5;}
+  .gnode.active circle{stroke:var(--accent);fill:var(--accent-soft);}
+  .gnode text{font-family:var(--sans);font-size:10.5px;fill:var(--ink);}
+  .gnode.dim{opacity:.25;}
+  .range-slider{width:100%;accent-color:var(--accent);}
+  .kb-search{border:1.5px solid var(--line);border-radius:16px;height:32px;padding:0 12px;font-size:12px;
+    font-family:var(--sans);outline:none;width:100%;color:var(--ink);}
+  .kb-search:focus{border-color:var(--accent);}
+  .dup-item{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line-soft);
+    border-radius:8px;padding:9px 12px;margin-bottom:8px;font-size:12px;background:#FBFAF7;}
+  .swatch-row{display:flex;gap:9px;align-items:center;}
+  .color-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;flex:0 0 auto;border:2px solid #fff;
+    box-shadow:0 0 0 1px var(--line);}
+  .color-swatch.on{box-shadow:0 0 0 2px var(--ink);}
+
+  /* ---- Quality floor: focus, motion, responsive ---- */
+  :where(button,input,[tabindex]):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+  .chip:focus-visible,.pill:focus-visible,.tool-pill:focus-visible,.switch:focus-visible,
+  .color-swatch:focus-visible,.gnode:focus-visible,.fnode:focus-visible,.queue-item:focus-visible,
+  .canned-pill:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;animation:none !important;}
+  }
+  @media (max-width:1080px){
+    main{padding:24px 22px 60px;}
+    .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    #screen-humanagent .canvas[style*="220px"]{grid-template-columns:1fr !important;}
+    .kn-wrap{grid-template-columns:1fr;}
+    .flow-wrap{grid-template-columns:1fr;}
+    #screen-conversation .canvas{grid-template-columns:1fr !important;}
+  }
+  @media (max-width:820px){
+    .app{flex-direction:column;}
+    aside.side{width:100%;flex:none;height:auto;position:relative;border-right:none;border-bottom:1px solid var(--line-soft);}
+    nav{display:flex;flex-wrap:wrap;gap:4px;}
+    .group-label{width:100%;padding:10px 10px 4px;}
+    .navbtn{width:auto;}
+    .grid2{grid-template-columns:1fr;}
+    .diagram{flex-direction:column;gap:10px;}
+    .arrow{width:2px;height:20px;flex:none;}
+    .arrow::after{right:-3px;top:auto;bottom:-1px;border-left-color:transparent;border-top-color:var(--line);}
+    .phone-frame{width:100%;}
+  }
+  @media (max-width:560px){
+    .kpi-grid{grid-template-columns:1fr;}
+    main{padding:18px 14px 50px;}
+    .subtabs{overflow-x:auto;}
+  }
+  .glink{stroke:var(--line);stroke-width:1.3;}
+  .glink.active{stroke:var(--accent);stroke-width:1.8;}
+  .node-detail{border:1px solid var(--line-soft);border-radius:8px;padding:12px 14px;margin-top:10px;font-size:12px;background:#FBFAF7;min-height:52px;}
+
+  /* ============ Flow designer ============ */
+  .flow-wrap{display:grid;grid-template-columns:1fr 250px;gap:18px;}
+  .flow-canvas{position:relative;height:400px;border:1px dashed var(--line-soft);border-radius:8px;background:
+    repeating-linear-gradient(0deg,transparent,transparent 23px,#EEEDE7 24px),
+    repeating-linear-gradient(90deg,transparent,transparent 23px,#EEEDE7 24px);}
+  .fnode{position:absolute;width:130px;border:1.5px solid var(--line);border-radius:8px;background:#fff;padding:8px 10px;
+    font-size:11px;cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,.03);}
+  .fnode .k{font-family:var(--mono);font-size:9px;color:var(--accent-ink);text-transform:uppercase;letter-spacing:.03em;}
+  .fnode.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
+  .inspector{border:1px solid var(--line-soft);border-radius:8px;padding:14px;font-size:12px;background:#fff;}
+  .flow-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+  .flow-svg line{stroke:var(--line);stroke-width:1.5;}
+
+  /* ============ Human agent workspace ============ */
+  .queue-item{border:1px solid var(--line-soft);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer;background:#fff;}
+  .queue-item:hover{border-color:var(--accent);}
+  .queue-item.selected{border-color:var(--accent);background:var(--accent-soft);}
+  .qi-top{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:600;}
+  .qi-meta{font-size:10.5px;color:var(--ink-soft);margin-top:4px;font-family:var(--mono);}
+  .priority-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;flex:0 0 auto;}
+  .priority-dot.high{background:var(--warn);}
+  .priority-dot.normal{background:var(--accent);}
+  .sys-note{align-self:center;font-size:10.5px;color:var(--ink-soft);font-family:var(--mono);text-align:center;margin:2px 0;}
+  .canned-pill{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:11.5px;cursor:pointer;
+    background:#fff;margin-bottom:7px;line-height:1.4;}
+  .canned-pill:hover{border-color:var(--accent);background:var(--accent-soft);}
+  input.field-in{outline:none;width:100%;font-family:var(--sans);}
+  input.field-in:focus{border-color:var(--accent);}
+  .rule-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+  .rule-actions .btn{padding:5px 10px;font-size:11px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">SHJ3<span>System wireframes — low‑fidelity</span></div>
+    <nav>
+      <div class="group-label">Assistant window</div>
+      <button class="navbtn active" data-screen="launcher">Launcher &amp; widget</button>
+      <button class="navbtn" data-screen="conversation">Conversation &amp; dynamic flow</button>
+      <button class="navbtn" data-screen="voice">Voice &amp; human handover</button>
+      <div class="group-label">Admin / configurator</div>
+      <button class="navbtn" data-screen="dashboard">Command centre</button>
+      <button class="navbtn" data-screen="registry">Agent registry</button>
+      <button class="navbtn" data-screen="wizard">Agent designer wizard</button>
+      <button class="navbtn" data-screen="orchestrator">Orchestrator / router</button>
+      <button class="navbtn" data-screen="tools">Tools &amp; MCP registry</button>
+      <button class="navbtn" data-screen="knowledge">Knowledge (Graph RAG)</button>
+      <button class="navbtn" data-screen="flow">Flow designer</button>
+      <button class="navbtn" data-screen="humanagent">Human agent workspace</button>
+      <button class="navbtn" data-screen="users">Users, teams &amp; roles</button>
+      <button class="navbtn" data-screen="channels">Channel configurations</button>
+      <button class="navbtn" data-screen="identity">Identity &amp; transactions</button>
+      <button class="navbtn" data-screen="guardrails">Guardrails &amp; policies</button>
+      <button class="navbtn" data-screen="evaluation">Evaluation &amp; testing</button>
+      <button class="navbtn" data-screen="governance">Governance &amp; ops</button>
+    </nav>
+    <div class="side-foot">Click chips, wizard steps, diagram toggles and graph nodes — every screen has live states.</div>
+  </aside>
+
+  <main>
+
+    <!-- ============ LAUNCHER ============ -->
+    <section class="screen active" id="screen-launcher">
+      <div class="screen-head">
+        <h1>Launcher &amp; widget shell</h1>
+        <p>Persistent entry point on every portal page. Toggle docked, expanded, or the WhatsApp rendering of the same assistant.</p>
+      </div>
+      <div class="toggle-row">
+        <button class="toggle-btn active" id="btn-docked">Docked</button>
+        <button class="toggle-btn" id="btn-expanded">Expanded</button>
+        <button class="toggle-btn" id="btn-whatsapp">WhatsApp</button>
+      </div>
+      <div class="canvas rel">
+        <div class="phone-frame" id="phoneFrame">
+          <div class="portal-chrome">
+            <div class="wf-line short"></div>
+            <div class="wf-line" style="width:14%"></div>
+            <div class="wf-line" style="width:14%"></div>
+            <div style="flex:1"></div>
+            <div class="wf-line" style="width:16%"></div>
+          </div>
+          <div class="widget-window">
+            <div class="widget-head">
+              <div class="idn"><span class="dot"></span> SHJ3 Assistant</div>
+              <div class="head-ctrls"><div class="ic">–</div><div class="ic">⧉</div></div>
+            </div>
+            <div class="disclaimer"><span>I'm continuously learning, so some responses may not be fully accurate.</span><span class="x">×</span></div>
+            <div class="thread">
+              <div class="bubble assist">
+                Hello! I am SHJ3 Assistant. I'm here to assist you with government services. How can I help you today?
+                <div class="chips">
+                  <div class="chip">Pay SEWA Bills</div>
+                  <div class="chip">Pay Utilities Bills</div>
+                  <div class="chip">Sharjah Custom Services</div>
+                  <div class="chip">Emirate of Sharjah Libraries</div>
+                  <div class="chip">Jawaher Centre Booking</div>
+                </div>
+                <div class="meta"><span class="ic"></span> 6:55 AM</div>
+              </div>
+            </div>
+            <div class="composer">
+              <div class="field">Ask SHJ3 Assistant</div>
+              <div class="mic">🎤</div>
+            </div>
+          </div>
+          <div class="launcher-fab">✕</div>
+        </div>
+        <div id="waFrame" style="display:none;max-width:400px;margin:0 auto;background:#0B141A;border-radius:16px;padding:14px;">
+          <div style="display:flex;align-items:center;gap:9px;padding:4px 4px 12px;border-bottom:1px solid #223;">
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--accent);"></div>
+            <div><div style="color:#E9EDEF;font-size:13px;font-weight:600;">SHJ3 Assistant</div>
+              <div style="color:#8696A0;font-size:10.5px;font-family:var(--mono);">business account &middot; online</div></div>
+          </div>
+          <div style="padding:14px 2px;display:flex;flex-direction:column;gap:10px;min-height:250px;">
+            <div style="align-self:center;background:#182229;color:#8696A0;font-size:10px;padding:5px 10px;border-radius:6px;text-align:center;max-width:88%;line-height:1.45;">
+              You opted in to receive messages from SHJ3. Reply STOP to opt out.</div>
+            <div style="align-self:flex-start;background:#202C33;color:#E9EDEF;font-size:12.5px;padding:8px 11px;border-radius:8px;max-width:82%;line-height:1.45;">
+              Hello! I am SHJ3 Assistant. How can I help you today?
+              <div style="margin-top:8px;border-top:1px solid #2A3942;padding-top:6px;">
+                <div style="color:#53BDEB;font-size:11.5px;padding:4px 0;">Pay SEWA Bills</div>
+                <div style="color:#53BDEB;font-size:11.5px;padding:4px 0;border-top:1px solid #2A3942;">Pay Utilities Bills</div>
+                <div style="color:#53BDEB;font-size:11.5px;padding:4px 0;border-top:1px solid #2A3942;">See all services</div>
+              </div>
+            </div>
+            <div style="align-self:flex-end;background:#005C4B;color:#E9EDEF;font-size:12.5px;padding:8px 11px;border-radius:8px;max-width:82%;">Pay SEWA Bills</div>
+            <div style="align-self:flex-start;background:#202C33;color:#E9EDEF;font-size:12.5px;padding:8px 11px;border-radius:8px;max-width:82%;line-height:1.45;">
+              Sure — please reply with your SEWA account number.</div>
+            <div style="align-self:center;background:#182229;color:#8696A0;font-size:10px;padding:5px 10px;border-radius:6px;font-family:var(--mono);">
+              24-hour session window open</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;padding-top:10px;border-top:1px solid #223;">
+            <div style="flex:1;height:32px;border-radius:16px;background:#2A3942;color:#8696A0;display:flex;align-items:center;padding:0 14px;font-size:11.5px;">Message</div>
+            <div style="width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;">🎤</div>
+          </div>
+        </div>
+        <div class="tag" style="top:34px;right:64px;">1</div>
+        <div class="tag" style="top:56px;right:64px;">2</div>
+        <div class="tag" style="top:100px;left:120px;">3</div>
+        <div class="tag" style="bottom:70px;left:120px;">4</div>
+        <div class="tag" style="bottom:14px;right:56px;">5</div>
+      </div>
+      <div class="legend">
+        <ul>
+          <li><b>1</b> Header: minimise / expand controls, persists across pages</li>
+          <li><b>2</b> Dismissible disclaimer banner</li>
+          <li><b>3</b> Config‑driven suggested action chips (5 shown), free‑text always available</li>
+          <li><b>4</b> Composer with voice input</li>
+          <li><b>5</b> Floating launcher toggle</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ CONVERSATION ============ -->
+    <section class="screen" id="screen-conversation">
+      <div class="screen-head">
+        <h1>Conversation &amp; dynamic flow</h1>
+        <p>Same thread rendered as a dynamic, slot‑filling flow. Step through the SEWA utilities example, or escape to free text at any point.</p>
+      </div>
+      <div class="toggle-row" id="convSteps">
+        <button class="toggle-btn active" data-step="0">1 · Greeting</button>
+        <button class="toggle-btn" data-step="1">2 · Pick utility</button>
+        <button class="toggle-btn" data-step="2">3 · Ask account #</button>
+        <button class="toggle-btn" data-step="3">4 · New inquiry</button>
+      </div>
+      <div class="canvas" style="display:grid;grid-template-columns:1fr 230px;gap:18px;">
+        <div class="widget-window" style="border:1px solid var(--line-soft);">
+          <div class="widget-head">
+            <div class="idn"><span class="dot"></span> SHJ3 Assistant</div>
+            <div class="head-ctrls"><div class="ic">–</div><div class="ic">⧉</div></div>
+          </div>
+          <div class="thread" id="convThread" style="max-height:420px;"></div>
+          <div class="composer">
+            <div class="field">Ask SHJ3 Assistant</div>
+            <div class="mic">🎤</div>
+          </div>
+        </div>
+        <div>
+          <div class="field-row"><label>Agent trace</label></div>
+          <div class="trace-log" id="traceLog" style="font-size:11px;line-height:1.8;"></div>
+          <div class="field-row" style="margin-top:14px;"><label>Sources (Graph RAG)</label></div>
+          <div class="node-detail" id="sourcesPanel" style="font-size:11.5px;">No grounding needed yet.</div>
+        </div>
+      </div>
+      <div class="legend">
+        <ul>
+          <li><b>1</b> Slot‑filling: quick‑reply chips instead of typing</li>
+          <li><b>2</b> Agent trace shows which agent/tool answered this turn</li>
+          <li><b>3</b> Sources panel surfaces the Graph RAG grounding for the last answer</li>
+          <li><b>4</b> "I have another inquiry" always available as an escape hatch</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ VOICE / HANDOVER ============ -->
+    <section class="screen" id="screen-voice">
+      <div class="screen-head">
+        <h1>Voice input &amp; human handover</h1>
+        <p>Toggle between an AI‑active state and an escalated‑to‑human state to compare composer, banner and trace behaviour.</p>
+      </div>
+      <div class="toggle-row">
+        <button class="toggle-btn active" id="btn-ai">AI thinking</button>
+        <button class="toggle-btn" id="btn-human">Escalated to human</button>
+      </div>
+      <div class="canvas" style="max-width:460px;margin:0 auto;">
+        <div class="widget-window" style="border:1px solid var(--line-soft);">
+          <div class="widget-head">
+            <div class="idn"><span class="dot"></span> SHJ3 Assistant</div>
+            <div class="head-ctrls"><div class="ic">–</div><div class="ic">⧉</div></div>
+          </div>
+          <div id="statusBanner" class="disclaimer" style="background:#F1F0EA;"><span>◐ Still thinking…</span></div>
+          <div class="thread" style="min-height:140px;">
+            <div class="bubble assist">Sure, I can assist you with that. Could you please provide me with your SEWA account number?
+              <div class="meta"><span class="ic"></span> 6:57 AM</div>
+            </div>
+          </div>
+          <div class="composer" id="voiceComposer">
+            <div class="field" id="voiceField" style="display:flex;align-items:center;gap:8px;">
+              <span id="voiceDot" style="width:8px;height:8px;border-radius:50%;background:var(--warn);"></span>
+              <span id="voiceLabel">Listening — "my account number is…"</span>
+            </div>
+            <div class="mic" id="micIcon" style="background:var(--accent-soft);border-color:var(--accent);">🎤</div>
+          </div>
+        </div>
+      </div>
+      <div class="legend" id="voiceLegend">
+        <ul>
+          <li><b>1</b> Live transcription preview while the mic is active</li>
+          <li><b>2</b> Status banner reflects processing / escalation state</li>
+          <li><b>3</b> On escalation: composer disables AI actions, queue position shown, full context passed to the agent</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ DASHBOARD ============ -->
+    <section class="screen" id="screen-dashboard">
+      <div class="screen-head">
+        <h1>Command centre</h1>
+        <p>Live volume and health across every published agent, plus transcript search and the queues that feed improvements back into the agents.</p>
+      </div>
+      <div class="subtabs" id="dashSubtabs">
+        <button class="subtab active" data-sub="overview">Overview</button>
+        <button class="subtab" data-sub="conversations">Conversation explorer</button>
+        <button class="subtab" data-sub="feedback">Feedback &amp; knowledge gaps</button>
+      </div>
+      <div id="dashPane"></div>
+    </section>
+
+    <!-- ============ AGENT REGISTRY ============ -->
+    <section class="screen" id="screen-registry">
+      <div class="screen-head">
+        <h1>Agent registry</h1>
+        <p>Every agent built in the wizard lives here — status, version, channels and usage, with clone, rollback and version history.</p>
+      </div>
+      <div class="canvas" id="registryPane"></div>
+    </section>
+
+    <!-- ============ WIZARD ============ -->
+    <section class="screen" id="screen-wizard">
+      <div class="screen-head">
+        <h1>Agent designer — wizard</h1>
+        <p>The core authoring tool: build one agent end‑to‑end, step by step, and test it before publish.</p>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="wizProgress" style="width:10%"></div></div>
+      <div class="stepper" id="wizSteps">
+        <div class="step active" data-w="0">1 · Identity</div>
+        <div class="step" data-w="1">2 · Instructions</div>
+        <div class="step" data-w="2">3 · Model</div>
+        <div class="step" data-w="3">4 · Skills &amp; tools</div>
+        <div class="step" data-w="4">5 · Knowledge</div>
+        <div class="step" data-w="5">6 · Flows</div>
+        <div class="step" data-w="6">7 · Guardrails</div>
+        <div class="step" data-w="7">8 · Channels</div>
+        <div class="step" data-w="8">9 · Test</div>
+        <div class="step" data-w="9">10 · Publish</div>
+      </div>
+      <div class="canvas" id="wizBody"></div>
+      <div class="wizard-actions">
+        <button class="btn ghost" id="wizBack">Back</button>
+        <button class="btn" id="wizNext">Save &amp; continue</button>
+      </div>
+    </section>
+
+    <!-- ============ ORCHESTRATOR ============ -->
+    <section class="screen" id="screen-orchestrator">
+      <div class="screen-head">
+        <h1>Orchestrator / router</h1>
+        <p>Configures how one prompt can be served by several agents, tools and skills together.</p>
+      </div>
+      <div class="toggle-row" id="routeToggle">
+        <button class="toggle-btn active" data-mode="sequential">Sequential</button>
+        <button class="toggle-btn" data-mode="parallel">Parallel</button>
+        <button class="toggle-btn" data-mode="supervisor">Supervisor–worker</button>
+      </div>
+      <div class="canvas">
+        <div class="diagram" id="routeDiagram">
+          <div class="node hot">Prompt</div>
+          <div class="arrow"></div>
+          <div class="node hot">Router</div>
+          <div class="arrow"></div>
+          <div class="agent-col">
+            <div class="node" id="agA">Billing agent</div>
+            <div class="node" id="agB">Knowledge agent</div>
+            <div class="node" id="agC">Handover agent</div>
+          </div>
+          <div class="arrow"></div>
+          <div class="node hot">Merge</div>
+          <div class="arrow"></div>
+          <div class="node hot">Response</div>
+        </div>
+      </div>
+      <div class="field-row"><label>Execution trace — "Pay SEWA bills" prompt</label></div>
+      <div class="trace-log" id="orchTrace"></div>
+    </section>
+
+    <!-- ============ TOOLS / MCP ============ -->
+    <section class="screen" id="screen-tools">
+      <div class="screen-head">
+        <h1>Tools &amp; MCP registry</h1>
+        <p>The shared catalogue every agent draws from. Same data as wizard step 4 — bind a tool here and it is available to the agents that reference it.</p>
+      </div>
+      <div class="subtabs" id="trSubtabs">
+        <button class="subtab active" data-sub="catalogue">Skills catalogue</button>
+        <button class="subtab" data-sub="mcp">MCP servers</button>
+        <button class="subtab" data-sub="api">API connectors</button>
+        <button class="subtab" data-sub="resilience">Resilience &amp; fallbacks</button>
+      </div>
+      <div class="canvas" id="trPane"></div>
+    </section>
+
+    <!-- ============ KNOWLEDGE / GRAPH RAG ============ -->
+    <section class="screen" id="screen-knowledge">
+      <div class="screen-head">
+        <h1>Knowledge — Graph RAG</h1>
+        <p>Ingested sources, the resulting entity graph, and the retrieval settings that turn both into grounded answers.</p>
+      </div>
+      <div class="subtabs" id="kbSubtabs">
+        <button class="subtab active" data-sub="sources">Sources</button>
+        <button class="subtab" data-sub="graph">Graph explorer</button>
+        <button class="subtab" data-sub="retrieval">Retrieval &amp; indexing</button>
+        <button class="subtab" data-sub="conflicts">Source conflicts</button>
+      </div>
+      <div class="canvas" id="kbPane"></div>
+    </section>
+
+
+    <!-- ============ FLOW DESIGNER ============ -->
+    <section class="screen" id="screen-flow">
+      <div class="screen-head">
+        <h1>Flow designer</h1>
+        <p>Visual canvas for the "Pay utilities bill" journey. Select a node to edit its config in the inspector.</p>
+      </div>
+      <div class="canvas">
+        <div class="flow-wrap">
+          <div class="flow-canvas" id="flowCanvas">
+            <svg class="flow-svg">
+              <line x1="70" y1="45" x2="70" y2="115"></line>
+              <line x1="70" y1="155" x2="70" y2="225"></line>
+              <line x1="70" y1="265" x2="70" y2="335"></line>
+              <line x1="150" y1="70" x2="220" y2="70"></line>
+            </svg>
+            <div class="fnode selected" style="left:10px;top:12px;" data-n="0"><div class="k">Message</div>Greeting + suggested chips</div>
+            <div class="fnode" style="left:10px;top:122px;" data-n="1"><div class="k">Question</div>Which utility service?</div>
+            <div class="fnode" style="left:220px;top:40px;" data-n="4"><div class="k">Condition</div>User picks "another inquiry"</div>
+            <div class="fnode" style="left:10px;top:232px;" data-n="2"><div class="k">Tool call</div>Fetch bill by account #</div>
+            <div class="fnode" style="left:10px;top:342px;" data-n="3"><div class="k">Handover</div>Escalate on low confidence</div>
+          </div>
+          <div class="inspector" id="flowInspector"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HUMAN AGENT WORKSPACE ============ -->
+    <section class="screen" id="screen-humanagent">
+      <div class="screen-head">
+        <h1>Human agent workspace</h1>
+        <p>Where a live agent picks up an escalated conversation with full AI context, plus the routing rules admins configure for it.</p>
+      </div>
+      <div class="toggle-row" id="haStatusToggle">
+        <button class="toggle-btn active" data-status="Available">● Available</button>
+        <button class="toggle-btn" data-status="Busy">● Busy</button>
+        <button class="toggle-btn" data-status="Offline">● Offline</button>
+      </div>
+      <div class="canvas" style="display:grid;grid-template-columns:220px 1fr 240px;gap:18px;">
+        <div>
+          <div class="field-row"><label>Escalation queue (3)</label></div>
+          <div id="haQueueList"></div>
+        </div>
+        <div class="widget-window" style="border:1px solid var(--line-soft);">
+          <div class="widget-head">
+            <div class="idn"><span class="dot"></span> <span id="haHeadName">Select a conversation</span></div>
+            <div class="head-ctrls"><div class="ic">–</div><div class="ic">⧉</div></div>
+          </div>
+          <div class="thread" id="haThread" style="min-height:280px;max-height:340px;"></div>
+          <div class="composer">
+            <div class="field" id="haComposerField">Type a reply…</div>
+            <div class="mic">➤</div>
+          </div>
+        </div>
+        <div>
+          <div class="field-row"><label>Customer</label></div>
+          <div class="node-detail" id="haCustomer" style="font-size:11.5px;">—</div>
+          <div class="field-row" style="margin-top:14px;"><label>Escalation reason</label></div>
+          <div class="node-detail" id="haReason" style="font-size:11.5px;">—</div>
+          <div class="field-row" style="margin-top:14px;"><label>Canned replies</label></div>
+          <div id="haCanned"></div>
+        </div>
+      </div>
+      <div class="canvas" id="routingManager">
+        <div class="screen-head" style="margin-bottom:14px;">
+          <h1 style="font-size:15px;">Routing rules manager</h1>
+          <p>Rules are evaluated top to bottom — the first active rule that matches wins. Reorder, disable, edit or test before publishing.</p>
+        </div>
+        <div id="rulesList"></div>
+        <button class="btn ghost" id="toggleAddRule" style="margin-top:4px;">+ Add rule</button>
+        <div id="ruleFormWrap"></div>
+
+        <div class="field-row" style="margin-top:24px;"><label>Test a ticket against these rules</label></div>
+        <div id="testPanel"></div>
+        <button class="btn" id="runTest" style="margin-top:4px;">Run test</button>
+        <div class="node-detail" id="testResult" style="margin-top:10px;">Pick ticket attributes above, then run the test.</div>
+      </div>
+    </section>
+
+    <!-- ============ USERS, TEAMS & ROLES ============ -->
+    <section class="screen" id="screen-users">
+      <div class="screen-head">
+        <h1>Users, teams &amp; roles</h1>
+        <p>Manage who has backoffice access, which team they sit in, and what each role is allowed to do — governs everything else in the admin.</p>
+      </div>
+      <div class="subtabs" id="umSubtabs">
+        <button class="subtab active" data-sub="users">Users</button>
+        <button class="subtab" data-sub="teams">Teams</button>
+        <button class="subtab" data-sub="roles">Roles &amp; permissions</button>
+      </div>
+      <div class="canvas" id="umPane"></div>
+    </section>
+
+    <!-- ============ CHANNEL CONFIGURATIONS ============ -->
+    <section class="screen" id="screen-channels">
+      <div class="screen-head">
+        <h1>Channel configurations</h1>
+        <p>Turn channels on or off, style the web widget, manage WhatsApp templates, and keep locales in sync.</p>
+      </div>
+      <div class="subtabs" id="chSubtabs">
+        <button class="subtab active" data-sub="overview">Channels</button>
+        <button class="subtab" data-sub="widget">Web widget studio</button>
+        <button class="subtab" data-sub="whatsapp">WhatsApp</button>
+        <button class="subtab" data-sub="proactive">Proactive messaging</button>
+        <button class="subtab" data-sub="locale">Localization</button>
+      </div>
+      <div class="canvas" id="chPane"></div>
+    </section>
+
+    <!-- ============ IDENTITY & TRANSACTIONS ============ -->
+    <section class="screen" id="screen-identity">
+      <div class="screen-head">
+        <h1>Identity &amp; transactions</h1>
+        <p>Binds a conversation to a verified person before money moves, and records what happened after it did.</p>
+      </div>
+      <div class="subtabs" id="idSubtabs">
+        <button class="subtab active" data-sub="verification">Verification</button>
+        <button class="subtab" data-sub="stepup">Step-up rules</button>
+        <button class="subtab" data-sub="payments">Payments</button>
+        <button class="subtab" data-sub="ledger">Transaction log</button>
+        <button class="subtab" data-sub="stitching">Identity stitching</button>
+      </div>
+      <div class="canvas" id="idPane"></div>
+    </section>
+
+    <!-- ============ GUARDRAILS & POLICIES ============ -->
+    <section class="screen" id="screen-guardrails">
+      <div class="screen-head">
+        <h1>Guardrails &amp; policies</h1>
+        <p>Central policies inherited by every agent, with explicit per-agent overrides — so a rule change lands everywhere at once.</p>
+      </div>
+      <div class="subtabs" id="grSubtabs">
+        <button class="subtab active" data-sub="policies">Global policies</button>
+        <button class="subtab" data-sub="overrides">Per-agent overrides</button>
+      </div>
+      <div class="canvas" id="grPane"></div>
+    </section>
+
+    <!-- ============ EVALUATION & TESTING ============ -->
+    <section class="screen" id="screen-evaluation">
+      <div class="screen-head">
+        <h1>Evaluation &amp; testing</h1>
+        <p>Golden question sets, scheduled regression runs, and the quality gate that stands between an agent and production.</p>
+      </div>
+      <div class="subtabs" id="evSubtabs">
+        <button class="subtab active" data-sub="golden">Golden sets</button>
+        <button class="subtab" data-sub="runs">Regression runs</button>
+        <button class="subtab" data-sub="gate">Publish gate</button>
+      </div>
+      <div class="canvas" id="evPane"></div>
+    </section>
+
+    <!-- ============ GOVERNANCE & OPS ============ -->
+    <section class="screen" id="screen-governance">
+      <div class="screen-head">
+        <h1>Governance &amp; ops</h1>
+        <p>Environment promotion, the immutable change record, live system health, and the privacy posture behind all of it.</p>
+      </div>
+      <div class="subtabs" id="govSubtabs">
+        <button class="subtab active" data-sub="environments">Environments</button>
+        <button class="subtab" data-sub="audit">Audit log</button>
+        <button class="subtab" data-sub="observability">Observability</button>
+        <button class="subtab" data-sub="privacy">Privacy &amp; data</button>
+      </div>
+      <div class="canvas" id="govPane"></div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// ---------- Sidebar navigation ----------
+const navBtns = document.querySelectorAll('.navbtn');
+navBtns.forEach(b=>b.addEventListener('click',()=>{
+  navBtns.forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+b.dataset.screen).classList.add('active');
+}));
+
+// ---------- Launcher: docked / expanded ----------
+const btnDocked=document.getElementById('btn-docked'), btnExpanded=document.getElementById('btn-expanded'), phoneFrame=document.getElementById('phoneFrame');
+const btnWhatsapp=document.getElementById('btn-whatsapp'), waFrame=document.getElementById('waFrame');
+const launcherTags=document.querySelectorAll('#screen-launcher .tag');
+function setLauncherMode(mode){
+  [btnDocked,btnExpanded,btnWhatsapp].forEach(b=>b.classList.remove('active'));
+  if(mode==='whatsapp'){
+    btnWhatsapp.classList.add('active');
+    phoneFrame.style.display='none'; waFrame.style.display='block';
+    launcherTags.forEach(t=>t.style.display='none');
+  } else {
+    phoneFrame.style.display='block'; waFrame.style.display='none';
+    launcherTags.forEach(t=>t.style.display='flex');
+    if(mode==='expanded'){ btnExpanded.classList.add('active'); phoneFrame.style.maxWidth='560px'; }
+    else { btnDocked.classList.add('active'); phoneFrame.style.maxWidth='400px'; }
+  }
+}
+btnDocked.addEventListener('click',()=>setLauncherMode('docked'));
+btnExpanded.addEventListener('click',()=>setLauncherMode('expanded'));
+btnWhatsapp.addEventListener('click',()=>setLauncherMode('whatsapp'));
+
+// ---------- Conversation stepper ----------
+const convSteps = [
+  {
+    thread:[
+      {who:'assist',text:'Hello! I am SHJ3 Assistant. I\'m here to assist you with government services. How can I help you today?',chips:['Pay SEWA Bills','Pay Utilities Bills','Sharjah Custom Services']}
+    ],
+    trace:'<b>router</b> → billing_agent (confidence 0.94)',
+    sources:'No grounding needed — greeting is a static template.'
+  },
+  {
+    thread:[
+      {who:'user',text:'Pay Utilities Bills'},
+      {who:'assist',text:'Could you please specify which utility service you would like to use for bill payment? We offer services for Etisalat, du, and SEWA.',chips:['Etisalat','du','SEWA']}
+    ],
+    trace:'<b>router</b> → billing_agent<br><b>tool</b> list_service_centres()<br><b>knowledge_agent</b> confirmed 3 eligible providers',
+    sources:'<b>Source:</b> Utilities providers directory · updated 3 days ago'
+  },
+  {
+    thread:[
+      {who:'user',text:'Pay SEWA Bills'},
+      {who:'assist',text:'Sure, I can assist you with that. Could you please provide me with your SEWA account number?'}
+    ],
+    trace:'<b>router</b> → billing_agent<br><b>tool</b> get_bill_status(provider="SEWA")<br>awaiting slot: account_number',
+    sources:'<b>Source:</b> SEWA tariff schedule · Entity: Service → Provider(SEWA)'
+  },
+  {
+    thread:[
+      {who:'user',text:'i have another inquiry'},
+      {who:'assist',text:'Sure, feel free to ask your inquiry, and I\'ll do my best to assist you!'}
+    ],
+    trace:'<b>flow</b> escape triggered → context preserved<br><b>router</b> re-evaluates next prompt',
+    sources:'No grounding needed — free‑text escape re‑opens the router.'
+  }
+];
+function renderConv(i){
+  const c = convSteps[i];
+  const threadEl = document.getElementById('convThread');
+  let full = [];
+  for(let k=0;k<=i;k++) full = full.concat(convSteps[k].thread);
+  threadEl.innerHTML = full.map(m=>{
+    if(m.who==='assist'){
+      let chips = m.chips? '<div class="chips">'+m.chips.map(c=>'<div class="chip">'+c+'</div>').join('')+'</div>':'';
+      return '<div class="bubble assist">'+m.text+chips+'<div class="meta"><span class="ic"></span>read aloud</div></div>';
+    } else {
+      return '<div class="bubble user">'+m.text+'</div>';
+    }
+  }).join('');
+  document.getElementById('traceLog').innerHTML = c.trace;
+  document.getElementById('sourcesPanel').innerHTML = c.sources;
+}
+document.querySelectorAll('#convSteps .toggle-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#convSteps .toggle-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  renderConv(parseInt(b.dataset.step));
+}));
+renderConv(0);
+
+// ---------- Voice / handover toggle ----------
+const btnAi=document.getElementById('btn-ai'), btnHuman=document.getElementById('btn-human');
+const statusBanner=document.getElementById('statusBanner'), voiceField=document.getElementById('voiceField'), voiceLegend=document.getElementById('voiceLegend');
+btnAi.addEventListener('click',()=>{
+  btnAi.classList.add('active');btnHuman.classList.remove('active');
+  statusBanner.innerHTML='<span>◐ Still thinking…</span>';
+  statusBanner.style.background='#F1F0EA';
+  voiceField.innerHTML='<span id="voiceDot" style="width:8px;height:8px;border-radius:50%;background:var(--warn);"></span><span>Listening — "my account number is…"</span>';
+});
+btnHuman.addEventListener('click',()=>{
+  btnHuman.classList.add('active');btnAi.classList.remove('active');
+  statusBanner.innerHTML='<span>Escalated · queue position 2 · agent context transferred</span>';
+  statusBanner.style.background='var(--accent-soft)';
+  voiceField.innerHTML='<span>Composer paused — a live agent has joined</span>';
+});
+
+// ---------- Wizard ----------
+const wizData = [
+  {title:'Identity',body:`
+    <div class="grid2">
+      <div class="field-row"><label>Agent name</label><div class="field-in">SEWA &amp; Utilities Billing Agent</div></div>
+      <div class="field-row"><label>Owning entity</label><div class="field-in">SEWA</div></div>
+    </div>
+    <div class="field-row"><label>Description</label><div class="field-in ta">Handles bill lookup and payment initiation for SEWA, Etisalat and du.</div></div>`},
+  {title:'Instructions',body:`
+    <div class="field-row"><label>System prompt</label><div class="field-in ta">You help residents pay utility bills. Always confirm the provider and account number before calling a tool…</div></div>
+    <div class="field-row"><label>Tone</label><div class="pill-select"><div class="pill on">Helpful</div><div class="pill">Formal</div><div class="pill">Concise</div></div></div>`},
+  {title:'Model',body:`
+    <div class="grid2">
+      <div class="field-row"><label>Primary model</label><div class="field-in">claude-sonnet-5 ▾</div></div>
+      <div class="field-row"><label>Fallback model</label><div class="field-in">claude-haiku-4.5 ▾</div></div>
+    </div>
+    <div class="field-row"><label>Temperature</label><div class="field-in">0.2</div></div>`},
+  {title:'Skills & tools',body:''},
+  {title:'Knowledge',body:`
+    <div class="field-row"><label>Bind knowledge collections</label></div>
+    <div class="pill-select">
+      <div class="pill on">SEWA tariff schedule</div><div class="pill on">Utilities providers directory</div>
+      <div class="pill">Sharjah Customs handbook</div>
+    </div>`},
+  {title:'Flows',body:`
+    <div class="field-row"><label>Attached dynamic flows</label></div>
+    <div class="list-row"><span>Pay utilities bill</span><span>Published</span></div>
+    <div class="list-row"><span>Update account details</span><span>Draft</span></div>`},
+  {title:'Guardrails',body:`
+    <div class="channel-row"><span>Mask PII in transcripts</span><div class="switch on"><div class="knob"></div></div></div>
+    <div class="channel-row"><span>Refuse below 60% grounding confidence</span><div class="switch on"><div class="knob"></div></div></div>
+    <div class="channel-row"><span>Allow discussing competitor providers</span><div class="switch"><div class="knob"></div></div></div>`},
+  {title:'Channels',body:`
+    <div class="channel-row"><span>Web widget</span><div class="switch on"><div class="knob"></div></div></div>
+    <div class="channel-row"><span>WhatsApp</span><div class="switch on"><div class="knob"></div></div></div>
+    <div class="channel-row"><span>Kiosk / IVR</span><div class="switch"><div class="knob"></div></div></div>`},
+  {title:'Test',body:`
+    <div class="field-row"><label>Sandbox preview</label></div>
+    <div class="widget-window" style="max-width:380px;border:1px solid var(--line-soft);">
+      <div class="widget-head"><div class="idn"><span class="dot"></span> Sandbox run</div></div>
+      <div class="thread" style="min-height:90px;">
+        <div class="bubble user">Pay SEWA Bills</div>
+        <div class="bubble assist">Sure — could you share your SEWA account number?</div>
+      </div>
+    </div>`},
+  {title:'Publish',body:`
+    <div class="grid2">
+      <div class="field-row"><label>Environment</label><div class="field-in">Production ▾</div></div>
+      <div class="field-row"><label>Version</label><div class="field-in">v1.3 → v1.4</div></div>
+    </div>
+    <div class="field-row"><label>Change summary</label><div class="field-in ta">Added du/Etisalat lookup tool; tightened guardrail threshold to 60%.</div></div>`}
+];
+let wizIdx=0;
+
+// ---- Skills & tools step state (step index 3) ----
+let skillsSubtab='catalogue';
+let catalogueSkills=[
+  {name:'Fetch SEWA bill', on:true},
+  {name:'Fetch Etisalat/du bill', on:true},
+  {name:'Escalate to live agent', on:true},
+  {name:'Book Jawaher Centre slot', on:false}
+];
+let mcpServers=[
+  {name:'Sharjah Services Gateway', url:'mcp://sharjah-services.internal', auth:'OAuth2 · client credentials', connected:true,
+    tools:[{name:'get_bill_status',bound:true},{name:'create_payment_link',bound:true},{name:'list_service_centres',bound:true},{name:'cancel_booking',bound:false}]},
+  {name:'Sharjah Customs MCP', url:'mcp://customs.shj.ae', auth:'mTLS', connected:false, tools:[]}
+];
+let showAddMcp=false;
+let apiConnectors=[
+  {name:'Fetch SEWA bill', method:'GET', endpoint:'https://api.sewa.ae/v1/bills/{account}', auth:'API key', tested:true},
+  {name:'Create payment link', method:'POST', endpoint:'https://pay.shj.ae/v1/links', auth:'OAuth2 · client credentials', tested:false}
+];
+let showAddApi=false;
+
+function cataloguePaneHtml(){
+  const pills = catalogueSkills.map((s,i)=>
+    '<div class="pill cat-pill'+(s.on?' on':'')+'" data-i="'+i+'">'+s.name+'</div>'
+  ).join('');
+  const boundMcp = mcpServers.reduce((n,s)=>n+s.tools.filter(t=>t.bound).length,0);
+  const boundApi = apiConnectors.length;
+  const boundCat = catalogueSkills.filter(s=>s.on).length;
+  return '<div class="field-row"><label>Attach reusable skills</label></div>'
+    +'<div class="pill-select">'+pills+'</div>'
+    +'<div class="attach-summary">'+boundCat+' catalogue skills · '+boundMcp+' MCP tools · '+boundApi+' API connectors attached to this agent</div>';
+}
+
+function mcpPaneHtml(){
+  const cards = mcpServers.map((s,i)=>{
+    const badge = s.connected ? '<span class="badge ok">Connected</span>' : '<span class="badge warn">Not connected</span>';
+    let inner;
+    if(s.connected){
+      inner = '<div class="tool-list">'+s.tools.map((t,ti)=>
+        '<div class="tool-pill'+(t.bound?' on':'')+'" data-si="'+i+'" data-ti="'+ti+'">'+t.name+'</div>'
+      ).join('')+'</div>';
+    } else {
+      inner = '<button class="btn ghost mcp-connect-btn" data-idx="'+i+'" style="margin-top:8px;font-size:11.5px;padding:6px 12px;">Connect &amp; discover tools</button>';
+    }
+    return '<div class="tool-card"><div class="tool-card-head"><div><b>'+s.name+'</b><div class="mono-sub">'+s.url+' · '+s.auth+'</div></div>'+badge+'</div>'+inner+'</div>';
+  }).join('');
+  const addForm = showAddMcp ? (
+    '<div class="connect-card">'
+    +'<div class="grid2">'
+    +'<div class="field-row"><label>Endpoint URL</label><div class="field-in">mcp://new-server.internal</div></div>'
+    +'<div class="field-row"><label>Auth</label><div class="field-in">OAuth2 · client credentials</div></div>'
+    +'</div>'
+    +'<button class="btn" id="newMcpConnect" style="margin-top:6px;">Connect &amp; discover tools</button>'
+    +'</div>'
+  ) : '';
+  return '<div class="field-row"><label>Registered MCP servers</label></div>'+cards
+    +'<button class="btn ghost" id="toggleAddMcp" style="margin-top:6px;">'+(showAddMcp?'Cancel':'+ Add MCP server')+'</button>'+addForm
+    +'<div class="attach-summary">Click a tool pill to bind or unbind it from this agent. Unbound tools stay registered on the server but are not callable here.</div>';
+}
+
+function apiPaneHtml(){
+  const cards = apiConnectors.map((a,i)=>{
+    const badge = a.tested ? '<span class="badge ok">Tested ✓</span>' : '<span class="badge warn">Untested</span>';
+    const testBtn = a.tested ? '' : '<button class="btn ghost api-test-btn" data-idx="'+i+'" style="margin-top:8px;font-size:11.5px;padding:6px 12px;">Test connection</button>';
+    const preview = a.tested ? '<div class="api-preview">{ "status": 200, "connector": "'+a.name+'", "sample": "…" }</div>' : '';
+    return '<div class="tool-card"><div class="tool-card-head"><div><b>'+a.name+'</b><div class="mono-sub">'+a.method+' '+a.endpoint+'</div><div class="mono-sub">Auth: '+a.auth+'</div></div>'+badge+'</div>'+testBtn+preview+'</div>';
+  }).join('');
+  const addForm = showAddApi ? (
+    '<div class="connect-card">'
+    +'<div class="grid2">'
+    +'<div class="field-row"><label>Method</label><div class="field-in">POST ▾</div></div>'
+    +'<div class="field-row"><label>Endpoint</label><div class="field-in">https://api.example.gov.ae/v1/resource</div></div>'
+    +'</div>'
+    +'<div class="field-row"><label>Auth</label><div class="field-in">API key</div></div>'
+    +'<button class="btn" id="newApiTest" style="margin-top:6px;">Test connection</button>'
+    +'</div>'
+  ) : '';
+  return '<div class="field-row"><label>Registered API connectors</label></div>'+cards
+    +'<button class="btn ghost" id="toggleAddApi" style="margin-top:6px;">'+(showAddApi?'Cancel':'+ Add API connector')+'</button>'+addForm
+    +'<div class="attach-summary">Every connector becomes a callable skill automatically, with its own schema and rate-limit policy.</div>';
+}
+
+function generateSkillsStepBody(){
+  const labels={catalogue:'Skills catalogue',mcp:'MCP servers',api:'API connectors'};
+  const tabs = Object.keys(labels).map(k=>
+    '<button class="subtab'+(skillsSubtab===k?' active':'')+'" data-sub="'+k+'">'+labels[k]+'</button>'
+  ).join('');
+  let pane;
+  if(skillsSubtab==='mcp') pane=mcpPaneHtml();
+  else if(skillsSubtab==='api') pane=apiPaneHtml();
+  else pane=cataloguePaneHtml();
+  return '<div class="subtabs">'+tabs+'</div>'+pane;
+}
+
+function renderWiz(){
+  document.querySelectorAll('#wizSteps .step').forEach((s,i)=>s.classList.toggle('active', i===wizIdx));
+  document.getElementById('wizProgress').style.width = ((wizIdx+1)/wizData.length*100)+'%';
+  const body = wizIdx===3 ? generateSkillsStepBody() : wizData[wizIdx].body;
+  document.getElementById('wizBody').innerHTML = '<div class="field-row"><label style="font-size:12px;">Step '+(wizIdx+1)+' of '+wizData.length+' — '+wizData[wizIdx].title+'</label></div>'+body;
+  document.getElementById('wizBack').style.visibility = wizIdx===0?'hidden':'visible';
+  document.getElementById('wizNext').textContent = wizIdx===wizData.length-1 ? 'Publish agent' : 'Save & continue';
+}
+document.querySelectorAll('#wizSteps .step').forEach(s=>s.addEventListener('click',()=>{wizIdx=parseInt(s.dataset.w);renderWiz();}));
+document.getElementById('wizNext').addEventListener('click',()=>{if(wizIdx<wizData.length-1){wizIdx++;renderWiz();}});
+document.getElementById('wizBack').addEventListener('click',()=>{if(wizIdx>0){wizIdx--;renderWiz();}});
+
+// Delegated clicks for the Skills & tools step (element persists across re-renders)
+document.getElementById('wizBody').addEventListener('click',(e)=>{
+  const sub=e.target.closest('.subtab');
+  if(sub){ skillsSubtab=sub.dataset.sub; renderWiz(); return; }
+
+  const catPill=e.target.closest('.cat-pill');
+  if(catPill){ const i=parseInt(catPill.dataset.i); catalogueSkills[i].on=!catalogueSkills[i].on; renderWiz(); return; }
+
+  const toggleMcp=e.target.closest('#toggleAddMcp');
+  if(toggleMcp){ showAddMcp=!showAddMcp; renderWiz(); return; }
+
+  const connectBtn=e.target.closest('.mcp-connect-btn');
+  if(connectBtn){
+    const i=parseInt(connectBtn.dataset.idx);
+    mcpServers[i].connected=true;
+    mcpServers[i].tools=[{name:'get_declaration_status',bound:true},{name:'submit_customs_form',bound:true},{name:'list_fees',bound:false}];
+    renderWiz(); return;
+  }
+  const newMcp=e.target.closest('#newMcpConnect');
+  if(newMcp){
+    mcpServers.push({name:'New MCP server', url:'mcp://new-server.internal', auth:'OAuth2 · client credentials', connected:true,
+      tools:[{name:'discovered_tool_1',bound:true},{name:'discovered_tool_2',bound:true}]});
+    showAddMcp=false; renderWiz(); return;
+  }
+  const toolPill=e.target.closest('.tool-pill');
+  if(toolPill){
+    const si=parseInt(toolPill.dataset.si), ti=parseInt(toolPill.dataset.ti);
+    mcpServers[si].tools[ti].bound=!mcpServers[si].tools[ti].bound; renderWiz(); return;
+  }
+
+  const toggleApi=e.target.closest('#toggleAddApi');
+  if(toggleApi){ showAddApi=!showAddApi; renderWiz(); return; }
+
+  const testBtn=e.target.closest('.api-test-btn');
+  if(testBtn){ const i=parseInt(testBtn.dataset.idx); apiConnectors[i].tested=true; renderWiz(); return; }
+
+  const newApi=e.target.closest('#newApiTest');
+  if(newApi){
+    apiConnectors.push({name:'New connector', method:'POST', endpoint:'https://api.example.gov.ae/v1/resource', auth:'API key', tested:true});
+    showAddApi=false; renderWiz(); return;
+  }
+});
+
+renderWiz();
+
+// ---------- Orchestrator ----------
+const routeTraces = {
+  sequential:'<b>router</b> selects billing_agent → runs alone<br><b>billing_agent</b> calls get_bill_status()<br><b>router</b> then hands to knowledge_agent for policy text<br><b>merge</b> combines both replies in order',
+  parallel:'<b>router</b> fans out to billing_agent + knowledge_agent simultaneously<br>both return within 1 turn<br><b>merge</b> combines replies, resolves overlap',
+  supervisor:'<b>supervisor</b> (router) plans: fetch bill → check eligibility → prepare payment link<br>delegates each sub-task to billing_agent as a worker<br><b>supervisor</b> reviews before responding'
+};
+document.querySelectorAll('#routeToggle .toggle-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#routeToggle .toggle-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById('orchTrace').innerHTML = routeTraces[b.dataset.mode];
+}));
+document.getElementById('orchTrace').innerHTML = routeTraces.sequential;
+
+// ---------- Tools & MCP registry (shares wizard step-4 data) ----------
+let trSubtab='catalogue';
+
+let breakers=[
+  {svc:'SEWA bill API', state:'Open', threshold:'5 failures / 60s', cooldown:'2 min', fallback:'Apologise + offer live agent'},
+  {svc:'Sharjah Services Gateway (MCP)', state:'Closed', threshold:'5 failures / 60s', cooldown:'2 min', fallback:'Serve cached answer if under 24h old'},
+  {svc:'WhatsApp BSP', state:'Closed', threshold:'10 failures / 60s', cooldown:'5 min', fallback:'Queue and retry'}
+];
+let cacheOn=true, degradeMsg='Some services are slow right now — I can still answer questions, but payments may be delayed.';
+function resiliencePaneHtml(){
+  return '<div class="field-row"><label>Circuit breakers</label></div>'
+    +breakers.map((b,i)=>'<div class="tool-card"><div class="tool-card-head">'
+      +'<div><b>'+b.svc+'</b><div class="mono-sub">Trips at '+b.threshold+' &middot; cooldown '+b.cooldown+'</div>'
+      +'<div class="mono-sub">Fallback: '+b.fallback+'</div></div>'
+      +(b.state==='Open'?'<span class="badge warn">Tripped — fallback active</span>':'<span class="badge ok">Closed — healthy</span>')+'</div>'
+      +'<div class="rule-actions"><button class="btn ghost br-reset" data-i="'+i+'">'+(b.state==='Open'?'Reset breaker':'Trip manually (test)')+'</button></div></div>').join('')
+    +'<div class="channel-row" style="margin-top:14px;"><span>Serve cached answers while a source is down</span>'
+      +'<div class="switch'+(cacheOn?' on':'')+'" id="cacheToggle"><div class="knob"></div></div></div>'
+    +'<div class="field-row" style="margin-top:12px;"><label>Degraded-mode message</label><div class="field-in ta">'+degradeMsg+'</div></div>'
+    +'<div class="attach-summary">Without a breaker, a slow API stalls every conversation that touches it. Tripped services fail fast to the fallback instead.</div>';
+}
+function renderTR(){
+  document.querySelectorAll('#trSubtabs .subtab').forEach(s=>s.classList.toggle('active', s.dataset.sub===trSubtab));
+  const pane=document.getElementById('trPane');
+  if(trSubtab==='mcp') pane.innerHTML=mcpPaneHtml();
+  else if(trSubtab==='api') pane.innerHTML=apiPaneHtml();
+  else if(trSubtab==='resilience') pane.innerHTML=resiliencePaneHtml();
+  else pane.innerHTML=cataloguePaneHtml();
+}
+document.getElementById('trSubtabs').addEventListener('click',(e)=>{
+  const t=e.target.closest('.subtab');
+  if(t){ trSubtab=t.dataset.sub; renderTR(); }
+});
+document.getElementById('trPane').addEventListener('click',(e)=>{
+  const catPill=e.target.closest('.cat-pill');
+  if(catPill){ catalogueSkills[parseInt(catPill.dataset.i)].on=!catalogueSkills[parseInt(catPill.dataset.i)].on; renderTR(); return; }
+  if(e.target.closest('#toggleAddMcp')){ showAddMcp=!showAddMcp; renderTR(); return; }
+  const cb=e.target.closest('.mcp-connect-btn');
+  if(cb){ const i=parseInt(cb.dataset.idx); mcpServers[i].connected=true;
+    mcpServers[i].tools=[{name:'get_declaration_status',bound:true},{name:'submit_customs_form',bound:true},{name:'list_fees',bound:false}];
+    renderTR(); return; }
+  if(e.target.closest('#newMcpConnect')){
+    mcpServers.push({name:'New MCP server',url:'mcp://new-server.internal',auth:'OAuth2 · client credentials',connected:true,
+      tools:[{name:'discovered_tool_1',bound:true},{name:'discovered_tool_2',bound:true}]});
+    showAddMcp=false; renderTR(); return; }
+  const tp=e.target.closest('.tool-pill');
+  if(tp && tp.dataset.si!==undefined){ mcpServers[parseInt(tp.dataset.si)].tools[parseInt(tp.dataset.ti)].bound=!mcpServers[parseInt(tp.dataset.si)].tools[parseInt(tp.dataset.ti)].bound; renderTR(); return; }
+  if(e.target.closest('#toggleAddApi')){ showAddApi=!showAddApi; renderTR(); return; }
+  const tb=e.target.closest('.api-test-btn');
+  if(tb){ apiConnectors[parseInt(tb.dataset.idx)].tested=true; renderTR(); return; }
+  if(e.target.closest('#newApiTest')){
+    apiConnectors.push({name:'New connector',method:'POST',endpoint:'https://api.example.gov.ae/v1/resource',auth:'API key',tested:true});
+    showAddApi=false; renderTR(); return; }
+  const br=e.target.closest('.br-reset');
+  if(br){ const i=+br.dataset.i; breakers[i].state = breakers[i].state==='Open'?'Closed':'Open'; renderTR(); return; }
+  if(e.target.closest('#cacheToggle')){ cacheOn=!cacheOn; renderTR(); return; }
+});
+renderTR();
+
+// ---------- Knowledge — Graph RAG ----------
+let kbSubtab='sources';
+
+// -- Sources --
+const sourceTypes=['Document','URL crawler','Database','SharePoint','API feed'];
+const scheduleOptions=['Manual','Daily','Weekly'];
+let knowledgeSources=[
+  {name:'SEWA tariff schedule', type:'Document', status:100, lastCrawled:'2 hours ago', schedule:'Manual', owner:'SEWA'},
+  {name:'Utilities providers directory', type:'URL crawler', status:90, lastCrawled:'1 day ago', schedule:'Daily', owner:'Platform'},
+  {name:'Sharjah Customs handbook', type:'Document', status:70, lastCrawled:'3 days ago', schedule:'Weekly', owner:'Customs'},
+  {name:'Library membership policy', type:'Document', status:55, lastCrawled:'6 days ago', schedule:'Weekly', owner:'Libraries'}
+];
+let showAddSource=false;
+
+function sourceFormHtml(){
+  return '<div class="connect-card">'
+    +'<div class="grid2">'
+      +'<div class="field-row"><label>Source name</label><input class="field-in" id="sfName" type="text" placeholder="e.g. Jawaher Centre booking rules"></div>'
+      +'<div class="field-row"><label>Location / URL</label><input class="field-in" id="sfLoc" type="text" placeholder="https:// or file path"></div>'
+    +'</div>'
+    +'<div class="field-row"><label>Type</label>'+pillGroup('sf-type', sourceTypes, sourceTypes[0])+'</div>'
+    +'<div class="field-row"><label>Re-crawl schedule</label>'+pillGroup('sf-sched', scheduleOptions, scheduleOptions[0])+'</div>'
+    +'<button class="btn" id="sfAdd" style="margin-top:6px;">Add source</button>'
+  +'</div>';
+}
+function sourcesPaneHtml(){
+  const cards = knowledgeSources.map((s,i)=>
+    '<div class="tool-card"><div class="tool-card-head">'
+      +'<div><b>'+s.name+'</b><div class="mono-sub">'+s.type+' &middot; owner: '+s.owner+' &middot; schedule: '+s.schedule+'</div></div>'
+      +(s.status>=100?'<span class="badge ok">Up to date</span>':'<span class="badge warn">'+s.status+'% indexed</span>')
+    +'</div>'
+    +'<div class="bar-track" style="margin-top:8px;"><div class="bar-fill" style="width:'+s.status+'%"></div></div>'
+    +'<div class="rule-actions">'
+      +'<button class="btn ghost src-recrawl" data-i="'+i+'">Re-crawl now</button>'
+      +'<button class="btn ghost src-remove" data-i="'+i+'">Remove</button>'
+    +'</div>'
+    +'<div class="mono-sub" style="margin-top:6px;">Last crawled '+s.lastCrawled+'</div>'
+    +'</div>'
+  ).join('');
+  return '<div class="field-row"><label>Ingested sources ('+knowledgeSources.length+')</label></div>'+cards
+    +'<button class="btn ghost" id="toggleAddSource" style="margin-top:6px;">'+(showAddSource?'Cancel':'+ Add source')+'</button>'
+    +(showAddSource?sourceFormHtml():'');
+}
+
+// -- Graph explorer --
+let graphNodes=[
+  {id:'service', label:'Service', x:110, y:150, r:30, info:'<b>Service</b> — "Pay utilities bill". Connects to Provider, Fee and Document nodes that ground every answer in this flow.'},
+  {id:'provider', label:'Provider', x:260, y:75, r:26, info:'<b>Provider</b> — SEWA / Etisalat / du. Used to disambiguate the "which utility service" question.'},
+  {id:'fee', label:'Fee', x:260, y:150, r:26, info:'<b>Fee</b> — tariff and payment thresholds pulled from the SEWA tariff schedule.'},
+  {id:'doc', label:'Document', x:260, y:225, r:26, info:'<b>Document</b> — source passage cited when the assistant explains a policy.'},
+  {id:'channel', label:'Channel', x:410, y:150, r:26, info:'<b>Channel</b> — which surface (web / WhatsApp) this service is available on.'}
+];
+let graphEdges=[
+  {from:'service',to:'provider'},{from:'service',to:'fee'},{from:'service',to:'doc'},{from:'fee',to:'channel'}
+];
+let selectedNode=null;
+let kbSearch='';
+let showAddNode=false;
+let duplicates=[
+  {a:'SEWA', b:'Sharjah Electricity & Water Authority'},
+  {a:'du', b:'du Telecom'}
+];
+
+function buildGraphSvg(){
+  const lines = graphEdges.map(e=>{
+    const a=graphNodes.find(n=>n.id===e.from), b=graphNodes.find(n=>n.id===e.to);
+    return '<line class="glink'+(selectedNode&&(selectedNode===a.id||selectedNode===b.id)?' active':'')+'" x1="'+a.x+'" y1="'+a.y+'" x2="'+b.x+'" y2="'+b.y+'"></line>';
+  }).join('');
+  const nodes = graphNodes.map(n=>{
+    const dim = kbSearch && !n.label.toLowerCase().includes(kbSearch.toLowerCase());
+    return '<g class="gnode'+(selectedNode===n.id?' active':'')+(dim?' dim':'')+'" data-n="'+n.id+'">'
+      +'<circle cx="'+n.x+'" cy="'+n.y+'" r="'+n.r+'"></circle>'
+      +'<text x="'+n.x+'" y="'+(n.y+4)+'" text-anchor="middle">'+n.label+'</text></g>';
+  }).join('');
+  const maxX = Math.max(...graphNodes.map(n=>n.x))+120;
+  const maxY = Math.max(...graphNodes.map(n=>n.y))+80;
+  return '<svg class="graph" viewBox="0 0 '+maxX+' '+maxY+'" id="graphSvg">'+lines+nodes+'</svg>';
+}
+function nodeFormHtml(){
+  return '<div class="connect-card">'
+    +'<div class="grid2">'
+      +'<div class="field-row"><label>Node label</label><input class="field-in" id="nfLabel" type="text" placeholder="e.g. Eligibility"></div>'
+      +'<div class="field-row"><label>Connect to</label>'+pillGroup('nf-parent', graphNodes.map(n=>n.label), graphNodes[0].label)+'</div>'
+    +'</div>'
+    +'<button class="btn" id="nfAdd" style="margin-top:6px;">Add node</button>'
+  +'</div>';
+}
+function duplicatesHtml(){
+  if(!duplicates.length) return '<div class="mono-sub">No potential duplicates found.</div>';
+  return duplicates.map((d,i)=>
+    '<div class="dup-item"><span>&ldquo;'+d.a+'&rdquo; &harr; &ldquo;'+d.b+'&rdquo;</span>'
+    +'<span style="display:flex;gap:6px;">'
+      +'<button class="btn ghost dup-merge" data-i="'+i+'" style="padding:4px 9px;font-size:11px;">Merge</button>'
+      +'<button class="btn ghost dup-ignore" data-i="'+i+'" style="padding:4px 9px;font-size:11px;">Ignore</button>'
+    +'</span></div>'
+  ).join('');
+}
+function graphPaneHtml(){
+  return '<div class="kn-wrap">'
+    +'<div>'
+      +'<div class="field-row"><label>Search entities</label><input class="kb-search" id="kbSearchInput" type="text" placeholder="e.g. SEWA, Fee, Channel" value="'+kbSearch+'"></div>'
+      +'<div class="field-row" style="margin-top:16px;"><label>Duplicate &amp; orphan detection</label></div>'
+      +'<div id="dupList">'+duplicatesHtml()+'</div>'
+    +'</div>'
+    +'<div>'
+      +'<div id="graphSvgWrap">'+buildGraphSvg()+'</div>'
+      +'<div class="node-detail" id="graphDetail">'+(selectedNode?graphNodes.find(n=>n.id===selectedNode).info:'Click a node to trace how it feeds an assistant answer.')+'</div>'
+      +'<button class="btn ghost" id="toggleAddNode" style="margin-top:12px;">'+(showAddNode?'Cancel':'+ Add node')+'</button>'
+      +(showAddNode?nodeFormHtml():'')
+    +'</div>'
+  +'</div>';
+}
+
+// -- Source conflicts --
+let conflicts=[
+  {topic:'SEWA residential tariff rate', a:{src:'SEWA tariff schedule', val:'AED 0.23 / kWh', when:'updated 2 hours ago'},
+   b:{src:'Sharjah Customs handbook (appendix)', val:'AED 0.19 / kWh', when:'updated 3 months ago'}, resolved:null},
+  {topic:'Library visitor membership duration', a:{src:'Library membership policy', val:'3 months', when:'updated 6 days ago'},
+   b:{src:'Utilities providers directory (FAQ)', val:'1 month', when:'updated 1 day ago'}, resolved:null}
+];
+let conflictPolicy='Prefer most recently updated source';
+function conflictsPaneHtml(){
+  const items = conflicts.map((c,i)=>{
+    if(c.resolved) return '<div class="tool-card"><div class="tool-card-head">'
+      +'<div><b>'+c.topic+'</b><div class="mono-sub">Resolved — authoritative source: '+c.resolved+'</div></div>'
+      +'<span class="badge ok">Resolved</span></div></div>';
+    return '<div class="tool-card"><div class="tool-card-head"><div><b>'+c.topic+'</b>'
+      +'<div class="mono-sub">Two sources disagree — the assistant may answer inconsistently until this is resolved.</div></div>'
+      +'<span class="badge warn">Conflict</span></div>'
+      +'<div class="dup-item" style="margin-top:10px;"><span><b>'+c.a.val+'</b> — '+c.a.src+' <span class="mono-sub" style="display:inline;">('+c.a.when+')</span></span>'
+        +'<button class="btn ghost cf-pick" data-i="'+i+'" data-s="a" style="padding:4px 9px;font-size:11px;">Make authoritative</button></div>'
+      +'<div class="dup-item"><span><b>'+c.b.val+'</b> — '+c.b.src+' <span class="mono-sub" style="display:inline;">('+c.b.when+')</span></span>'
+        +'<button class="btn ghost cf-pick" data-i="'+i+'" data-s="b" style="padding:4px 9px;font-size:11px;">Make authoritative</button></div>'
+      +'</div>';
+  }).join('');
+  return '<div class="field-row"><label>Default resolution policy</label>'
+      +pillGroup('cf-pol',['Prefer most recently updated source','Prefer owning entity source','Always ask an admin'],conflictPolicy)+'</div>'
+    +'<div class="field-row" style="margin-top:16px;"><label>Detected conflicts ('+conflicts.filter(c=>!c.resolved).length+')</label></div>'
+    +(items||'<div class="mono-sub">No conflicts detected.</div>')
+    +'<div class="attach-summary">Detected when two indexed sources return contradicting values for the same graph entity. Unresolved conflicts lower the grounding confidence of any answer that touches them.</div>';
+}
+
+// -- Retrieval & indexing --
+let retrievalConfig={chunkSize:512, overlap:64, embeddingModel:'text-embedding-3-large', hybridWeight:60, topK:8, reranker:true};
+const embeddingModels=['text-embedding-3-large','text-embedding-3-small','multilingual-e5'];
+let reindexJobs=[
+  {name:'SEWA tariff schedule', status:'Completed', when:'2 hours ago'},
+  {name:'Utilities providers directory', status:'Completed', when:'1 day ago'},
+  {name:'Sharjah Customs handbook', status:'Failed', when:'3 days ago'}
+];
+let playgroundResult=null;
+
+function retrievalPaneHtml(){
+  const jobs = reindexJobs.map(j=>{
+    const badge = j.status==='Completed' ? '<span class="badge ok">Completed</span>' : j.status==='Running' ? '<span class="badge warn">Running</span>' : '<span class="badge warn">Failed</span>';
+    return '<div class="list-row"><span>'+j.name+'</span><span>'+badge+' &middot; '+j.when+'</span></div>';
+  }).join('');
+  return '<div class="grid2">'
+    +'<div class="field-row"><label>Chunk size (tokens)</label><input class="field-in" id="rcChunk" type="text" value="'+retrievalConfig.chunkSize+'"></div>'
+    +'<div class="field-row"><label>Chunk overlap (tokens)</label><input class="field-in" id="rcOverlap" type="text" value="'+retrievalConfig.overlap+'"></div>'
+  +'</div>'
+  +'<div class="field-row"><label>Embedding model</label>'+pillGroup('rc-embed', embeddingModels, retrievalConfig.embeddingModel)+'</div>'
+  +'<div class="field-row"><label>Hybrid weighting — vector &harr; graph (currently '+retrievalConfig.hybridWeight+'% graph)</label>'
+    +'<input class="range-slider" id="rcHybrid" type="range" min="0" max="100" value="'+retrievalConfig.hybridWeight+'"></div>'
+  +'<div class="grid2">'
+    +'<div class="field-row"><label>Top‑K passages</label><input class="field-in" id="rcTopK" type="text" value="'+retrievalConfig.topK+'"></div>'
+    +'<div class="field-row"><label>Reranker</label><div class="switch'+(retrievalConfig.reranker?' on':'')+'" id="rcReranker"><div class="knob"></div></div></div>'
+  +'</div>'
+  +'<div class="field-row" style="margin-top:18px;"><label>Retrieval playground</label>'
+    +'<div style="display:flex;gap:8px;"><input class="field-in" id="rpQuery" type="text" placeholder="e.g. How do I pay my SEWA bill?" style="flex:1;">'
+    +'<button class="btn" id="rpRun">Run</button></div></div>'
+  +'<div class="node-detail" id="rpResult">'+(playgroundResult||'Run a query to see ranked chunks and the matched subgraph.')+'</div>'
+  +'<div class="field-row" style="margin-top:20px;"><label>Re-index jobs</label></div>'
+  +jobs
+  +'<button class="btn ghost" id="reindexNow" style="margin-top:10px;">Re-index all sources now</button>';
+}
+
+function renderKB(){
+  document.querySelectorAll('#kbSubtabs .subtab').forEach(s=>s.classList.toggle('active', s.dataset.sub===kbSubtab));
+  const pane=document.getElementById('kbPane');
+  if(kbSubtab==='sources') pane.innerHTML = sourcesPaneHtml();
+  else if(kbSubtab==='graph') pane.innerHTML = graphPaneHtml();
+  else if(kbSubtab==='conflicts') pane.innerHTML = conflictsPaneHtml();
+  else pane.innerHTML = retrievalPaneHtml();
+}
+
+document.getElementById('kbSubtabs').addEventListener('click',(e)=>{
+  const t=e.target.closest('.subtab');
+  if(t){ kbSubtab=t.dataset.sub; showAddSource=false; showAddNode=false; renderKB(); }
+});
+
+document.getElementById('kbPane').addEventListener('click',(e)=>{
+  // ---- sources ----
+  if(e.target.closest('#toggleAddSource')){ showAddSource=!showAddSource; renderKB(); return; }
+  const typePill=e.target.closest('.sf-type-pill');
+  if(typePill){ document.querySelectorAll('.sf-type-pill').forEach(p=>p.classList.remove('on')); typePill.classList.add('on'); return; }
+  const schedPill=e.target.closest('.sf-sched-pill');
+  if(schedPill){ document.querySelectorAll('.sf-sched-pill').forEach(p=>p.classList.remove('on')); schedPill.classList.add('on'); return; }
+  if(e.target.closest('#sfAdd')){
+    const name=document.getElementById('sfName').value || 'New source';
+    const type=document.querySelector('.sf-type-pill.on').dataset.v;
+    const schedule=document.querySelector('.sf-sched-pill.on').dataset.v;
+    knowledgeSources.push({name,type,status:5,lastCrawled:'just now',schedule,owner:'Platform'});
+    showAddSource=false; renderKB(); return;
+  }
+  const recrawl=e.target.closest('.src-recrawl');
+  if(recrawl){ const i=parseInt(recrawl.dataset.i); knowledgeSources[i].status=100; knowledgeSources[i].lastCrawled='just now'; renderKB(); return; }
+  const srcRemove=e.target.closest('.src-remove');
+  if(srcRemove){ const i=parseInt(srcRemove.dataset.i); knowledgeSources.splice(i,1); renderKB(); return; }
+
+  // ---- graph ----
+  const gnode=e.target.closest('.gnode');
+  if(gnode){ selectedNode=gnode.dataset.n; renderKB(); return; }
+  const dupMerge=e.target.closest('.dup-merge');
+  if(dupMerge){ duplicates.splice(parseInt(dupMerge.dataset.i),1); renderKB(); return; }
+  const dupIgnore=e.target.closest('.dup-ignore');
+  if(dupIgnore){ duplicates.splice(parseInt(dupIgnore.dataset.i),1); renderKB(); return; }
+  if(e.target.closest('#toggleAddNode')){ showAddNode=!showAddNode; renderKB(); return; }
+  const parentPill=e.target.closest('.nf-parent-pill');
+  if(parentPill){ document.querySelectorAll('.nf-parent-pill').forEach(p=>p.classList.remove('on')); parentPill.classList.add('on'); return; }
+  if(e.target.closest('#nfAdd')){
+    const label=document.getElementById('nfLabel').value || 'New entity';
+    const parentLabel=document.querySelector('.nf-parent-pill.on').dataset.v;
+    const parent=graphNodes.find(n=>n.label===parentLabel);
+    const id='n'+Date.now();
+    const col = graphNodes.length%2===0 ? 260 : 410;
+    const newNode={id, label, x: parent.x+150, y: 60+(graphNodes.length*45)%260, r:24, info:'<b>'+label+'</b> — custom entity connected to '+parentLabel+'.'};
+    graphNodes.push(newNode);
+    graphEdges.push({from:parent.id, to:id});
+    showAddNode=false; renderKB(); return;
+  }
+
+  // ---- retrieval ----
+  const embedPill=e.target.closest('.rc-embed-pill');
+  if(embedPill){ document.querySelectorAll('.rc-embed-pill').forEach(p=>p.classList.remove('on')); embedPill.classList.add('on'); retrievalConfig.embeddingModel=embedPill.dataset.v; return; }
+  const reranker=e.target.closest('#rcReranker');
+  if(reranker){ retrievalConfig.reranker=!retrievalConfig.reranker; renderKB(); return; }
+  if(e.target.closest('#rpRun')){
+    const q=document.getElementById('rpQuery').value || 'How do I pay my SEWA bill?';
+    playgroundResult='Query: &ldquo;'+q+'&rdquo;<br><br><b>Top passages</b><br>1. SEWA tariff schedule &middot; score 0.91<br>2. Utilities providers directory &middot; score 0.84<br>3. SEWA tariff schedule (section 2) &middot; score 0.77<br><br><b>Matched subgraph</b><br>Service(Pay utilities bill) &rarr; Provider(SEWA) &rarr; Fee';
+    renderKB(); return;
+  }
+  if(e.target.closest('#reindexNow')){
+    reindexJobs.unshift({name:'All sources', status:'Running', when:'just now'});
+    renderKB();
+    setTimeout(()=>{ reindexJobs[0].status='Completed'; if(kbSubtab==='retrieval') renderKB(); }, 1200);
+    return;
+  }
+  // ---- conflicts ----
+  const cfPol=e.target.closest('.cf-pol-pill');
+  if(cfPol){ conflictPolicy=cfPol.dataset.v; renderKB(); return; }
+  const cfPick=e.target.closest('.cf-pick');
+  if(cfPick){ const i=+cfPick.dataset.i; conflicts[i].resolved = cfPick.dataset.s==='a'?conflicts[i].a.src:conflicts[i].b.src; renderKB(); return; }
+});
+
+document.getElementById('kbPane').addEventListener('input',(e)=>{
+  if(e.target.id==='kbSearchInput'){ kbSearch=e.target.value; document.getElementById('graphSvgWrap').innerHTML=buildGraphSvg(); }
+});
+document.getElementById('kbPane').addEventListener('change',(e)=>{
+  if(e.target.id==='rcHybrid'){ retrievalConfig.hybridWeight=parseInt(e.target.value); renderKB(); }
+});
+
+renderKB();
+
+// ---------- Flow designer ----------
+const flowInfo = {
+  0:'<b>Message node</b><br>Greeting text + 5 suggested chips, sourced from the Quick Actions manager.',
+  1:'<b>Question node</b><br>Prompt: "Which utility service?" Options bound to the Provider list (SEWA, Etisalat, du).',
+  2:'<b>Tool call node</b><br>Calls <i>get_bill_status(provider, account_number)</i>. Retries once on timeout, then falls to node 4.',
+  3:'<b>Handover node</b><br>Triggers when confidence &lt; 60% or the tool call fails twice. Passes full transcript to a live agent.',
+  4:'<b>Condition node</b><br>If the user types "another inquiry" at any point, exits this flow and returns control to the router.'
+};
+document.querySelectorAll('.fnode').forEach(n=>n.addEventListener('click',()=>{
+  document.querySelectorAll('.fnode').forEach(x=>x.classList.remove('selected'));
+  n.classList.add('selected');
+  document.getElementById('flowInspector').innerHTML = flowInfo[n.dataset.n];
+}));
+document.getElementById('flowInspector').innerHTML = flowInfo[0];
+
+// ---------- Human agent workspace ----------
+const haQueue = [
+  {name:'Ahmed R.', topic:'SEWA billing', wait:'2m', channel:'WhatsApp', priority:'normal',
+    customer:'Ahmed R. · SEWA account ending 4821 · Verified via UAE PASS',
+    reason:'Tool call failed twice (invalid account lookup) — auto‑escalated per guardrail policy.',
+    transcript:[
+      {who:'user',text:'Pay SEWA Bills'},
+      {who:'assist',text:'Sure — could you share your SEWA account number?'},
+      {who:'user',text:'It keeps saying invalid account number, I\'ve tried 3 times.'},
+      {who:'sys',text:'Escalated to human agent — full context transferred'}
+    ],
+    canned:['Let me look into that for you right away.','Could you confirm the account holder\'s Emirates ID last 4 digits?','I\'ve corrected the account link — please try the payment again now.']},
+  {name:'Fatima S.', topic:'Customs enquiry', wait:'6m', channel:'Web', priority:'high',
+    customer:'Fatima S. · Import declaration #SC‑88213 · Not verified',
+    reason:'User requested escalation directly — sentiment flagged as frustrated.',
+    transcript:[
+      {who:'user',text:'Sharjah Custom Services'},
+      {who:'assist',text:'Could you share your declaration number?'},
+      {who:'user',text:'This is urgent, I need to speak to a person now.'},
+      {who:'sys',text:'Escalated to human agent — full context transferred'}
+    ],
+    canned:['I understand the urgency — pulling up your declaration now.','Your shipment is currently under document review, expected clearance in 24 hours.','I\'ve flagged this as priority with the customs team.']},
+  {name:'Yousef M.', topic:'Library membership', wait:'1m', channel:'Web', priority:'normal',
+    customer:'Yousef M. · No membership on file',
+    reason:'Low grounding confidence on eligibility question (below 60% threshold).',
+    transcript:[
+      {who:'user',text:'Emirate of Sharjah Libraries'},
+      {who:'assist',text:'Are you asking about membership eligibility for residents or visitors?'},
+      {who:'user',text:'I\'m a visitor, can I still join?'},
+      {who:'sys',text:'Escalated to human agent — full context transferred'}
+    ],
+    canned:['Visitors can get a 3‑month temporary membership with a passport copy.','Would you like me to book a library visit for you?','Let me confirm the visitor policy for your case.']}
+];
+let haSelected = 0;
+function renderHaQueue(){
+  document.getElementById('haQueueList').innerHTML = haQueue.map((q,i)=>
+    '<div class="queue-item'+(i===haSelected?' selected':'')+'" data-q="'+i+'">'
+    +'<div class="qi-top"><span><span class="priority-dot '+q.priority+'"></span>'+q.name+'</span></div>'
+    +'<div class="qi-meta">'+q.topic+' · '+q.channel+' · waiting '+q.wait+'</div>'
+    +'</div>'
+  ).join('');
+}
+function renderHaConversation(){
+  const q = haQueue[haSelected];
+  document.getElementById('haHeadName').textContent = q.name+' — '+q.topic;
+  document.getElementById('haThread').innerHTML = q.transcript.map(m=>{
+    if(m.who==='sys') return '<div class="sys-note">— '+m.text+' —</div>';
+    if(m.who==='assist') return '<div class="bubble assist">'+m.text+'</div>';
+    return '<div class="bubble user">'+m.text+'</div>';
+  }).join('');
+  document.getElementById('haCustomer').textContent = q.customer;
+  document.getElementById('haReason').textContent = q.reason;
+  document.getElementById('haCanned').innerHTML = q.canned.map(c=>'<div class="canned-pill">'+c+'</div>').join('');
+  document.getElementById('haComposerField').textContent = 'Type a reply…';
+}
+document.getElementById('haQueueList').addEventListener('click',(e)=>{
+  const item=e.target.closest('.queue-item');
+  if(item){ haSelected=parseInt(item.dataset.q); renderHaQueue(); renderHaConversation(); }
+});
+document.getElementById('haCanned').addEventListener('click',(e)=>{
+  const pill=e.target.closest('.canned-pill');
+  if(pill){ document.getElementById('haComposerField').textContent = pill.textContent; }
+});
+document.querySelectorAll('#haStatusToggle .toggle-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#haStatusToggle .toggle-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+}));
+renderHaQueue();
+renderHaConversation();
+
+// ---------- Routing rules manager ----------
+let routingRules=[
+  {attr:'Topic', op:'=', val:'Billing', route:'SEWA billing team', active:true},
+  {attr:'Priority', op:'=', val:'High', route:'Senior agents', active:true},
+  {attr:'Channel', op:'=', val:'WhatsApp', route:'WhatsApp‑trained agents', active:true},
+  {attr:'Wait time', op:'>', val:'5', route:'Re‑queue + supervisor alert', active:true}
+];
+let editingRuleIdx=null; // null=hidden, -1=new, i=editing rule i
+
+function renderRules(){
+  document.getElementById('rulesList').innerHTML = routingRules.map((r,i)=>{
+    const badge = r.active ? '<span class="badge ok">Active</span>' : '<span class="badge warn">Inactive</span>';
+    const valLabel = r.attr==='Wait time' ? r.val+' min' : r.val;
+    return '<div class="tool-card">'
+      +'<div class="tool-card-head"><div><b>Rule '+(i+1)+'</b><div class="mono-sub">'+r.attr+' '+r.op+' '+valLabel+' &rarr; '+r.route+'</div></div>'+badge+'</div>'
+      +'<div class="rule-actions">'
+        +'<button class="btn ghost rule-up" data-i="'+i+'">&uarr; Move up</button>'
+        +'<button class="btn ghost rule-down" data-i="'+i+'">&darr; Move down</button>'
+        +'<button class="btn ghost rule-toggle" data-i="'+i+'">'+(r.active?'Disable':'Enable')+'</button>'
+        +'<button class="btn ghost rule-edit" data-i="'+i+'">Edit</button>'
+        +'<button class="btn ghost rule-delete" data-i="'+i+'">Delete</button>'
+      +'</div>'
+    +'</div>';
+  }).join('');
+}
+
+const ruleAttrs=['Topic','Priority','Channel','Wait time'];
+function ruleFormHtml(idx){
+  const r = idx===null ? {attr:'Topic',val:'',route:''} : routingRules[idx];
+  const op = r.attr==='Wait time' ? '>' : '=';
+  const attrPills = ruleAttrs.map(a=>'<div class="pill rf-attr'+(r.attr===a?' on':'')+'" data-a="'+a+'">'+a+'</div>').join('');
+  return '<div class="connect-card">'
+    +'<div class="field-row"><label>'+(idx===null?'New rule — condition attribute':'Edit rule '+(idx+1)+' — condition attribute')+'</label>'
+      +'<div class="pill-select">'+attrPills+'</div></div>'
+    +'<div class="grid2">'
+      +'<div class="field-row"><label>Operator</label><div class="field-in" id="rfOp">'+op+'</div></div>'
+      +'<div class="field-row"><label>Value'+(r.attr==='Wait time'?' (minutes)':'')+'</label><input class="field-in" id="rfVal" type="text" value="'+(r.val||'')+'" placeholder="e.g. Billing"></div>'
+    +'</div>'
+    +'<div class="field-row"><label>Route to</label><input class="field-in" id="rfRoute" type="text" value="'+(r.route||'')+'" placeholder="e.g. SEWA billing team"></div>'
+    +'<div style="display:flex;gap:8px;margin-top:6px;">'
+      +'<button class="btn" id="rfSave" data-edit="'+(idx===null?-1:idx)+'">Save rule</button>'
+      +'<button class="btn ghost" id="rfCancel">Cancel</button>'
+    +'</div>'
+  +'</div>';
+}
+function renderRuleForm(){
+  document.getElementById('ruleFormWrap').innerHTML = editingRuleIdx===null ? '' : ruleFormHtml(editingRuleIdx===-1?null:editingRuleIdx);
+}
+
+const testOptions={Topic:['Billing','Customs','Library','General'],Priority:['Normal','High'],Channel:['Web','WhatsApp'],'Wait time':['2','6','10']};
+let testTicket={Topic:'Billing',Priority:'Normal',Channel:'Web','Wait time':'2'};
+function renderTestPanel(){
+  document.getElementById('testPanel').innerHTML = Object.keys(testOptions).map(g=>{
+    const pills = testOptions[g].map(v=>{
+      const label = g==='Wait time' ? v+' min' : v;
+      return '<div class="pill test-pill'+(testTicket[g]===v?' on':'')+'" data-g="'+g+'" data-v="'+v+'">'+label+'</div>';
+    }).join('');
+    return '<div class="field-row"><label>'+g+'</label><div class="pill-select">'+pills+'</div></div>';
+  }).join('');
+}
+
+document.getElementById('routingManager').addEventListener('click',(e)=>{
+  if(e.target.closest('#toggleAddRule')){ editingRuleIdx=-1; renderRuleForm(); return; }
+
+  const up=e.target.closest('.rule-up');
+  if(up){ const i=parseInt(up.dataset.i); if(i>0){[routingRules[i-1],routingRules[i]]=[routingRules[i],routingRules[i-1]]; renderRules();} return; }
+
+  const down=e.target.closest('.rule-down');
+  if(down){ const i=parseInt(down.dataset.i); if(i<routingRules.length-1){[routingRules[i+1],routingRules[i]]=[routingRules[i],routingRules[i+1]]; renderRules();} return; }
+
+  const tgl=e.target.closest('.rule-toggle');
+  if(tgl){ const i=parseInt(tgl.dataset.i); routingRules[i].active=!routingRules[i].active; renderRules(); return; }
+
+  const edit=e.target.closest('.rule-edit');
+  if(edit){ editingRuleIdx=parseInt(edit.dataset.i); renderRuleForm(); return; }
+
+  const del=e.target.closest('.rule-delete');
+  if(del){ const i=parseInt(del.dataset.i); routingRules.splice(i,1); renderRules(); return; }
+
+  const attrPill=e.target.closest('.rf-attr');
+  if(attrPill){
+    document.querySelectorAll('.rf-attr').forEach(p=>p.classList.remove('on'));
+    attrPill.classList.add('on');
+    document.getElementById('rfOp').textContent = attrPill.dataset.a==='Wait time' ? '>' : '=';
+    return;
+  }
+
+  const save=e.target.closest('#rfSave');
+  if(save){
+    const attr=document.querySelector('.rf-attr.on').dataset.a;
+    const op=document.getElementById('rfOp').textContent;
+    const val=document.getElementById('rfVal').value || '—';
+    const route=document.getElementById('rfRoute').value || '—';
+    const idx=parseInt(save.dataset.edit);
+    if(idx===-1){ routingRules.push({attr,op,val,route,active:true}); }
+    else{ routingRules[idx]=Object.assign({},routingRules[idx],{attr,op,val,route}); }
+    editingRuleIdx=null;
+    renderRules(); renderRuleForm();
+    return;
+  }
+  if(e.target.closest('#rfCancel')){ editingRuleIdx=null; renderRuleForm(); return; }
+
+  const testPill=e.target.closest('.test-pill');
+  if(testPill){ testTicket[testPill.dataset.g]=testPill.dataset.v; renderTestPanel(); return; }
+
+  if(e.target.closest('#runTest')){
+    let matchedRule=null, matchedIdx=null;
+    for(let i=0;i<routingRules.length;i++){
+      const r=routingRules[i];
+      if(!r.active) continue;
+      let matched;
+      if(r.attr==='Wait time'){
+        const threshold=parseInt(r.val), ticketVal=parseInt(testTicket['Wait time']);
+        matched = r.op==='>' ? ticketVal>threshold : ticketVal===threshold;
+      } else {
+        matched = testTicket[r.attr]===r.val;
+      }
+      if(matched){ matchedRule=r; matchedIdx=i; break; }
+    }
+    document.getElementById('testResult').innerHTML = matchedRule
+      ? 'Matched <b>rule '+(matchedIdx+1)+'</b> ('+matchedRule.attr+' '+matchedRule.op+' '+matchedRule.val+(matchedRule.attr==='Wait time'?' min':'')+') &rarr; routed to <b>'+matchedRule.route+'</b>'
+      : 'No active rule matched — ticket goes to the default queue.';
+    return;
+  }
+});
+
+renderRules();
+renderTestPanel();
+
+// ---------- Users, teams & roles ----------
+let teams=[
+  {name:'SEWA Billing', scope:'SEWA'},
+  {name:'Customs', scope:'Sharjah Customs'},
+  {name:'Libraries', scope:'Sharjah Libraries'},
+  {name:'Platform', scope:'All entities'}
+];
+let users=[
+  {name:'Sara Al Mazrouei', email:'sara.almazrouei@shj.ae', team:'SEWA Billing', role:'Agent Designer', status:'Active'},
+  {name:'Omar Khan', email:'omar.khan@shj.ae', team:'Customs', role:'Live Agent', status:'Active'},
+  {name:'Priya Nair', email:'priya.nair@shj.ae', team:'Libraries', role:'Knowledge Manager', status:'Invited'},
+  {name:'Ahmed Saeed', email:'ahmed.saeed@shj.ae', team:'Platform', role:'Super Admin', status:'Active'},
+  {name:'Lina Haddad', email:'lina.haddad@shj.ae', team:'Libraries', role:'Reviewer', status:'Suspended'}
+];
+const permKeys=[
+  {key:'dashboard', label:'View dashboard'},
+  {key:'manageAgents', label:'Manage agents'},
+  {key:'publishAgents', label:'Publish agents'},
+  {key:'manageKnowledge', label:'Manage knowledge'},
+  {key:'manageRouting', label:'Manage routing rules'},
+  {key:'handleEscalations', label:'Handle escalations'},
+  {key:'manageUsers', label:'Manage users &amp; teams'},
+  {key:'viewAnalytics', label:'View analytics'}
+];
+let roles=[
+  {name:'Super Admin', perms:{dashboard:true,manageAgents:true,publishAgents:true,manageKnowledge:true,manageRouting:true,handleEscalations:true,manageUsers:true,viewAnalytics:true}},
+  {name:'Entity Admin', perms:{dashboard:true,manageAgents:true,publishAgents:true,manageKnowledge:true,manageRouting:true,handleEscalations:false,manageUsers:false,viewAnalytics:true}},
+  {name:'Agent Designer', perms:{dashboard:true,manageAgents:true,publishAgents:false,manageKnowledge:false,manageRouting:false,handleEscalations:false,manageUsers:false,viewAnalytics:false}},
+  {name:'Knowledge Manager', perms:{dashboard:true,manageAgents:false,publishAgents:false,manageKnowledge:true,manageRouting:false,handleEscalations:false,manageUsers:false,viewAnalytics:false}},
+  {name:'Reviewer', perms:{dashboard:true,manageAgents:false,publishAgents:false,manageKnowledge:false,manageRouting:false,handleEscalations:false,manageUsers:false,viewAnalytics:true}},
+  {name:'Live Agent', perms:{dashboard:false,manageAgents:false,publishAgents:false,manageKnowledge:false,manageRouting:false,handleEscalations:true,manageUsers:false,viewAnalytics:false}},
+  {name:'Analyst', perms:{dashboard:true,manageAgents:false,publishAgents:false,manageKnowledge:false,manageRouting:false,handleEscalations:false,manageUsers:false,viewAnalytics:true}}
+];
+
+let umSubtab='users';
+let showAddUser=false, editingUserIdx=null, showAddTeam=false;
+
+function statusBadge(status){
+  if(status==='Active') return '<span class="badge ok">Active</span>';
+  if(status==='Invited') return '<span class="badge warn">Invited</span>';
+  return '<span class="badge warn">Suspended</span>';
+}
+function pillGroup(name, options, current){
+  return '<div class="pill-select">'+options.map(o=>
+    '<div class="pill '+name+'-pill'+(current===o?' on':'')+'" data-v="'+o+'">'+o+'</div>'
+  ).join('')+'</div>';
+}
+function userFormHtml(idx){
+  const u = idx===null ? {name:'',email:'',team:teams[0].name,role:roles[0].name} : users[idx];
+  return '<div class="connect-card">'
+    +'<div class="grid2">'
+      +'<div class="field-row"><label>Full name</label><input class="field-in" id="ufName" type="text" value="'+u.name+'" placeholder="e.g. Khalid Ahmadi"></div>'
+      +'<div class="field-row"><label>Email</label><input class="field-in" id="ufEmail" type="text" value="'+u.email+'" placeholder="name@shj.ae"></div>'
+    +'</div>'
+    +'<div class="field-row"><label>Team</label>'+pillGroup('uf-team', teams.map(t=>t.name), u.team)+'</div>'
+    +'<div class="field-row"><label>Role</label>'+pillGroup('uf-role', roles.map(r=>r.name), u.role)+'</div>'
+    +'<div style="display:flex;gap:8px;margin-top:6px;">'
+      +'<button class="btn" id="ufSave" data-edit="'+(idx===null?-1:idx)+'">'+(idx===null?'Send invite':'Save changes')+'</button>'
+      +'<button class="btn ghost" id="ufCancel">Cancel</button>'
+    +'</div>'
+  +'</div>';
+}
+function usersPaneHtml(){
+  const rows = users.map((u,i)=>
+    '<div class="tool-card"><div class="tool-card-head"><div><b>'+u.name+'</b><div class="mono-sub">'+u.email+'</div><div class="mono-sub">'+u.team+' &middot; '+u.role+'</div></div>'+statusBadge(u.status)+'</div>'
+    +'<div class="rule-actions">'
+      +'<button class="btn ghost user-edit" data-i="'+i+'">Edit</button>'
+      +'<button class="btn ghost user-suspend" data-i="'+i+'">'+(u.status==='Suspended'?'Reactivate':'Suspend')+'</button>'
+      +'<button class="btn ghost user-remove" data-i="'+i+'">Remove</button>'
+    +'</div></div>'
+  ).join('');
+  return '<div class="field-row"><label>Users ('+users.length+')</label></div>'+rows
+    +'<button class="btn ghost" id="toggleAddUser" style="margin-top:6px;">'+(showAddUser?'Cancel':'+ Invite user')+'</button>'
+    +(showAddUser?userFormHtml(null):'')
+    +(editingUserIdx!==null?userFormHtml(editingUserIdx):'');
+}
+
+function teamFormHtml(){
+  return '<div class="connect-card">'
+    +'<div class="grid2">'
+      +'<div class="field-row"><label>Team name</label><input class="field-in" id="tfName" type="text" placeholder="e.g. Support Tier 2"></div>'
+      +'<div class="field-row"><label>Entity scope</label><input class="field-in" id="tfScope" type="text" placeholder="e.g. All entities"></div>'
+    +'</div>'
+    +'<button class="btn" id="tfCreate" style="margin-top:6px;">Create team</button>'
+  +'</div>';
+}
+function teamsPaneHtml(){
+  const cards = teams.map((t)=>{
+    const members = users.filter(u=>u.team===t.name);
+    return '<div class="tool-card"><div class="tool-card-head"><div><b>'+t.name+'</b><div class="mono-sub">Scope: '+t.scope+' &middot; '+members.length+' members</div></div></div>'
+    +'<div class="tool-list">'+(members.length?members.map(m=>'<div class="tool-pill on">'+m.name+'</div>').join(''):'<span class="mono-sub">No members yet — invite or reassign a user to this team.</span>')+'</div>'
+    +'</div>';
+  }).join('');
+  return '<div class="field-row"><label>Teams ('+teams.length+')</label></div>'+cards
+    +'<button class="btn ghost" id="toggleAddTeam" style="margin-top:6px;">'+(showAddTeam?'Cancel':'+ Add team')+'</button>'
+    +(showAddTeam?teamFormHtml():'');
+}
+
+function rolesPaneHtml(){
+  const header = '<tr><th>Permission</th>'+roles.map(r=>'<th>'+r.name+'</th>').join('')+'</tr>';
+  const body = permKeys.map(pk=>{
+    const cells = roles.map((r,ri)=>
+      '<td style="text-align:center;"><div class="switch'+(r.perms[pk.key]?' on':'')+' perm-switch" data-role="'+ri+'" data-perm="'+pk.key+'"><div class="knob"></div></div></td>'
+    ).join('');
+    return '<tr><td>'+pk.label+'</td>'+cells+'</tr>';
+  }).join('');
+  return '<div class="field-row"><label>Permission matrix</label></div>'
+    +'<div style="overflow-x:auto;"><table class="wf-table">'+header+body+'</table></div>'
+    +'<button class="btn ghost" id="addRole" style="margin-top:14px;">+ Add custom role</button>';
+}
+
+function renderUM(){
+  document.querySelectorAll('#umSubtabs .subtab').forEach(s=>s.classList.toggle('active', s.dataset.sub===umSubtab));
+  const pane = document.getElementById('umPane');
+  if(umSubtab==='users') pane.innerHTML = usersPaneHtml();
+  else if(umSubtab==='teams') pane.innerHTML = teamsPaneHtml();
+  else pane.innerHTML = rolesPaneHtml();
+}
+
+document.getElementById('umSubtabs').addEventListener('click',(e)=>{
+  const t=e.target.closest('.subtab');
+  if(t){ umSubtab=t.dataset.sub; showAddUser=false; editingUserIdx=null; showAddTeam=false; renderUM(); }
+});
+
+document.getElementById('umPane').addEventListener('click',(e)=>{
+  // ---- users tab ----
+  if(e.target.closest('#toggleAddUser')){ showAddUser=!showAddUser; editingUserIdx=null; renderUM(); return; }
+  const uEdit=e.target.closest('.user-edit');
+  if(uEdit){ editingUserIdx=parseInt(uEdit.dataset.i); showAddUser=false; renderUM(); return; }
+  const uSuspend=e.target.closest('.user-suspend');
+  if(uSuspend){ const i=parseInt(uSuspend.dataset.i); users[i].status = users[i].status==='Suspended' ? 'Active' : 'Suspended'; renderUM(); return; }
+  const uRemove=e.target.closest('.user-remove');
+  if(uRemove){ const i=parseInt(uRemove.dataset.i); users.splice(i,1); renderUM(); return; }
+
+  const teamPill=e.target.closest('.uf-team-pill');
+  if(teamPill){ document.querySelectorAll('.uf-team-pill').forEach(p=>p.classList.remove('on')); teamPill.classList.add('on'); return; }
+  const rolePill=e.target.closest('.uf-role-pill');
+  if(rolePill){ document.querySelectorAll('.uf-role-pill').forEach(p=>p.classList.remove('on')); rolePill.classList.add('on'); return; }
+
+  const ufSave=e.target.closest('#ufSave');
+  if(ufSave){
+    const idx=parseInt(ufSave.dataset.edit);
+    const name=document.getElementById('ufName').value || 'Unnamed user';
+    const email=document.getElementById('ufEmail').value || '—';
+    const team=document.querySelector('.uf-team-pill.on').dataset.v;
+    const role=document.querySelector('.uf-role-pill.on').dataset.v;
+    if(idx===-1){ users.push({name,email,team,role,status:'Invited'}); }
+    else{ users[idx]=Object.assign({},users[idx],{name,email,team,role}); }
+    showAddUser=false; editingUserIdx=null; renderUM(); return;
+  }
+  if(e.target.closest('#ufCancel')){ showAddUser=false; editingUserIdx=null; renderUM(); return; }
+
+  // ---- teams tab ----
+  if(e.target.closest('#toggleAddTeam')){ showAddTeam=!showAddTeam; renderUM(); return; }
+  if(e.target.closest('#tfCreate')){
+    const name=document.getElementById('tfName').value || 'New team';
+    const scope=document.getElementById('tfScope').value || '—';
+    teams.push({name,scope});
+    showAddTeam=false; renderUM(); return;
+  }
+
+  // ---- roles tab ----
+  const permSwitch=e.target.closest('.perm-switch');
+  if(permSwitch){
+    const ri=parseInt(permSwitch.dataset.role), pk=permSwitch.dataset.perm;
+    roles[ri].perms[pk]=!roles[ri].perms[pk];
+    renderUM(); return;
+  }
+  if(e.target.closest('#addRole')){
+    const blank={}; permKeys.forEach(p=>blank[p.key]=false);
+    roles.push({name:'New role '+(roles.length+1), perms:blank});
+    renderUM(); return;
+  }
+});
+
+renderUM();
+
+// ---------- Channel configurations ----------
+let channelsSubtab='overview';
+const agentsList=['SEWA & Utilities Billing Agent','Customs Enquiry Agent','Library Services Agent','General FAQ Agent'];
+
+let channels=[
+  {name:'Web widget', enabled:true, agent:'SEWA & Utilities Billing Agent', hours:'24/7'},
+  {name:'WhatsApp', enabled:true, agent:'SEWA & Utilities Billing Agent', hours:'24/7'},
+  {name:'Mobile app', enabled:false, agent:'—', hours:'—'},
+  {name:'Kiosk / IVR', enabled:false, agent:'—', hours:'—'}
+];
+function channelsPaneHtml(){
+  const cards = channels.map((c,i)=>{
+    const badge = c.enabled ? '<span class="badge ok">Live</span>' : '<span class="badge warn">Disabled</span>';
+    return '<div class="tool-card"><div class="tool-card-head">'
+      +'<div><b>'+c.name+'</b><div class="mono-sub">Agent: '+c.agent+' &middot; Hours: '+c.hours+'</div></div>'
+      +'<div style="display:flex;gap:10px;align-items:center;">'+badge+'<div class="switch channel-toggle'+(c.enabled?' on':'')+'" data-i="'+i+'"><div class="knob"></div></div></div>'
+    +'</div></div>';
+  }).join('');
+  return '<div class="field-row"><label>Channels</label></div>'+cards
+    +'<div class="field-row" style="margin-top:16px;"><label>Out-of-hours behaviour</label></div>'
+    +'<div class="grid2">'
+      +'<div class="field-row"><label>Working hours (human handover)</label><div class="field-in">Sun–Thu 08:00–20:00 · Sat 09:00–14:00</div></div>'
+      +'<div class="field-row"><label>Public holidays</label><div class="field-in">UAE calendar — auto-synced</div></div>'
+    +'</div>'
+    +'<div class="channel-row"><span>Assistant stays available 24/7 even when agents are offline</span><div class="switch on"><div class="knob"></div></div></div>'
+    +'<div class="field-row"><label>Message when no agent is available</label><div class="field-in ta">Our team is offline right now. I can still help, or leave a message and an agent will reply when we reopen.</div></div>'
+    +'<div class="attach-summary">Toggling a channel off stops new conversations there immediately; open conversations are allowed to finish.</div>';
+}
+
+// -- Web widget studio --
+const colorOptions=['#1F6F5C','#0F4C81','#B4553F','#6B5B95','#2D2D2D'];
+let widgetConfig={
+  color:'#1F6F5C',
+  position:'Bottom right',
+  defaultState:'Docked',
+  disclaimer:"I'm continuously learning, so some responses may not be fully accurate.",
+  greeting:'Hello! I am SHJ3 Assistant. How can I help you today?',
+  placeholder:'Ask SHJ3 Assistant',
+  domains:['sharjah.ae','services.shj.ae']
+};
+function widgetPreviewHtml(){
+  return '<div class="widget-window" style="max-width:300px;border:1px solid var(--line-soft);">'
+    +'<div class="widget-head"><div class="idn"><span class="dot" style="background:'+widgetConfig.color+'22;border-color:'+widgetConfig.color+';"></span> SHJ3 Assistant</div>'
+    +'<div class="head-ctrls"><div class="ic">–</div><div class="ic">⧉</div></div></div>'
+    +'<div class="disclaimer" style="font-size:10.5px;">'+widgetConfig.disclaimer+'</div>'
+    +'<div class="thread"><div class="bubble assist" style="background:'+widgetConfig.color+'14;border-color:'+widgetConfig.color+'33;">'+widgetConfig.greeting
+      +'<div class="chips"><div class="chip" style="border-color:'+widgetConfig.color+';color:'+widgetConfig.color+';">Pay SEWA Bills</div></div></div></div>'
+    +'<div class="composer"><div class="field">'+widgetConfig.placeholder+'</div><div class="mic">🎤</div></div>'
+    +'<div class="mono-sub" style="padding:0 12px 10px;">Launcher: '+widgetConfig.position+' &middot; opens '+widgetConfig.defaultState.toLowerCase()+'</div>'
+  +'</div>';
+}
+function widgetPaneHtml(){
+  const swatches = colorOptions.map(c=>'<div class="color-swatch'+(widgetConfig.color===c?' on':'')+'" data-c="'+c+'" style="background:'+c+'"></div>').join('');
+  const domains = widgetConfig.domains.map((d,i)=>'<div class="tool-pill on domain-pill" data-i="'+i+'">'+d+' &times;</div>').join('');
+  return '<div class="grid2">'
+    +'<div>'
+      +'<div class="field-row"><label>Accent color</label><div class="swatch-row">'+swatches+'</div></div>'
+      +'<div class="field-row"><label>Launcher position</label>'+pillGroup('wp-pos', ['Bottom right','Bottom left'], widgetConfig.position)+'</div>'
+      +'<div class="field-row"><label>Default state</label>'+pillGroup('wp-state', ['Docked','Expanded'], widgetConfig.defaultState)+'</div>'
+      +'<div class="field-row"><label>Disclaimer text</label><input class="field-in" id="wpDisclaimer" type="text" value="'+widgetConfig.disclaimer+'"></div>'
+      +'<div class="field-row"><label>Greeting text</label><input class="field-in" id="wpGreeting" type="text" value="'+widgetConfig.greeting+'"></div>'
+      +'<div class="field-row"><label>Composer placeholder</label><input class="field-in" id="wpPlaceholder" type="text" value="'+widgetConfig.placeholder+'"></div>'
+      +'<div class="field-row"><label>Allowed domains</label><div class="tool-list">'+domains+'</div>'
+        +'<div style="display:flex;gap:8px;margin-top:8px;"><input class="field-in" id="wpNewDomain" type="text" placeholder="add-domain.ae" style="flex:1;">'
+        +'<button class="btn ghost" id="wpAddDomain" style="padding:6px 12px;">Add</button></div></div>'
+      +'<button class="btn" id="wpSave" style="margin-top:10px;">Save widget settings</button>'
+    +'</div>'
+    +'<div>'
+      +'<div class="field-row"><label>Live preview</label></div>'
+      +'<div id="widgetPreview">'+widgetPreviewHtml()+'</div>'
+      +'<div class="field-row" style="margin-top:16px;"><label>Embed snippet</label></div>'
+      +'<div class="api-preview" id="embedSnippet">&lt;script src="https://cdn.shj3.ae/widget.js" data-color="'+widgetConfig.color+'"&gt;&lt;/script&gt;</div>'
+      +'<button class="btn ghost" id="copySnippet" style="margin-top:8px;">Copy snippet</button>'
+    +'</div>'
+  +'</div>';
+}
+
+// -- WhatsApp --
+let waConfig={number:'+971 800 7342', bsp:'Meta Cloud API', optIn:true, sessionWindow:'24 hours'};
+let waTemplates=[
+  {name:'welcome_message', status:'Approved'},
+  {name:'bill_reminder', status:'Approved'},
+  {name:'appointment_confirmation', status:'Pending'}
+];
+let showAddTemplate=false;
+function templateFormHtml(){
+  return '<div class="connect-card">'
+    +'<div class="field-row"><label>Template name</label><input class="field-in" id="tplName" type="text" placeholder="e.g. payment_receipt"></div>'
+    +'<div class="field-row"><label>Sample body</label><input class="field-in" id="tplBody" type="text" placeholder="Your payment of {{1}} was received."></div>'
+    +'<button class="btn" id="tplSubmit" style="margin-top:6px;">Submit for approval</button>'
+  +'</div>';
+}
+function waPaneHtml(){
+  const tplRows = waTemplates.map(t=>{
+    const badge = t.status==='Approved' ? '<span class="badge ok">Approved</span>' : t.status==='Pending' ? '<span class="badge warn">Pending review</span>' : '<span class="badge warn">Rejected</span>';
+    return '<div class="list-row"><span>'+t.name+'</span><span>'+badge+'</span></div>';
+  }).join('');
+  return '<div class="grid2">'
+    +'<div class="field-row"><label>WhatsApp number</label><div class="field-in">'+waConfig.number+'</div></div>'
+    +'<div class="field-row"><label>BSP</label><div class="field-in">'+waConfig.bsp+'</div></div>'
+  +'</div>'
+  +'<div class="channel-row"><span>Opt-in required before first message</span><div class="switch'+(waConfig.optIn?' on':'')+'" id="waOptIn"><div class="knob"></div></div></div>'
+  +'<div class="field-row"><label>Session window</label><div class="field-in">'+waConfig.sessionWindow+' — free-form replies allowed after a user message; a template is required to re-open after this</div></div>'
+  +'<div class="field-row" style="margin-top:18px;"><label>Message templates</label></div>'
+  +tplRows
+  +'<button class="btn ghost" id="toggleAddTemplate" style="margin-top:8px;">'+(showAddTemplate?'Cancel':'+ Submit new template')+'</button>'
+  +(showAddTemplate?templateFormHtml():'');
+}
+
+// -- Localization --
+let locales=[
+  {name:'English', voice:'Aria (EN)', rtl:false, completeness:100, fallback:true},
+  {name:'Arabic', voice:'Layla (AR)', rtl:true, completeness:82, fallback:false}
+];
+function localizationPaneHtml(){
+  const rows = locales.map((l,i)=>
+    '<div class="tool-card"><div class="tool-card-head"><div><b>'+l.name+'</b><div class="mono-sub">Voice: '+l.voice+' &middot; '+(l.rtl?'RTL':'LTR')+(l.fallback?' &middot; fallback locale':'')+'</div></div>'
+    +'<span class="badge '+(l.completeness>=100?'ok':'warn')+'">'+l.completeness+'% translated</span></div>'
+    +'<div class="bar-track" style="margin-top:8px;"><div class="bar-fill" style="width:'+l.completeness+'%"></div></div>'
+    +'<div class="rule-actions"><button class="btn ghost loc-fallback" data-i="'+i+'" '+(l.fallback?'disabled':'')+'>'+(l.fallback?'Fallback locale':'Set as fallback')+'</button></div>'
+    +'</div>'
+  ).join('');
+  return '<div class="field-row"><label>Locales</label></div>'+rows
+    +'<div class="attach-summary">'
+    +(locales.some(l=>l.completeness<100)
+      ? 'Arabic is at '+locales.find(l=>l.name==='Arabic').completeness+'%. With the locale gate on (Evaluation &rarr; Publish gate), agents bound to Arabic are blocked from publishing until it reaches 100% — otherwise an Arabic user can receive English replies.'
+      : 'All bound locales are fully translated.')+'</div>';
+}
+
+// -- Proactive messaging --
+let proactiveCampaigns=[
+  {name:'Bill due reminder', template:'bill_reminder', trigger:'3 days before due date', channel:'WhatsApp', audience:'Opted-in SEWA customers', on:true, sent:'4,210 this month'},
+  {name:'Appointment confirmation', template:'appointment_confirmation', trigger:'On booking created', channel:'WhatsApp', audience:'Jawaher Centre bookings', on:false, sent:'—'},
+  {name:'Payment receipt', template:'payment_receipt', trigger:'On payment settled', channel:'WhatsApp', audience:'All payers', on:true, sent:'1,880 this month'}
+];
+let quietHours=true;
+function proactivePaneHtml(){
+  return '<div class="field-row"><label>Campaigns &amp; triggers</label></div>'
+    +proactiveCampaigns.map((c,i)=>{
+      const approved = waTemplates.find(t=>t.name===c.template && t.status==='Approved');
+      return '<div class="tool-card"><div class="tool-card-head">'
+        +'<div><b>'+c.name+'</b><div class="mono-sub">Template: '+c.template+' &middot; '+c.channel+'</div>'
+        +'<div class="mono-sub">Trigger: '+c.trigger+' &middot; '+c.audience+'</div>'
+        +'<div class="mono-sub">Sent: '+c.sent+'</div>'
+        +(approved?'':'<div class="mono-sub">Template not approved — campaign cannot send.</div>')+'</div>'
+        +'<div style="display:flex;gap:10px;align-items:center;">'
+        +(approved?'<span class="badge ok">Template approved</span>':'<span class="badge warn">Blocked</span>')
+        +'<div class="switch pc-toggle'+(c.on&&approved?' on':'')+'" data-i="'+i+'"><div class="knob"></div></div></div></div></div>';
+    }).join('')
+    +'<div class="channel-row" style="margin-top:14px;"><span>Respect quiet hours (no sends 21:00–07:00)</span>'
+      +'<div class="switch'+(quietHours?' on':'')+'" id="quietToggle"><div class="knob"></div></div></div>'
+    +'<div class="attach-summary">Outbound sends require an approved template and a recorded opt-in. Both are checked at send time, not just here.</div>';
+}
+
+function renderChannels(){
+  document.querySelectorAll('#chSubtabs .subtab').forEach(s=>s.classList.toggle('active', s.dataset.sub===channelsSubtab));
+  const pane=document.getElementById('chPane');
+  if(channelsSubtab==='overview') pane.innerHTML = channelsPaneHtml();
+  else if(channelsSubtab==='widget') pane.innerHTML = widgetPaneHtml();
+  else if(channelsSubtab==='whatsapp') pane.innerHTML = waPaneHtml();
+  else if(channelsSubtab==='proactive') pane.innerHTML = proactivePaneHtml();
+  else pane.innerHTML = localizationPaneHtml();
+}
+
+document.getElementById('chSubtabs').addEventListener('click',(e)=>{
+  const t=e.target.closest('.subtab');
+  if(t){ channelsSubtab=t.dataset.sub; showAddTemplate=false; renderChannels(); }
+});
+
+document.getElementById('chPane').addEventListener('click',(e)=>{
+  // overview
+  const chToggle=e.target.closest('.channel-toggle');
+  if(chToggle){ const i=parseInt(chToggle.dataset.i); channels[i].enabled=!channels[i].enabled; renderChannels(); return; }
+
+  // widget studio
+  const swatch=e.target.closest('.color-swatch');
+  if(swatch){ widgetConfig.color=swatch.dataset.c; renderChannels(); return; }
+  const posPill=e.target.closest('.wp-pos-pill');
+  if(posPill){ document.querySelectorAll('.wp-pos-pill').forEach(p=>p.classList.remove('on')); posPill.classList.add('on'); widgetConfig.position=posPill.dataset.v; return; }
+  const statePill=e.target.closest('.wp-state-pill');
+  if(statePill){ document.querySelectorAll('.wp-state-pill').forEach(p=>p.classList.remove('on')); statePill.classList.add('on'); widgetConfig.defaultState=statePill.dataset.v; return; }
+  const domainPill=e.target.closest('.domain-pill');
+  if(domainPill){ widgetConfig.domains.splice(parseInt(domainPill.dataset.i),1); renderChannels(); return; }
+  if(e.target.closest('#wpAddDomain')){
+    const v=document.getElementById('wpNewDomain').value;
+    if(v){ widgetConfig.domains.push(v); }
+    renderChannels(); return;
+  }
+  if(e.target.closest('#wpSave')){
+    widgetConfig.disclaimer=document.getElementById('wpDisclaimer').value;
+    widgetConfig.greeting=document.getElementById('wpGreeting').value;
+    widgetConfig.placeholder=document.getElementById('wpPlaceholder').value;
+    renderChannels(); return;
+  }
+  const copyBtn=e.target.closest('#copySnippet');
+  if(copyBtn){ const orig=copyBtn.textContent; copyBtn.textContent='Copied!'; setTimeout(()=>{copyBtn.textContent=orig;},1200); return; }
+
+  // whatsapp
+  if(e.target.closest('#waOptIn')){ waConfig.optIn=!waConfig.optIn; renderChannels(); return; }
+  if(e.target.closest('#toggleAddTemplate')){ showAddTemplate=!showAddTemplate; renderChannels(); return; }
+  if(e.target.closest('#tplSubmit')){
+    const name=document.getElementById('tplName').value || 'new_template';
+    waTemplates.push({name, status:'Pending'});
+    showAddTemplate=false; renderChannels(); return;
+  }
+
+  // localization
+  const fallbackBtn=e.target.closest('.loc-fallback');
+  if(fallbackBtn && !fallbackBtn.disabled){
+    const i=parseInt(fallbackBtn.dataset.i);
+    locales.forEach((l,li)=>l.fallback = li===i);
+    renderChannels(); return;
+  }
+  // proactive
+  const pc=e.target.closest('.pc-toggle');
+  if(pc){ const i=+pc.dataset.i;
+    const approved = waTemplates.find(t=>t.name===proactiveCampaigns[i].template && t.status==='Approved');
+    if(approved){ proactiveCampaigns[i].on=!proactiveCampaigns[i].on; }
+    renderChannels(); return; }
+  if(e.target.closest('#quietToggle')){ quietHours=!quietHours; renderChannels(); return; }
+});
+
+renderChannels();
+
+// ---------- Command centre (overview / conversations / feedback) ----------
+let dashSubtab='overview';
+let dashRange='Today';
+const dashData={
+  'Today':{kpis:['1,284','78%','64%','3.1%'], bars:[70,40,85,55,30,95,50], intents:[['Pay utilities bill',412],['Sharjah customs enquiry',301],['Library membership',188],['Jawaher Centre booking',140],['Escalated to agent',96]]},
+  'Last 7 days':{kpis:['8,940','81%','67%','2.4%'], bars:[60,75,50,90,65,80,70], intents:[['Pay utilities bill',2810],['Sharjah customs enquiry',1994],['Library membership',1203],['Jawaher Centre booking',870],['Escalated to agent',640]]},
+  'Last 30 days':{kpis:['36,410','83%','69%','2.0%'], bars:[55,65,72,60,88,74,92], intents:[['Pay utilities bill',11640],['Sharjah customs enquiry',8320],['Library membership',5100],['Jawaher Centre booking',3480],['Escalated to agent',2210]]}
+};
+const kpiLabels=['Conversations','Containment rate','Deflection rate','Tool error rate'];
+
+let convFilter='All';
+const transcripts=[
+  {user:'Ahmed R.', channel:'WhatsApp', intent:'Pay utilities bill', outcome:'Escalated', rating:'👎', when:'12 min ago'},
+  {user:'Fatima S.', channel:'Web', intent:'Customs enquiry', outcome:'Escalated', rating:'👎', when:'28 min ago'},
+  {user:'Yousef M.', channel:'Web', intent:'Library membership', outcome:'Resolved', rating:'👍', when:'1 hr ago'},
+  {user:'Mariam A.', channel:'WhatsApp', intent:'Pay utilities bill', outcome:'Resolved', rating:'👍', when:'2 hrs ago'},
+  {user:'Hassan T.', channel:'Web', intent:'Jawaher booking', outcome:'Abandoned', rating:'—', when:'3 hrs ago'}
+];
+let openTranscript=null;
+
+let feedbackItems=[
+  {q:'Why was my SEWA bill higher this month?', count:34, cause:'Missing knowledge', status:'Open'},
+  {q:'Can I pay someone else\'s bill?', count:21, cause:'Missing knowledge', status:'Open'},
+  {q:'Assistant gave wrong customs fee', count:12, cause:'Stale source', status:'Open'}
+];
+let gapItems=[
+  {q:'Do you accept Apple Pay?', count:58},
+  {q:'How do I dispute a fine?', count:41},
+  {q:'Library opening hours on Fridays', count:27}
+];
+
+function overviewHtml(){
+  const d=dashData[dashRange];
+  const ranges=['Today','Last 7 days','Last 30 days'].map(r=>'<div class="pill dash-range'+(dashRange===r?' on':'')+'" data-v="'+r+'">'+r+'</div>').join('');
+  const kpis=d.kpis.map((v,i)=>'<div class="kpi"><div class="num">'+v+'</div><div class="lbl">'+kpiLabels[i]+'</div></div>').join('');
+  const bars=d.bars.map(h=>'<i style="height:'+h+'%"></i>').join('');
+  const intents=d.intents.map(x=>'<div class="list-row"><span>'+x[0]+'</span><span>'+x[1].toLocaleString()+'</span></div>').join('');
+  return '<div class="field-row"><label>Date range</label><div class="pill-select">'+ranges+'</div></div>'
+    +'<div class="kpi-grid">'+kpis+'</div>'
+    +'<div class="canvas" style="display:grid;grid-template-columns:1.3fr 1fr;gap:24px;">'
+      +'<div><div class="field-row"><label>Channel split — messages / day</label></div><div class="bars">'+bars+'</div></div>'
+      +'<div><div class="field-row"><label>Top intents</label></div>'+intents+'</div>'
+    +'</div>';
+}
+function conversationsHtml(){
+  const filters=['All','Escalated','Resolved','Abandoned'].map(f=>'<div class="pill conv-filter'+(convFilter===f?' on':'')+'" data-v="'+f+'">'+f+'</div>').join('');
+  const rows=transcripts.filter(t=>convFilter==='All'||t.outcome===convFilter).map((t,i)=>{
+    const badge=t.outcome==='Resolved'?'<span class="badge ok">Resolved</span>':'<span class="badge warn">'+t.outcome+'</span>';
+    const open=openTranscript===t.user;
+    const detail=open?'<div class="thread" style="border-top:1px solid var(--line-soft);margin-top:10px;padding:12px 0;">'
+      +'<div class="bubble user">'+t.intent+'</div>'
+      +'<div class="bubble assist">Could you confirm a few details so I can help with that?</div>'
+      +'<div class="sys-note">— outcome: '+t.outcome+' · rating '+t.rating+' · PII redacted —</div></div>'
+      +'<div class="rule-actions"><button class="btn ghost gold-add" data-i="'+i+'">Add to golden set</button><button class="btn ghost">Export</button></div>':'';
+    return '<div class="tool-card"><div class="tool-card-head">'
+      +'<div><b>'+t.user+'</b><div class="mono-sub">'+t.channel+' &middot; '+t.intent+' &middot; '+t.when+' &middot; '+t.rating+'</div></div>'+badge+'</div>'
+      +'<div class="rule-actions"><button class="btn ghost conv-open" data-u="'+t.user+'">'+(open?'Hide transcript':'View transcript')+'</button></div>'+detail
+      +'</div>';
+  }).join('');
+  return '<div class="field-row"><label>Filter by outcome</label><div class="pill-select">'+filters+'</div></div>'
+    +'<div class="canvas">'+(rows||'<div class="mono-sub">No conversations match this filter.</div>')+'</div>';
+}
+function feedbackHtml(){
+  const fb=feedbackItems.map((f,i)=>
+    '<div class="tool-card"><div class="tool-card-head"><div><b>'+f.q+'</b><div class="mono-sub">'+f.count+' thumbs-down &middot; cause: '+f.cause+'</div></div>'
+    +(f.status==='Fixed'?'<span class="badge ok">Fixed</span>':'<span class="badge warn">Open</span>')+'</div>'
+    +'<div class="rule-actions"><button class="btn ghost fb-fix" data-i="'+i+'">'+(f.status==='Fixed'?'Reopen':'Mark fixed')+'</button>'
+    +'<button class="btn ghost">Assign owner</button></div></div>'
+  ).join('');
+  const gaps=gapItems.map((g,i)=>
+    '<div class="dup-item"><span>&ldquo;'+g.q+'&rdquo; &middot; asked '+g.count+'&times;</span>'
+    +'<span style="display:flex;gap:6px;"><button class="btn ghost gap-know" data-i="'+i+'" style="padding:4px 9px;font-size:11px;">Create knowledge entry</button>'
+    +'<button class="btn ghost gap-flow" data-i="'+i+'" style="padding:4px 9px;font-size:11px;">Create flow</button></span></div>'
+  ).join('');
+  return '<div class="canvas"><div class="field-row"><label>Thumbs-down review queue</label></div>'+fb+'</div>'
+    +'<div class="canvas"><div class="field-row"><label>Unanswered questions — knowledge gaps</label></div>'
+    +(gaps||'<div class="mono-sub">All gaps triaged.</div>')+'</div>';
+}
+function renderDash(){
+  document.querySelectorAll('#dashSubtabs .subtab').forEach(s=>s.classList.toggle('active', s.dataset.sub===dashSubtab));
+  const p=document.getElementById('dashPane');
+  if(dashSubtab==='conversations') p.innerHTML=conversationsHtml();
+  else if(dashSubtab==='feedback') p.innerHTML=feedbackHtml();
+  else p.innerHTML=overviewHtml();
+}
+document.getElementById('dashSubtabs').addEventListener('click',(e)=>{
+  const t=e.target.closest('.subtab'); if(t){ dashSubtab=t.dataset.sub; renderDash(); }
+});
+document.getElementById('dashPane').addEventListener('click',(e)=>{
+  const r=e.target.closest('.dash-range'); if(r){ dashRange=r.dataset.v; renderDash(); return; }
+  const cf=e.target.closest('.conv-filter'); if(cf){ convFilter=cf.dataset.v; openTranscript=null; renderDash(); return; }
+  const co=e.target.closest('.conv-open'); if(co){ openTranscript = openTranscript===co.dataset.u ? null : co.dataset.u; renderDash(); return; }
+  const fx=e.target.closest('.fb-fix'); if(fx){ const i=parseInt(fx.dataset.i); feedbackItems[i].status = feedbackItems[i].status==='Fixed'?'Open':'Fixed'; renderDash(); return; }
+  const gk=e.target.closest('.gap-know'); if(gk){ gapItems.splice(parseInt(gk.dataset.i),1); renderDash(); return; }
+  const gf=e.target.closest('.gap-flow'); if(gf){ gapItems.splice(parseInt(gf.dataset.i),1); renderDash(); return; }
+  const ga=e.target.closest('.gold-add');
+  if(ga){ goldenSets[0].cases += 1;
+    ga.textContent='Added to “'+goldenSets[0].name+'”'; ga.disabled=true; return; }
+});
+renderDash();
+
+// ---------- Agent registry ----------
+let registryAgents=[
+  {name:'SEWA & Utilities Billing Agent', owner:'SEWA', version:'v1.4', status:'Published', channels:'Web, WhatsApp', usage:'412/day',
+   history:[{v:'v1.4',note:'Added du/Etisalat lookup tool',when:'2 days ago'},{v:'v1.3',note:'Tightened guardrail threshold',when:'2 weeks ago'},{v:'v1.2',note:'Initial billing flow',when:'1 month ago'}]},
+  {name:'Customs Enquiry Agent', owner:'Sharjah Customs', version:'v2.1', status:'Published', channels:'Web', usage:'301/day',
+   history:[{v:'v2.1',note:'Added declaration status tool',when:'5 days ago'},{v:'v2.0',note:'Rebuilt on Graph RAG',when:'3 weeks ago'}]},
+  {name:'Library Services Agent', owner:'Sharjah Libraries', version:'v0.9', status:'Draft', channels:'—', usage:'—',
+   history:[{v:'v0.9',note:'Draft — membership flow in progress',when:'1 day ago'}]},
+  {name:'General FAQ Agent', owner:'Platform', version:'v3.0', status:'Published', channels:'Web, WhatsApp', usage:'640/day',
+   history:[{v:'v3.0',note:'Merged entity FAQs into one graph',when:'1 week ago'},{v:'v2.4',note:'Arabic locale added',when:'1 month ago'}]}
+];
+let openHistory=null;
+function renderRegistry(){
+  document.getElementById('registryPane').innerHTML = registryAgents.map((a,i)=>{
+    const badge = a.status==='Published'?'<span class="badge ok">Published</span>':'<span class="badge warn">Draft</span>';
+    const open = openHistory===i;
+    const hist = open ? '<div style="margin-top:10px;border-top:1px solid var(--line-soft);padding-top:10px;">'
+      +a.history.map((h,hi)=>'<div class="list-row"><span><b>'+h.v+'</b> — '+h.note+'</span><span>'+h.when
+        +(hi>0?' &middot; <button class="btn ghost reg-rollback" data-i="'+i+'" data-v="'+h.v+'" style="padding:3px 8px;font-size:10.5px;">Roll back</button>':'')
+        +'</span></div>').join('')+'</div>' : '';
+    return '<div class="tool-card"><div class="tool-card-head">'
+      +'<div><b>'+a.name+'</b><div class="mono-sub">'+a.owner+' &middot; '+a.version+' &middot; '+a.channels+' &middot; '+a.usage+'</div></div>'+badge+'</div>'
+      +'<div class="rule-actions">'
+        +'<button class="btn ghost reg-history" data-i="'+i+'">'+(open?'Hide versions':'Version history')+'</button>'
+        +'<button class="btn ghost reg-clone" data-i="'+i+'">Clone</button>'
+        +'<button class="btn ghost reg-status" data-i="'+i+'">'+(a.status==='Published'?'Unpublish':'Publish')+'</button>'
+        +'<button class="btn ghost reg-archive" data-i="'+i+'">Archive</button>'
+      +'</div>'+hist+'</div>';
+  }).join('') + '<div class="attach-summary">Agents are authored in the Agent designer wizard — this registry manages their lifecycle after publish.</div>';
+}
+document.getElementById('registryPane').addEventListener('click',(e)=>{
+  const h=e.target.closest('.reg-history'); if(h){ const i=parseInt(h.dataset.i); openHistory = openHistory===i?null:i; renderRegistry(); return; }
+  const c=e.target.closest('.reg-clone'); if(c){ const a=registryAgents[parseInt(c.dataset.i)];
+    registryAgents.push(Object.assign({},a,{name:a.name+' (copy)',status:'Draft',version:'v0.1',channels:'—',usage:'—',history:[{v:'v0.1',note:'Cloned from '+a.name,when:'just now'}]}));
+    renderRegistry(); return; }
+  const s=e.target.closest('.reg-status'); if(s){ const i=parseInt(s.dataset.i);
+    registryAgents[i].status = registryAgents[i].status==='Published'?'Draft':'Published'; renderRegistry(); return; }
+  const ar=e.target.closest('.reg-archive'); if(ar){ registryAgents.splice(parseInt(ar.dataset.i),1); openHistory=null; renderRegistry(); return; }
+  const rb=e.target.closest('.reg-rollback'); if(rb){ const i=parseInt(rb.dataset.i);
+    registryAgents[i].version=rb.dataset.v;
+    registryAgents[i].history.unshift({v:rb.dataset.v,note:'Rolled back to '+rb.dataset.v,when:'just now'});
+    renderRegistry(); return; }
+});
+renderRegistry();
+
+// ========== IDENTITY & TRANSACTIONS ==========
+let idSubtab='verification';
+let idProviders=[
+  {name:'UAE PASS', kind:'National digital identity', on:true, note:'Returns verified name, Emirates ID hash and mobile.'},
+  {name:'OTP to registered mobile', kind:'Possession factor', on:true, note:'Fallback when UAE PASS is unavailable.'},
+  {name:'Emirates ID scan', kind:'Document check', on:false, note:'Used for in-person kiosk journeys.'}
+];
+let stepUpRules=[
+  {action:'View bill balance', level:'Anonymous allowed', on:true},
+  {action:'Link a utility account', level:'Verified identity required', on:true},
+  {action:'Initiate a payment', level:'Verified identity + OTP', on:true},
+  {action:'Change registered mobile', level:'Verified identity + OTP', on:true}
+];
+let ownershipCheck=true, gateways=[
+  {name:'Sharjah Pay gateway', methods:'Card, Apple Pay, bank transfer', status:'Live'},
+  {name:'SEWA direct debit', methods:'Bank mandate', status:'Sandbox'}
+];
+let transactions=[
+  {ref:'TXN-88213', user:'Ahmed R.', amount:'AED 412.00', service:'SEWA bill', status:'Settled', when:'12 min ago'},
+  {ref:'TXN-88210', user:'Mariam A.', amount:'AED 189.50', service:'Etisalat bill', status:'Settled', when:'1 hr ago'},
+  {ref:'TXN-88204', user:'Hassan T.', amount:'AED 75.00', service:'Jawaher booking', status:'Refund requested', when:'3 hrs ago'},
+  {ref:'TXN-88199', user:'Yousef M.', amount:'AED 240.00', service:'SEWA bill', status:'Failed', when:'5 hrs ago'}
+];
+let stitchConfig={enabled:true, key:'Verified Emirates ID hash', retention:'90 days', memoryScope:'Per verified identity'};
+
+function idPaneHtml(){
+  if(idSubtab==='verification'){
+    return '<div class="field-row"><label>Identity providers</label></div>'
+      +idProviders.map((p,i)=>'<div class="tool-card"><div class="tool-card-head">'
+        +'<div><b>'+p.name+'</b><div class="mono-sub">'+p.kind+'</div><div class="mono-sub">'+p.note+'</div></div>'
+        +'<div class="switch idp-toggle'+(p.on?' on':'')+'" data-i="'+i+'"><div class="knob"></div></div></div></div>').join('')
+      +'<div class="channel-row"><span>Verify the user actually owns the account number they supply</span>'
+        +'<div class="switch'+(ownershipCheck?' on':'')+'" id="ownCheck"><div class="knob"></div></div></div>'
+      +'<div class="attach-summary">With ownership checking off, a user could look up or pay against an account they do not hold. Keep this on for any billing agent.</div>';
+  }
+  if(idSubtab==='stepup'){
+    return '<div class="field-row"><label>Required assurance per action</label></div>'
+      +stepUpRules.map((r,i)=>'<div class="tool-card"><div class="tool-card-head">'
+        +'<div><b>'+r.action+'</b><div class="mono-sub">'+r.level+'</div></div>'
+        +'<div class="switch su-toggle'+(r.on?' on':'')+'" data-i="'+i+'"><div class="knob"></div></div></div></div>').join('')
+      +'<div class="attach-summary">A flow node that triggers one of these actions pauses for step-up before the tool call is made.</div>';
+  }
+  if(idSubtab==='payments'){
+    return '<div class="field-row"><label>Payment gateways</label></div>'
+      +gateways.map(g=>'<div class="tool-card"><div class="tool-card-head"><div><b>'+g.name+'</b><div class="mono-sub">'+g.methods+'</div></div>'
+        +(g.status==='Live'?'<span class="badge ok">Live</span>':'<span class="badge warn">Sandbox</span>')+'</div></div>').join('')
+      +'<div class="field-row" style="margin-top:16px;"><label>Receipts</label></div>'
+      +'<div class="channel-row"><span>Send receipt in-conversation</span><div class="switch on"><div class="knob"></div></div></div>'
+      +'<div class="channel-row"><span>Email a PDF copy</span><div class="switch on"><div class="knob"></div></div></div>'
+      +'<div class="channel-row"><span>Allow refund requests from the assistant</span><div class="switch on"><div class="knob"></div></div></div>';
+  }
+  if(idSubtab==='ledger'){
+    return '<div class="field-row"><label>Transactions</label></div>'
+      +transactions.map((t,i)=>{
+        const badge = t.status==='Settled'?'<span class="badge ok">Settled</span>':'<span class="badge warn">'+t.status+'</span>';
+        const actions = t.status==='Refund requested'
+          ? '<div class="rule-actions"><button class="btn ghost txn-approve" data-i="'+i+'">Approve refund</button><button class="btn ghost txn-deny" data-i="'+i+'">Decline</button></div>' : '';
+        return '<div class="tool-card"><div class="tool-card-head"><div><b>'+t.ref+' — '+t.amount+'</b>'
+          +'<div class="mono-sub">'+t.user+' &middot; '+t.service+' &middot; '+t.when+'</div></div>'+badge+'</div>'+actions+'</div>';
+      }).join('');
+  }
+  return '<div class="channel-row"><span>Stitch the same person across channels</span>'
+      +'<div class="switch'+(stitchConfig.enabled?' on':'')+'" id="stitchToggle"><div class="knob"></div></div></div>'
+    +'<div class="field-row" style="margin-top:14px;"><label>Stitching key</label>'+pillGroup('st-key',['Verified Emirates ID hash','Mobile number','Never stitch'],stitchConfig.key)+'</div>'
+    +'<div class="field-row"><label>Conversation memory scope</label>'+pillGroup('st-scope',['Per verified identity','Per channel session','No memory'],stitchConfig.memoryScope)+'</div>'
+    +'<div class="field-row"><label>Memory retention</label>'+pillGroup('st-ret',['30 days','90 days','1 year'],stitchConfig.retention)+'</div>'
+    +'<div class="attach-summary">Stitching only ever joins <b>verified</b> sessions. An anonymous web chat is never merged into a verified WhatsApp identity.</div>';
+}
+function renderId(){
+  document.querySelectorAll('#idSubtabs .subtab').forEach(s=>s.classList.toggle('active', s.dataset.sub===idSubtab));
+  document.getElementById('idPane').innerHTML=idPaneHtml();
+}
+document.getElementById('idSubtabs').addEventListener('click',e=>{const t=e.target.closest('.subtab');if(t){idSubtab=t.dataset.sub;renderId();}});
+document.getElementById('idPane').addEventListener('click',e=>{
+  const ip=e.target.closest('.idp-toggle'); if(ip){idProviders[+ip.dataset.i].on=!idProviders[+ip.dataset.i].on;renderId();return;}
+  if(e.target.closest('#ownCheck')){ownershipCheck=!ownershipCheck;renderId();return;}
+  const su=e.target.closest('.su-toggle'); if(su){stepUpRules[+su.dataset.i].on=!stepUpRules[+su.dataset.i].on;renderId();return;}
+  const ta=e.target.closest('.txn-approve'); if(ta){transactions[+ta.dataset.i].status='Refunded';renderId();return;}
+  const td=e.target.closest('.txn-deny'); if(td){transactions[+td.dataset.i].status='Settled';renderId();return;}
+  if(e.target.closest('#stitchToggle')){stitchConfig.enabled=!stitchConfig.enabled;renderId();return;}
+  const k=e.target.closest('.st-key-pill'); if(k){stitchConfig.key=k.dataset.v;renderId();return;}
+  const sc=e.target.closest('.st-scope-pill'); if(sc){stitchConfig.memoryScope=sc.dataset.v;renderId();return;}
+  const rt=e.target.closest('.st-ret-pill'); if(rt){stitchConfig.retention=rt.dataset.v;renderId();return;}
+});
+renderId();
+
+// ========== GUARDRAILS & POLICIES ==========
+let grSubtab='policies';
+let globalPolicies=[
+  {name:'Mask PII in transcripts', desc:'Emirates ID, account and card numbers redacted before storage.', on:true, locked:true},
+  {name:'Refuse below grounding confidence', desc:'Answer is withheld and the user is offered a human instead.', on:true, locked:false, value:'60%'},
+  {name:'Prompt-injection filter', desc:'Blocks instructions embedded in retrieved documents or user uploads.', on:true, locked:true},
+  {name:'Block financial advice', desc:'Assistant will not advise on payment timing, credit or disputes.', on:true, locked:false},
+  {name:'Restrict to in-scope government services', desc:'Out-of-scope prompts return the service directory.', on:true, locked:false}
+];
+let agentOverrides=[
+  {agent:'SEWA & Utilities Billing Agent', policy:'Refuse below grounding confidence', value:'75%', reason:'Money movement — stricter than global.'},
+  {agent:'General FAQ Agent', policy:'Restrict to in-scope government services', value:'Disabled', reason:'Handles broad wayfinding questions.'}
+];
+function grPaneHtml(){
+  if(grSubtab==='policies'){
+    return '<div class="field-row"><label>Policies inherited by every agent</label></div>'
+      +globalPolicies.map((p,i)=>'<div class="tool-card"><div class="tool-card-head">'
+        +'<div><b>'+p.name+'</b>'+(p.value?' <span class="mono-sub" style="display:inline;">('+p.value+')</span>':'')
+        +'<div class="mono-sub">'+p.desc+'</div>'+(p.locked?'<div class="mono-sub">Locked by platform policy — cannot be overridden per agent.</div>':'')+'</div>'
+        +'<div class="switch gp-toggle'+(p.on?' on':'')+(p.locked?'':'')+'" data-i="'+i+'"><div class="knob"></div></div></div></div>').join('')
+      +'<div class="attach-summary">Changing a policy here applies to all '+registryAgents.length+' agents on next publish, except where an override exists.</div>';
+  }
+  return '<div class="field-row"><label>Explicit overrides</label></div>'
+    +(agentOverrides.length?agentOverrides.map((o,i)=>'<div class="tool-card"><div class="tool-card-head">'
+      +'<div><b>'+o.agent+'</b><div class="mono-sub">'+o.policy+' &rarr; '+o.value+'</div><div class="mono-sub">'+o.reason+'</div></div>'
+      +'<span class="badge warn">Override</span></div>'
+      +'<div class="rule-actions"><button class="btn ghost ov-remove" data-i="'+i+'">Remove override</button></div></div>').join('')
+      :'<div class="mono-sub">No overrides — every agent follows global policy.</div>')
+    +'<div class="attach-summary">Overrides are deliberately visible and few. Locked policies never appear here.</div>';
+}
+function renderGr(){
+  document.querySelectorAll('#grSubtabs .subtab').forEach(s=>s.classList.toggle('active', s.dataset.sub===grSubtab));
+  document.getElementById('grPane').innerHTML=grPaneHtml();
+}
+document.getElementById('grSubtabs').addEventListener('click',e=>{const t=e.target.closest('.subtab');if(t){grSubtab=t.dataset.sub;renderGr();}});
+document.getElementById('grPane').addEventListener('click',e=>{
+  const g=e.target.closest('.gp-toggle');
+  if(g){const i=+g.dataset.i; if(globalPolicies[i].locked){return;} globalPolicies[i].on=!globalPolicies[i].on; renderGr(); return;}
+  const r=e.target.closest('.ov-remove'); if(r){agentOverrides.splice(+r.dataset.i,1);renderGr();return;}
+});
+renderGr();
+
+// ========== EVALUATION & TESTING ==========
+let evSubtab='golden';
+let goldenSets=[
+  {name:'Billing core journeys', cases:48, owner:'SEWA', lastScore:94},
+  {name:'Customs enquiries', cases:32, owner:'Customs', lastScore:88},
+  {name:'Arabic language parity', cases:60, owner:'Platform', lastScore:71},
+  {name:'Guardrail red-team set', cases:25, owner:'Platform', lastScore:100}
+];
+let evRuns=[
+  {agent:'SEWA & Utilities Billing Agent', version:'v1.4', set:'Billing core journeys', acc:94, ground:91, tool:97, status:'Passed', when:'2 days ago'},
+  {agent:'Customs Enquiry Agent', version:'v2.1', set:'Customs enquiries', acc:88, ground:85, tool:92, status:'Passed', when:'5 days ago'},
+  {agent:'General FAQ Agent', version:'v3.0', set:'Arabic language parity', acc:71, ground:69, tool:88, status:'Failed', when:'1 week ago'}
+];
+let gateConfig={enabled:true, minAccuracy:85, minGrounding:80, requireRedTeam:true, blockOnLocaleGap:true};
+function evPaneHtml(){
+  if(evSubtab==='golden'){
+    return '<div class="field-row"><label>Golden question sets</label></div>'
+      +goldenSets.map((g,i)=>'<div class="tool-card"><div class="tool-card-head">'
+        +'<div><b>'+g.name+'</b><div class="mono-sub">'+g.cases+' cases &middot; owner: '+g.owner+'</div></div>'
+        +'<span class="badge '+(g.lastScore>=85?'ok':'warn')+'">'+g.lastScore+'% last run</span></div>'
+        +'<div class="bar-track" style="margin-top:8px;"><div class="bar-fill" style="width:'+g.lastScore+'%"></div></div>'
+        +'<div class="rule-actions"><button class="btn ghost ev-run" data-i="'+i+'">Run now</button><button class="btn ghost">Edit cases</button></div></div>').join('')
+      +'<div class="attach-summary">Conversations flagged in the command centre land here via &ldquo;Add to golden set&rdquo;.</div>';
+  }
+  if(evSubtab==='runs'){
+    return '<div class="field-row"><label>Recent runs</label></div>'
+      +evRuns.map(r=>'<div class="tool-card"><div class="tool-card-head">'
+        +'<div><b>'+r.agent+' '+r.version+'</b><div class="mono-sub">'+r.set+' &middot; '+r.when+'</div>'
+        +'<div class="mono-sub">accuracy '+r.acc+'% &middot; groundedness '+r.ground+'% &middot; tool accuracy '+r.tool+'%</div></div>'
+        +(r.status==='Passed'?'<span class="badge ok">Passed</span>':'<span class="badge warn">Failed</span>')+'</div></div>').join('')
+      +'<button class="btn ghost" id="evRunAll" style="margin-top:8px;">Run all suites</button>';
+  }
+  return '<div class="channel-row"><span>Block publish when a suite fails</span>'
+      +'<div class="switch'+(gateConfig.enabled?' on':'')+'" id="gateOn"><div class="knob"></div></div></div>'
+    +'<div class="grid2" style="margin-top:12px;">'
+      +'<div class="field-row"><label>Minimum accuracy</label><div class="field-in">'+gateConfig.minAccuracy+'%</div></div>'
+      +'<div class="field-row"><label>Minimum groundedness</label><div class="field-in">'+gateConfig.minGrounding+'%</div></div>'
+    +'</div>'
+    +'<div class="channel-row"><span>Red-team set must score 100%</span><div class="switch'+(gateConfig.requireRedTeam?' on':'')+'" id="gateRt"><div class="knob"></div></div></div>'
+    +'<div class="channel-row"><span>Block publish when a bound locale is below 100% translated</span><div class="switch'+(gateConfig.blockOnLocaleGap?' on':'')+'" id="gateLoc"><div class="knob"></div></div></div>'
+    +'<div class="attach-summary">'+(gateConfig.enabled
+      ? 'Gate is active. <b>General FAQ Agent v3.0</b> is currently blocked — Arabic parity at 71% is below the 85% floor.'
+      : 'Gate is off. Any agent can be published regardless of test results.')+'</div>';
+}
+function renderEv(){
+  document.querySelectorAll('#evSubtabs .subtab').forEach(s=>s.classList.toggle('active', s.dataset.sub===evSubtab));
+  document.getElementById('evPane').innerHTML=evPaneHtml();
+}
+document.getElementById('evSubtabs').addEventListener('click',e=>{const t=e.target.closest('.subtab');if(t){evSubtab=t.dataset.sub;renderEv();}});
+document.getElementById('evPane').addEventListener('click',e=>{
+  const r=e.target.closest('.ev-run');
+  if(r){const i=+r.dataset.i; goldenSets[i].lastScore=Math.min(100, goldenSets[i].lastScore+Math.floor(Math.random()*8)-3); renderEv(); return;}
+  if(e.target.closest('#evRunAll')){ evRuns.unshift({agent:'All agents',version:'current',set:'All suites',acc:90,ground:87,tool:95,status:'Passed',when:'just now'}); renderEv(); return; }
+  if(e.target.closest('#gateOn')){gateConfig.enabled=!gateConfig.enabled;renderEv();return;}
+  if(e.target.closest('#gateRt')){gateConfig.requireRedTeam=!gateConfig.requireRedTeam;renderEv();return;}
+  if(e.target.closest('#gateLoc')){gateConfig.blockOnLocaleGap=!gateConfig.blockOnLocaleGap;renderEv();return;}
+});
+renderEv();
+
+// ========== GOVERNANCE & OPS ==========
+let govSubtab='environments';
+let environments=[
+  {name:'Development', agents:4, version:'latest', promotes:'UAT'},
+  {name:'UAT', agents:3, version:'v1.4 / v2.1 / v3.0', promotes:'Production'},
+  {name:'Production', agents:3, version:'v1.3 / v2.1 / v2.4', promotes:null}
+];
+let pendingPromotions=[
+  {what:'SEWA & Utilities Billing Agent v1.4', from:'UAT', to:'Production', requester:'Sara Al Mazrouei', status:'Awaiting approval'}
+];
+let auditLog=[
+  {who:'Sara Al Mazrouei', what:'Published SEWA & Utilities Billing Agent v1.4', when:'2 days ago', env:'UAT'},
+  {who:'Ahmed Saeed', what:'Changed global policy: grounding threshold 55% → 60%', when:'3 days ago', env:'Production'},
+  {who:'Priya Nair', what:'Added knowledge source: Library membership policy', when:'6 days ago', env:'Development'},
+  {who:'Omar Khan', what:'Exported 42 conversation transcripts', when:'1 week ago', env:'Production'},
+  {who:'Ahmed Saeed', what:'Granted Entity Admin role to Lina Haddad', when:'2 weeks ago', env:'Production'}
+];
+let systemHealth=[
+  {svc:'Sharjah Services Gateway (MCP)', status:'Healthy', p95:'240 ms', err:'0.2%'},
+  {svc:'SEWA bill API', status:'Degraded', p95:'1,840 ms', err:'6.1%'},
+  {svc:'Graph RAG retrieval', status:'Healthy', p95:'310 ms', err:'0.0%'},
+  {svc:'WhatsApp BSP', status:'Healthy', p95:'190 ms', err:'0.4%'}
+];
+let privacyConfig={consentLedger:true, retention:'90 days', residency:'UAE — Sharjah data centre', erasure:true};
+function govPaneHtml(){
+  if(govSubtab==='environments'){
+    return '<div class="field-row"><label>Environments</label></div>'
+      +environments.map(e=>'<div class="tool-card"><div class="tool-card-head">'
+        +'<div><b>'+e.name+'</b><div class="mono-sub">'+e.agents+' agents &middot; '+e.version+'</div></div>'
+        +(e.promotes?'<button class="btn ghost" style="padding:5px 11px;font-size:11px;">Promote to '+e.promotes+'</button>':'<span class="badge ok">Live</span>')
+        +'</div></div>').join('')
+      +'<div class="field-row" style="margin-top:16px;"><label>Pending promotions</label></div>'
+      +(pendingPromotions.length?pendingPromotions.map((p,i)=>'<div class="tool-card"><div class="tool-card-head">'
+        +'<div><b>'+p.what+'</b><div class="mono-sub">'+p.from+' &rarr; '+p.to+' &middot; requested by '+p.requester+'</div></div>'
+        +'<span class="badge warn">'+p.status+'</span></div>'
+        +'<div class="rule-actions"><button class="btn ghost promo-ok" data-i="'+i+'">Approve</button><button class="btn ghost promo-no" data-i="'+i+'">Reject</button></div></div>').join('')
+        :'<div class="mono-sub">Nothing awaiting approval.</div>');
+  }
+  if(govSubtab==='audit'){
+    return '<div class="field-row"><label>Immutable change record</label></div>'
+      +auditLog.map(a=>'<div class="list-row"><span><b>'+a.who+'</b> — '+a.what+'</span><span class="mono-sub">'+a.env+' &middot; '+a.when+'</span></div>').join('')
+      +'<div class="attach-summary">Entries cannot be edited or deleted by any role, including Super Admin. Exportable for compliance review.</div>';
+  }
+  if(govSubtab==='observability'){
+    return '<div class="field-row"><label>Service health</label></div>'
+      +systemHealth.map(s=>'<div class="tool-card"><div class="tool-card-head">'
+        +'<div><b>'+s.svc+'</b><div class="mono-sub">p95 latency '+s.p95+' &middot; error rate '+s.err+'</div></div>'
+        +(s.status==='Healthy'?'<span class="badge ok">Healthy</span>':'<span class="badge warn">Degraded</span>')+'</div></div>').join('')
+      +'<div class="attach-summary">SEWA bill API is degraded — its circuit breaker is configured under Tools &rarr; Resilience &amp; fallbacks.</div>';
+  }
+  return '<div class="channel-row"><span>Maintain a consent ledger per user</span><div class="switch'+(privacyConfig.consentLedger?' on':'')+'" id="pvConsent"><div class="knob"></div></div></div>'
+    +'<div class="channel-row"><span>Honour erasure requests (right to be forgotten)</span><div class="switch'+(privacyConfig.erasure?' on':'')+'" id="pvErase"><div class="knob"></div></div></div>'
+    +'<div class="field-row" style="margin-top:14px;"><label>Transcript retention</label>'+pillGroup('pv-ret',['30 days','90 days','1 year','7 years'],privacyConfig.retention)+'</div>'
+    +'<div class="field-row"><label>Data residency</label>'+pillGroup('pv-res',['UAE — Sharjah data centre','UAE — Dubai data centre','Region-flexible'],privacyConfig.residency)+'</div>'
+    +'<div class="attach-summary">Retention applies to transcripts and derived memory. Transaction records follow the statutory 7-year rule regardless of this setting.</div>';
+}
+function renderGov(){
+  document.querySelectorAll('#govSubtabs .subtab').forEach(s=>s.classList.toggle('active', s.dataset.sub===govSubtab));
+  document.getElementById('govPane').innerHTML=govPaneHtml();
+}
+document.getElementById('govSubtabs').addEventListener('click',e=>{const t=e.target.closest('.subtab');if(t){govSubtab=t.dataset.sub;renderGov();}});
+document.getElementById('govPane').addEventListener('click',e=>{
+  const ok=e.target.closest('.promo-ok');
+  if(ok){const p=pendingPromotions.splice(+ok.dataset.i,1)[0];
+    auditLog.unshift({who:'You', what:'Approved promotion: '+p.what+' to '+p.to, when:'just now', env:p.to}); renderGov(); return;}
+  const no=e.target.closest('.promo-no');
+  if(no){const p=pendingPromotions.splice(+no.dataset.i,1)[0];
+    auditLog.unshift({who:'You', what:'Rejected promotion: '+p.what, when:'just now', env:p.from}); renderGov(); return;}
+  if(e.target.closest('#pvConsent')){privacyConfig.consentLedger=!privacyConfig.consentLedger;renderGov();return;}
+  if(e.target.closest('#pvErase')){privacyConfig.erasure=!privacyConfig.erasure;renderGov();return;}
+  const rt=e.target.closest('.pv-ret-pill'); if(rt){privacyConfig.retention=rt.dataset.v;renderGov();return;}
+  const rs=e.target.closest('.pv-res-pill'); if(rs){privacyConfig.residency=rs.dataset.v;renderGov();return;}
+});
+renderGov();
+</script>
+</body>
+</html>

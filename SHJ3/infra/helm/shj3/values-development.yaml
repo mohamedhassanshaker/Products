@@ -1,0 +1,64 @@
+# deployment.md §7.2: "values-development.yaml differs in the ways that
+# matter: stores.*.mode: in-cluster for all four, replicas 1, hpa.enabled:
+# false, pdb omitted entirely (a PDB with minAvailable: 1 on a single replica
+# blocks every node drain), and migration.runAsHook: true because a dev
+# migration failing the upgrade is the desired feedback." §3.1's environment
+# matrix corroborates: SQL Server "StatefulSet, 1 replica, Developer edition";
+# every replica count is 1.
+
+global:
+  env: development
+  residency: uae-sharjah-dc
+  imageRegistry: registry.shj.ae/shj3
+
+web:
+  image: { repository: shj3-web, tag: "" }
+  replicas: 1
+  hpa:
+    enabled: false
+  pdb:
+    enabled: false # a PDB on a single replica blocks every node drain for no benefit
+
+ai:
+  image: { repository: shj3-ai, tag: "" }
+  replicas: 1
+  hpa:
+    enabled: false
+  pdb:
+    enabled: false
+  maxConcurrentTurns: 24
+  startupBudgetSeconds: 180
+
+worker:
+  replicas: 1
+  pdb:
+    enabled: false
+
+stores:
+  sqlserver:
+    mode: in-cluster
+    storage: 20Gi
+  neo4j:
+    mode: in-cluster
+    edition: community
+    replicas: 1
+    storage: 20Gi
+  qdrant:
+    mode: in-cluster
+    replicas: 1
+    storage: 20Gi
+  redis:
+    mode: in-cluster
+    storage: 2Gi
+
+migration:
+  runAsHook: true # a failing migration failing the upgrade is the desired feedback in dev
+
+ingress:
+  enabled: false # local dev reaches shj3-web directly (port-forward / NodePort); no edge TLS to terminate
+
+networkPolicy:
+  enabled: true # keep the same isolation guarantees under test in every environment, not just production
+
+serviceMonitor:
+  enabled: false

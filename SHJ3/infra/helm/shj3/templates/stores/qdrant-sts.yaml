@@ -1,0 +1,113 @@
+{{/*
+§7.9 gating (in-cluster only) applied the same way as neo4j-sts.yaml.
+Unlike neo4j, the doc gives no full worked YAML for Qdrant — this is a
+constructed, good-faith implementation following the same shape (security
+context, PVC retention, resource requests) rather than a verbatim
+transcription, flagged here rather than presented as doc-sourced.
+
+Clustering (§3.1 production: "2 replicas, replication factor 2"): a headless
+Service (templates/stores/qdrant-headless.yaml, this file) plus
+QDRANT__CLUSTER__ENABLED lets replica N>0 bootstrap against peer 0 — Qdrant's
+own documented pattern. Only meaningful when stores.qdrant.replicas > 1;
+harmless when it is 1 (development/uat).
+*/}}
+{{- if eq .Values.stores.qdrant.mode "in-cluster" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "shj3.fullname" . }}-qdrant-headless
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "qdrant") | nindent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    {{- include "shj3.selectorLabels" (dict "root" $ "component" "qdrant") | nindent 4 }}
+  ports:
+    - name: http
+      port: 6333
+    - name: grpc
+      port: 6334
+    - name: cluster
+      port: 6335
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "shj3.fullname" . }}-qdrant
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "qdrant") | nindent 4 }}
+spec:
+  serviceName: {{ include "shj3.fullname" . }}-qdrant-headless
+  replicas: {{ .Values.stores.qdrant.replicas }}
+  podManagementPolicy: OrderedReady
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  selector:
+    matchLabels:
+      {{- include "shj3.selectorLabels" (dict "root" $ "component" "qdrant") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "shj3.labels" (dict "root" $ "component" "qdrant") | nindent 8 }}
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      containers:
+        - name: qdrant
+          image: "qdrant/qdrant:v1.19.0" # pinned to match qdrant-client's resolved version — see docker-compose.yml's own comment on this constraint (RISK-016)
+          {{- if gt (.Values.stores.qdrant.replicas | int) 1 }}
+          args:
+            - "--uri"
+            - "http://$(POD_NAME).{{ include "shj3.fullname" . }}-qdrant-headless:6335"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: QDRANT__CLUSTER__ENABLED
+              value: "true"
+            {{- if .Values.stores.qdrant.replicationFactor }}
+            - name: QDRANT__CLUSTER__REPLICATION_FACTOR
+              value: {{ .Values.stores.qdrant.replicationFactor | quote }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 6333
+            - name: grpc
+              containerPort: 6334
+            - name: cluster
+              containerPort: 6335
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 15
+            failureThreshold: 3
+          resources:
+            requests: { cpu: 500m, memory: 2Gi }
+            limits: { cpu: "2", memory: 4Gi }
+          volumeMounts:
+            - name: data
+              mountPath: /qdrant/storage
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        storageClassName: {{ .Values.storageClass }}
+        resources:
+          requests:
+            storage: {{ .Values.stores.qdrant.storage }}
+{{- end }}

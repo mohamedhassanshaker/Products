@@ -1,0 +1,34 @@
+# SHJ3 — one chart, values per environment (ADR-0008, deployment.md §7).
+#
+# `version` (below) is THIS CHART's own version — bump it whenever a template
+# changes, independent of the application release.
+#
+# `appVersion` is the application release version. deployment.md §7.1: "set by
+# scripts/release.sh and must equal the image tag. `helm upgrade` with a
+# mismatched appVersion and image.tag is rejected by a `fail` in _helpers.tpl."
+# That guard lives in `templates/_helpers.tpl`'s `shj3.checkVersionConsistency`
+# and is called once from `templates/config/configmap-web.yaml` (any one
+# template that always renders is enough — `fail` aborts the whole render).
+#
+# No CI/CD in this project (ADR-0008) — there is no release.sh yet either
+# (Phase C's Docker wave noted the same gap for image build-args). Until it
+# exists, appVersion is bumped by hand and MUST match whatever
+# `web.image.tag`/`ai.image.tag` are set to in the values file used for a
+# given `helm upgrade` — that agreement is exactly what the fail guard checks.
+apiVersion: v2
+name: shj3
+description: >-
+  SHJ3 — agentic government-services assistant for the Emirate of Sharjah,
+  and its backoffice. Two workloads sharing one release: shj3-web (Next.js
+  UI + BFF) and shj3-ai (FastAPI agent runtime + Graph RAG), the latter
+  doubling as shj3-worker (ADR-0001 constraint 1: background work is a
+  replica with another role, never a third deployable).
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+kubeVersion: ">=1.27.0-0"
+home: https://github.com/shj3/shj3
+sources:
+  - https://github.com/shj3/shj3
+maintainers:
+  - name: SHJ3 platform engineering

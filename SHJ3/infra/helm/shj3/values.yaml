@@ -1,0 +1,281 @@
+# SHJ3 — safe defaults. Every environment overrides via values-{development,uat,production}.yaml
+# (deployment.md §7.2). Nothing here is meant to be deployed as-is — most
+# critically, both `image.tag` fields are deliberately empty (see
+# `templates/_helpers.tpl`'s `shj3.checkVersionConsistency` doc comment: no
+# `scripts/release.sh` exists yet, ADR-0008/RISK-002, so a real deploy must
+# pass the real tag explicitly until one does).
+
+global:
+  # Drives config strictness, residency assertions, and which of the three
+  # values-*.yaml files this logically pairs with. Real code reads
+  # SHJ3_ENVIRONMENT (confirmed via apps/web/src/modules/platform/config.ts
+  # and apps/ai's health_router.py) — NOT deployment.md §4.2 row #1's
+  # `SHJ3_ENV`, which has drifted from the implementation. Every ConfigMap in
+  # this chart uses the real, code-confirmed name; see docs/deployment.md's
+  # own review note (added alongside this chart) for the full drift list.
+  env: development
+  residency: uae-sharjah-dc
+  imageRegistry: registry.shj.ae/shj3
+
+# ---------------------------------------------------------------------------
+# shj3-web — Next.js UI + BFF + config API. §7.3: request/response, CPU-light.
+# ---------------------------------------------------------------------------
+web:
+  image:
+    repository: shj3-web
+    tag: "" # scripts/release.sh's future job; must equal Chart.yaml's appVersion.
+  containerPort: 3000
+  replicas: 1
+  resources:
+    requests: { cpu: 250m, memory: 512Mi }
+    limits: { cpu: "1", memory: 1Gi }
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 65
+  pdb:
+    enabled: false
+    minAvailable: 1
+  # §7.6: short requests, short drain.
+  terminationGracePeriodSeconds: 30
+  preStopDrainSeconds: 20
+
+# ---------------------------------------------------------------------------
+# shj3-ai — FastAPI agent runtime + Graph RAG; sole writer of Neo4j/Qdrant.
+# §7.3: long-held streamed turns, materially larger than web.
+# ---------------------------------------------------------------------------
+ai:
+  image:
+    repository: shj3-ai
+    tag: ""
+  containerPort: 8000
+  replicas: 1
+  resources:
+    requests: { cpu: "1", memory: 3Gi }
+    limits: { cpu: "3", memory: 6Gi }
+  hpa:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 12
+    # deployment.md §7.5 [ASSUMPTION]: requires a cluster-side prometheus-adapter
+    # exposing this custom metric. This chart renders the HPA correctly per
+    # spec; it cannot itself provide the adapter — see tasks/todo.md's Phase C
+    # review for the operational dependency stated plainly.
+    metric:
+      name: shj3_ai_active_turns
+      averageValue: "16"
+  pdb:
+    enabled: false
+    minAvailable: 1
+  # SHJ3_AI_MAX_CONCURRENT_TURNS (.env.example / deployment.md §4.2 #21) — the
+  # real, code-confirmed name (see runtime_state.py / health_router.py).
+  maxConcurrentTurns: 24
+  # §7.4: SHJ3_AI_MODEL_INIT_TIMEOUT_S default (90s) must stay below the
+  # startup probe's total budget (60 * 3s = 180s) — enforced by convention,
+  # not by a template check, since the timeout is an app-side env var and the
+  # probe budget is chart-side; §7.4's own comment names this ordering as
+  # "the whole point."
+  startupBudgetSeconds: 180
+  # §7.6: the preStop drain sequence's own budget (5s readiness-propagation
+  # sleep + up to 120s draining active turns) — terminationGracePeriodSeconds
+  # must exceed it, or the kubelet SIGKILLs mid-drain.
+  terminationGracePeriodSeconds: 150
+  preStopReadinessSleepSeconds: 5
+  preStopDrainTimeoutSeconds: 120
+
+# ---------------------------------------------------------------------------
+# shj3-worker — same image as shj3-ai (`.Values.ai.image`), SHJ3_AI_ROLE=worker.
+# No HPA (§7.5: job-leased, not request-driven; more pods ≠ more throughput).
+# ---------------------------------------------------------------------------
+worker:
+  replicas: 1
+  resources:
+    requests: { cpu: "1", memory: 3Gi }
+    limits: { cpu: "4", memory: 8Gi }
+  pdb:
+    enabled: false
+    minAvailable: 1
+  # §7.6: leases, not requests — finishing the current batch avoids repeating
+  # paid embedding work, so the grace period is minutes, not seconds.
+  terminationGracePeriodSeconds: 660
+  preStopDrainTimeoutSeconds: 600
+
+# ---------------------------------------------------------------------------
+# Stores (§7.9). `mode: in-cluster` renders a StatefulSet; `managed` renders
+# nothing for that store (the app connects to an externally-managed
+# endpoint via the same env vars, sourced from values instead of a Service DNS
+# name). §3.1: Neo4j is in-cluster in every environment (Community, no
+# managed offering is residency-compliant — RISK-017); SQL Server and Redis
+# are managed in uat/production.
+# ---------------------------------------------------------------------------
+stores:
+  sqlserver:
+    mode: in-cluster
+    managedHost: "" # only read when mode == managed
+    storage: 50Gi
+  neo4j:
+    mode: in-cluster
+    edition: community
+    replicas: 1 # fixed at 1 — chart `fail`s on any other value (ADR-0009; Community cannot cluster)
+    storage: 50Gi
+    heapMaxSize: 4G
+  qdrant:
+    mode: in-cluster
+    replicas: 1
+    storage: 50Gi
+  redis:
+    mode: in-cluster
+    managedHost: ""
+    storage: 5Gi
+
+storageClass: standard
+
+# ---------------------------------------------------------------------------
+# Backup CronJobs (docs/deployment.md §12, tasks/todo.md Phase C).
+#
+# sql: only meaningful — and only rendered — when stores.sqlserver.mode ==
+# in-cluster (§3.1: `development` today). A managed instance (uat/production)
+# has its own cloud-native backup/PITR mechanism, which this repo has never
+# named or provisioned — see sqlserver-backup-cronjob.yaml's own header for
+# why that is flagged as a real, separate, un-designed gap rather than
+# defaulted to something that would look implemented but isn't.
+#
+# neo4j: renders whenever stores.neo4j.mode == in-cluster, which per §3.1 is
+# EVERY environment (RISK-017: no managed Neo4j offering is
+# residency-compliant) — unlike sql, this one actually matters in uat and
+# production too. An OPTIMISATION, not a recovery dependency (ADR-0009): the
+# graph is a derived store, rebuildable by re-index. See
+# neo4j-backup-cronjob.yaml's own header for why its mechanism (and its
+# ServiceAccount's real Kubernetes RBAC) looks structurally different from
+# sql's.
+# ---------------------------------------------------------------------------
+backup:
+  sql:
+    enabled: true
+    schedule: "0 2 * * *" # 02:00, matching deployment.md §12.2's target nightly time
+    retentionDays: 14 # PVC-bound, not the 35-day/7-year target in §12.2 — see the CronJob's own note
+    storage: 20Gi
+  neo4j:
+    # WEEKLY, not nightly — deliberately, matching deployment.md §12.1/§12.2's
+    # own explicit target design verbatim: "do not 'improve' it by restoring
+    # Neo4j to a nightly obligation — a nightly stop-the-instance dump would
+    # deliberately create a graph outage every night to protect data that
+    # regenerates from SQL Server on demand." Sunday 03:00, matching §12.2's
+    # table row exactly.
+    schedule: "0 3 * * 0"
+    retentionDays: 14 # matches §12.2's table row for Neo4j exactly
+    storage: 20Gi # dump is compressed and typically far smaller than the live graph; uat/production override this (see values-uat.yaml/values-production.yaml)
+
+# ---------------------------------------------------------------------------
+# Migration Job (§7.9 gating note, §8). `runAsHook: true` (dev/uat) makes a
+# failing migration fail the `helm upgrade` itself — the desired feedback
+# outside production; `false` in production, where migrations are RB-06 and
+# run as their own deliberate, reviewed step, never implicitly on upgrade.
+# ---------------------------------------------------------------------------
+migration:
+  runAsHook: true
+  image:
+    # Migrations run Prisma against shj3-web's own image (it owns the
+    # schema, ADR-0002/0005) — no separate migration image to build/version.
+    repository: shj3-web
+    tag: ""
+
+# ---------------------------------------------------------------------------
+# Ingress (§2.1/§2.3: ingress-nginx, TLS 1.3 via the platform PKI, routes only
+# to shj3-web:3000). Disabled by default — every environment turns it on with
+# its own real hostname; there is no safe default hostname to ship.
+# ---------------------------------------------------------------------------
+ingress:
+  enabled: false
+  className: nginx
+  host: ""
+  tls:
+    enabled: true
+    # §4.3: the `shj3-tls` Secret also carries mTLS CA bundles (#17, #25, #42)
+    # — this is a DIFFERENT secret (the edge-facing server certificate),
+    # named separately so rotating one never touches the other.
+    secretName: shj3-edge-tls
+
+# ---------------------------------------------------------------------------
+# Observability (§4.2 #67-68, §13). OTLP endpoint the app pushes traces/spans
+# to — the otel-collector itself is deployed separately (not part of this
+# chart, see servicemonitor.yaml's own comment on the metrics-scrape side of
+# this same relationship).
+# ---------------------------------------------------------------------------
+observability:
+  otlpEndpoint: ""
+
+# ---------------------------------------------------------------------------
+# NetworkPolicies (§7.7, §2.2, §2.3). default-deny + explicit per-flow
+# allowlists. The ingress-controller and otel-collector selectors are this
+# chart's own reasonable, flagged default (§7.7 shows the ai/stores/egress
+# policies verbatim but not a from-scratch web policy or an ingress-controller
+# selector) — override if your cluster's ingress-nginx install differs.
+# ---------------------------------------------------------------------------
+networkPolicy:
+  enabled: true
+  ingressController:
+    namespaceSelector:
+      matchLabels: { kubernetes.io/metadata.name: ingress-nginx }
+    podSelector:
+      matchLabels: { app.kubernetes.io/name: ingress-nginx }
+  otelCollector:
+    podSelector:
+      matchLabels: { app: otel-collector }
+    metricsPort: 9100
+  egressProxy:
+    podSelector:
+      matchLabels: { app: egress-proxy }
+    port: 3128
+  # §7.7 example 3: "SQL Server + Redis private link" CIDR for managed stores.
+  # Only relevant when stores.sqlserver.mode / stores.redis.mode == managed;
+  # harmless (unused) otherwise.
+  managedStoreCidr: 10.42.0.0/16
+  # The Kubernetes API server's own reachable address — needed ONLY by the
+  # Neo4j backup CronJob's orchestrator container (neo4j-backup-cronjob.yaml),
+  # the first workload in this chart that talks to the API server at all
+  # rather than a database. A PLACEHOLDER, exactly like managedStoreCidr
+  # above: the real value is cluster-specific (typically the
+  # `kubernetes.default.svc` ClusterIP — `kubectl get svc kubernetes -o
+  # jsonpath='{.spec.clusterIP}'` against the real target cluster) and MUST
+  # be confirmed before a real deploy; this default is the common kubeadm
+  # default Service CIDR's first address, not a verified value for any
+  # specific SHJ3 cluster.
+  apiServerCidr: 10.96.0.1/32
+  dns:
+    namespaceSelector:
+      matchLabels: { kubernetes.io/metadata.name: kube-system }
+
+# ---------------------------------------------------------------------------
+# ServiceMonitor (§7.1, §13.2/§14.3) — requires the Prometheus Operator CRDs
+# installed cluster-side; disabled by default so this chart does not fail to
+# install on a cluster without them.
+# ---------------------------------------------------------------------------
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+  # Label the Operator's own Prometheus resource selects ServiceMonitors by —
+  # cluster-specific, so left as an explicit, empty-by-default override point
+  # rather than a guessed value.
+  additionalLabels: {}
+
+# ---------------------------------------------------------------------------
+# Secrets (§4.3, §7.8) — referenced by name only. This chart creates NONE of
+# them; they are provisioned out of band (`kubectl create secret` from the
+# vault export, or an External Secrets Operator sync [ASSUMPTION], per §7.8's
+# own text). Naming matches §4.3's table exactly.
+# ---------------------------------------------------------------------------
+secrets:
+  web: shj3-web-secrets
+  ai: shj3-ai-secrets
+  migrator: shj3-migrator-secrets
+  tls: shj3-tls
+
+# RBAC (§7.8): neither runtime talks to the Kubernetes API —
+# automountServiceAccountToken: false everywhere, and the Role each
+# ServiceAccount binds is deliberately empty (see templates/rbac/*'s own
+# comments for why an explicit empty Role beats no Role at all here).
+serviceAccount:
+  create: true

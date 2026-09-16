@@ -1,0 +1,47 @@
+{{/*
+LiteLLM router config (§4.2 #49: "model aliases, per-model timeouts, retry
+policy — mounted at LITELLM_CONFIG_PATH"). B-5 (the agent runtime that
+actually constructs a LiteLLM router and reads per-agent primary/fallback
+model config from SQL Server — tasks/todo.md's Phase B checklist) is not
+built yet, so there is no real caller reading this file's content today.
+Provided as a real, valid, minimal starting shape rather than an empty file
+or a placeholder comment — "a model swap is a ConfigMap edit plus a
+rollout, not a rebuild" (§7.8) only holds if there is something real here to
+edit. Aliases below are ADR-0004's chosen models; B-5 owns extending this
+with the real per-agent primary/fallback pairs once that config lives in
+SQL Server and needs a router-level alias to resolve against.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "shj3.fullname" . }}-litellm-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-ai") | nindent 4 }}
+data:
+  litellm.yaml: |
+    # ADR-0004: OpenRouter for chat/reasoning. Real per-agent primary/fallback
+    # selection (B-5) resolves an agent's configured model id to one of these
+    # aliases; nothing resolves against this file yet.
+    model_list:
+      - model_name: shj3-chat-primary
+        litellm_params:
+          model: openrouter/anthropic/claude-3.5-sonnet
+          api_base: {{ .Values.ai.openrouterBaseUrl | default "https://openrouter.ai/api/v1" | quote }}
+          api_key: os.environ/SHJ3_OPENROUTER_API_KEY
+          timeout: 60
+      - model_name: shj3-chat-fallback
+        litellm_params:
+          model: openrouter/openai/gpt-4o-mini
+          api_base: {{ .Values.ai.openrouterBaseUrl | default "https://openrouter.ai/api/v1" | quote }}
+          api_key: os.environ/SHJ3_OPENROUTER_API_KEY
+          timeout: 60
+
+    litellm_settings:
+      # deployment.md §7.4: SHJ3_AI_MODEL_INIT_TIMEOUT_S budgets router
+      # construction; num_retries/request_timeout are per-call, distinct from
+      # that one-time init budget.
+      num_retries: 2
+      request_timeout: 60
+      fallbacks:
+        - shj3-chat-primary: [shj3-chat-fallback]

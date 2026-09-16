@@ -1,0 +1,94 @@
+{{/*
+§7.1: "pre-upgrade hook, opt-in". §7.2/§3.1 give the values-level switch
+(`migration.runAsHook: true` in development/uat, `false` in production
+because "production migrations are RB-06, never a hook") but not the
+template mechanics — a judgment call, flagged here: this whole resource is
+gated behind `.Values.migration.runAsHook`, not just its hook annotations.
+
+Why the whole resource, not just the annotations: a Kubernetes Job is
+effectively immutable once created, and a PLAIN (non-hook) Job would still
+be applied by an ordinary `helm upgrade` as a normal manifest — it would
+just lose Helm's hook ordering/cleanup semantics, not stop running
+automatically. "Never a hook" in production has to mean "never part of a
+routine helm upgrade at all", which only holds if the resource does not
+render in that mode. RB-06's real production migration procedure applies
+this same Job manifest deliberately and separately (e.g.
+`helm template ... --set migration.runAsHook=true --show-only
+templates/migration/job.yaml | kubectl apply -f -`), not via this chart's
+normal install/upgrade path — consistent with §8's description of migration
+as its own careful, human-run runbook, not an upgrade side effect.
+
+Reuses the already-built orchestrator (`pnpm db:migrate` ->
+scripts/migrate-tenants.mjs, package.json) rather than re-deriving N-tenant
+migration logic inside a Job command — that script already IS
+`RunTenantMigrations`: resumable, checksum-conflict detection, per-tenant
+status (§8.2's migration state table).
+*/}}
+{{- if .Values.migration.runAsHook }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "shj3.fullname" . }}-migration
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-migration") | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-weight": "0"
+    # before-hook-creation: a re-run (e.g. a retried upgrade) does not
+    # collide with a Job name Kubernetes still remembers as completed.
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 0 # RunTenantMigrations is itself resumable (§8.6/RB-07) — a bare retry-from-scratch is the wrong recovery, so don't let Kubernetes attempt one
+  template:
+    metadata:
+      labels:
+        {{- include "shj3.labels" (dict "root" $ "component" "shj3-migration") | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ include "shj3.fullname" . }}-migration
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: migration
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.migration.image.repository }}:{{ .Values.migration.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          command: ["node", "scripts/migrate-tenants.mjs"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          env:
+            - name: SHJ3_ENVIRONMENT
+              value: {{ .Values.global.env | quote }}
+            # §4.3: SHJ3_SQL_MIGRATOR_URL (#29) — "mounted ONLY into the
+            # migration Job, never into a long-running pod. A running
+            # application cannot alter the schema." DATABASE_URL is set to
+            # the SAME value: Prisma's CLI (which `migrate-tenants.mjs`
+            # drives) only reads that literal name (.env.example's own
+            # comment) — the elevated migrator credential has to reach the
+            # CLI under the name the CLI actually looks for.
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.migrator }}
+                  key: SHJ3_SQL_MIGRATOR_URL
+            - name: SHJ3_SQL_MIGRATOR_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.migrator }}
+                  key: SHJ3_SQL_MIGRATOR_URL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+{{- end }}

@@ -1,0 +1,23 @@
+{
+  "name": "@shj3/tokens",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SHJ3 design tokens: the three token layers, skin format and validator, CSS emitter and WCAG 2.1 AA contrast gate (ADR-0007)",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "typecheck": "tsc --build",
+    "test": "pnpm -w run test:unit"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,32 @@
+[← Requirements index](./README.md)
+
+# 10. Glossary
+
+| Term | Definition |
+|---|---|
+| **Tenant** | The isolation unit. One Sharjah government entity, with its own SQL Server schema, Neo4j database, Qdrant collection and Redis key prefix. Four are seeded: SEWA, Sharjah Customs, Sharjah Libraries, Platform. |
+| **Entity** | Overloaded in the sources, and disambiguated here. **(a) Government entity** — a Sharjah organisation, which is what a tenant is. **(b) Graph entity** — a node in the knowledge graph of type `Service`, `Provider`, `Fee`, `Document` or `Channel`. Where this document says "owning entity" it means (a); where it says "graph entity" it means (b). |
+| **Agent** | A configured, versioned assistant persona with its own instructions, model selection, bound knowledge, bound flows, bound tools, guardrails and channels. Authored in the wizard (B3), governed in the registry (B2). |
+| **Skill** | A named capability attachable to an agent from the platform catalogue. Every registered API connector automatically becomes a skill with its own schema and rate-limit policy. |
+| **Tool** | A callable function an agent may invoke during a turn, exposed either by an MCP server or by an API connector. Discovery makes a tool *exist*; explicit binding makes it *callable* — the tool-permission boundary. |
+| **MCP server** | An external service exposing tools over the Model Context Protocol. Registered with an endpoint and an authentication method; its tool set is obtained by discovery rather than declared by hand. |
+| **Connector** | A registered HTTP API integration — method, endpoint, authentication — that becomes a callable skill. Distinguished from an MCP server by having one operation rather than a discoverable set. |
+| **Flow** | An authored conversational journey: a graph of `Message`, `Question`, `Tool call`, `Handover` and `Condition` nodes, belonging to one agent. Dynamic, versioned, and never able to trap the user. Not to be confused with a **pipeline** (below). |
+| **Pipeline** | *(Delivery-added, see [`orchestration.md`](./orchestration.md) §5.5.2.)* An authored, named, versioned graph of *agent invocations* wired together across one turn — `Start`, `Agent`, `Supervisor` and `Response` nodes connected by `Sequential`, `Parallel` and `LoopBack` edges. Where a flow scripts one agent's own dialogue, a pipeline orchestrates which agents run, in what order or in parallel, and how their replies merge. A tenant may activate at most one Published pipeline version at a time (`RouterConfig.activePipelineVersionId`); with none active, the tenant's turns run through the three legacy execution modes. |
+| **Pipeline node** | One step in a pipeline graph — `Start` (the entry point), `Agent` (invokes a specific or turn-bound agent), `Supervisor` (an agent node configured to review/aggregate upstream replies), or `Response` (the terminal node whose output becomes the turn's reply). Carries its own input-context mode, error policy and optional cost/timeout overrides. |
+| **Pipeline edge** | A connection between two pipeline nodes, of kind `Sequential` (ordered hand-off), `Parallel` (concurrent fan-out, two or more sharing a source), or `LoopBack` (a cycle, carrying a mandatory `maxIterations` bound and an optional condition). |
+| **Loop-back condition** | An optional, whitelisted comparison expression (see [`orchestration.md`](./orchestration.md) FR-ORCH-18) attached to a `LoopBack` edge, evaluated each pass to decide whether to repeat early-exit before the edge's hard `maxIterations` bound is reached. Never arbitrary code; an unresolvable field or an evaluation error is treated as `False` (exits the loop). |
+| **Slot** | A named value a flow is waiting for, such as `account_number`. The awaited slot is visible on the trace and transfers with an escalation. The point at which a slot triggers a gated action is where step-up verification occurs. |
+| **Escape** | A free-text exit available at every node of every flow. It leaves the flow, returns control to the router, and preserves context so the flow can be resumed. This is the mechanism behind the brief's "also can be free text" requirement. |
+| **Grounding confidence** | A numeric measure of how well retrieval supports a candidate answer. Below the configured threshold (default 60%) the answer is withheld and a human offered, or escalated where a handover node and staffed agents exist. Unresolved source conflicts reduce it. |
+| **Golden set** | A curated, owned collection of test cases with expected outcomes, scored on demand and on every regression run. Conversations from the command centre can be promoted into one. Four are seeded, including a red-team set that must score 100% to permit publish. |
+| **Skin** | A named, saveable theme preset: a JSON document of semantic token values plus asset references, conforming to a versioned schema. Duplicable, editable, exportable and importable. Default and dark skins ship. |
+| **Containment rate** | The share of conversations resolved without human involvement. **[ASSUMPTION]** — undefined in the source; see [`risks.md`](./risks.md) RISK-008. |
+| **Deflection rate** | The share of conversations that would otherwise have become a channel contact — a call, a visit or a ticket. A subset of containment. **[ASSUMPTION]** — undefined in the source; see [`risks.md`](./risks.md) RISK-008. |
+| **Step-up** | The act of raising a session's assurance level before a gated action proceeds — for example requiring verified identity plus OTP before initiating a payment. Always evaluated and satisfied *before* the tool call, never after. |
+| **Assurance level** | The verification state carried on a `Principal`: `L0` anonymous, `L1` verified identity, `L2` verified identity plus OTP, `L3` document-verified. Feature modules gate on the level and never on how it was established. |
+| **Publish gate** | The quality gate between an agent version and an environment. Evaluates suite results, accuracy, groundedness, red-team score and bound-locale translation completeness, and names every failing condition with its score and threshold. |
+| **Promotion** | Moving a specific agent version between environments (Development → UAT → Production), subject to approval by a principal other than the requester, and always audited. Distinct from **rollback**, which changes which version is current within one environment. |
+
+---
+[← risks](./risks.md) · [Requirements index](./README.md)

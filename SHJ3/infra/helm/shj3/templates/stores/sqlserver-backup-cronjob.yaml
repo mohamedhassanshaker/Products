@@ -1,0 +1,167 @@
+{{/*
+SQL Server backup automation — closes the Phase C gap tasks/todo.md tracked as
+"backup automation itself is not built". SQL Server is the only store with a
+real backup obligation (deployment.md §12.1: Neo4j/Qdrant are derived and
+rebuildable, Redis is deliberately unbacked) — this is the one CronJob this
+chart needs.
+
+## Real, not aspirational — and stated exactly which part is which
+
+The BACKUP DATABASE / RESTORE VERIFYONLY sequence below is not invented for
+this template: it is the identical command shape independently built AND
+EXECUTED for real by scripts/backup-sql.sh / scripts/restore-sql.sh — a full
+backup -> corrupt -> restore -> verify round trip run against a real,
+isolated SQL Server container (see that script's own header and
+docs/deployment.md §12.4 for the dated, real drill this mirrors). What is
+NOT proven: this CronJob's actual behaviour on a live cluster. There is no
+Kubernetes cluster reachable in this development environment (confirmed by
+the Helm/Kubernetes wave, tasks/todo.md) — this template is verified only by
+`helm lint` / `helm template` (scripts/chart:verify), the same honesty bar
+every other resource in this chart already holds itself to. Treat the first
+real production `helm upgrade` that renders this CronJob as its actual first
+live test, not this pass.
+
+## Why this is gated on stores.sqlserver.mode == "in-cluster"
+
+Per §3.1, SQL Server is only ever a StatefulSet THIS CHART OWNS in
+`development` — uat/production use a managed instance (an externally hosted
+SQL Server, per stores/sqlserver-sts.yaml's own gating), whose backup/PITR is
+the cloud provider's responsibility, not a Kubernetes CronJob's. Stated
+plainly rather than left implicit: **no managed-SQL-Server backup mechanism
+has been named, designed, or provisioned anywhere in this repository.**
+deployment.md §12.2/§8.4's Azure Blob Storage URLs are Phase A illustrative
+placeholders, not a confirmed cloud target — RISK-001 (data residency) is
+still open, and no ADR names a specific managed SQL Server product. This
+CronJob deliberately covers only the one SQL Server deployment shape that
+actually exists as real, working infrastructure today (the in-cluster
+StatefulSet); the managed-instance backup story is a real, separate,
+un-designed gap, named here rather than papered over with a CronJob that
+would not apply to the environment it is aimed at.
+
+## Design choices, each a deliberate trade-off flagged rather than hidden
+
+1. **Image: the same pinned `mcr.microsoft.com/mssql/server` image
+   sqlserver-sts.yaml already uses**, not a slimmer standalone `sqlcmd`
+   image. Heavier to pull (the same image the StatefulSet already pulls, so
+   in practice this cost is already paid once per node), but zero new
+   supply-chain surface for one CLI binary — the same "reuse over
+   reinvention" call worker's Dockerfile reuse and migration/job.yaml's
+   image reuse already made elsewhere in this chart.
+2. **`concurrencyPolicy: Forbid`** — a backup that overlaps a slow prior run
+   would double the SQL Server load a nightly job is explicitly scheduled to
+   avoid during business hours; skipping a run is safer than stacking them.
+3. **Retention is enforced INSIDE the Job** (`find ... -mtime +N -delete`),
+   not by a separate CronJob or an object-storage lifecycle rule — there is
+   no object storage here at all, only a PVC, and Kubernetes has no built-in
+   PVC-file retention primitive. Simple and auditable in the Job's own log.
+4. **No secondary-copy / off-cluster replication.** deployment.md §12.2 calls
+   for a second availability zone; a single PVC is a single point of
+   failure. Flagged, not solved — genuinely out of this pass's scope (it
+   needs an object-storage target this repo has never provisioned), and
+   strictly better than the prior state (zero backups) rather than the full
+   target design.
+*/}}
+{{- if and .Values.backup.sql.enabled (eq .Values.stores.sqlserver.mode "in-cluster") }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "shj3.fullname" . }}-sql-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-sql-backup") | nindent 4 }}
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: {{ .Values.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.backup.sql.storage }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "shj3.fullname" . }}-sql-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-sql-backup") | nindent 4 }}
+spec:
+  schedule: {{ .Values.backup.sql.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0 # a failed backup should page, not silently retry into a truncated .bak
+      template:
+        metadata:
+          labels:
+            {{- include "shj3.labels" (dict "root" $ "component" "shj3-sql-backup") | nindent 12 }}
+        spec:
+          restartPolicy: Never
+          serviceAccountName: {{ include "shj3.fullname" . }}-sql-backup
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            fsGroup: 10001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: sql-backup
+              image: "mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04"
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              env:
+                - name: MSSQL_SA_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ .Values.secrets.migrator }}
+                      key: MSSQL_SA_PASSWORD
+              command: ["/bin/bash", "-c"]
+              # Same three commands scripts/backup-sql.sh runs and proved for real: BACKUP,
+              # then RESTORE VERIFYONLY (an unverified backup is not a backup — deployment.md
+              # §8.4), then prune anything past retention. Exits non-zero (via `set -e` and the
+              # explicit grep) on ANY failure, including a backup that "succeeded" but does not
+              # verify — backoffLimit: 0 above means that failure is visible, not silently eaten.
+              args:
+                - |
+                  set -euo pipefail
+                  STAMP=$(date -u +%Y%m%dT%H%M%SZ)
+                  FILE="/backup/shj3-${STAMP}.bak"
+                  HOST="{{ include "shj3.fullname" . }}-sqlserver"
+                  SQLCMD=/opt/mssql-tools18/bin/sqlcmd
+
+                  echo "[sql-backup] BACKUP DATABASE [shj3] -> ${FILE}"
+                  "$SQLCMD" -S "$HOST" -U sa -P "$MSSQL_SA_PASSWORD" -C -Q \
+                    "BACKUP DATABASE [shj3] TO DISK = N'${FILE}' WITH COMPRESSION, CHECKSUM, STATS=10;"
+
+                  echo "[sql-backup] RESTORE VERIFYONLY ${FILE}"
+                  "$SQLCMD" -S "$HOST" -U sa -P "$MSSQL_SA_PASSWORD" -C -Q \
+                    "RESTORE VERIFYONLY FROM DISK = N'${FILE}' WITH CHECKSUM;" | tee /tmp/verify.txt
+                  grep -q "is valid" /tmp/verify.txt || {
+                    echo "[sql-backup] FATAL: backup did not verify — an unverified backup is not a backup" >&2
+                    exit 1
+                  }
+
+                  echo "[sql-backup] pruning backups older than {{ .Values.backup.sql.retentionDays }} days"
+                  find /backup -maxdepth 1 -name 'shj3-*.bak' -mtime +{{ .Values.backup.sql.retentionDays }} -print -delete
+
+                  echo "[sql-backup] done: ${FILE}"
+              volumeMounts:
+                - name: backup
+                  mountPath: /backup
+                - name: tmp
+                  mountPath: /tmp
+              resources:
+                requests: { cpu: 250m, memory: 512Mi }
+                limits: { cpu: "1", memory: 1Gi }
+          volumes:
+            - name: backup
+              persistentVolumeClaim:
+                claimName: {{ include "shj3.fullname" . }}-sql-backup
+            - name: tmp
+              emptyDir: {}
+{{- end }}

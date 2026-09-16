@@ -1,0 +1,33 @@
+{{/*
+§7.7 rule 1, verbatim: ONLY shj3-web may reach shj3-ai. No ingress path
+terminates on shj3-ai; no other pod is an allowed source, other than the
+OTel Collector's own metrics-scrape port (§2.2's first ownership rule).
+*/}}
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: shj3-ai-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-ai") | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app: shj3-ai
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: shj3-web
+      ports:
+        - protocol: TCP
+          port: {{ .Values.ai.containerPort }}
+    - from:
+        - podSelector:
+            {{- toYaml .Values.networkPolicy.otelCollector.podSelector | nindent 12 }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.networkPolicy.otelCollector.metricsPort }}
+{{- end }}

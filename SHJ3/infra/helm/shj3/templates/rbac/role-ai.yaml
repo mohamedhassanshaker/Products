@@ -1,0 +1,25 @@
+{{/* Same judgment call and reasoning as role-web.yaml — see that file's own comment. Shared by shj3-ai and shj3-worker (same ServiceAccount). */}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "shj3.fullname" . }}-ai
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-ai") | nindent 4 }}
+rules: []
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "shj3.fullname" . }}-ai
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-ai") | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "shj3.fullname" . }}-ai
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "shj3.fullname" . }}-ai
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,192 @@
+/*
+ * SHJ3 Tailwind v4 theme bridge — GENERATED FILE, DO NOT EDIT.
+ *
+ * Generated from @shj3/tokens by scripts/generate-tailwind-theme.mjs, which
+ * calls generateTailwindThemeCss() (packages/tokens/src/tailwind-theme.ts).
+ * Editing this file by hand will be reverted by the next generation, and
+ * scripts/gates/tailwind-theme-drift.mjs will fail the commit. To change a
+ * Tailwind-facing token name or add a new one, edit the token package's
+ * semantic.ts / components.ts and the generator, then re-run
+ * `pnpm tokens:tailwind`.
+ *
+ * design-system.md §3.4, ADR-0007.
+ */
+/* Reset: clear Tailwind's built-in default theme (ADR-0007 — replace, not extend). */
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  --font-weight-*: initial;
+  --tracking-*: initial;
+  --leading-*: initial;
+  --breakpoint-*: initial;
+  --container-*: initial;
+  --spacing: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --ease-*: initial;
+  --animate-*: initial;
+  --blur-*: initial;
+  --perspective-*: initial;
+  --aspect-*: initial;
+}
+
+/* Bridge: every token category with a real Tailwind utility namespace, each
+   pointing at this package's runtime custom property rather than a value
+   (design-system.md §3.4). */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset: var(--ring-offset);
+  --color-overlay: var(--overlay);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-subtle: var(--success-subtle);
+  --color-success-strong: var(--success-strong);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-warning-strong: var(--warning-strong);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-subtle: var(--destructive-subtle);
+  --color-destructive-strong: var(--destructive-strong);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-subtle: var(--info-subtle);
+  --color-info-strong: var(--info-strong);
+  --color-chat-user-bubble: var(--chat-user-bubble);
+  --color-chat-user-bubble-foreground: var(--chat-user-bubble-foreground);
+  --color-chat-assistant-bubble: var(--chat-assistant-bubble);
+  --color-chat-assistant-bubble-foreground: var(--chat-assistant-bubble-foreground);
+  --color-chat-meta-foreground: var(--chat-meta-foreground);
+  --color-chat-disclaimer: var(--chat-disclaimer);
+  --color-chat-disclaimer-foreground: var(--chat-disclaimer-foreground);
+  --color-chat-composer: var(--chat-composer);
+  --color-chat-typing: var(--chat-typing);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-muted-foreground: var(--sidebar-muted-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-active-surface: var(--sidebar-active-surface);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-selection: var(--selection);
+  --color-selection-foreground: var(--selection-foreground);
+  --color-skeleton: var(--skeleton);
+  --color-code-surface: var(--code-surface);
+  --color-code-foreground: var(--code-foreground);
+  --color-disabled-surface: var(--disabled-surface);
+  --color-disabled-foreground: var(--disabled-foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-arabic: var(--font-arabic);
+  --text-2xs: var(--text-2xs);
+  --text-xs: var(--text-xs);
+  --text-sm: var(--text-sm);
+  --text-base: var(--text-base);
+  --text-md: var(--text-md);
+  --text-lg: var(--text-lg);
+  --text-xl: var(--text-xl);
+  --text-2xl: var(--text-2xl);
+  --text-3xl: var(--text-3xl);
+  --leading-tight: var(--leading-tight);
+  --leading-snug: var(--leading-snug);
+  --leading-normal: var(--leading-normal);
+  --leading-relaxed: var(--leading-relaxed);
+  --leading-arabic: var(--leading-arabic);
+  --font-weight-regular: var(--font-weight-regular);
+  --font-weight-medium: var(--font-weight-medium);
+  --font-weight-semibold: var(--font-weight-semibold);
+  --font-weight-bold: var(--font-weight-bold);
+  --tracking-tight: var(--tracking-tight);
+  --tracking-normal: var(--tracking-normal);
+  --tracking-wide: var(--tracking-wide);
+  --spacing-0: var(--space-0);
+  --spacing-px: var(--space-px);
+  --spacing-1: var(--space-1);
+  --spacing-2: var(--space-2);
+  --spacing-3: var(--space-3);
+  --spacing-4: var(--space-4);
+  --spacing-5: var(--space-5);
+  --spacing-6: var(--space-6);
+  --spacing-8: var(--space-8);
+  --spacing-10: var(--space-10);
+  --spacing-12: var(--space-12);
+  --spacing-16: var(--space-16);
+  --spacing-20: var(--space-20);
+  --spacing-24: var(--space-24);
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-full: var(--radius-full);
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-inset: var(--shadow-inset);
+  --ease-standard: var(--ease-standard);
+  --ease-out: var(--ease-out);
+  --ease-in: var(--ease-in);
+  --ease-emphasised: var(--ease-emphasised);
+}
+
+/* Breakpoints (§4.9): build-time literals, the one deliberate non-var() exception. */
+@theme {
+  --breakpoint-sm: 560px;
+  --breakpoint-md: 820px;
+  --breakpoint-lg: 1080px;
+  --breakpoint-xl: 1400px;
+}
+
+/*
+ * Tokens with no Tailwind v4 utility namespace to bridge to (verified against
+ * tailwindcss@4.3.3 — see the module docstring in tailwind-theme.ts). These
+ * remain ordinary runtime custom properties, already emitted at `:root` by
+ * `serializeBaseStylesheet` (css.ts) — a component consumes them directly,
+ * e.g. `border-radius: var(--button-radius)`, never through a Tailwind class.
+ *
+ * typography (scale inputs):
+ *   --font-size-base, --font-scale-ratio
+ * spacing (scale input + component-shaped):
+ *   --space-unit, --density-scale, --control-height-sm, --control-height-md, --control-height-lg, --row-height, --page-gutter
+ * radius (root control):
+ *   --radius-root
+ * shadow (depth control + colour input):
+ *   --shadow-depth, --shadow-color
+ * z-index (no v4 theme namespace):
+ *   --z-base, --z-dropdown, --z-sticky, --z-overlay, --z-modal, --z-popover, --z-toast, --z-tooltip
+ * motion (no v4 duration theme namespace):
+ *   --duration-instant, --duration-fast, --duration-normal, --duration-slow, --duration-slower, --motion-scale
+ * component — layer 3 (§4.10, no matching utility namespace):
+ *   --button-radius, --button-height-sm, --button-height-md, --button-height-lg, --button-padding-inline, --input-radius, --input-border, --input-height, --badge-radius, --badge-padding-inline, --badge-font-size, --card-radius, --card-border, --card-padding, --card-shadow, --sidebar-width, --sidebar-width-collapsed, --sidebar-item-radius, --sidebar-style, --chat-bubble-radius, --chat-bubble-max-inline-size, --table-row-height, --table-header-surface, --table-cell-padding-inline, --table-border, --table-sticky-shadow, --matrix-cell-size, --matrix-header-inline-size, --graph-node-radius, --graph-edge-stroke, --graph-canvas-surface, --graph-grid-line, --flow-node-inline-size, --flow-canvas-edge-stroke, --flow-canvas-graph-block-size, --wizard-step-indicator-size, --subtab-underline-thickness, --subtab-gap, --summary-strip-surface, --summary-strip-border-inline-start, --progress-track-height, --focus-ring-width, --focus-ring-offset
+ */

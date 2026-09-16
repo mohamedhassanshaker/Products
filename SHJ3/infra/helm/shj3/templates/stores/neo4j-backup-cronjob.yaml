@@ -1,0 +1,318 @@
+{{/*
+Neo4j backup automation — closes the honest gap docs/deployment.md §12.5 and
+tasks/todo.md's Phase C review named plainly rather than papered over: "no
+script, no CronJob, no compose profile" for Neo4j. RB-17 is an OPTIMISATION,
+never a recovery dependency (ADR-0009: the graph is a derived store,
+rebuildable by re-index) — this CronJob exists so a restore is occasionally
+the FASTER option, not because anything depends on it existing.
+
+## Real, not invented — and built on a real, executed drill
+
+The dump/verify/manifest logic below is the identical command sequence
+independently built AND EXECUTED for real by scripts/backup-neo4j.sh against
+an isolated, disposable Neo4j 5.26-community container — full backup,
+corrupt, restore, verify round trip, both safety refusals proven (see that
+script's own header and tasks/todo.md's review entry for this work). What is
+NOT proven: this CronJob's actual orchestration (StatefulSet scale-down,
+pod-wait, throwaway worker pod) on a live cluster — there is no cluster
+reachable in this environment (the same standing gap every prior Helm wave
+has recorded). Verified only by `helm lint`/`helm template`
+(`pnpm chart:verify`). Treat the first real production `helm upgrade` that
+actually triggers this CronJob as its true first live test.
+
+## Why this CANNOT be a single-container Job the way sqlserver-backup-cronjob.yaml is
+
+SQL Server backs up ONLINE — a live, serving database. Neo4j Community
+cannot: `neo4j-admin database dump` refuses outright against a database
+mounted in a running server, and Community has no Enterprise
+`STOP DATABASE <name>` command to quiesce just the database while the server
+keeps running (confirmed for real — see serviceaccount-neo4j-backup.yaml's
+header). The ONLY way to make the database "not in use" is to stop the whole
+server process, which for this StatefulSet means the neo4j-0 POD must not be
+running at all — and a Job's own pod cannot mount the neo4j data PVC to
+perform the dump while ALSO being the thing responsible for stopping the pod
+that currently holds it (a Kubernetes volume attach happens before ANY
+container in a pod — including init containers — starts, so "stop the other
+pod first, then use its volume" cannot happen inside one pod's own container
+sequence). This CronJob therefore runs two phases across two pods:
+
+  1. **Orchestrator** (this Job's own pod; `bitnami/kubectl`, no PVC mounted
+     at all): scales the neo4j StatefulSet to 0, waits for neo4j-0 to fully
+     terminate (releasing the PVC), then `kubectl apply`s a throwaway
+     **worker** pod spec, waits for it to complete, reads its logs, deletes
+     it, then scales the StatefulSet back to 1 and waits for neo4j-0 to
+     become Ready again — regardless of whether the worker succeeded, so a
+     failed backup never leaves the real database down (see the `trap`-style
+     "always scale back up" handling in the script below).
+  2. **Worker** (a plain Pod the orchestrator creates and deletes each run,
+     under a FIXED name so RBAC can scope get/delete/watch/logs to it by
+     resourceName; `neo4j:5.26-community`, same image the StatefulSet runs,
+     with the data PVC AND a dedicated backup PVC mounted): runs the actual
+     `neo4j-admin database dump`, verifies it (`--info`), writes the sha256
+     manifest, and prunes backups past retention — the same four steps
+     scripts/backup-neo4j.sh performs on a host, just running inside the
+     cluster instead of via `docker run`.
+
+This is the first template in this chart whose ServiceAccount holds real
+Kubernetes RBAC (see serviceaccount-neo4j-backup.yaml's own header for
+exactly what and why) and the first whose pod needs egress to the Kubernetes
+API server (see networkpolicy/egress.yaml's `neo4j-backup-egress` block,
+added alongside this file) — both real, deliberate, narrowly-scoped
+departures from this chart's otherwise-universal "workloads hold zero
+Kubernetes privilege" convention, forced by Neo4j Community's offline-only
+backup, not chosen for convenience.
+
+## Two real gotchas from the executed drill that this template's script
+   deliberately guards against (see scripts/backup-neo4j.sh for the full
+   account of finding both):
+
+  1. `neo4j-admin` always names its output `<database>.dump` — never a
+     free-form filename — and `load --from-path` looks for that EXACT name.
+     Confirmed for real: a directory missing that exact filename makes
+     `--info` exit 0 with NO output at all — silent, false-looking success.
+     Never trust the exit code alone; grep the "Database: neo4j" line the
+     tool prints on a genuine, found, valid archive.
+  2. Because the filename is fixed, each run needs its OWN timestamped
+     SUBDIRECTORY under the backup PVC (`/backup/<stamp>/neo4j.dump`), not a
+     flat directory of differently-named files the way SQL's `.bak`s are —
+     retention pruning below therefore removes whole subdirectories past
+     `backup.neo4j.retentionDays`, not individual files.
+
+## Judgment calls, each flagged rather than hidden
+
+- **Gated on `stores.neo4j.mode == "in-cluster"`, which is EVERY environment
+  today** (§3.1/RISK-017: no managed Neo4j offering is residency-compliant),
+  unlike the SQL CronJob's dev-only gate — this one actually renders, and
+  matters, in uat and production too. The conditional is kept anyway, for
+  the same reason neo4j-sts.yaml keeps it: a future managed offering would
+  only need a values change, not a template rewrite.
+- **`concurrencyPolicy: Forbid`** — an overlapping run would try to scale the
+  same StatefulSet twice and could race the worker pod's fixed name.
+- **The worker pod's name is FIXED, not timestamped** — deliberately, so
+  RBAC can scope get/delete/watch/logs to it by resourceName (Kubernetes
+  cannot scope `create` by name regardless; see
+  serviceaccount-neo4j-backup.yaml). The orchestrator deletes any leftover
+  worker pod from a prior failed run before creating a fresh one.
+- **`networkPolicy.apiServerCidr` is a placeholder**, mirroring
+  `managedStoreCidr`'s own existing placeholder pattern in this chart — the
+  real value is cluster-specific (typically the `kubernetes.default.svc`
+  ClusterIP) and must be confirmed against the actual target cluster before
+  a real deploy, exactly as `managedStoreCidr`'s own comment already
+  requires for its case.
+- **No secondary/off-cluster copy** — same real, separate, out-of-scope gap
+  sqlserver-backup-cronjob.yaml already names for SQL Server; not solved
+  differently here.
+- **`backup.neo4j.schedule` defaults to WEEKLY (Sunday 03:00), not nightly** —
+  deliberately, matching deployment.md §12.1/§12.2's own explicit target
+  design verbatim: a nightly stop-the-instance dump "would deliberately
+  create a graph outage every night to protect data that regenerates from
+  SQL Server on demand." Do not "fix" this to a nightly schedule to match
+  sqlserver-backup-cronjob.yaml's own cadence — that would reintroduce
+  exactly the outage §12.1 explicitly rejected.
+- **Does NOT scale `shj3-ai`/`shj3-worker` to 0 before dumping**, unlike
+  RB-17's own restore procedure (§12.5) and unlike §12.2's stated target
+  ("in a maintenance window with shj3-ai/shj3-worker writes quiesced"). A
+  real, deliberate simplification, named rather than hidden: any write
+  attempted during the (brief, weekly, off-hours) window this StatefulSet is
+  scaled to 0 simply fails at the connection — which is exactly the failure
+  mode ADR-0009 already designed the whole system to absorb gracefully
+  (retrieval degrades to vector-only; a write failure surfaces as a normal
+  transient error, not data loss, since Neo4j is a derived store). Adding a
+  SECOND scaled resource (two more Deployments, more RBAC, more sequencing)
+  to suppress an already-tolerated failure mode was judged not worth the
+  additional, still cluster-unverifiable complexity in this pass. Worth
+  revisiting if the weekly window turns out to generate real alert noise.
+*/}}
+{{- if eq .Values.stores.neo4j.mode "in-cluster" }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "shj3.fullname" . }}-neo4j-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-neo4j-backup") | nindent 4 }}
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: {{ .Values.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.backup.neo4j.storage }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "shj3.fullname" . }}-neo4j-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-neo4j-backup") | nindent 4 }}
+spec:
+  schedule: {{ .Values.backup.neo4j.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0 # a failed backup should page, not silently retry — same stance as the SQL CronJob
+      activeDeadlineSeconds: 2700 # 45m ceiling on the whole orchestration (scale down + dump + scale up); a stuck run should fail loudly, not hang the next schedule
+      template:
+        metadata:
+          labels:
+            {{- include "shj3.labels" (dict "root" $ "component" "shj3-neo4j-backup") | nindent 12 }}
+        spec:
+          restartPolicy: Never
+          serviceAccountName: {{ include "shj3.fullname" . }}-neo4j-backup
+          automountServiceAccountToken: true # kubectl in-cluster auth needs the bound token — see serviceaccount-neo4j-backup.yaml
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            fsGroup: 10001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: orchestrator
+              image: "bitnami/kubectl:1.30" # floating minor tag — kubectl's own version-skew policy tolerates +/-1 minor against the real API server; pin exactly once a target cluster version is confirmed (same "confirm against the real thing" caveat as networkPolicy.apiServerCidr below)
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: [ALL]
+              env:
+                - name: NAMESPACE
+                  value: {{ .Release.Namespace | quote }}
+                - name: STATEFULSET
+                  value: "{{ include "shj3.fullname" . }}-neo4j"
+                - name: NEO4J_POD
+                  value: "{{ include "shj3.fullname" . }}-neo4j-0"
+                - name: WORKER_POD
+                  value: "{{ include "shj3.fullname" . }}-neo4j-backup-worker"
+                - name: DATA_PVC
+                  value: "data-{{ include "shj3.fullname" . }}-neo4j-0" # StatefulSet volumeClaimTemplate naming: "<template>-<sts>-<ordinal>" (neo4j-sts.yaml's own "data" template, ordinal fixed at 0 — ADR-0009, replicas can never exceed 1)
+                - name: BACKUP_PVC
+                  value: "{{ include "shj3.fullname" . }}-neo4j-backup"
+                - name: RETENTION_DAYS
+                  value: {{ .Values.backup.neo4j.retentionDays | quote }}
+                - name: NEO4J_IMAGE
+                  value: "neo4j:5.26-community" # pinned to match neo4j-sts.yaml's own image, for the same "consistency across every place this version is named" reason
+              command: ["/bin/bash", "-c"]
+              args:
+                - |
+                  set -euo pipefail
+                  STAMP=$(date -u +%Y%m%dT%H%M%SZ)
+                  echo "[neo4j-backup] scaling $STATEFULSET to 0 — Neo4j Community has no online backup (neo4j-admin requires the database offline)."
+                  echo "[neo4j-backup] graph-grounded retrieval degrades to vector-only for the duration (ADR-0009's own accepted design)."
+                  kubectl -n "$NAMESPACE" scale statefulset/"$STATEFULSET" --replicas=0
+
+                  echo "[neo4j-backup] waiting for $NEO4J_POD to terminate"
+                  for i in $(seq 1 60); do
+                    kubectl -n "$NAMESPACE" get pod "$NEO4J_POD" >/dev/null 2>&1 || break
+                    sleep 5
+                  done
+                  if kubectl -n "$NAMESPACE" get pod "$NEO4J_POD" >/dev/null 2>&1; then
+                    echo "[neo4j-backup] FATAL: $NEO4J_POD did not terminate within 5 minutes." >&2
+                    kubectl -n "$NAMESPACE" scale statefulset/"$STATEFULSET" --replicas=1
+                    exit 1
+                  fi
+
+                  # Defensive: a leftover worker pod from a prior failed run would make
+                  # `apply` fail (most Pod fields are immutable post-creation).
+                  kubectl -n "$NAMESPACE" delete pod "$WORKER_POD" --ignore-not-found --wait=true >/dev/null 2>&1 || true
+
+                  echo "[neo4j-backup] launching worker pod $WORKER_POD"
+                  cat <<PODYAML | kubectl -n "$NAMESPACE" apply -f -
+                  apiVersion: v1
+                  kind: Pod
+                  metadata:
+                    name: $WORKER_POD
+                    labels:
+                      app: shj3-neo4j-backup-worker
+                  spec:
+                    restartPolicy: Never
+                    automountServiceAccountToken: false
+                    securityContext:
+                      runAsUser: 7474
+                      runAsGroup: 7474
+                      fsGroup: 7474
+                    containers:
+                      - name: worker
+                        image: "$NEO4J_IMAGE"
+                        command: ["/bin/bash", "-c"]
+                        args:
+                          - |
+                            set -euo pipefail
+                            DEST="/backup/$STAMP"
+                            mkdir -p "\$DEST"
+                            echo "[worker] neo4j-admin database dump neo4j -> \$DEST"
+                            neo4j-admin database dump neo4j --to-path="\$DEST" --overwrite-destination
+
+                            echo "[worker] verifying (neo4j-admin database load --info) — an unverified backup is not a backup."
+                            INFO_OUT="\$(neo4j-admin database load --from-path="\$DEST" --info neo4j)"
+                            echo "\$INFO_OUT"
+                            if ! grep -q '^Database: neo4j' <<<"\$INFO_OUT"; then
+                              echo "[worker] FATAL: artifact did not verify (no valid archive metadata printed)." >&2
+                              exit 1
+                            fi
+
+                            SHA256="\$(sha256sum "\$DEST/neo4j.dump" | awk '{print \$1}' | sed 's/^\\\\//')"
+                            SIZE_BYTES="\$(wc -c < "\$DEST/neo4j.dump" | tr -d ' ')"
+                            cat > "\$DEST/neo4j.dump.manifest.json" <<JSON
+                            {
+                              "database": "neo4j",
+                              "label": "weekly",
+                              "takenAtUtc": "$STAMP",
+                              "sourceStatefulSet": "$STATEFULSET",
+                              "sourceImage": "$NEO4J_IMAGE",
+                              "file": "neo4j.dump",
+                              "sha256": "\$SHA256",
+                              "sizeBytes": \$SIZE_BYTES,
+                              "infoVerify": "pass"
+                            }
+                            JSON
+
+                            echo "[worker] pruning backups older than $RETENTION_DAYS days"
+                            find /backup -mindepth 1 -maxdepth 1 -type d -mtime +$RETENTION_DAYS -print -exec rm -rf {} +
+
+                            echo "[worker] OK: \$DEST/neo4j.dump (\$SIZE_BYTES bytes, sha256=\$SHA256)"
+                        volumeMounts:
+                          - name: data
+                            mountPath: /data
+                          - name: backup
+                            mountPath: /backup
+                        resources:
+                          requests: { cpu: 250m, memory: 512Mi }
+                          limits: { cpu: "1", memory: 2Gi }
+                    volumes:
+                      - name: data
+                        persistentVolumeClaim:
+                          claimName: $DATA_PVC
+                      - name: backup
+                        persistentVolumeClaim:
+                          claimName: $BACKUP_PVC
+                  PODYAML
+
+                  echo "[neo4j-backup] waiting for worker pod to finish"
+                  WORKER_OK=1
+                  kubectl -n "$NAMESPACE" wait --for=jsonpath='{.status.phase}'=Succeeded pod/"$WORKER_POD" --timeout=1800s || WORKER_OK=0
+                  echo "[neo4j-backup] worker pod logs:"
+                  kubectl -n "$NAMESPACE" logs pod/"$WORKER_POD" || true
+                  kubectl -n "$NAMESPACE" delete pod "$WORKER_POD" --ignore-not-found --wait=false >/dev/null 2>&1 || true
+
+                  echo "[neo4j-backup] scaling $STATEFULSET back to 1 — always, regardless of worker outcome, so a failed backup never leaves the real database down."
+                  kubectl -n "$NAMESPACE" scale statefulset/"$STATEFULSET" --replicas=1
+                  kubectl -n "$NAMESPACE" wait --for=condition=Ready pod/"$NEO4J_POD" --timeout=600s
+
+                  if [[ "$WORKER_OK" -ne 1 ]]; then
+                    echo "[neo4j-backup] FATAL: worker pod did not succeed — see its logs above." >&2
+                    exit 1
+                  fi
+                  echo "[neo4j-backup] done"
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+              resources:
+                requests: { cpu: 100m, memory: 128Mi }
+                limits: { cpu: 500m, memory: 256Mi }
+          volumes:
+            - name: tmp
+              emptyDir: {}
+{{- end }}

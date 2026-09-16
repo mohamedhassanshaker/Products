@@ -1,0 +1,45 @@
+{{/*
+JUDGMENT CALL, flagged rather than silently resolved: §7.1 lists
+`rbac/role-*.yaml` as real files this chart must have, but §7.8's own text
+states plainly that NEITHER shj3-web nor shj3-ai talks to the Kubernetes
+API — "automountServiceAccountToken: false on all three workloads" and even
+the migration Job's own ServiceAccount "grants nothing in Kubernetes
+either". Taken at face value, nothing in this system needs a single
+Kubernetes RBAC permission.
+
+Rather than ship no Role at all (leaving §7.1's own naming unaccounted for,
+and leaving "this ServiceAccount should never gain permissions" as an
+absence instead of a fact), this chart makes the zero-permission posture an
+explicit, auditable object: an empty Role bound to shj3-web's
+ServiceAccount. A `rules: []` Role that exists is a diff away from ever
+silently growing scope; a Role that was never created has no such
+protection — a future edit adding a rule to it is a change someone has to
+make and review, rather than a new Role appearing from nothing. Combined
+with `automountServiceAccountToken: false`, this permission would not even
+be reachable if it existed, so this is belt-and-braces on top of an already
+enforced control, not the control itself.
+*/}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "shj3.fullname" . }}-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-web") | nindent 4 }}
+rules: []
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "shj3.fullname" . }}-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "shj3-web") | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "shj3.fullname" . }}-web
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "shj3.fullname" . }}-web
+  apiGroup: rbac.authorization.k8s.io

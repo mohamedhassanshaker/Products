@@ -1,0 +1,168 @@
+{{/*
+§7.9, and the one real, named incident class in this whole chart: Neo4j
+Community's readiness probe must hit something the app actually uses
+(a real Bolt query via cypher-shell), never `/db/manage/server/core/available`
+or any other clustering-only endpoint — Community does not have clustering,
+so that endpoint does not exist, and a probe pointed at it yields a pod that
+is NEVER Ready: an outage that reads as a data problem, not a config one.
+
+Gated on stores.neo4j.mode == "in-cluster" (§7.9: "every store template is
+wrapped in `{{- if eq .Values.stores.<name>.mode "in-cluster" }}`"). Neo4j
+has no "managed" mode in this chart at all, unlike SQL Server/Redis — §3.1:
+in-cluster in every environment, since no managed offering is
+residency-compliant (RISK-017) — but the same conditional shape is kept for
+consistency with the other three stores' templates, and so a future managed
+Neo4j offering would only need a values change, not a template rewrite.
+
+replicas is fixed at 1 and this template `fail`s on any other value —
+Community cannot cluster (ADR-0009); a 2-replica StatefulSet on one RWO
+volume would not be a cluster, it would be a second, empty instance with a
+Service load-balancing half of every query into it.
+
+A SECOND real gotcha, found by cross-checking docker-compose.yml's already-
+tested neo4j service rather than transcribing deployment.md §7.9's shown
+YAML blindly (that YAML is not verbatim-correct against the real image):
+the neo4j:5.x image's entrypoint treats EVERY `NEO4J_`-prefixed variable as
+a server-setting override (`NEO4J_dbms_foo` -> `dbms.foo`) and refuses to
+start on one it does not recognise, with strict validation on by default —
+docker-compose.yml's own neo4j service comment states this plainly, having
+hit it for real. Two consequences, both applied below instead of §7.9's
+literal example: (1) the admin password is set via `NEO4J_AUTH` (the one
+variable name the entrypoint special-cases, not a `dbms.*` passthrough) —
+never a bare `NEO4J_PASSWORD` var, which deployment.md §7.9's own example
+uses and would likely fail this exact validation; (2) the password value
+the readiness probe's shell needs is carried under a deliberately
+NON-`NEO4J_`-prefixed name, `SHJ3_NEO4J_HEALTHCHECK_PASSWORD` — the same
+name docker-compose.yml already uses for the identical reason, kept
+identical across both deployment paths rather than inventing a second name
+for the same purpose. Likewise, the heap-size setting is real Neo4j 5.x
+`server.memory.*` config (`NEO4J_server_memory_heap_max__size`), not the
+`dbms.memory.*` namespace deployment.md §7.9's example shows — 5.x renamed
+this namespace; the doc's example predates the rename, confirmed by
+docker-compose.yml's own service actually running with `server_memory_*`
+and nothing else.
+*/}}
+{{- if eq .Values.stores.neo4j.mode "in-cluster" }}
+{{- if ne (.Values.stores.neo4j.replicas | int) 1 }}
+{{- fail (printf "stores.neo4j.replicas is %v, but Neo4j Community cannot cluster (ADR-0009) — it must be exactly 1. A 2+ replica StatefulSet on one RWO volume is not a cluster, it is a second instance with no data and a Service that load-balances half of every query into it." .Values.stores.neo4j.replicas) -}}
+{{- end }}
+{{/*
+The headless Service the StatefulSet's own `serviceName` field below names —
+found missing (this file originally jumped straight to the StatefulSet)
+while independently validating the rendered manifest count against the
+other three stores, all of which correctly declare one: SHJ3_NEO4J_URI
+(configmap-ai.yaml) resolves `{{ include "shj3.fullname" . }}-neo4j` as a
+real DNS name, which requires an actual Service object of that name to
+exist, not just a StatefulSet's internal `serviceName` reference.
+*/}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "shj3.fullname" . }}-neo4j
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "neo4j") | nindent 4 }}
+spec:
+  clusterIP: None
+  selector:
+    {{- include "shj3.selectorLabels" (dict "root" $ "component" "neo4j") | nindent 4 }}
+  ports:
+    - name: bolt
+      port: 7687
+    - name: http
+      port: 7474
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "shj3.fullname" . }}-neo4j
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shj3.labels" (dict "root" $ "component" "neo4j") | nindent 4 }}
+spec:
+  serviceName: {{ include "shj3.fullname" . }}-neo4j
+  replicas: 1
+  podManagementPolicy: OrderedReady
+  # A `helm uninstall` must never be able to delete a database volume.
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  selector:
+    matchLabels:
+      {{- include "shj3.selectorLabels" (dict "root" $ "component" "neo4j") | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "shj3.labels" (dict "root" $ "component" "neo4j") | nindent 8 }}
+    spec:
+      securityContext:
+        runAsUser: 7474
+        runAsGroup: 7474
+        fsGroup: 7474
+      containers:
+        - name: neo4j
+          image: "neo4j:5.26-community" # pinned to match docker-compose.yml's own image (consistency across both deployment paths)
+          ports:
+            - name: bolt
+              containerPort: 7687
+            - name: http
+              containerPort: 7474
+          env:
+            # Community: "yes" accepts GPLv3 — the licence agreement, not a
+            # feature flag.
+            - name: NEO4J_ACCEPT_LICENSE_AGREEMENT
+              value: "yes"
+            # Non-NEO4J_-prefixed on purpose (see this file's top comment) —
+            # the plain password value, read by NEO4J_AUTH below via
+            # Kubernetes' own $(VAR) container-env expansion, and by the
+            # readiness probe's shell via normal process-env inheritance.
+            - name: SHJ3_NEO4J_HEALTHCHECK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.ai }}
+                  key: SHJ3_NEO4J_PASSWORD
+            - name: NEO4J_AUTH
+              value: "neo4j/$(SHJ3_NEO4J_HEALTHCHECK_PASSWORD)"
+            - name: NEO4J_server_memory_heap_initial__size
+              value: {{ .Values.stores.neo4j.heapInitialSize | default "512m" | quote }}
+            - name: NEO4J_server_memory_heap_max__size
+              value: {{ .Values.stores.neo4j.heapMaxSize | default "4G" | quote }}
+            - name: NEO4J_server_memory_pagecache_size
+              value: {{ .Values.stores.neo4j.pagecacheSize | default "512m" | quote }}
+            # No dbms_mode / causal_clustering keys — Community silently
+            # ignores them, and a StatefulSet that appears to configure a
+            # cluster while running a single instance is worse than one that
+            # never claimed to (docker-compose.yml's own neo4j comment,
+            # equally true here).
+          # Single-instance readiness — the real, named gotcha this template
+          # exists to get right. The endpoint this must NEVER hit is
+          # /db/manage/server/core/available (clustering-only, Community
+          # does not have it — a pod that is never Ready, read as a data
+          # problem). Probe the thing the application actually uses instead:
+          # a real Bolt query via cypher-shell, over a shell so the password
+          # is read from the real process environment exactly the way
+          # docker-compose.yml's own already-tested healthcheck does.
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - 'cypher-shell -u neo4j -p "$SHJ3_NEO4J_HEALTHCHECK_PASSWORD" "RETURN 1" >/dev/null 2>&1 || exit 1'
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests: { cpu: 500m, memory: 4Gi }
+            limits: { cpu: "2", memory: {{ .Values.stores.neo4j.heapMaxSize | default "4G" }} }
+          volumeMounts:
+            - name: data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        storageClassName: {{ .Values.storageClass }}
+        resources:
+          requests:
+            storage: {{ .Values.stores.neo4j.storage }}
+{{- end }}

@@ -1,0 +1,41 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/claude-hooks/pretool-no-secrets.mjs",
+            "timeout": 15,
+            "statusMessage": "Checking for hardcoded secrets..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/claude-hooks/posttool-track-touched.mjs",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/claude-hooks/stop-verify-touched.mjs",
+            "timeout": 120,
+            "statusMessage": "Verifying changed files (format, lint, gates)..."
+          }
+        ]
+      }
+    ]
+  }
+}
